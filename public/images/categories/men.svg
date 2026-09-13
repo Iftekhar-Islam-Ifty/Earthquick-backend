@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="100%" height="100%">
+  <defs>
+    <linearGradient id="menBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F5EFE6"/>
+      <stop offset="100%" stop-color="#E5D9C7"/>
+    </linearGradient>
+    <radialGradient id="menGlow" cx="50%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#E5D9C7" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="400" height="400" rx="24" fill="url(#menBg)"/>
+  <circle cx="200" cy="180" r="140" fill="url(#menGlow)"/>
+  <!-- Elegant Minimalist Panjabi / Kurta Silhouette -->
+  <g transform="translate(100, 70)" stroke="#1B3A4B" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Collar & Neckline -->
+    <path d="M75,90 C85,60 115,60 125,90" stroke="#B8966A" stroke-width="3.5"/>
+    <path d="M85,75 C95,65 105,65 115,75" stroke="#B8966A" stroke-width="2"/>
+    <line x1="100" y1="90" x2="100" y2="170" stroke="#B8966A" stroke-width="3"/>
+    <!-- Buttons -->
+    <circle cx="100" cy="108" r="2.5" fill="#B8966A" stroke="none"/>
+    <circle cx="100" cy="128" r="2.5" fill="#B8966A" stroke="none"/>
+    <circle cx="100" cy="148" r="2.5" fill="#B8966A" stroke="none"/>
+    <!-- Shoulders & Torso -->
+    <path d="M75,90 L20,120 L35,210 L65,200 L65,260 L135,260 L135,200 L165,210 L180,120 L125,90 Z" fill="#1B3A4B" fill-opacity="0.06"/>
+    <!-- Chest pocket subtle outline -->
+    <path d="M60,135 L80,135 L80,165 L60,165 Z" stroke="#B8966A" stroke-width="1.5" opacity="0.6"/>
+    <path d="M60,135 L70,142 L80,135" stroke="#B8966A" stroke-width="1.5" opacity="0.6"/>
+  </g>
+  <text x="200" y="340" text-anchor="middle" font-family="'Cinzel', 'Playfair Display', serif" font-size="16" font-weight="600" letter-spacing="4" fill="#1B3A4B">MEN'S ATELIER</text>
+</svg>

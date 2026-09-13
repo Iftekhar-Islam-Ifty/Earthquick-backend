@@ -1,0 +1,274 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Product;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use Illuminate\View\View;
+
+/* =========================================================================
+ * CART CONTROLLER
+ * Manages customer shopping bag sessions, cart drawer AJAX synchronization,
+ * line item quantities, and subtotal/free shipping calculations.
+ * ========================================================================= */
+
+class CartController extends Controller
+{
+    /* =========================================================================
+     * CART DISPLAY & DATA SYNCHRONIZATION
+     * Returns full cart page view or serialized JSON for reactive drawer.
+     * ========================================================================= */
+
+    /**
+     * Display the shopping cart page or return serialized JSON for AJAX drawer.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\View\View|\Illuminate\Http\JsonResponse
+     */
+    public function index(Request $request): View|JsonResponse
+    {
+        // Retrieve current cart array from server session
+        $cart = session()->get('cart', []);
+        $subtotal = 0;
+        $count = 0;
+
+        // Compute aggregated subtotal and total line-item count
+        foreach ($cart as $item) {
+            $subtotal += ((float) $item['price']) * ((int) $item['quantity']);
+            $count += (int) $item['quantity'];
+        }
+
+        // Return JSON payload if requested via AJAX
+        if ($request->wantsJson() || $request->ajax()) {
+            return response()->json([
+                'success'                 => true,
+                'cart'                    => $cart,
+                'items'                   => array_values($cart),
+                'count'                   => $count,
+                'subtotal'                => $subtotal,
+                'formatted_subtotal'      => '৳' . number_format($subtotal),
+                'free_shipping_threshold' => 3000,
+                'free_shipping_unlocked'  => ($subtotal >= 3000),
+                'free_shipping_remaining' => max(0, 3000 - $subtotal),
+            ]);
+        }
+
+        return view('cart', compact('cart', 'subtotal', 'count'));
+    }
+
+    /* =========================================================================
+     * ADD ITEM TO CART
+     * Appends product variant or increments quantity in the session cart.
+     * ========================================================================= */
+
+    /**
+     * Add a product variant to the session shopping cart.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
+     */
+    public function add(Request $request): JsonResponse|RedirectResponse
+    {
+        $request->validate([
+            'product_id' => 'required|exists:products,id',
+            'quantity'   => 'nullable|integer|min:1',
+            'size'       => 'nullable|string|max:100',
+        ]);
+
+        $product = Product::findOrFail($request->product_id);
+        $quantity = max(1, (int) $request->input('quantity', 1));
+        $size = $request->input('size', 'Standard');
+        
+        $cart = session()->get('cart', []);
+        // Generate unique cart key based on product ID and selected variant size
+        $cartKey = $product->id . '_' . Str::slug($size);
+
+        if (isset($cart[$cartKey])) {
+            $cart[$cartKey]['quantity'] += $quantity;
+        } else {
+            $cart[$cartKey] = [
+                'key'        => $cartKey,
+                'id'         => $product->id,
+                'product_id' => $product->id,
+                'name'       => $product->name,
+                'slug'       => $product->slug,
+                'price'      => (float) $product->price,
+                'image'      => $product->image,
+                'size'       => $size,
+                'quantity'   => $quantity,
+            ];
+        }
+
+        // Commit updated cart payload into session storage
+        session()->put('cart', $cart);
+
+        // Recalculate cart totals
+        $subtotal = 0;
+        $count = 0;
+        foreach ($cart as $item) {
+            $subtotal += ((float) $item['price']) * ((int) $item['quantity']);
+            $count += (int) $item['quantity'];
+        }
+
+        // Instant checkout redirect when triggered via 'Buy Now' action
+        if ($request->input('buy_now')) {
+            return redirect()->route('checkout.index');
+        }
+
+        if ($request->wantsJson() || $request->ajax()) {
+            return response()->json([
+                'success'                 => true,
+                'message'                 => 'Item added to shopping bag successfully.',
+                'cart'                    => $cart,
+                'items'                   => array_values($cart),
+                'count'                   => $count,
+                'subtotal'                => $subtotal,
+                'formatted_subtotal'      => '৳' . number_format($subtotal),
+                'free_shipping_threshold' => 3000,
+                'free_shipping_unlocked'  => ($subtotal >= 3000),
+                'free_shipping_remaining' => max(0, 3000 - $subtotal),
+            ]);
+        }
+
+        return redirect()->back()->with('success', 'Item added to your shopping bag successfully.');
+    }
+
+    /* =========================================================================
+     * UPDATE CART QUANTITY
+     * Modifies quantity or removes line item if reduced to zero.
+     * ========================================================================= */
+
+    /**
+     * Update item quantity in the cart session.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function update(Request $request): JsonResponse
+    {
+        $request->validate([
+            'key'      => 'required|string',
+            'quantity' => 'nullable|integer',
+            'delta'    => 'nullable|integer',
+        ]);
+
+        $cart = session()->get('cart', []);
+        $key = $request->input('key');
+
+        if (isset($cart[$key])) {
+            if ($request->has('quantity')) {
+                $cart[$key]['quantity'] = (int) $request->input('quantity');
+            } elseif ($request->has('delta')) {
+                $cart[$key]['quantity'] += (int) $request->input('delta');
+            }
+
+            // Remove line item automatically if quantity falls below 1
+            if ($cart[$key]['quantity'] <= 0) {
+                unset($cart[$key]);
+            }
+
+            session()->put('cart', $cart);
+        }
+
+        $subtotal = 0;
+        $count = 0;
+        foreach ($cart as $item) {
+            $subtotal += ((float) $item['price']) * ((int) $item['quantity']);
+            $count += (int) $item['quantity'];
+        }
+
+        return response()->json([
+            'success'                 => true,
+            'message'                 => 'Shopping bag updated successfully.',
+            'cart'                    => $cart,
+            'items'                   => array_values($cart),
+            'count'                   => $count,
+            'subtotal'                => $subtotal,
+            'formatted_subtotal'      => '৳' . number_format($subtotal),
+            'free_shipping_threshold' => 3000,
+            'free_shipping_unlocked'  => ($subtotal >= 3000),
+            'free_shipping_remaining' => max(0, 3000 - $subtotal),
+        ]);
+    }
+
+    /* =========================================================================
+     * REMOVE ITEM FROM CART
+     * Removes an individual line item identified by variant key.
+     * ========================================================================= */
+
+    /**
+     * Remove an item from the session cart.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function remove(Request $request): JsonResponse
+    {
+        $request->validate([
+            'key' => 'required|string',
+        ]);
+
+        $cart = session()->get('cart', []);
+        $key = $request->input('key');
+        $removedName = '';
+
+        if (isset($cart[$key])) {
+            $removedName = $cart[$key]['name'];
+            unset($cart[$key]);
+            session()->put('cart', $cart);
+        }
+
+        $subtotal = 0;
+        $count = 0;
+        foreach ($cart as $item) {
+            $subtotal += ((float) $item['price']) * ((int) $item['quantity']);
+            $count += (int) $item['quantity'];
+        }
+
+        return response()->json([
+            'success'                 => true,
+            'message'                 => $removedName ? "{$removedName} removed from bag." : 'Item removed from bag.',
+            'cart'                    => $cart,
+            'items'                   => array_values($cart),
+            'count'                   => $count,
+            'subtotal'                => $subtotal,
+            'formatted_subtotal'      => '৳' . number_format($subtotal),
+            'free_shipping_threshold' => 3000,
+            'free_shipping_unlocked'  => ($subtotal >= 3000),
+            'free_shipping_remaining' => max(0, 3000 - $subtotal),
+        ]);
+    }
+
+    /* =========================================================================
+     * CLEAR ENTIRE CART
+     * Flushes the active cart session.
+     * ========================================================================= */
+
+    /**
+     * Clear all items from the shopping cart session.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function clear(Request $request): JsonResponse
+    {
+        // Flush cart key from session storage
+        session()->forget('cart');
+
+        return response()->json([
+            'success'                 => true,
+            'message'                 => 'Shopping bag cleared successfully.',
+            'cart'                    => [],
+            'items'                   => [],
+            'count'                   => 0,
+            'subtotal'                => 0,
+            'formatted_subtotal'      => '৳0',
+            'free_shipping_threshold' => 3000,
+            'free_shipping_unlocked'  => false,
+            'free_shipping_remaining' => 3000,
+        ]);
+    }
+}

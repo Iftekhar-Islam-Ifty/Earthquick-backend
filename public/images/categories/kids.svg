@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="100%" height="100%">
+  <defs>
+    <linearGradient id="kidsBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FBF7F0"/>
+      <stop offset="100%" stop-color="#ECE3D2"/>
+    </linearGradient>
+    <radialGradient id="kidsGlow" cx="50%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.7"/>
+      <stop offset="100%" stop-color="#ECE3D2" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="400" height="400" rx="24" fill="url(#kidsBg)"/>
+  <circle cx="200" cy="180" r="140" fill="url(#kidsGlow)"/>
+  <!-- Kids Festive Outfit / Joyful Motif -->
+  <g transform="translate(110, 80)" stroke="#1B3A4B" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Festive Kurti / Outfit -->
+    <path d="M60,85 C70,65 110,65 120,85 L145,115 L125,135 L110,120 L125,230 L55,230 L70,120 L55,135 L35,115 Z" fill="#B8966A" fill-opacity="0.12"/>
+    <path d="M70,80 C80,72 100,72 110,80" stroke="#B8966A" stroke-width="3"/>
+    <line x1="90" y1="80" x2="90" y2="140" stroke="#B8966A" stroke-width="2.5"/>
+    <circle cx="90" cy="98" r="2" fill="#1B3A4B"/>
+    <circle cx="90" cy="115" r="2" fill="#1B3A4B"/>
+    <!-- Festive sparkle stars -->
+    <path d="M30,70 L34,80 L44,84 L34,88 L30,98 L26,88 L16,84 L26,80 Z" fill="#B8966A" stroke="none" opacity="0.8"/>
+    <path d="M150,90 L153,98 L161,101 L153,104 L150,112 L147,104 L139,101 L147,98 Z" fill="#B8966A" stroke="none" opacity="0.6"/>
+    <path d="M140,210 L142,216 L148,218 L142,220 L140,226 L138,220 L132,218 L138,216 Z" fill="#B8966A" stroke="none" opacity="0.5"/>
+  </g>
+  <text x="200" y="340" text-anchor="middle" font-family="'Cinzel', 'Playfair Display', serif" font-size="16" font-weight="600" letter-spacing="4" fill="#1B3A4B">KIDS COLLECTION</text>
+</svg>

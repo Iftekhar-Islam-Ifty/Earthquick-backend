@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="100%" height="100%">
+  <defs>
+    <linearGradient id="homeBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F6EFE5"/>
+      <stop offset="100%" stop-color="#E2D4C1"/>
+    </linearGradient>
+    <radialGradient id="lampGlow" cx="50%" cy="35%" r="50%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.75"/>
+      <stop offset="100%" stop-color="#E2D4C1" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="400" height="400" rx="24" fill="url(#homeBg)"/>
+  <circle cx="200" cy="170" r="140" fill="url(#lampGlow)"/>
+  <!-- Nakshi Kantha Embroidered Cushion & Handloom Living -->
+  <g transform="translate(100, 75)" stroke="#1B3A4B" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Artisanal Cushion Frame -->
+    <rect x="35" y="65" width="130" height="130" rx="16" fill="#FAF5EE" stroke="#B8966A" stroke-width="3"/>
+    <!-- Decorative Kantha Quilting Patterns -->
+    <rect x="50" y="80" width="100" height="100" rx="8" stroke="#1B3A4B" stroke-dasharray="4 4" stroke-width="1.8"/>
+    <!-- Central Botanical / Mandala Motif -->
+    <circle cx="100" cy="130" r="24" stroke="#B8966A" stroke-width="2" fill="#B8966A" fill-opacity="0.15"/>
+    <circle cx="100" cy="130" r="12" stroke="#1B3A4B" stroke-width="1.5"/>
+    <circle cx="100" cy="130" r="4" fill="#B8966A" stroke="none"/>
+    <!-- Leaf / Petal accents -->
+    <path d="M100,98 Q108,106 100,114 Q92,106 100,98 Z" fill="#B8966A"/>
+    <path d="M100,146 Q108,154 100,162 Q92,154 100,146 Z" fill="#B8966A"/>
+    <path d="M68,130 Q76,138 84,130 Q76,122 68,130 Z" fill="#B8966A"/>
+    <path d="M116,130 Q124,138 132,130 Q124,122 116,130 Z" fill="#B8966A"/>
+    <!-- Tassels on cushion corners -->
+    <circle cx="35" cy="65" r="4" fill="#B8966A" stroke="none"/>
+    <circle cx="165" cy="65" r="4" fill="#B8966A" stroke="none"/>
+    <circle cx="35" cy="195" r="4" fill="#B8966A" stroke="none"/>
+    <circle cx="165" cy="195" r="4" fill="#B8966A" stroke="none"/>
+  </g>
+  <text x="200" y="340" text-anchor="middle" font-family="'Cinzel', 'Playfair Display', serif" font-size="16" font-weight="600" letter-spacing="4" fill="#1B3A4B">HOME &amp; LIVING</text>
+</svg>
