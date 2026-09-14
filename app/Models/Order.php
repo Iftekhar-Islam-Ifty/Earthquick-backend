@@ -35,6 +35,9 @@ class Order extends Model
         'delivery_fee',
         'total',
         'status',
+        'courier_name',
+        'tracking_number',
+        'admin_notes',
     ];
 
     /* =========================================================================

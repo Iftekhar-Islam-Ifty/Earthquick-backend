@@ -8,6 +8,7 @@ use App\Models\OrderItem;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
 
@@ -250,6 +251,475 @@ class AdminFeatureTest extends TestCase
         $customerResponse = $this->actingAs($customer)->get('/');
         $customerResponse->assertStatus(200);
         $customerResponse->assertDontSee(route('admin.dashboard'));
+    }
+
+    /**
+     * Test admin can view product creation page.
+     */
+    public function test_admin_can_view_product_create_page(): void
+    {
+        $admin = User::create([
+            'name'     => 'Product Creator Admin',
+            'email'    => 'prodcreate' . rand(1000, 9999) . '@earthquick.com',
+            'phone'    => '01755' . rand(100000, 999999),
+            'password' => Hash::make('password123'),
+            'is_admin' => true,
+        ]);
+
+        $response = $this->actingAs($admin)->get('/admin/products/create');
+        $response->assertStatus(200);
+        $response->assertSee('Create New Atelier Masterpiece');
+        $response->assertSee('Selling Price (BDT ৳)');
+    }
+
+    /**
+     * Test admin can create a new product with image upload.
+     */
+    public function test_admin_can_create_product_with_image_upload(): void
+    {
+        $admin = User::create([
+            'name'     => 'Catalog Uploader Admin',
+            'email'    => 'uploader' . rand(1000, 9999) . '@earthquick.com',
+            'phone'    => '01766' . rand(100000, 999999),
+            'password' => Hash::make('password123'),
+            'is_admin' => true,
+        ]);
+
+        $category = Category::first();
+        $jpegBytes = base64_decode('/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAP//////////////////////////////////////////////////////////////////////////////////////wgALCAABAAEBAREA/8QAFBABAAAAAAAAAAAAAAAAAAAAAP/aAAgBAQABPxA=');
+        $fakeImage = UploadedFile::fake()->createWithContent('jamdani_test.jpg', $jpegBytes);
+
+        $response = $this->actingAs($admin)->post('/admin/products', [
+            'name'           => 'Heritage Jamdani Gold Zari',
+            'category_id'    => $category->id,
+            'price'          => 14500,
+            'old_price'      => 16000,
+            'fabric'         => 'Pure Silk',
+            'stock_quantity' => 8,
+            'in_stock'       => 1,
+            'is_featured'    => 1,
+            'is_new_arrival' => 1,
+            'badge'          => 'Atelier Pick',
+            'short_desc'     => 'Exquisite heirloom zari weaving.',
+            'description'    => 'Detailed handcrafted jamdani created by master artisans.',
+            'image'          => $fakeImage,
+        ]);
+
+        $response->assertRedirect(route('admin.products'));
+        $this->assertDatabaseHas('products', [
+            'name'        => 'Heritage Jamdani Gold Zari',
+            'category_id' => $category->id,
+            'price'       => 14500,
+            'fabric'      => 'Pure Silk',
+            'in_stock'    => true,
+            'is_featured' => true,
+        ]);
+
+        $product = Product::where('name', 'Heritage Jamdani Gold Zari')->first();
+        $this->assertNotNull($product);
+        $this->assertStringStartsWith('images/products/', $product->image);
+
+        // Clean up uploaded test image
+        if (file_exists(public_path($product->image))) {
+            @unlink(public_path($product->image));
+        }
+    }
+
+    /**
+     * Test admin can view product edit page.
+     */
+    public function test_admin_can_view_product_edit_page(): void
+    {
+        $admin = User::create([
+            'name'     => 'Editor Admin',
+            'email'    => 'editor' . rand(1000, 9999) . '@earthquick.com',
+            'phone'    => '01777' . rand(100000, 999999),
+            'password' => Hash::make('password123'),
+            'is_admin' => true,
+        ]);
+
+        $product = Product::first();
+
+        $response = $this->actingAs($admin)->get("/admin/products/{$product->id}/edit");
+        $response->assertStatus(200);
+        $response->assertSee('Edit Atelier Piece');
+        $response->assertSee(e($product->name));
+    }
+
+    /**
+     * Test admin can update a product.
+     */
+    public function test_admin_can_update_product(): void
+    {
+        $admin = User::create([
+            'name'     => 'Updater Admin',
+            'email'    => 'updater' . rand(1000, 9999) . '@earthquick.com',
+            'phone'    => '01788' . rand(100000, 999999),
+            'password' => Hash::make('password123'),
+            'is_admin' => true,
+        ]);
+
+        $category = Category::first();
+        $product = Product::create([
+            'name'           => 'Temporary Update Test Item',
+            'slug'           => 'temp-update-test-' . rand(100, 999),
+            'sku'            => 'NT-TST-' . rand(100, 999),
+            'category_id'    => $category->id,
+            'price'          => 4000,
+            'fabric'         => 'Cotton',
+            'image'          => 'images/products/test.jpg',
+            'in_stock'       => true,
+            'stock_quantity' => 10,
+        ]);
+
+        $response = $this->actingAs($admin)->put("/admin/products/{$product->id}", [
+            'name'           => 'Updated Atelier Masterpiece',
+            'category_id'    => $category->id,
+            'price'          => 5500,
+            'old_price'      => 6000,
+            'fabric'         => 'Pure Linen',
+            'stock_quantity' => 15,
+            'in_stock'       => 1,
+            'is_featured'    => 1,
+            'badge'          => 'Revised Edition',
+        ]);
+
+        $response->assertRedirect(route('admin.products'));
+        $this->assertDatabaseHas('products', [
+            'id'          => $product->id,
+            'name'        => 'Updated Atelier Masterpiece',
+            'price'       => 5500,
+            'fabric'      => 'Pure Linen',
+            'is_featured' => true,
+        ]);
+    }
+
+    /**
+     * Test admin can delete a product.
+     */
+    public function test_admin_can_delete_product(): void
+    {
+        $admin = User::create([
+            'name'     => 'Deletion Admin',
+            'email'    => 'deleter' . rand(1000, 9999) . '@earthquick.com',
+            'phone'    => '01799' . rand(100000, 999999),
+            'password' => Hash::make('password123'),
+            'is_admin' => true,
+        ]);
+
+        $category = Category::first();
+        $product = Product::create([
+            'name'           => 'To Be Deleted Saree',
+            'slug'           => 'to-be-deleted-saree-' . rand(100, 999),
+            'sku'            => 'NT-DEL-' . rand(100, 999),
+            'category_id'    => $category->id,
+            'price'          => 3500,
+            'fabric'         => 'Mulmul',
+            'image'          => 'images/products/test-delete.jpg',
+            'in_stock'       => true,
+            'stock_quantity' => 5,
+        ]);
+
+        $productId = $product->id;
+
+        $response = $this->actingAs($admin)->delete("/admin/products/{$productId}");
+        $response->assertRedirect(route('admin.products'));
+
+        $this->assertDatabaseMissing('products', [
+            'id' => $productId,
+        ]);
+    }
+
+    /**
+     * Test admin can search orders by phone, order number, or customer name.
+     */
+    public function test_admin_can_search_orders_by_phone_or_order_number(): void
+    {
+        $admin = User::create([
+            'name'     => 'Order Searcher',
+            'email'    => 'searcher' . rand(1000, 9999) . '@earthquick.com',
+            'phone'    => '01722' . rand(100000, 999999),
+            'password' => Hash::make('password123'),
+            'is_admin' => true,
+        ]);
+
+        $uniqueNum = 'EQ-SRCH-' . rand(10000, 99999);
+        $uniquePhone = '01899' . rand(100000, 999999);
+
+        $order = Order::create([
+            'order_number'   => $uniqueNum,
+            'customer_name'  => 'Syed Waliullah',
+            'customer_phone' => $uniquePhone,
+            'delivery_zone'  => 'inside_ctg',
+            'district'       => 'Chattogram',
+            'area'           => 'Nasirabad',
+            'address'        => 'Lane 4, Plot 12',
+            'payment_method' => 'cod',
+            'subtotal'       => 4500,
+            'delivery_fee'   => 80,
+            'total'          => 4580,
+            'status'         => 'pending',
+        ]);
+
+        // Search by unique order number
+        $responseOrderNum = $this->actingAs($admin)->get("/admin/orders?search={$uniqueNum}");
+        $responseOrderNum->assertStatus(200);
+        $responseOrderNum->assertSee($uniqueNum);
+        $responseOrderNum->assertSee('Syed Waliullah');
+
+        // Search by unique customer phone
+        $responsePhone = $this->actingAs($admin)->get("/admin/orders?search={$uniquePhone}");
+        $responsePhone->assertStatus(200);
+        $responsePhone->assertSee($uniqueNum);
+
+        // Search by nonexistent term
+        $responseNone = $this->actingAs($admin)->get('/admin/orders?search=NONEXISTENT_ORDER_99999');
+        $responseNone->assertStatus(200);
+        $responseNone->assertDontSee($uniqueNum);
+    }
+
+    /**
+     * Test admin can update order with courier name, tracking number, and admin notes.
+     */
+    public function test_admin_can_update_order_with_courier_and_tracking(): void
+    {
+        $admin = User::create([
+            'name'     => 'Courier Dispatcher',
+            'email'    => 'dispatcher' . rand(1000, 9999) . '@earthquick.com',
+            'phone'    => '01633' . rand(100000, 999999),
+            'password' => Hash::make('password123'),
+            'is_admin' => true,
+        ]);
+
+        $order = Order::create([
+            'order_number'   => 'EQ-COUR-' . rand(1000, 9999),
+            'customer_name'  => 'Rokeya Sakhawat',
+            'customer_phone' => '01711223344',
+            'delivery_zone'  => 'outside_ctg',
+            'district'       => 'Rajshahi',
+            'area'           => 'Shaheb Bazar',
+            'address'        => 'Ghoramara',
+            'payment_method' => 'cod',
+            'subtotal'       => 6200,
+            'delivery_fee'   => 150,
+            'total'          => 6350,
+            'status'         => 'processing',
+        ]);
+
+        $response = $this->actingAs($admin)->post("/admin/orders/{$order->id}/status", [
+            'status'          => 'in_transit',
+            'courier_name'    => 'Steadfast Courier',
+            'tracking_number' => 'SF-TEST-8899',
+            'admin_notes'     => 'Packed in signature luxury silk gift box.',
+        ]);
+
+        $response->assertRedirect();
+        $this->assertDatabaseHas('orders', [
+            'id'              => $order->id,
+            'status'          => 'in_transit',
+            'courier_name'    => 'Steadfast Courier',
+            'tracking_number' => 'SF-TEST-8899',
+            'admin_notes'     => 'Packed in signature luxury silk gift box.',
+        ]);
+    }
+
+    /**
+     * Test admin can view printable order packing slip and invoice.
+     */
+    public function test_admin_can_view_order_invoice(): void
+    {
+        $admin = User::create([
+            'name'     => 'Billing Specialist',
+            'email'    => 'billing' . rand(1000, 9999) . '@earthquick.com',
+            'phone'    => '01844' . rand(100000, 999999),
+            'password' => Hash::make('password123'),
+            'is_admin' => true,
+        ]);
+
+        $order = Order::create([
+            'order_number'   => 'EQ-INV-' . rand(1000, 9999),
+            'customer_name'  => 'Kazi Nazrul',
+            'customer_phone' => '01955667788',
+            'customer_email' => 'nazrul@example.com',
+            'delivery_zone'  => 'inside_ctg',
+            'district'       => 'Chattogram',
+            'area'           => 'Khulshi',
+            'address'        => 'Road 1, Hill View',
+            'payment_method' => 'cod',
+            'subtotal'       => 5000,
+            'delivery_fee'   => 80,
+            'total'          => 5080,
+            'status'         => 'in_transit',
+            'courier_name'   => 'Pathao Courier',
+            'tracking_number'=> 'PT-998811',
+        ]);
+
+        $product = Product::first();
+
+        OrderItem::create([
+            'order_id'      => $order->id,
+            'product_id'    => $product->id,
+            'product_name'  => 'Atelier Silk Panjabi',
+            'size'          => '42',
+            'unit_price'    => 5000,
+            'quantity'      => 1,
+            'total_price'   => 5000,
+            'product_image' => 'images/products/placeholder.jpg',
+        ]);
+
+        $response = $this->actingAs($admin)->get("/admin/orders/{$order->id}/invoice");
+        $response->assertStatus(200);
+        $response->assertSee('PACKING SLIP &amp; INVOICE', false);
+        $response->assertSee($order->order_number);
+        $response->assertSee('Kazi Nazrul');
+        $response->assertSee('Pathao Courier');
+        $response->assertSee('PT-998811');
+        $response->assertSee('Atelier Silk Panjabi');
+    }
+
+    /**
+     * Test admin dashboard calculates and renders executive analytics, charts, and top products.
+     */
+    public function test_admin_dashboard_renders_analytics_and_charts(): void
+    {
+        $admin = User::create([
+            'name'     => 'Analytics Lead',
+            'email'    => 'analytics' . rand(1000, 9999) . '@earthquick.com',
+            'phone'    => '01777' . rand(100000, 999999),
+            'password' => Hash::make('password123'),
+            'is_admin' => true,
+        ]);
+
+        $product = Product::first();
+        $order = Order::create([
+            'order_number'   => 'EQ-ANALYTICS-' . rand(1000, 9999),
+            'customer_name'  => 'Tareq Masud',
+            'customer_phone' => '01811223344',
+            'delivery_zone'  => 'inside_ctg',
+            'district'       => 'Chattogram',
+            'area'           => 'Panchlaish',
+            'address'        => 'House 12, Road 4',
+            'payment_method' => 'cod',
+            'subtotal'       => 7200,
+            'delivery_fee'   => 80,
+            'total'          => 7280,
+            'status'         => 'delivered',
+        ]);
+
+        OrderItem::create([
+            'order_id'      => $order->id,
+            'product_id'    => $product->id,
+            'product_name'  => $product->name,
+            'unit_price'    => 3600,
+            'quantity'      => 2,
+            'total_price'   => 7200,
+            'product_image' => $product->image,
+        ]);
+
+        $response = $this->actingAs($admin)->get('/admin');
+        $response->assertStatus(200);
+        $response->assertSee('Executive Performance &amp; Analytics', false);
+        $response->assertSee('revenueTrendChart');
+        $response->assertSee('categorySalesChart');
+        $response->assertSee('Top Performing Creations');
+        $response->assertSee('Export Orders (CSV)');
+        $response->assertSee($product->name);
+    }
+
+    /**
+     * Test admin can stream export of orders ledger as CSV.
+     */
+    public function test_admin_can_export_orders_csv(): void
+    {
+        $admin = User::create([
+            'name'     => 'Export Auditor',
+            'email'    => 'export' . rand(1000, 9999) . '@earthquick.com',
+            'phone'    => '01633' . rand(100000, 999999),
+            'password' => Hash::make('password123'),
+            'is_admin' => true,
+        ]);
+
+        $order = Order::create([
+            'order_number'   => 'EQ-CSV-' . rand(1000, 9999),
+            'customer_name'  => 'Begum Rokeya',
+            'customer_phone' => '01577889900',
+            'customer_email' => 'rokeya@example.com',
+            'delivery_zone'  => 'outside_ctg',
+            'district'       => 'Rangpur',
+            'area'           => 'Pairaband',
+            'address'        => 'Atelier Manor',
+            'payment_method' => 'cod',
+            'subtotal'       => 12000,
+            'delivery_fee'   => 150,
+            'total'          => 12150,
+            'status'         => 'confirmed',
+            'courier_name'   => 'Steadfast Courier',
+            'tracking_number'=> 'SF-CSV-12345',
+        ]);
+
+        $response = $this->actingAs($admin)->get('/admin/orders/export');
+
+        $response->assertStatus(200);
+        $this->assertStringContainsString('text/csv', (string) $response->headers->get('content-type'));
+        $this->assertStringContainsString('attachment; filename="earthquick_sales_orders_', (string) $response->headers->get('content-disposition'));
+
+        // Capture streamed content
+        $streamedContent = $response->streamedContent();
+        $this->assertStringContainsString('Order Number', $streamedContent);
+        $this->assertStringContainsString($order->order_number, $streamedContent);
+        $this->assertStringContainsString('Begum Rokeya', $streamedContent);
+        $this->assertStringContainsString('SF-CSV-12345', $streamedContent);
+    }
+
+    /**
+     * Test admin can export filtered orders by status.
+     */
+    public function test_admin_can_export_filtered_orders_csv(): void
+    {
+        $admin = User::create([
+            'name'     => 'Filtered Auditor',
+            'email'    => 'filter' . rand(1000, 9999) . '@earthquick.com',
+            'phone'    => '01988' . rand(100000, 999999),
+            'password' => Hash::make('password123'),
+            'is_admin' => true,
+        ]);
+
+        $deliveredOrder = Order::create([
+            'order_number'   => 'EQ-DELIVERED-' . rand(1000, 9999),
+            'customer_name'  => 'Delivered Client',
+            'customer_phone' => '01711999888',
+            'delivery_zone'  => 'inside_ctg',
+            'district'       => 'Chattogram',
+            'area'           => 'Agrabad',
+            'address'        => 'Commercial Area',
+            'payment_method' => 'cod',
+            'subtotal'       => 4000,
+            'delivery_fee'   => 80,
+            'total'          => 4080,
+            'status'         => 'delivered',
+        ]);
+
+        $pendingOrder = Order::create([
+            'order_number'   => 'EQ-PENDING-' . rand(1000, 9999),
+            'customer_name'  => 'Pending Client',
+            'customer_phone' => '01722999888',
+            'delivery_zone'  => 'inside_ctg',
+            'district'       => 'Chattogram',
+            'area'           => 'Nasirabad',
+            'address'        => 'Housing Society',
+            'payment_method' => 'cod',
+            'subtotal'       => 3000,
+            'delivery_fee'   => 80,
+            'total'          => 3080,
+            'status'         => 'pending',
+        ]);
+
+        $response = $this->actingAs($admin)->get('/admin/orders/export?status=delivered');
+        $response->assertStatus(200);
+
+        $csv = $response->streamedContent();
+        $this->assertStringContainsString($deliveredOrder->order_number, $csv);
+        $this->assertStringNotContainsString($pendingOrder->order_number, $csv);
     }
 }
 

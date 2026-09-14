@@ -76,6 +76,10 @@
           </div>
           <span class="eq-tracking-courier">
             Courier: <strong>Steadfast / Sundarban Express</strong>
+            Courier: <strong>{{ $order->courier_name ?: 'Atelier Logistics' }}</strong>
+            @if($order->tracking_number)
+              &bull; Consignment ID: <strong style="color: var(--eq-gold-dark); letter-spacing: 0.03em;">{{ $order->tracking_number }}</strong>
+            @endif
           </span>
         </div>
         
@@ -100,6 +104,18 @@
             <div class="eq-step-label">Delivered</div>
           </div>
         </div>
+
+        @if($order->tracking_number)
+          <div style="margin-top: 1rem; padding: 0.65rem 0.9rem; background: rgba(201, 150, 47, 0.08); border-radius: 6px; border: 1px solid rgba(201, 150, 47, 0.25); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; font-size: 0.84rem;">
+            <div>
+              <span style="color: var(--eq-charcoal-soft);">Dispatched via <strong>{{ $order->courier_name ?? 'Courier' }}</strong>:</span>
+              <span style="font-weight: 600; color: var(--eq-gold-dark); margin-left: 0.25rem;">{{ $order->tracking_number }}</span>
+            </div>
+            <span style="font-size: 0.78rem; color: var(--eq-charcoal-soft); font-style: italic;">
+              Track with courier service using this Consignment ID
+            </span>
+          </div>
+        @endif
       </div>
 
       <!-- Customer Details Grid -->

@@ -95,8 +95,15 @@ Route::get('/api/search/suggestions', [SearchController::class, 'suggestions'])-
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [AdminController::class, 'dashboard'])->name('dashboard');
     Route::get('/orders', [AdminController::class, 'orders'])->name('orders');
+    Route::get('/orders/export', [AdminController::class, 'exportOrders'])->name('orders.export');
     Route::get('/orders/{id}', [AdminController::class, 'showOrder'])->name('orders.show');
     Route::post('/orders/{id}/status', [AdminController::class, 'updateOrderStatus'])->name('orders.update-status');
+    Route::get('/orders/{id}/invoice', [AdminController::class, 'orderInvoice'])->name('orders.invoice');
     Route::get('/products', [AdminController::class, 'products'])->name('products');
+    Route::get('/products/create', [AdminController::class, 'createProduct'])->name('products.create');
+    Route::post('/products', [AdminController::class, 'storeProduct'])->name('products.store');
+    Route::get('/products/{id}/edit', [AdminController::class, 'editProduct'])->name('products.edit');
+    Route::put('/products/{id}', [AdminController::class, 'updateProduct'])->name('products.update');
+    Route::delete('/products/{id}', [AdminController::class, 'deleteProduct'])->name('products.delete');
     Route::post('/products/{id}/toggle-stock', [AdminController::class, 'toggleStock'])->name('products.toggle-stock');
 });

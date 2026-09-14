@@ -44,6 +44,8 @@
       min-height: 100vh;
       font-size: 0.92rem;
       line-height: 1.5;
+      overflow-x: hidden;
+      width: 100%;
     }
 
     /* Admin Sidebar */
@@ -189,6 +191,7 @@
       flex-direction: column;
       min-width: 0;
       background-color: var(--eq-cream);
+      overflow-x: hidden;
     }
 
     .eq-admin-topbar {
@@ -202,6 +205,7 @@
       position: sticky;
       top: 0;
       z-index: 90;
+      min-width: 0;
     }
 
     .eq-admin-topbar__title {
@@ -214,6 +218,9 @@
     .eq-admin-content {
       padding: 2rem;
       flex: 1;
+      min-width: 0;
+      max-width: 100%;
+      box-sizing: border-box;
     }
 
     /* Cards & Containers */
@@ -224,6 +231,9 @@
       padding: 1.5rem;
       margin-bottom: 1.5rem;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+      min-width: 0;
+      max-width: 100%;
+      box-sizing: border-box;
     }
 
     .eq-admin-card__header {
@@ -233,6 +243,9 @@
       margin-bottom: 1.25rem;
       padding-bottom: 0.75rem;
       border-bottom: 1px solid var(--eq-line);
+      min-width: 0;
+      gap: 0.75rem;
+      flex-wrap: wrap;
     }
 
     .eq-admin-card__title {
@@ -245,9 +258,23 @@
     /* Metric Stat Grid */
     .eq-admin-metrics {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 1.25rem;
       margin-bottom: 1.5rem;
+      min-width: 0;
+      width: 100%;
+    }
+
+    @media (max-width: 1200px) {
+      .eq-admin-metrics {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 640px) {
+      .eq-admin-metrics {
+        grid-template-columns: minmax(0, 1fr);
+      }
     }
 
     .eq-metric-box {

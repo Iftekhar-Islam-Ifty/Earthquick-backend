@@ -5,30 +5,45 @@
 
 @section('content')
 
-  <!-- Back Link & Header Bar -->
-  <div style="margin-bottom: 1.5rem; display: flex; align-items: center; justify-content: space-between;">
-    <a href="{{ route('admin.orders') }}" class="eq-admin-btn eq-admin-btn--outline" style="gap: 0.5rem;">
-      &larr; Back to All Orders
-    </a>
+  <!-- Top Action & Navigation Bar Card -->
+  <div style="background: var(--eq-white); border: 1px solid var(--eq-line); border-radius: 8px; padding: 1rem 1.5rem; margin-bottom: 2rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);">
+    <div style="display: flex; align-items: center; gap: 1.25rem; flex-wrap: wrap;">
+      <a href="{{ route('admin.orders') }}" class="eq-admin-btn eq-admin-btn--outline" style="gap: 0.5rem; padding: 0.45rem 1rem; font-size: 0.85rem;">
+        &larr; Back to All Orders
+      </a>
+      <div style="font-size: 0.88rem; color: var(--eq-charcoal-soft);">
+        Placed on: <strong style="color: var(--eq-navy);">{{ $order->created_at->format('d M Y, h:i A') }}</strong>
+      </div>
+    </div>
 
-    <div style="display: flex; align-items: center; gap: 0.75rem;">
-      <span style="font-size: 0.85rem; color: var(--eq-charcoal-soft);">
-        Current Lifecycle Status:
-      </span>
-      <span class="eq-status-badge eq-status-badge--{{ $order->status }}" style="font-size: 0.82rem; padding: 0.35rem 0.85rem;">
-        {{ str_replace('_', ' ', $order->status) }}
-      </span>
+    <div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+      <a href="{{ route('admin.orders.invoice', $order->id) }}" target="_blank" class="eq-admin-btn eq-admin-btn--primary" style="gap: 0.45rem; padding: 0.45rem 1.1rem; font-size: 0.85rem;">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <polyline points="6 9 6 2 18 2 18 9"></polyline>
+          <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+          <rect x="6" y="14" width="12" height="8"></rect>
+        </svg>
+        Print Invoice / Packing Slip
+      </a>
+
+      <div style="display: flex; align-items: center; gap: 0.5rem; background: var(--eq-cream); padding: 0.35rem 0.85rem; border-radius: 6px; border: 1px solid var(--eq-line);">
+        <span style="font-size: 0.78rem; color: var(--eq-charcoal-soft); text-transform: uppercase; letter-spacing: 0.04em;">Status:</span>
+        <span class="eq-status-badge eq-status-badge--{{ $order->status }}" style="font-size: 0.8rem; padding: 0.25rem 0.75rem;">
+          {{ str_replace('_', ' ', $order->status) }}
+        </span>
+      </div>
     </div>
   </div>
 
-  <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1.75rem;">
+  <!-- Two-Column Order Work Area -->
+  <div style="display: grid; grid-template-columns: 1.8fr 1.2fr; gap: 2rem; align-items: start;">
     
     <!-- LEFT COLUMN: ITEMS & FINANCIAL SUMMARY -->
     <div>
       <!-- Order Items Card -->
       <section class="eq-admin-card">
         <div class="eq-admin-card__header">
-          <h2 class="eq-admin-card__title">Purchased Creations ({{ $order->items->count() }} items)</h2>
+          <h2 class="eq-admin-card__title">Purchased Creations ({{ $order->items->count() }} {{ Str::plural('item', $order->items->count()) }})</h2>
         </div>
 
         <div class="eq-admin-table-wrap">
@@ -76,26 +91,36 @@
               <span>৳{{ number_format($order->subtotal) }}</span>
             </div>
             <div style="display: flex; justify-content: space-between; color: var(--eq-charcoal-soft);">
-              <span>Delivery Charge ({{ $order->delivery_zone === 'inside_ctg' ? 'Inside Chattogram' : 'Outside Chattogram' }}):</span>
+              <span>Delivery Charge ({{ $order->delivery_zone === 'inside_ctg' ? 'Chattogram' : 'Nationwide' }}):</span>
               <span>৳{{ number_format($order->delivery_fee) }}</span>
             </div>
             <div style="display: flex; justify-content: space-between; font-size: 1.1rem; font-weight: 600; color: var(--eq-navy); border-top: 2px solid var(--eq-navy); padding-top: 0.65rem; margin-top: 0.35rem;">
-              <span>Total Payable:</span>
+              <span>Total Payable (COD):</span>
               <span style="color: var(--eq-gold-dark);">৳{{ number_format($order->total) }}</span>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- Special Order Notes -->
+      <!-- Customer Delivery Notes -->
       @if($order->order_notes)
-        <section class="eq-admin-card">
+        <section class="eq-admin-card" style="border-left: 3px solid var(--eq-gold);">
           <div class="eq-admin-card__header">
-            <h3 class="eq-admin-card__title" style="font-size: 1rem;">Customer Delivery Instructions / Notes</h3>
+            <h3 class="eq-admin-card__title" style="font-size: 1rem;">Customer Delivery Instructions</h3>
           </div>
-          <p style="font-size: 0.88rem; color: var(--eq-charcoal); font-style: italic; background: var(--eq-cream); padding: 0.85rem 1rem; border-radius: 4px; border-left: 3px solid var(--eq-gold);">
+          <p style="font-size: 0.88rem; color: var(--eq-charcoal); font-style: italic; background: var(--eq-cream); padding: 0.85rem 1rem; border-radius: 4px;">
             &ldquo;{{ $order->order_notes }}&rdquo;
           </p>
+        </section>
+      @endif
+
+      <!-- Internal Admin Remarks -->
+      @if($order->admin_notes)
+        <section class="eq-admin-card" style="border-left: 3px solid var(--eq-navy);">
+          <div class="eq-admin-card__header">
+            <h3 class="eq-admin-card__title" style="font-size: 1rem;">Internal Admin &amp; Warehouse Remarks</h3>
+          </div>
+          <p style="font-size: 0.88rem; color: var(--eq-charcoal); background: var(--eq-cream-deep); padding: 0.85rem 1rem; border-radius: 4px; white-space: pre-wrap;">{{ $order->admin_notes }}</p>
         </section>
       @endif
     </div>
@@ -103,19 +128,19 @@
     <!-- RIGHT COLUMN: STATUS UPDATE & CLIENT INFO -->
     <div>
       
-      <!-- Lifecycle Status Form Card -->
+      <!-- Lifecycle & Logistics Form Card -->
       <section class="eq-admin-card" style="border: 1px solid var(--eq-gold);">
         <div class="eq-admin-card__header">
           <h3 class="eq-admin-card__title" style="font-size: 1rem; color: var(--eq-gold-dark);">
-            Update Delivery Status
+            Fulfillment &amp; Courier Logistics
           </h3>
         </div>
 
         <form method="POST" action="{{ route('admin.orders.update-status', $order->id) }}">
           @csrf
-          <div style="margin-bottom: 1.25rem;">
+          <div style="margin-bottom: 1.15rem;">
             <label for="order-status-select" style="display: block; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 0.45rem; color: var(--eq-charcoal);">
-              Select Lifecycle Stage:
+              Lifecycle Stage:
             </label>
             <select name="status" id="order-status-select" style="width: 100%; padding: 0.65rem 0.85rem; border-radius: 6px; border: 1px solid var(--eq-line); font-family: var(--font-body); font-size: 0.9rem; background: var(--eq-white); color: var(--eq-charcoal); outline: none;">
               <option value="pending" {{ $order->status === 'pending' ? 'selected' : '' }}>Pending (Received)</option>
@@ -127,12 +152,42 @@
             </select>
           </div>
 
-          <p style="font-size: 0.78rem; color: var(--eq-charcoal-soft); margin-bottom: 1.25rem; line-height: 1.45;">
-            &bull; Updating status immediately refreshes the parcel tracking progress bar on the customer's personal dashboard (`/account`).
+          <div style="margin-bottom: 1.15rem;">
+            <label for="order-courier-input" style="display: block; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 0.45rem; color: var(--eq-charcoal);">
+              Courier Partner:
+            </label>
+            <input type="text" name="courier_name" id="order-courier-input" list="courier-list" value="{{ old('courier_name', $order->courier_name) }}" placeholder="e.g. Steadfast Courier, Sundarban, Pathao" style="width: 100%; padding: 0.65rem 0.85rem; border-radius: 6px; border: 1px solid var(--eq-line); font-family: var(--font-body); font-size: 0.9rem; background: var(--eq-white); color: var(--eq-charcoal); outline: none;">
+            <datalist id="courier-list">
+              <option value="Steadfast Courier">
+              <option value="Sundarban Courier Service">
+              <option value="Pathao Courier">
+              <option value="RedX Logistics">
+              <option value="Paperfly">
+              <option value="eCourier">
+              <option value="In-House Atelier Courier">
+            </datalist>
+          </div>
+
+          <div style="margin-bottom: 1.15rem;">
+            <label for="order-tracking-input" style="display: block; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 0.45rem; color: var(--eq-charcoal);">
+              Tracking ID / Consignment No:
+            </label>
+            <input type="text" name="tracking_number" id="order-tracking-input" value="{{ old('tracking_number', $order->tracking_number) }}" placeholder="e.g. ST-7894210" style="width: 100%; padding: 0.65rem 0.85rem; border-radius: 6px; border: 1px solid var(--eq-line); font-family: var(--font-body); font-size: 0.9rem; background: var(--eq-white); color: var(--eq-charcoal); outline: none;">
+          </div>
+
+          <div style="margin-bottom: 1.15rem;">
+            <label for="order-admin-notes" style="display: block; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 0.45rem; color: var(--eq-charcoal);">
+              Internal Warehouse Notes:
+            </label>
+            <textarea name="admin_notes" id="order-admin-notes" rows="3" placeholder="Remarks visible to shop admin only..." style="width: 100%; padding: 0.65rem 0.85rem; border-radius: 6px; border: 1px solid var(--eq-line); font-family: var(--font-body); font-size: 0.86rem; background: var(--eq-white); color: var(--eq-charcoal); outline: none; resize: vertical;">{{ old('admin_notes', $order->admin_notes) }}</textarea>
+          </div>
+
+          <p style="font-size: 0.76rem; color: var(--eq-charcoal-soft); margin-bottom: 1.15rem; line-height: 1.45;">
+            &bull; Saving updates synchronizes courier &amp; tracking code with customer tracking at <code>/account</code>.
           </p>
 
           <button type="submit" class="eq-admin-btn eq-admin-btn--gold" style="width: 100%; justify-content: center; padding: 0.65rem;">
-            Update Order Status
+            Update Fulfillment &amp; Status
           </button>
         </form>
       </section>
@@ -199,4 +254,3 @@
   </div>
 
 @endsection
-
