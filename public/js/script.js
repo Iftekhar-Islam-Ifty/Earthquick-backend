@@ -162,14 +162,6 @@ function initNavbar() {
     });
   }
 
-  // Drawer search button inside footer
-  const drawerSearchBtn = document.getElementById("drawer-btn-search");
-  if (drawerSearchBtn) {
-    drawerSearchBtn.addEventListener("click", () => {
-      closeMobileNav();
-    });
-  }
-
   // Close and block touch when clicking outside on backdrop
   if (backdrop) {
     const handleBackdropDismiss = (e) => {

@@ -33,9 +33,8 @@
 
   <!-- Earthquick Custom Stylesheet -->
   <link rel="stylesheet" href="{{ asset('css/style.css') }}" />
-
-  <!-- Reusable Components Loader -->
-  <script src="{{ asset('js/layout.js') }}"></script>
+  <!-- Earthquick Dedicated Responsive Stylesheet -->
+  <link rel="stylesheet" href="{{ asset('css/responsive.css') }}" />
 
   <!-- Resilient Image Fallback for static hosting -->
   <script>

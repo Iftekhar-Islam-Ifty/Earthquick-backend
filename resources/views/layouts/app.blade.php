@@ -32,6 +32,8 @@
 
     <!-- Earthquick Custom Stylesheet -->
     <link rel="stylesheet" href="{{ asset('css/style.css') }}" />
+    <!-- Earthquick Dedicated Responsive Stylesheet -->
+    <link rel="stylesheet" href="{{ asset('css/responsive.css') }}" />
     @stack('styles')
 </head>
 <body class="@yield('body_class')">
