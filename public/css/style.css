@@ -1219,6 +1219,10 @@ p {
   gap: var(--space-sm);
 }
 
+.eq-carousel__floating-arrow {
+  display: none;
+}
+
 /* Product card — reused visual unit, styled slightly differently per section via modifiers */
 .eq-product-card {
   flex: 0 0 calc(25% - var(--space-md) * 3 / 4);

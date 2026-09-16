@@ -321,8 +321,13 @@
           </div>
         </div>
 
-        <!-- Carousel Track -->
+        <!-- Carousel Track with Left & Right Side Arrows -->
         <div class="eq-carousel eq-reveal">
+          <!-- Mobile Left Floating Arrow Button -->
+          <button type="button" class="eq-arrow-btn eq-carousel__floating-arrow eq-carousel__floating-arrow--prev" data-action="prev" id="new-arrivals-floating-prev" aria-label="Previous new arrival products">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg>
+          </button>
+
           <div class="eq-carousel__viewport">
             <div class="eq-carousel__track">
 
@@ -428,6 +433,11 @@
 
             </div>
           </div>
+
+          <!-- Mobile Right Floating Arrow Button -->
+          <button type="button" class="eq-arrow-btn eq-carousel__floating-arrow eq-carousel__floating-arrow--next" data-action="next" id="new-arrivals-floating-next" aria-label="Next new arrival products">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"></path></svg>
+          </button>
         </div>
       </div>
     </section>
@@ -624,8 +634,13 @@
           </div>
         </div>
 
-        <!-- Carousel Track -->
+        <!-- Carousel Track with Left & Right Side Arrows -->
         <div class="eq-carousel eq-reveal">
+          <!-- Mobile Left Floating Arrow Button -->
+          <button type="button" class="eq-arrow-btn eq-carousel__floating-arrow eq-carousel__floating-arrow--prev" data-action="prev" id="three-piece-floating-prev" aria-label="Previous three piece products">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg>
+          </button>
+
           <div class="eq-carousel__viewport">
             <div class="eq-carousel__track">
 
@@ -713,6 +728,11 @@
 
             </div>
           </div>
+
+          <!-- Mobile Right Floating Arrow Button -->
+          <button type="button" class="eq-arrow-btn eq-carousel__floating-arrow eq-carousel__floating-arrow--next" data-action="next" id="three-piece-floating-next" aria-label="Next three piece products">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"></path></svg>
+          </button>
         </div>
 
         <div class="eq-reveal" style="margin-top: var(--space-lg); text-align:center;">

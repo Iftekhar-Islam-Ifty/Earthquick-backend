@@ -2152,31 +2152,112 @@
     margin-top: 0.4rem !important;
   }
 
-  /* Three Piece Section on Mobile: Clean light ground matching apparel flow */
+  /* ===================================================================
+     MOBILE 4-CARDS PER ROW HORIZONTAL CAROUSEL (New Arrivals & Three Piece)
+     - Compact section padding and header
+     - Top arrows removed; floating side arrows on left and right
+     - Exactly 4 cards visible per row in viewport
+     - Proportional 10:14.7 image cards ensuring full photo visibility without cropping
+     - Smooth horizontal swipe/scroll to the right to view remaining cards
+     =================================================================== */
+  #new-arrivals,
   #three-piece-section {
-    padding: clamp(1.35rem, 2.8vw, 1.75rem) 0 !important;
+    padding: clamp(0.75rem, 1.8vw, 1.05rem) 0 !important;
+  }
+
+  #three-piece-section {
     background-color: var(--eq-white) !important;
     color: var(--eq-charcoal) !important;
   }
 
+  #new-arrivals .eq-section-head,
+  #three-piece-section .eq-section-head {
+    margin-bottom: 0.35rem !important;
+    gap: 0 !important;
+  }
+
+  #new-arrivals .eq-section-head h2,
   #three-piece-section .eq-section-head h2 {
     color: var(--eq-charcoal) !important;
   }
 
+  #new-arrivals .eq-section-head p,
   #three-piece-section .eq-section-head p {
-    color: var(--eq-charcoal-soft) !important;
+    display: none !important; /* Hide description on mobile to minimize vertical space */
   }
 
+  #new-arrivals .eq-eyebrow,
   #three-piece-section .eq-eyebrow {
     color: var(--eq-gold-dark) !important;
   }
 
-  /* ===================================================================
-     MOBILE 4-CARDS PER ROW HORIZONTAL CAROUSEL (New Arrivals & Three Piece)
-     - Exactly 4 cards visible per row in viewport
-     - Proportional 3:4 image cards with compact typography
-     - Smooth horizontal swipe/scroll to the right to view remaining cards
-     =================================================================== */
+  /* Hide top arrows above cards on mobile */
+  #new-arrivals .eq-carousel__controls,
+  #three-piece-section .eq-carousel__controls {
+    display: none !important;
+  }
+
+  /* Floating side navigation arrows on mobile */
+  #new-arrivals .eq-carousel,
+  #three-piece-section .eq-carousel {
+    position: relative !important;
+  }
+
+  #new-arrivals .eq-carousel__floating-arrow,
+  #three-piece-section .eq-carousel__floating-arrow {
+    display: flex !important;
+    position: absolute !important;
+    top: 66px !important; /* Vertically centered relative to image cards */
+    transform: translateY(-50%) !important;
+    z-index: 20 !important;
+    width: 26px !important;
+    height: 26px !important;
+    min-width: 26px !important;
+    min-height: 26px !important;
+    padding: 0 !important;
+    border-radius: 50% !important;
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    border: 1px solid var(--eq-line) !important;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.16) !important;
+    color: var(--eq-navy) !important;
+    cursor: pointer !important;
+    align-items: center !important;
+    justify-content: center !important;
+    backdrop-filter: blur(4px) !important;
+    -webkit-backdrop-filter: blur(4px) !important;
+    transition: opacity 0.2s ease, transform 0.2s ease !important;
+    touch-action: manipulation !important;
+  }
+
+  #new-arrivals .eq-carousel__floating-arrow--prev,
+  #three-piece-section .eq-carousel__floating-arrow--prev {
+    left: -4px !important;
+  }
+
+  #new-arrivals .eq-carousel__floating-arrow--next,
+  #three-piece-section .eq-carousel__floating-arrow--next {
+    right: -4px !important;
+  }
+
+  #new-arrivals .eq-carousel__floating-arrow svg,
+  #three-piece-section .eq-carousel__floating-arrow svg {
+    width: 13px !important;
+    height: 13px !important;
+    stroke: var(--eq-navy) !important;
+    display: block !important;
+  }
+
+  #new-arrivals .eq-carousel__floating-arrow:disabled,
+  #three-piece-section .eq-carousel__floating-arrow:disabled {
+    opacity: 0.25 !important;
+    pointer-events: none !important;
+  }
+
+  #new-arrivals .eq-reveal:last-child,
+  #three-piece-section .eq-reveal:last-child {
+    margin-top: 0.4rem !important;
+  }
+
   #new-arrivals .eq-carousel__viewport,
   #three-piece-section .eq-carousel__viewport {
     overflow-x: auto !important;
@@ -2227,12 +2308,13 @@
     color: inherit !important;
   }
 
+  /* Proportional 10:14.7 image frame ensuring full photo is visible without cropping */
   #new-arrivals .eq-product-card__frame,
   #three-piece-section .eq-product-card__frame {
-    aspect-ratio: 3 / 4 !important;
+    aspect-ratio: 10 / 14.7 !important;
     width: 100% !important;
     height: auto !important;
-    max-height: 125px !important;
+    max-height: 142px !important;
     border-radius: 6px !important;
     overflow: hidden !important;
     margin: 0 !important;

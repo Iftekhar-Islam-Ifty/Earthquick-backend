@@ -1048,8 +1048,8 @@ function initCarousels() {
     if (!viewport || !track) return;
 
     const scope = carousel.closest(".eq-section") || carousel;
-    const prevBtn = scope.querySelector('[data-action="prev"]');
-    const nextBtn = scope.querySelector('[data-action="next"]');
+    const prevBtns = scope.querySelectorAll('[data-action="prev"]');
+    const nextBtns = scope.querySelectorAll('[data-action="next"]');
 
     let position = 0;
 
@@ -1072,8 +1072,8 @@ function initCarousels() {
       if (window.innerWidth <= 768) {
         track.style.transform = "none";
         const maxScrollLeft = viewport.scrollWidth - viewport.clientWidth;
-        if (prevBtn) prevBtn.disabled = viewport.scrollLeft <= 4;
-        if (nextBtn) nextBtn.disabled = viewport.scrollLeft >= maxScrollLeft - 4;
+        prevBtns.forEach(btn => btn.disabled = viewport.scrollLeft <= 4);
+        nextBtns.forEach(btn => btn.disabled = viewport.scrollLeft >= maxScrollLeft - 4);
         return;
       }
 
@@ -1081,13 +1081,13 @@ function initCarousels() {
       position = Math.min(Math.max(position, 0), max);
       track.style.transform = `translateX(-${position}px)`;
 
-      if (prevBtn) prevBtn.disabled = position <= 0;
-      if (nextBtn) nextBtn.disabled = position >= max - 2;
+      prevBtns.forEach(btn => btn.disabled = position <= 0);
+      nextBtns.forEach(btn => btn.disabled = position >= max - 2);
     }
 
     // Arrow button controls
-    if (prevBtn) {
-      prevBtn.addEventListener("click", () => {
+    prevBtns.forEach(btn => {
+      btn.addEventListener("click", () => {
         if (window.innerWidth <= 768) {
           viewport.scrollBy({ left: -cardStep() * 2, behavior: "smooth" });
         } else {
@@ -1095,10 +1095,10 @@ function initCarousels() {
           update();
         }
       });
-    }
+    });
 
-    if (nextBtn) {
-      nextBtn.addEventListener("click", () => {
+    nextBtns.forEach(btn => {
+      btn.addEventListener("click", () => {
         if (window.innerWidth <= 768) {
           viewport.scrollBy({ left: cardStep() * 2, behavior: "smooth" });
         } else {
@@ -1106,15 +1106,15 @@ function initCarousels() {
           update();
         }
       });
-    }
+    });
 
     // Touch Swipe Support for Mobile & Tablet
     // On mobile, listen to native smooth scroll events to update arrow buttons
     viewport.addEventListener("scroll", () => {
       if (window.innerWidth <= 768) {
         const maxScrollLeft = viewport.scrollWidth - viewport.clientWidth;
-        if (prevBtn) prevBtn.disabled = viewport.scrollLeft <= 4;
-        if (nextBtn) nextBtn.disabled = viewport.scrollLeft >= maxScrollLeft - 4;
+        prevBtns.forEach(btn => btn.disabled = viewport.scrollLeft <= 4);
+        nextBtns.forEach(btn => btn.disabled = viewport.scrollLeft >= maxScrollLeft - 4);
       }
     }, { passive: true });
 
