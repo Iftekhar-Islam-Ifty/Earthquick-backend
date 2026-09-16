@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title', ($query ? 'Search: "' . e($query) . '"' : 'Search Collection') . ' — Earthquick / Nous Telos')
-@section('meta_description', 'Discover handcrafted sarees, bespoke three-piece ensembles, and accessories from Earthquick Atelier.')
+@section('meta_description', 'Discover handcrafted sarees, bespoke three-piece ensembles, and accessories from Earthquick Studio.')
 @section('body_class', 'eq-catalog-page')
 
 @section('content')
@@ -26,7 +26,7 @@
     <section class="eq-cat-banner" id="search-banner">
       <div class="eq-container">
         <div class="eq-cat-banner__inner">
-          <span class="eq-cat-banner__eyebrow">NOUS TELOS ATELIER</span>
+          <span class="eq-cat-banner__eyebrow">NOUS TELOS STUDIO</span>
           <h1 class="eq-cat-banner__title" id="search-title">
             @if($query)
               Search Results for &ldquo;{{ $query }}&rdquo;
@@ -150,7 +150,7 @@
                     @endif
                     <span>৳{{ number_format($product->price) }}</span>
                   </div>
-                  <span class="eq-product-stock-tag">{{ $product->stock_quantity <= 3 ? '⚡ Only ' . $product->stock_quantity . ' left in atelier' : 'Ready to Ship' }}</span>
+                  <span class="eq-product-stock-tag">{{ $product->stock_quantity <= 3 ? '⚡ Only ' . $product->stock_quantity . ' left in stock' : 'Ready to Ship' }}</span>
                 </div>
               </article>
             @endforeach
@@ -191,7 +191,7 @@
             <!-- Direct shortcut buttons to popular collections -->
             <div style="margin-top: 2rem; border-top: 1px solid var(--eq-line); padding-top: 1.75rem;">
               <span style="font-size: 0.8rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--eq-charcoal-soft); font-weight: 500;">
-                Popular Atelier Collections
+                Popular Featured Collections
               </span>
               <div class="eq-shop-shortcuts" style="max-width: 650px; margin: 1rem auto 0; grid-template-columns: repeat(4, 1fr);">
                 <a href="{{ route('subcategory.show', ['categorySlug' => 'women', 'subcategorySlug' => 'saree']) }}" class="eq-shop-shortcut-card">

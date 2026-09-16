@@ -52,6 +52,8 @@ Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
 Route::post('/cart/update', [CartController::class, 'update'])->name('cart.update');
 Route::post('/cart/remove', [CartController::class, 'remove'])->name('cart.remove');
 Route::post('/cart/clear', [CartController::class, 'clear'])->name('cart.clear');
+Route::post('/cart/coupon/apply', [CartController::class, 'applyCoupon'])->name('cart.coupon.apply');
+Route::post('/cart/coupon/remove', [CartController::class, 'removeCoupon'])->name('cart.coupon.remove');
 
 /* =========================================================================
  * 6. CHECKOUT & ATOMIC ORDER SUBMISSION
@@ -106,4 +108,11 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::put('/products/{id}', [AdminController::class, 'updateProduct'])->name('products.update');
     Route::delete('/products/{id}', [AdminController::class, 'deleteProduct'])->name('products.delete');
     Route::post('/products/{id}/toggle-stock', [AdminController::class, 'toggleStock'])->name('products.toggle-stock');
+
+    // Coupon & Promotional Campaign Management
+    Route::get('/coupons', [AdminController::class, 'coupons'])->name('coupons');
+    Route::get('/coupons/create', [AdminController::class, 'couponCreate'])->name('coupons.create');
+    Route::post('/coupons', [AdminController::class, 'couponStore'])->name('coupons.store');
+    Route::post('/coupons/{id}/toggle', [AdminController::class, 'couponToggle'])->name('coupons.toggle');
+    Route::delete('/coupons/{id}', [AdminController::class, 'couponDestroy'])->name('coupons.destroy');
 });

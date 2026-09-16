@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Invoice #{{ $order->order_number }} — Earthquick Atelier</title>
+  <title>Invoice #{{ $order->order_number }} — Earthquick Store</title>
   
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -370,7 +370,7 @@
     <header class="eq-invoice-header">
       <div>
         <div class="eq-brand-title">EARTHQUICK</div>
-        <div class="eq-brand-sub">NOUS TELOS &bull; LUXURY ATELIER</div>
+        <div class="eq-brand-sub">NOUS TELOS &bull; DESIGN STUDIO</div>
         <div class="eq-brand-address">
           Chattogram Metropolitan, Bangladesh<br>
           Direct line: +880 1812-345678 &bull; concierge@earthquick.com<br>
@@ -410,7 +410,7 @@
         <div class="eq-grid-title">Logistics &amp; Fulfillment</div>
         <div class="eq-grid-val">
           Fulfillment Stage: <strong>{{ ucfirst(str_replace('_', ' ', $order->status)) }}</strong><br>
-          Courier Partner: <strong>{{ $order->courier_name ?: 'Standard Atelier Dispatch' }}</strong><br>
+          Courier Partner: <strong>{{ $order->courier_name ?: 'Standard Store Dispatch' }}</strong><br>
           Consignment Tracking ID: 
           @if($order->tracking_number)
             <strong style="color: var(--eq-gold-dark); letter-spacing: 0.04em;">{{ $order->tracking_number }}</strong>
@@ -470,6 +470,12 @@
           <td style="color: var(--eq-charcoal-soft);">Subtotal:</td>
           <td>৳{{ number_format($order->subtotal) }}</td>
         </tr>
+        @if($order->discount_amount > 0)
+          <tr style="color: #28a745; font-weight: 600;">
+            <td>Promo Discount ({{ $order->coupon_code }}):</td>
+            <td>-৳{{ number_format($order->discount_amount) }}</td>
+          </tr>
+        @endif
         <tr>
           <td style="color: var(--eq-charcoal-soft);">Delivery Charge:</td>
           <td>৳{{ number_format($order->delivery_fee) }}</td>
@@ -484,13 +490,13 @@
     <!-- Notes & Sign-off Block -->
     <footer class="eq-notes-section">
       <div class="eq-policy-note">
-        <strong>Atelier Assurance &amp; Exchange Terms:</strong><br>
+        <strong>Quality Assurance &amp; Exchange Terms:</strong><br>
         Each garment is crafted with meticulous care. In the event of sizing discrepancies or defects, exchange requests are honored within 7 days of parcel delivery provided original tags, packaging, and this packing slip are intact.
       </div>
 
       <div class="eq-signature-box">
         <div class="eq-signature-line"></div>
-        <div class="eq-signature-label">Authorized Atelier Dispatch</div>
+        <div class="eq-signature-label">Authorized Dispatch</div>
       </div>
     </footer>
 

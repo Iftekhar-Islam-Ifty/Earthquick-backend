@@ -100,7 +100,7 @@
               </svg>
               <span id="stock-text">
                 @if($product->stock_quantity > 0)
-                  In Stock &mdash; Ready to ship from atelier ({{ $product->stock_quantity }} left)
+                  In Stock &mdash; Ready to ship ({{ $product->stock_quantity }} left in stock)
                 @else
                   Available to Order &mdash; Ready to ship
                 @endif
@@ -326,31 +326,31 @@
 
 <!-- Schema.org Product Structured Data (JSON-LD) -->
 <script type="application/ld+json">
-{
-  "@context": "https://schema.org/",
-  "@type": "Product",
-  "name": "{{ addslashes($product->name) }}",
-  "image": [
-    "{{ asset($product->image) }}"
+{!! json_encode([
+  '@context' => 'https://schema.org/',
+  '@type' => 'Product',
+  'name' => $product->name,
+  'image' => [
+    asset($product->image)
   ],
-  "description": "{{ addslashes(strip_tags($product->short_desc ?? $product->description)) }}",
-  "sku": "{{ $product->sku ?? ('NT-' . $product->id) }}",
-  "brand": {
-    "@type": "Brand",
-    "name": "Nous Telos"
-  },
-  "offers": {
-    "@type": "Offer",
-    "url": "{{ route('product.show', $product->slug) }}",
-    "priceCurrency": "BDT",
-    "price": "{{ $product->price }}",
-    "itemCondition": "https://schema.org/NewCondition",
-    "availability": "{{ $product->in_stock ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock' }}",
-    "seller": {
-      "@type": "Organization",
-      "name": "Earthquick"
-    }
-  }
-}
+  'description' => strip_tags($product->short_desc ?? ($product->description ?? '')),
+  'sku' => $product->sku ?? ('NT-' . $product->id),
+  'brand' => [
+    '@type' => 'Brand',
+    'name' => 'Nous Telos',
+  ],
+  'offers' => [
+    '@type' => 'Offer',
+    'url' => route('product.show', $product->slug),
+    'priceCurrency' => 'BDT',
+    'price' => (string) $product->price,
+    'itemCondition' => 'https://schema.org/NewCondition',
+    'availability' => $product->in_stock ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
+    'seller' => [
+      '@type' => 'Organization',
+      'name' => 'Earthquick',
+    ],
+  ],
+], JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) !!}
 </script>
 @endpush

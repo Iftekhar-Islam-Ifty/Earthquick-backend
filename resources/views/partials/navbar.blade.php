@@ -156,25 +156,18 @@
         <li class="eq-drawer-footer">
           <div class="eq-drawer-actions">
             @auth
-              @if(Auth::user()->is_admin)
-                <a href="{{ route('admin.dashboard') }}" class="eq-drawer-action-btn" id="drawer-btn-admin" style="text-decoration: none; background: rgba(201, 150, 47, 0.15); color: var(--eq-gold-dark); border: 1px solid rgba(201, 150, 47, 0.4); font-weight: 600;">
-                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-                  </svg>
-                  <span>Admin</span>
-                </a>
-              @endif
-              <a href="{{ route('account.dashboard') }}" class="eq-drawer-action-btn" id="drawer-btn-account" style="text-decoration: none;">
-                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <a href="{{ route('account.dashboard') }}" class="eq-drawer-action-btn eq-drawer-action-btn--account" id="drawer-btn-account" title="My Account">
+                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                   <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                   <circle cx="12" cy="7" r="4"></circle>
                 </svg>
-                <span>{{ explode(' ', Auth::user()->name)[0] }}</span>
+                <span>{{ explode(' ', Auth::user()->name ?? 'Earthquick')[0] }}</span>
               </a>
-              <form method="POST" action="{{ route('logout') }}" style="display: inline;">
+
+              <form method="POST" action="{{ route('logout') }}" class="eq-drawer-form">
                 @csrf
-                <button type="submit" class="eq-drawer-action-btn" style="border: none; background: none; cursor: pointer;">
-                  <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <button type="submit" class="eq-drawer-action-btn eq-drawer-action-btn--logout" id="drawer-btn-logout" title="Sign Out">
+                  <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                     <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
                     <polyline points="16 17 21 12 16 7"></polyline>
                     <line x1="21" y1="12" x2="9" y2="12"></line>
@@ -183,21 +176,14 @@
                 </button>
               </form>
             @else
-              <a href="{{ route('login') }}" class="eq-drawer-action-btn" id="drawer-btn-account" style="text-decoration: none;">
-                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <a href="{{ route('login') }}" class="eq-drawer-action-btn eq-drawer-action-btn--login" id="drawer-btn-account" title="Sign In">
+                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                   <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                   <circle cx="12" cy="7" r="4"></circle>
                 </svg>
                 <span>Sign In</span>
               </a>
             @endauth
-            <button type="button" class="eq-drawer-action-btn" data-action="open-search" id="drawer-btn-search">
-              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <circle cx="11" cy="11" r="7"></circle>
-                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-              </svg>
-              <span>Search</span>
-            </button>
           </div>
           <p class="eq-drawer-tagline">Handloom Heritage &bull; Nous Telos</p>
         </li>
@@ -216,27 +202,28 @@
 
       <!-- Account & Admin Buttons -->
       @auth
-        <div style="display: flex; align-items: center; gap: 0.65rem;">
+        <div class="eq-navbar-auth-group">
           @if(Auth::user()->is_admin)
-            <a href="{{ route('admin.dashboard') }}" aria-label="Admin Atelier Panel" id="eq-btn-admin-panel" style="display: inline-flex; align-items: center; gap: 0.35rem; background: var(--eq-navy); color: #ffffff; padding: 0.35rem 0.75rem; border-radius: 999px; text-decoration: none; font-size: 0.76rem; font-weight: 600; box-shadow: 0 2px 6px rgba(27, 58, 75, 0.2); transition: all 0.2s ease;" title="Atelier Executive Admin Panel">
+            <a href="{{ route('admin.dashboard') }}" aria-label="Admin Panel" id="eq-btn-admin-panel" class="eq-btn-admin-badge" title="Store Executive Admin Panel">
               <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="var(--eq-gold)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
               </svg>
-              <span>Admin Panel</span>
+              <span class="eq-btn-admin-text eq-btn-admin-text--full">Admin Panel</span>
+              <span class="eq-btn-admin-text eq-btn-admin-text--short">Admin</span>
             </a>
           @endif
-          <a href="{{ route('account.dashboard') }}" aria-label="My Account" id="eq-btn-account" style="display: flex; align-items: center; gap: 0.35rem; color: inherit; text-decoration: none;" title="{{ Auth::user()->name }} (My Account)">
+          <a href="{{ route('account.dashboard') }}" aria-label="My Account" id="eq-btn-account" class="eq-btn-account-link" title="{{ Auth::user()->name }} (My Account)">
             <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
               <circle cx="12" cy="7" r="4"></circle>
             </svg>
-            <span style="font-size: 0.82rem; font-weight: 500; max-width: 90px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-              {{ explode(' ', Auth::user()->name)[0] }}
+            <span class="eq-navbar-user-name">
+              {{ explode(' ', Auth::user()->name ?? 'Earthquick')[0] }}
             </span>
           </a>
-          <form method="POST" action="{{ route('logout') }}" style="display: inline; margin: 0;">
+          <form method="POST" action="{{ route('logout') }}" class="eq-navbar-logout-form">
             @csrf
-            <button type="submit" style="background: none; border: none; padding: 0; color: var(--eq-charcoal-soft); cursor: pointer; display: flex; align-items: center;" title="Sign Out">
+            <button type="submit" class="eq-navbar-logout-btn" title="Sign Out">
               <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
                 <polyline points="16 17 21 12 16 7"></polyline>

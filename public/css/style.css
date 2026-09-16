@@ -838,6 +838,73 @@ p {
   box-shadow: 0 2px 6px rgba(42, 38, 34, 0.2);
 }
 
+/* Navbar Auth Group & Admin Badge (Desktop) */
+.eq-navbar-auth-group {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.eq-btn-admin-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: var(--eq-navy);
+  color: #ffffff;
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  text-decoration: none;
+  font-size: 0.76rem;
+  font-weight: 600;
+  box-shadow: 0 2px 6px rgba(27, 58, 75, 0.2);
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.eq-btn-admin-badge:hover {
+  background: var(--eq-gold-dark);
+  color: #ffffff;
+}
+
+.eq-btn-admin-text--short {
+  display: none;
+}
+
+.eq-btn-admin-text--full {
+  display: inline;
+}
+
+.eq-btn-account-link {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: inherit;
+  text-decoration: none;
+}
+
+.eq-navbar-user-name {
+  font-size: 0.82rem;
+  font-weight: 500;
+  max-width: 90px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.eq-navbar-logout-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--eq-charcoal-soft);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.eq-navbar-logout-btn:hover {
+  color: #c0392b;
+}
+
 .eq-navbar__toggle {
   display: none;
   background: none;
@@ -3976,13 +4043,77 @@ p {
   .eq-navbar__icons {
     gap: 0.25rem !important;
     flex-shrink: 0 !important;
+    display: flex !important;
+    align-items: center !important;
   }
 
+  .eq-navbar-auth-group {
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.25rem !important;
+  }
+
+  /* Standard 34x34 icon buttons for search, cart, etc. */
   .eq-navbar__icons button,
   .eq-navbar__icons a {
     padding: 5px !important;
     width: 34px !important;
     height: 34px !important;
+  }
+
+  /* Admin Badge button on Mobile Navbar: fixed from squishing */
+  .eq-navbar__icons #eq-btn-admin-panel,
+  .eq-btn-admin-badge {
+    width: auto !important;
+    height: 32px !important;
+    min-width: unset !important;
+    padding: 0 0.55rem !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 0.28rem !important;
+    border-radius: 999px !important;
+    background: var(--eq-navy) !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(201, 150, 47, 0.45) !important;
+    box-shadow: 0 2px 5px rgba(27, 58, 75, 0.22) !important;
+    text-decoration: none !important;
+    white-space: nowrap !important;
+    flex-shrink: 0 !important;
+  }
+
+  .eq-btn-admin-badge svg {
+    width: 13px !important;
+    height: 13px !important;
+    stroke: var(--eq-gold) !important;
+    flex-shrink: 0 !important;
+    display: block !important;
+  }
+
+  .eq-btn-admin-badge .eq-btn-admin-text {
+    font-size: 0.72rem !important;
+    font-weight: 600 !important;
+    color: #ffffff !important;
+    line-height: 1 !important;
+    letter-spacing: 0.02em !important;
+  }
+
+  .eq-btn-admin-badge .eq-btn-admin-text--full {
+    display: none !important;
+  }
+
+  .eq-btn-admin-badge .eq-btn-admin-text--short {
+    display: inline !important;
+  }
+
+  /* User name text hidden on mobile navbar so account icon stays a 34x34 square */
+  .eq-navbar-user-name {
+    display: none !important;
+  }
+
+  /* Logout button hidden on mobile navbar (it's in the drawer footer) */
+  .eq-navbar-logout-form {
+    display: none !important;
   }
 
   .eq-navbar__icons svg {
@@ -4268,7 +4399,15 @@ p {
     padding: 0.65rem 0.85rem !important;
   }
 
-  /* Circular Chevron Toggle Button */
+  /* Disable desktop hover/focus-within rotation on mobile */
+  .eq-nav-item--has-dropdown:hover .eq-dropdown-toggle-btn svg,
+  .eq-nav-item--has-dropdown:focus-within .eq-dropdown-toggle-btn svg,
+  .eq-nav-item--has-dropdown:hover .eq-dropdown-toggle-btn,
+  .eq-nav-item--has-dropdown:focus-within .eq-dropdown-toggle-btn {
+    transform: none !important;
+  }
+
+  /* Circular Chevron Toggle Button (Button itself stays steady) */
   .eq-dropdown-toggle-btn {
     width: 36px !important;
     height: 36px !important;
@@ -4283,7 +4422,8 @@ p {
     color: var(--eq-navy) !important;
     cursor: pointer !important;
     margin-right: 4px !important;
-    transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s ease, color 0.2s ease !important;
+    transform: none !important;
+    transition: background-color 0.2s ease, color 0.2s ease !important;
     touch-action: manipulation !important;
   }
 
@@ -4291,10 +4431,28 @@ p {
     background-color: rgba(201, 150, 47, 0.18) !important;
   }
 
-  .eq-nav-item--has-dropdown.is-expanded .eq-dropdown-toggle-btn {
-    transform: rotate(180deg) !important;
+  /* The chevron SVG rotates cleanly when expanded */
+  .eq-dropdown-toggle-btn svg {
+    width: 14px !important;
+    height: 14px !important;
+    display: block !important;
+    transform: rotate(0deg) !important;
+    transform-origin: center center !important;
+    transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), stroke 0.2s ease !important;
+    pointer-events: none !important;
+  }
+
+  .eq-nav-item--has-dropdown.is-expanded .eq-dropdown-toggle-btn,
+  .eq-dropdown-toggle-btn[aria-expanded="true"] {
+    transform: none !important;
     background-color: rgba(201, 150, 47, 0.14) !important;
     color: var(--eq-gold-dark) !important;
+  }
+
+  .eq-nav-item--has-dropdown.is-expanded .eq-dropdown-toggle-btn svg,
+  .eq-dropdown-toggle-btn[aria-expanded="true"] svg {
+    transform: rotate(180deg) !important;
+    stroke: var(--eq-gold-dark) !important;
   }
 
   /* Subcategories Panel (Minimal Accordion, Clean Indentation) */
@@ -4487,35 +4645,99 @@ p {
     width: 100% !important;
   }
 
+  /* Mobile Drawer Actions — Exact 50/50 Equal Size */
   .eq-drawer-actions {
     display: flex !important;
-    gap: 0.5rem !important;
+    align-items: stretch !important;
+    gap: 0.55rem !important;
     width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Equal 50/50 flex partition for both action items */
+  .eq-drawer-actions > a.eq-drawer-action-btn,
+  .eq-drawer-actions > form.eq-drawer-form,
+  .eq-drawer-form {
+    flex: 1 1 0% !important;
+    width: 0 !important;
+    min-width: 0 !important;
+    display: flex !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+  }
+
+  .eq-drawer-form .eq-drawer-action-btn {
+    width: 100% !important;
+    height: 100% !important;
+    flex: 1 1 0% !important;
+    min-width: 0 !important;
   }
 
   .eq-drawer-action-btn {
-    flex: 1 !important;
-    display: flex !important;
+    flex: 1 1 0% !important;
+    min-width: 0 !important;
+    width: 100% !important;
+    height: 44px !important;
+    min-height: 44px !important;
+    max-height: 44px !important;
+    display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
     gap: 0.45rem !important;
-    padding: 0.6rem 0.5rem !important;
+    padding: 0 0.65rem !important;
+    box-sizing: border-box !important;
     font-family: var(--font-body) !important;
-    font-size: 0.85rem !important;
+    font-size: 0.84rem !important;
     font-weight: 500 !important;
     border-radius: 8px !important;
-    background-color: rgba(27, 58, 75, 0.05) !important;
-    color: var(--eq-navy) !important;
-    border: none !important;
+    border: 1px solid rgba(27, 58, 75, 0.1) !important;
     cursor: pointer !important;
     text-decoration: none !important;
-    transition: background-color 0.2s ease !important;
+    white-space: nowrap !important;
+    transition: all 0.2s ease !important;
   }
 
-  .eq-drawer-action-btn:hover,
-  .eq-drawer-action-btn:active {
+  .eq-drawer-action-btn svg {
+    flex-shrink: 0 !important;
+  }
+
+  .eq-drawer-action-btn span {
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+  }
+
+  .eq-drawer-action-btn--account {
+    background-color: rgba(27, 58, 75, 0.06) !important;
+    color: var(--eq-navy) !important;
+    border-color: rgba(27, 58, 75, 0.12) !important;
+  }
+
+  .eq-drawer-action-btn--account:hover,
+  .eq-drawer-action-btn--account:active {
     background-color: rgba(201, 150, 47, 0.16) !important;
     color: var(--eq-navy) !important;
+    border-color: rgba(201, 150, 47, 0.4) !important;
+  }
+
+  .eq-drawer-action-btn--logout {
+    background-color: rgba(220, 53, 69, 0.06) !important;
+    color: #c0392b !important;
+    border-color: rgba(220, 53, 69, 0.2) !important;
+  }
+
+  .eq-drawer-action-btn--logout:hover,
+  .eq-drawer-action-btn--logout:active {
+    background-color: rgba(220, 53, 69, 0.14) !important;
+    color: #a93226 !important;
+    border-color: rgba(220, 53, 69, 0.4) !important;
+  }
+
+  .eq-drawer-action-btn--login {
+    background-color: var(--eq-navy) !important;
+    color: #ffffff !important;
+    border-color: var(--eq-navy) !important;
   }
 
   .eq-drawer-tagline {
@@ -5016,28 +5238,148 @@ p {
     color: var(--eq-gold-dark) !important;
   }
 
-  #three-piece-section .eq-product-card {
-    flex: 0 0 calc(48% - 5px) !important;
+  /* ===================================================================
+     MOBILE 4-CARDS PER ROW HORIZONTAL CAROUSEL (New Arrivals & Three Piece)
+     - Exactly 4 cards visible per row in viewport
+     - Proportional 3:4 image cards with compact typography
+     - Smooth horizontal swipe/scroll to the right to view remaining cards
+     =================================================================== */
+  #new-arrivals .eq-carousel__viewport,
+  #three-piece-section .eq-carousel__viewport {
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    -webkit-overflow-scrolling: touch !important;
+    scroll-snap-type: x mandatory !important;
+    scroll-behavior: smooth !important;
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+    padding-bottom: 6px !important;
   }
 
+  #new-arrivals .eq-carousel__viewport::-webkit-scrollbar,
+  #three-piece-section .eq-carousel__viewport::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  #new-arrivals .eq-carousel__track,
+  #three-piece-section .eq-carousel__track {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    gap: 0.45rem !important;
+    width: max-content !important;
+    min-width: 100% !important;
+    transform: none !important;
+  }
+
+  /* Exactly 4 cards visible per row in the viewport */
+  #new-arrivals .eq-product-card,
+  #three-piece-section .eq-product-card {
+    flex: 0 0 calc((100vw - 2 * clamp(0.65rem, 2.5vw, 1rem) - 1.35rem) / 4) !important;
+    width: calc((100vw - 2 * clamp(0.65rem, 2.5vw, 1rem) - 1.35rem) / 4) !important;
+    min-width: calc((100vw - 2 * clamp(0.65rem, 2.5vw, 1rem) - 1.35rem) / 4) !important;
+    max-width: calc((100vw - 2 * clamp(0.65rem, 2.5vw, 1rem) - 1.35rem) / 4) !important;
+    scroll-snap-align: start !important;
+    display: flex !important;
+    flex-direction: column !important;
+    box-sizing: border-box !important;
+    text-align: left !important;
+  }
+
+  #new-arrivals .eq-product-card__link,
+  #three-piece-section .eq-product-card__link {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    text-decoration: none !important;
+    color: inherit !important;
+  }
+
+  #new-arrivals .eq-product-card__frame,
   #three-piece-section .eq-product-card__frame {
     aspect-ratio: 3 / 4 !important;
-    max-height: 165px !important;
+    width: 100% !important;
+    height: auto !important;
+    max-height: 125px !important;
+    border-radius: 6px !important;
+    overflow: hidden !important;
+    margin: 0 !important;
     background-color: var(--eq-sand) !important;
+    position: relative !important;
   }
 
-  #three-piece-section .eq-product-card__name {
-    font-size: 0.8rem !important;
-    color: var(--eq-charcoal) !important;
+  #new-arrivals .eq-product-card__frame img,
+  #three-piece-section .eq-product-card__frame img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    object-position: top center !important;
+    display: block !important;
   }
 
-  #three-piece-section .eq-product-card__price {
-    font-size: 0.76rem !important;
-    color: var(--eq-charcoal-soft) !important;
+  #new-arrivals .eq-badge,
+  #three-piece-section .eq-badge {
+    font-size: 0.44rem !important;
+    padding: 1px 3px !important;
+    top: 3px !important;
+    left: 3px !important;
+    border-radius: 3px !important;
+    line-height: 1.2 !important;
   }
 
+  #new-arrivals .eq-product-card__quick-add,
+  #three-piece-section .eq-product-card__quick-add {
+    display: none !important;
+  }
+
+  #new-arrivals .eq-product-card__body,
+  #three-piece-section .eq-product-card__body {
+    padding: 0.22rem 0.05rem 0 !important;
+    gap: 0.02rem !important;
+    display: flex !important;
+    flex-direction: column !important;
+    text-align: left !important;
+    align-items: flex-start !important;
+    background: transparent !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  #new-arrivals .eq-product-card__category,
   #three-piece-section .eq-product-card__category {
+    font-size: 0.48rem !important;
+    letter-spacing: 0.04em !important;
+    text-transform: uppercase !important;
     color: var(--eq-gold-dark) !important;
+    line-height: 1.1 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+  }
+
+  #new-arrivals .eq-product-card__name,
+  #three-piece-section .eq-product-card__name {
+    font-size: 0.67rem !important;
+    font-weight: 500 !important;
+    line-height: 1.2 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    width: 100% !important;
+    color: var(--eq-charcoal) !important;
+    text-align: left !important;
+    margin: 0 !important;
+  }
+
+  #new-arrivals .eq-product-card__price,
+  #three-piece-section .eq-product-card__price {
+    font-size: 0.67rem !important;
+    font-weight: 600 !important;
+    line-height: 1.1 !important;
+    color: var(--eq-charcoal-soft) !important;
+    margin-top: 1px !important;
+    text-align: left !important;
   }
 
   /* Two Piece Section on Mobile */

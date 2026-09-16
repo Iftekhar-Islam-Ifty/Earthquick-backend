@@ -1,72 +1,145 @@
 @extends('admin.layout')
 
-@section('title', 'Atelier Dashboard & Analytics — Earthquick Admin')
-@section('page_title', 'Atelier Executive Dashboard')
+@section('title', 'Executive Dashboard & Analytics — Earthquick Admin')
+@section('page_title', 'Executive Store Dashboard')
 
 @section('content')
 
   <style>
-    .eq-dashboard-charts-grid {
+    .eq-dashboard-grid {
       display: grid;
-      grid-template-columns: 1.65fr 1fr;
-      gap: 1.5rem;
-      margin-bottom: 2rem;
+      grid-template-columns: 1.6fr 1fr;
+      grid-template-areas:
+        "revenue category"
+        "top-creations export";
+      gap: 1.15rem;
+      margin-bottom: 1.25rem;
       min-width: 0;
       width: 100%;
       align-items: stretch;
     }
-    .eq-dashboard-widgets-grid {
-      display: grid;
-      grid-template-columns: 1.25fr 0.75fr;
-      gap: 1.5rem;
-      margin-bottom: 2rem;
-      min-width: 0;
-      width: 100%;
-      align-items: start;
+    .eq-grid-revenue {
+      grid-area: revenue;
     }
-    @media (max-width: 1100px) {
-      .eq-dashboard-charts-grid {
-        grid-template-columns: 1fr;
-      }
-      .eq-dashboard-widgets-grid {
-        grid-template-columns: 1fr;
-      }
+    .eq-grid-category {
+      grid-area: category;
     }
+    .eq-grid-top-creations {
+      grid-area: top-creations;
+    }
+    .eq-grid-export {
+      grid-area: export;
+    }
+
     .eq-chart-wrapper {
       position: relative;
       width: 100%;
       min-width: 0;
-      height: 280px;
-      max-height: 280px;
+      height: 215px;
+      max-height: 215px;
       overflow: hidden;
     }
     .eq-chart-wrapper canvas {
       max-width: 100% !important;
       max-height: 100% !important;
     }
+
+    @media (max-width: 1100px) and (min-width: 769px) {
+      .eq-dashboard-grid {
+        grid-template-columns: 1.4fr 1fr;
+        gap: 1rem;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .eq-dashboard-grid {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        grid-template-areas:
+          "revenue revenue"
+          "export category"
+          "top-creations top-creations" !important;
+        gap: 0.65rem !important;
+        margin-bottom: 0.85rem !important;
+      }
+
+      .eq-grid-revenue {
+        grid-area: revenue !important;
+      }
+      .eq-grid-export {
+        grid-area: export !important;
+      }
+      .eq-grid-category {
+        grid-area: category !important;
+      }
+      .eq-grid-top-creations {
+        grid-area: top-creations !important;
+      }
+
+      .eq-grid-export, .eq-grid-category {
+        padding: 0.65rem 0.75rem !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: space-between !important;
+      }
+
+      .eq-grid-category .eq-chart-wrapper {
+        height: 125px !important;
+        max-height: 125px !important;
+      }
+
+      .eq-grid-revenue .eq-chart-wrapper {
+        height: 180px !important;
+        max-height: 180px !important;
+      }
+
+      .eq-export-desc,
+      .eq-export-footer {
+        display: none !important;
+      }
+
+      .eq-export-btn-full {
+        padding: 0.4rem 0.5rem !important;
+        font-size: 0.76rem !important;
+      }
+
+      .eq-export-pills {
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+        gap: 0.25rem !important;
+      }
+
+      .eq-export-pills a {
+        padding: 0.3rem 0.15rem !important;
+        font-size: 0.65rem !important;
+        letter-spacing: -0.02em !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+      }
+    }
   </style>
 
   <!-- Page Header & Global Quick Actions -->
-  <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.75rem; flex-wrap: wrap; gap: 1rem; min-width: 0;">
+  <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.85rem; flex-wrap: wrap; gap: 0.6rem; min-width: 0;">
     <div>
-      <h2 style="font-family: var(--font-display); font-size: 1.45rem; color: var(--eq-navy); margin-bottom: 0.2rem;">
+      <h2 style="font-family: var(--font-display); font-size: 1.25rem; color: var(--eq-navy); margin-bottom: 0.1rem; line-height: 1.2;">
         Executive Performance &amp; Analytics
       </h2>
-      <p style="font-size: 0.84rem; color: var(--eq-charcoal-soft);">
-        Live overview of commercial health, revenue trajectories, category metrics, and ledger reports.
+      <p style="font-size: 0.76rem; color: var(--eq-charcoal-soft); margin: 0;">
+        Live overview of commercial health, revenue trajectories, category metrics, and reports.
       </p>
     </div>
-    <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
-      <a href="{{ route('admin.orders.export') }}" class="eq-admin-btn eq-admin-btn--outline" style="gap: 0.45rem; padding: 0.55rem 1rem; font-size: 0.84rem;" title="Download complete orders ledger as Excel CSV">
-        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+      <a href="{{ route('admin.orders.export') }}" class="eq-admin-btn eq-admin-btn--outline" style="gap: 0.35rem; padding: 0.35rem 0.75rem; font-size: 0.78rem;" title="Download complete orders ledger as Excel CSV">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
           <polyline points="7 10 12 15 17 10"></polyline>
           <line x1="12" y1="15" x2="12" y2="3"></line>
         </svg>
         Export Orders (CSV)
       </a>
-      <a href="{{ route('admin.orders') }}" class="eq-admin-btn eq-admin-btn--primary" style="gap: 0.45rem; padding: 0.55rem 1rem; font-size: 0.84rem;">
-        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <a href="{{ route('admin.orders') }}" class="eq-admin-btn eq-admin-btn--primary" style="gap: 0.35rem; padding: 0.35rem 0.8rem; font-size: 0.78rem;">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M9 11l3 3L22 4"></path>
           <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
         </svg>
@@ -75,96 +148,100 @@
     </div>
   </div>
 
-  <!-- Stat Metric Cards (4-Column Grid) -->
-  <section class="eq-admin-metrics" style="margin-bottom: 2rem;">
+  <!-- Stat Metric Cards (Compact 1-Row Layout) -->
+  <section class="eq-admin-metrics" style="margin-bottom: 1rem;">
     
     <!-- Card 1: Total Orders -->
     <div class="eq-metric-box" style="border-top: 3px solid var(--eq-navy); min-width: 0;">
-      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.4rem;">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.2rem; width: 100%;">
         <span class="eq-metric-box__title">Total Orders</span>
-        <span style="font-size: 0.7rem; font-weight: 600; background: #e0f2fe; color: #0369a1; padding: 0.15rem 0.5rem; border-radius: 999px;">
+        <span class="eq-metric-badge" style="font-size: 0.66rem; font-weight: 600; background: #e0f2fe; color: #0369a1; padding: 0.08rem 0.4rem; border-radius: 999px;">
           Lifetime
         </span>
       </div>
-      <div class="eq-metric-box__value" style="color: var(--eq-navy);">
+      <div class="eq-metric-box__value" style="color: var(--eq-navy); font-size: 1.35rem;">
         {{ number_format($totalOrders) }}
       </div>
       <span class="eq-metric-box__sub">
-        Today: <strong>{{ $todayOrders }}</strong> &bull; This Month: <strong>{{ $monthOrders }}</strong>
+        <span class="eq-sub-desktop">Today: <strong>{{ $todayOrders }}</strong> &bull; Month: <strong>{{ $monthOrders }}</strong></span>
+        <span class="eq-sub-mobile">Today: {{ $todayOrders }}</span>
       </span>
     </div>
 
     <!-- Card 2: Net Sales Revenue -->
     <div class="eq-metric-box" style="border-top: 3px solid var(--eq-gold); min-width: 0;">
-      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.4rem;">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.2rem; width: 100%;">
         <span class="eq-metric-box__title">Net Sales Revenue</span>
-        <span style="font-size: 0.7rem; font-weight: 600; background: #fef3c7; color: #92400e; padding: 0.15rem 0.5rem; border-radius: 999px;">
+        <span class="eq-metric-badge" style="font-size: 0.66rem; font-weight: 600; background: #fef3c7; color: #92400e; padding: 0.08rem 0.4rem; border-radius: 999px;">
           Excl. Cancelled
         </span>
       </div>
-      <div class="eq-metric-box__value" style="color: var(--eq-gold-dark);">
+      <div class="eq-metric-box__value" style="color: var(--eq-gold-dark); font-size: 1.35rem;">
         ৳{{ number_format($totalRevenue) }}
       </div>
       <span class="eq-metric-box__sub">
-        Today: ৳{{ number_format($todayRevenue) }} &bull; Month: ৳{{ number_format($monthRevenue) }}
+        <span class="eq-sub-desktop">Today: ৳{{ number_format($todayRevenue) }} &bull; Month: ৳{{ number_format($monthRevenue) }}</span>
+        <span class="eq-sub-mobile">Today: ৳{{ number_format($todayRevenue) }}</span>
       </span>
     </div>
 
     <!-- Card 3: Average Order Value (AOV) -->
     <div class="eq-metric-box" style="border-top: 3px solid #166534; min-width: 0;">
-      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.4rem;">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.2rem; width: 100%;">
         <span class="eq-metric-box__title">Average Order Value</span>
-        <span style="font-size: 0.7rem; font-weight: 600; background: #dcfce7; color: #166534; padding: 0.15rem 0.5rem; border-radius: 999px;">
+        <span class="eq-metric-badge" style="font-size: 0.66rem; font-weight: 600; background: #dcfce7; color: #166534; padding: 0.08rem 0.4rem; border-radius: 999px;">
           AOV
         </span>
       </div>
-      <div class="eq-metric-box__value" style="color: #166534;">
+      <div class="eq-metric-box__value" style="color: #166534; font-size: 1.35rem;">
         ৳{{ number_format($averageOrderValue) }}
       </div>
       <span class="eq-metric-box__sub">
-        Per fulfilled acquisition transaction
+        <span class="eq-sub-desktop">Per fulfilled acquisition</span>
+        <span class="eq-sub-mobile">Per order</span>
       </span>
     </div>
 
     <!-- Card 4: Catalog & Atelier Stock -->
     <div class="eq-metric-box" style="border-top: 3px solid var(--eq-charcoal); min-width: 0;">
-      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.4rem;">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.2rem; width: 100%;">
         <span class="eq-metric-box__title">Catalog Portfolio</span>
-        <span style="font-size: 0.7rem; font-weight: 600; background: var(--eq-cream-deep); color: var(--eq-charcoal); padding: 0.15rem 0.5rem; border-radius: 999px;">
+        <span class="eq-metric-badge" style="font-size: 0.66rem; font-weight: 600; background: var(--eq-cream-deep); color: var(--eq-charcoal); padding: 0.08rem 0.4rem; border-radius: 999px;">
           Stock
         </span>
       </div>
-      <div class="eq-metric-box__value">
-        {{ number_format($totalProducts) }} <span style="font-size: 0.88rem; font-weight: 400; color: var(--eq-charcoal-soft);">items</span>
+      <div class="eq-metric-box__value" style="font-size: 1.35rem;">
+        {{ number_format($totalProducts) }} <span class="eq-sub-desktop" style="font-size: 0.8rem; font-weight: 400; color: var(--eq-charcoal-soft);">items</span>
       </div>
       <span class="eq-metric-box__sub">
-        <strong>{{ $inStockProducts }}</strong> in-stock &bull; <strong style="color: #b45309;">{{ $pendingOrdersCount }}</strong> pending
+        <span class="eq-sub-desktop"><strong>{{ $inStockProducts }}</strong> in-stock &bull; <strong style="color: #b45309;">{{ $pendingOrdersCount }}</strong> pending</span>
+        <span class="eq-sub-mobile">{{ $inStockProducts }} in-stock</span>
       </span>
     </div>
 
   </section>
 
-  <!-- Interactive Infographic Charts Section (2 Columns, Responsive) -->
-  <div class="eq-dashboard-charts-grid">
+  <!-- Interactive Infographic Charts & Secondary Insights Grid -->
+  <div class="eq-dashboard-grid">
     
-    <!-- Left Chart: Revenue & Order Trajectory -->
-    <section class="eq-admin-card" style="margin-bottom: 0; min-width: 0; overflow: hidden; display: flex; flex-direction: column;">
-      <div class="eq-admin-card__header" style="margin-bottom: 1rem;">
+    <!-- Area 1: Revenue & Order Trajectory -->
+    <section class="eq-admin-card eq-grid-revenue" style="margin-bottom: 0; min-width: 0; overflow: hidden; display: flex; flex-direction: column; padding: 0.95rem 1.15rem;">
+      <div class="eq-admin-card__header" style="margin-bottom: 0.65rem; padding-bottom: 0.45rem;">
         <div>
-          <h3 class="eq-admin-card__title" style="font-size: 1.05rem;">
+          <h3 class="eq-admin-card__title" style="font-size: 0.98rem;">
             Sales Revenue &amp; Order Volume Trend
           </h3>
-          <span style="font-size: 0.78rem; color: var(--eq-charcoal-soft);">
-            Daily commercial performance over the past 14 days
+          <span style="font-size: 0.74rem; color: var(--eq-charcoal-soft);">
+            Daily trajectory over past 14 days
           </span>
         </div>
-        <div style="display: flex; align-items: center; gap: 0.75rem; font-size: 0.75rem;">
-          <span style="display: inline-flex; align-items: center; gap: 0.35rem;">
-            <span style="width: 10px; height: 10px; background: var(--eq-gold); border-radius: 2px;"></span>
+        <div style="display: flex; align-items: center; gap: 0.65rem; font-size: 0.72rem;">
+          <span style="display: inline-flex; align-items: center; gap: 0.3rem;">
+            <span style="width: 9px; height: 9px; background: var(--eq-gold); border-radius: 2px;"></span>
             Revenue (৳)
           </span>
-          <span style="display: inline-flex; align-items: center; gap: 0.35rem;">
-            <span style="width: 10px; height: 10px; background: var(--eq-navy); border-radius: 2px;"></span>
+          <span style="display: inline-flex; align-items: center; gap: 0.3rem;">
+            <span style="width: 9px; height: 9px; background: var(--eq-navy); border-radius: 2px;"></span>
             Orders
           </span>
         </div>
@@ -174,15 +251,15 @@
       </div>
     </section>
 
-    <!-- Right Chart: Category Distribution -->
-    <section class="eq-admin-card" style="margin-bottom: 0; min-width: 0; overflow: hidden; display: flex; flex-direction: column;">
-      <div class="eq-admin-card__header" style="margin-bottom: 1rem;">
+    <!-- Area 2: Category Distribution -->
+    <section class="eq-admin-card eq-grid-category" style="margin-bottom: 0; min-width: 0; overflow: hidden; display: flex; flex-direction: column; padding: 0.95rem 1.15rem;">
+      <div class="eq-admin-card__header" style="margin-bottom: 0.55rem; padding-bottom: 0.4rem;">
         <div>
-          <h3 class="eq-admin-card__title" style="font-size: 1.05rem;">
+          <h3 class="eq-admin-card__title" style="font-size: 0.95rem;">
             Category Sales Share
           </h3>
-          <span style="font-size: 0.78rem; color: var(--eq-charcoal-soft);">
-            Revenue distribution by parent category
+          <span style="font-size: 0.72rem; color: var(--eq-charcoal-soft);">
+            Revenue distribution
           </span>
         </div>
       </div>
@@ -191,26 +268,21 @@
       </div>
     </section>
 
-  </div>
-
-  <!-- Secondary Insights Grid (Top Creations & Export) -->
-  <div class="eq-dashboard-widgets-grid">
-    
-    <!-- Top 5 Best-Selling Creations -->
-    <section class="eq-admin-card" style="margin-bottom: 0; min-width: 0; overflow: hidden;">
-      <div class="eq-admin-card__header">
+    <!-- Area 3: Top 5 Best-Selling Creations -->
+    <section class="eq-admin-card eq-grid-top-creations" style="margin-bottom: 0; min-width: 0; overflow: hidden; padding: 0.95rem 1.15rem;">
+      <div class="eq-admin-card__header" style="margin-bottom: 0.65rem; padding-bottom: 0.45rem;">
         <div>
-          <h3 class="eq-admin-card__title" style="font-size: 1.05rem;">
+          <h3 class="eq-admin-card__title" style="font-size: 0.98rem;">
             Top Performing Creations
           </h3>
-          <span style="font-size: 0.78rem; color: var(--eq-charcoal-soft);">
-            Ranked by units sold across completed orders
+          <span style="font-size: 0.74rem; color: var(--eq-charcoal-soft);">
+            Ranked by units sold across orders
           </span>
         </div>
       </div>
 
       <div class="eq-admin-table-wrap" style="width: 100%; min-width: 0; overflow-x: auto;">
-        <table class="eq-admin-table" style="font-size: 0.84rem; min-width: 360px;">
+        <table class="eq-admin-table" style="font-size: 0.82rem; min-width: 340px;">
           <thead>
             <tr>
               <th>Piece</th>
@@ -223,9 +295,9 @@
             @forelse($topProducts as $top)
               <tr>
                 <td>
-                  <div style="display: flex; align-items: center; gap: 0.75rem;">
+                  <div style="display: flex; align-items: center; gap: 0.65rem;">
                     @if($top->product_image)
-                      <img src="{{ asset($top->product_image) }}" alt="{{ $top->product_name }}" style="width: 36px; height: 46px; object-fit: cover; border-radius: 4px; border: 1px solid var(--eq-line); flex-shrink: 0;" />
+                      <img src="{{ asset($top->product_image) }}" alt="{{ $top->product_name }}" style="width: 32px; height: 42px; object-fit: cover; border-radius: 4px; border: 1px solid var(--eq-line); flex-shrink: 0;" />
                     @endif
                     <div style="min-width: 0;">
                       @if($top->product_slug)
@@ -239,7 +311,7 @@
                   </div>
                 </td>
                 <td style="color: var(--eq-charcoal-soft);">
-                  {{ $top->category_name ?? 'Atelier' }}
+                  {{ $top->category_name ?? 'Studio Piece' }}
                 </td>
                 <td style="text-align: center; font-weight: 600;">
                   {{ $top->units_sold }}
@@ -250,7 +322,7 @@
               </tr>
             @empty
               <tr>
-                <td colspan="4" style="text-align: center; padding: 2rem; color: var(--eq-charcoal-soft);">
+                <td colspan="4" style="text-align: center; padding: 1.5rem; color: var(--eq-charcoal-soft);">
                   No order item records yet to aggregate top products.
                 </td>
               </tr>
@@ -260,42 +332,42 @@
       </div>
     </section>
 
-    <!-- Quick Ledger & Order Export Card -->
-    <section class="eq-admin-card" style="margin-bottom: 0; min-width: 0; overflow: hidden;">
-      <div class="eq-admin-card__header">
+    <!-- Area 4: Quick Ledger & Order Export Card -->
+    <section class="eq-admin-card eq-grid-export" style="margin-bottom: 0; min-width: 0; overflow: hidden; padding: 0.95rem 1.15rem;">
+      <div class="eq-admin-card__header" style="margin-bottom: 0.55rem; padding-bottom: 0.4rem;">
         <div>
-          <h3 class="eq-admin-card__title" style="font-size: 1.05rem;">
+          <h3 class="eq-admin-card__title" style="font-size: 0.95rem;">
             Report &amp; Ledger Export
           </h3>
-          <span style="font-size: 0.78rem; color: var(--eq-charcoal-soft);">
-            Filtered downloads for Excel spreadsheets
+          <span style="font-size: 0.72rem; color: var(--eq-charcoal-soft);">
+            Excel downloads
           </span>
         </div>
       </div>
 
-      <div style="font-size: 0.86rem; color: var(--eq-charcoal); line-height: 1.6; margin-bottom: 1.25rem;">
-        <p style="margin-bottom: 0.75rem;">
+      <div style="font-size: 0.84rem; color: var(--eq-charcoal); line-height: 1.5; margin-bottom: 0.65rem;">
+        <p class="eq-export-desc" style="margin-bottom: 0.55rem;">
           Download a complete chronological transaction ledger formatted for Microsoft Excel with UTF-8 encoding.
         </p>
-        <div style="display: flex; flex-direction: column; gap: 0.5rem; min-width: 0;">
-          <a href="{{ route('admin.orders.export') }}" class="eq-admin-btn eq-admin-btn--primary" style="justify-content: center; padding: 0.6rem; text-align: center; white-space: normal; line-height: 1.35;">
+        <div style="display: flex; flex-direction: column; gap: 0.45rem; min-width: 0;">
+          <a href="{{ route('admin.orders.export') }}" class="eq-admin-btn eq-admin-btn--primary eq-export-btn-full" style="justify-content: center; padding: 0.45rem 0.6rem; text-align: center; white-space: normal; line-height: 1.35; font-size: 0.8rem;">
             &darr; Export Complete Orders Ledger
           </a>
-          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)); gap: 0.5rem; margin-top: 0.25rem; min-width: 0;">
-            <a href="{{ route('admin.orders.export', ['status' => 'pending']) }}" class="eq-admin-btn eq-admin-btn--outline" style="justify-content: center; font-size: 0.78rem; padding: 0.42rem; text-align: center;">
+          <div class="eq-export-pills" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); gap: 0.4rem; margin-top: 0.15rem; min-width: 0;">
+            <a href="{{ route('admin.orders.export', ['status' => 'pending']) }}" class="eq-admin-btn eq-admin-btn--outline" style="justify-content: center; font-size: 0.75rem; padding: 0.35rem; text-align: center;">
               Pending
             </a>
-            <a href="{{ route('admin.orders.export', ['status' => 'processing']) }}" class="eq-admin-btn eq-admin-btn--outline" style="justify-content: center; font-size: 0.78rem; padding: 0.42rem; text-align: center;">
+            <a href="{{ route('admin.orders.export', ['status' => 'processing']) }}" class="eq-admin-btn eq-admin-btn--outline" style="justify-content: center; font-size: 0.75rem; padding: 0.35rem; text-align: center;">
               Processing
             </a>
-            <a href="{{ route('admin.orders.export', ['status' => 'delivered']) }}" class="eq-admin-btn eq-admin-btn--outline" style="justify-content: center; font-size: 0.78rem; padding: 0.42rem; text-align: center;">
+            <a href="{{ route('admin.orders.export', ['status' => 'delivered']) }}" class="eq-admin-btn eq-admin-btn--outline" style="justify-content: center; font-size: 0.75rem; padding: 0.35rem; text-align: center;">
               Delivered
             </a>
           </div>
         </div>
       </div>
 
-      <div style="background: var(--eq-cream); padding: 0.85rem 1rem; border-radius: 6px; border: 1px solid var(--eq-line); font-size: 0.78rem; color: var(--eq-charcoal-soft); word-break: break-word;">
+      <div class="eq-export-footer" style="background: var(--eq-cream); padding: 0.65rem 0.85rem; border-radius: 6px; border: 1px solid var(--eq-line); font-size: 0.74rem; color: var(--eq-charcoal-soft); word-break: break-word;">
         &bull; Includes Order #, Contacts, Address, Courier Tracking, Line Totals, and Fulfillment Status.
       </div>
     </section>
@@ -303,21 +375,21 @@
   </div>
 
   <!-- Recent Orders Table Section -->
-  <section class="eq-admin-card" style="min-width: 0; overflow: hidden;">
-    <div class="eq-admin-card__header">
+  <section class="eq-admin-card" style="min-width: 0; overflow: hidden; padding: 0.95rem 1.15rem;">
+    <div class="eq-admin-card__header" style="margin-bottom: 0.65rem; padding-bottom: 0.45rem;">
       <div>
-        <h2 class="eq-admin-card__title">Recent Customer Orders (Latest 10)</h2>
-        <span style="font-size: 0.78rem; color: var(--eq-charcoal-soft);">
+        <h2 class="eq-admin-card__title" style="font-size: 0.98rem;">Recent Customer Orders (Latest 10)</h2>
+        <span style="font-size: 0.74rem; color: var(--eq-charcoal-soft);">
           Latest incoming transaction stream
         </span>
       </div>
-      <a href="{{ route('admin.orders') }}" class="eq-admin-btn eq-admin-btn--outline">
+      <a href="{{ route('admin.orders') }}" class="eq-admin-btn eq-admin-btn--outline" style="font-size: 0.76rem; padding: 0.3rem 0.65rem;">
         View All Orders &rarr;
       </a>
     </div>
 
     <div class="eq-admin-table-wrap" style="width: 100%; min-width: 0; overflow-x: auto;">
-      <table class="eq-admin-table" style="min-width: 720px;">
+      <table class="eq-admin-table" style="min-width: 660px; font-size: 0.82rem;">
         <thead>
           <tr>
             <th>Order #</th>
@@ -340,17 +412,17 @@
               </td>
               <td>
                 <div style="font-weight: 500;">{{ $order->customer_name }}</div>
-                <div style="font-size: 0.76rem; color: var(--eq-charcoal-soft);">{{ $order->customer_phone }}</div>
+                <div style="font-size: 0.74rem; color: var(--eq-charcoal-soft);">{{ $order->customer_phone }}</div>
               </td>
               <td>
                 <div>{{ $order->district }}</div>
-                <div style="font-size: 0.74rem; color: var(--eq-charcoal-soft);">{{ $order->area }}</div>
+                <div style="font-size: 0.72rem; color: var(--eq-charcoal-soft);">{{ $order->area }}</div>
               </td>
               <td style="font-weight: 600; color: var(--eq-gold-dark); white-space: nowrap;">
                 ৳{{ number_format($order->total) }}
               </td>
               <td>
-                <span style="font-size: 0.78rem; text-transform: uppercase; background: var(--eq-cream); padding: 0.2rem 0.5rem; border-radius: 4px;">
+                <span style="font-size: 0.74rem; text-transform: uppercase; background: var(--eq-cream); padding: 0.15rem 0.45rem; border-radius: 4px;">
                   {{ $order->payment_method ?? 'COD' }}
                 </span>
               </td>
@@ -359,18 +431,18 @@
                   {{ str_replace('_', ' ', $order->status) }}
                 </span>
               </td>
-              <td style="font-size: 0.82rem; color: var(--eq-charcoal-soft); white-space: nowrap;">
+              <td style="font-size: 0.78rem; color: var(--eq-charcoal-soft); white-space: nowrap;">
                 {{ $order->created_at->format('d M Y, h:i A') }}
               </td>
               <td style="text-align: right;">
-                <a href="{{ route('admin.orders.show', $order->id) }}" class="eq-admin-btn eq-admin-btn--outline" style="padding: 0.3rem 0.65rem; font-size: 0.78rem;">
+                <a href="{{ route('admin.orders.show', $order->id) }}" class="eq-admin-btn eq-admin-btn--outline" style="padding: 0.25rem 0.55rem; font-size: 0.76rem;">
                   Inspect &rarr;
                 </a>
               </td>
             </tr>
           @empty
             <tr>
-              <td colspan="8" style="text-align: center; padding: 2.5rem; color: var(--eq-charcoal-soft);">
+              <td colspan="8" style="text-align: center; padding: 2rem; color: var(--eq-charcoal-soft);">
                 No customer orders recorded yet.
               </td>
             </tr>
@@ -409,7 +481,7 @@
                 pointBackgroundColor: '#c9962f',
                 pointBorderColor: '#ffffff',
                 pointBorderWidth: 1.5,
-                pointRadius: 4,
+                pointRadius: 3.5,
                 yAxisID: 'yRevenue'
               },
               {
@@ -419,7 +491,7 @@
                 backgroundColor: 'rgba(27, 58, 75, 0.78)',
                 hoverBackgroundColor: '#1b3a4b',
                 borderRadius: 4,
-                barThickness: 12,
+                barThickness: 11,
                 yAxisID: 'yOrders'
               }
             ]
@@ -439,8 +511,8 @@
                 backgroundColor: '#1b3a4b',
                 titleColor: '#ffffff',
                 bodyColor: '#f7f2e9',
-                padding: 10,
-                boxPadding: 4,
+                padding: 8,
+                boxPadding: 3,
                 usePointStyle: true,
                 callbacks: {
                   label: function (context) {
@@ -466,7 +538,7 @@
                 ticks: {
                   font: {
                     family: 'Jost, sans-serif',
-                    size: 11
+                    size: 10.5
                   },
                   color: '#8c857b'
                 }
@@ -481,7 +553,7 @@
                 ticks: {
                   font: {
                     family: 'Jost, sans-serif',
-                    size: 11
+                    size: 10.5
                   },
                   color: '#8c857b',
                   callback: function (value) {
@@ -500,7 +572,7 @@
                   stepSize: 1,
                   font: {
                     family: 'Jost, sans-serif',
-                    size: 11
+                    size: 10.5
                   },
                   color: '#8c857b'
                 }
@@ -534,7 +606,7 @@
                 legend: {
                   position: 'bottom',
                   labels: {
-                    font: { family: 'Jost, sans-serif', size: 12 },
+                    font: { family: 'Jost, sans-serif', size: 11 },
                     color: '#8c857b'
                   }
                 },
@@ -569,11 +641,11 @@
                 legend: {
                   position: 'bottom',
                   labels: {
-                    boxWidth: 12,
-                    padding: 12,
+                    boxWidth: window.innerWidth < 768 ? 7 : 10,
+                    padding: window.innerWidth < 768 ? 5 : 10,
                     font: {
                       family: 'Jost, sans-serif',
-                      size: 11
+                      size: window.innerWidth < 768 ? 9 : 10.5
                     },
                     color: '#5c564d'
                   }

@@ -222,7 +222,7 @@
               <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
               <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
             </svg>
-            <span>Confirm &amp; Place Order &bull; <span class="order-total-display">৳{{ number_format($subtotal + 80) }}</span></span>
+            <span>Confirm &amp; Place Order &bull; <span class="order-total-display">৳{{ number_format(max(0, $subtotal - ($discount ?? 0)) + 80) }}</span></span>
           </button>
         </div>
 
@@ -249,19 +249,53 @@
           @endforeach
         </div>
 
+        <!-- Promo / Coupon Code Entry -->
+        <div class="eq-checkout-coupon-box" style="margin-top: 1.25rem; margin-bottom: 1.25rem; padding: 0.85rem 1rem; background: #ffffff; border: 1px solid var(--eq-line); border-radius: 8px;">
+          @if(!empty($coupon) && ($discount ?? 0) > 0)
+            <div style="display: flex; align-items: center; justify-content: space-between; background: rgba(40, 167, 69, 0.08); border: 1px dashed #28a745; border-radius: 6px; padding: 0.55rem 0.8rem;">
+              <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <span style="background: #28a745; color: #fff; font-size: 0.74rem; font-weight: 700; padding: 0.2rem 0.5rem; border-radius: 4px; letter-spacing: 0.5px;">{{ $coupon['code'] }}</span>
+                <span style="font-size: 0.82rem; color: #1e7e34; font-weight: 600;">-৳{{ number_format($discount) }} Applied</span>
+              </div>
+              <form action="{{ route('cart.coupon.remove') }}" method="POST" style="margin: 0;">
+                @csrf
+                <button type="submit" style="background: none; border: none; color: #dc3545; font-size: 0.78rem; font-weight: 600; cursor: pointer; text-decoration: underline; padding: 0;">Remove</button>
+              </form>
+            </div>
+          @else
+            <form action="{{ route('cart.coupon.apply') }}" method="POST" style="display: flex; gap: 0.45rem; margin: 0;">
+              @csrf
+              <input type="text" name="code" placeholder="Promo code (e.g. EID2026)" value="{{ old('code') }}" style="flex: 1; min-height: 38px; padding: 0.4rem 0.75rem; font-size: 0.82rem; text-transform: uppercase; border: 1px solid #d1d5db; border-radius: 6px; font-family: monospace;" required />
+              <button type="submit" style="min-height: 38px; padding: 0 1.1rem; background: var(--eq-charcoal, #1a1a1a); color: #ffffff; font-size: 0.82rem; font-weight: 600; border: none; border-radius: 6px; cursor: pointer; transition: background 0.2s ease;">Apply</button>
+            </form>
+            @if(session('error'))
+              <p style="color: #dc3545; font-size: 0.78rem; margin: 0.4rem 0 0 0;">{{ session('error') }}</p>
+            @endif
+            @if(session('success'))
+              <p style="color: #28a745; font-size: 0.78rem; margin: 0.4rem 0 0 0;">{{ session('success') }}</p>
+            @endif
+          @endif
+        </div>
+
         <!-- Price Breakdown -->
         <div class="eq-price-breakdown">
           <div class="eq-price-row">
             <span>Subtotal</span>
             <span id="price-subtotal">৳{{ number_format($subtotal) }}</span>
           </div>
+          @if(!empty($coupon) && ($discount ?? 0) > 0)
+            <div class="eq-price-row" id="price-discount-row" style="color: #28a745; font-weight: 600;">
+              <span>Promo Discount ({{ $coupon['code'] }})</span>
+              <span id="price-discount">-৳{{ number_format($discount) }}</span>
+            </div>
+          @endif
           <div class="eq-price-row">
             <span>Delivery Fee</span>
             <span id="price-shipping">৳80</span>
           </div>
           <div class="eq-price-row eq-price-row--total">
             <span>Grand Total</span>
-            <span class="eq-total-amount" id="price-grand-total">৳{{ number_format($subtotal + 80) }}</span>
+            <span class="eq-total-amount" id="price-grand-total">৳{{ number_format(max(0, $subtotal - ($discount ?? 0)) + 80) }}</span>
           </div>
         </div>
 
@@ -292,6 +326,7 @@
 @push('scripts')
 <script>
   const checkoutSubtotal = {{ (float) $subtotal }};
+  const checkoutDiscount = {{ (float) ($discount ?? 0) }};
 
   function selectShippingZone(zone, fee) {
     const cardInside = document.getElementById('card-shipping-inside');
@@ -308,7 +343,7 @@
       if (cardInside) cardInside.classList.remove('is-selected');
     }
 
-    const total = checkoutSubtotal + fee;
+    const total = Math.max(0, checkoutSubtotal - checkoutDiscount) + fee;
     const formattedTotal = '৳' + total.toLocaleString('en-IN');
 
     if (shippingEl) shippingEl.textContent = '৳' + fee;

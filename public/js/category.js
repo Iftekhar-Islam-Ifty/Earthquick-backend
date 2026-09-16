@@ -561,7 +561,7 @@
       name: "Heirloom Botanical Nakshi Kantha Quilt",
       category: "home-decor",
       subCategory: "kantha",
-      categoryLabel: "Living Atelier",
+      categoryLabel: "Living Studio",
       subLabel: "Kantha Quilt",
       price: 8500,
       oldPrice: 9800,
@@ -583,7 +583,7 @@
       name: "Floral Geometric Hand-Stitched Kantha Throw",
       category: "home-decor",
       subCategory: "kantha",
-      categoryLabel: "Living Atelier",
+      categoryLabel: "Living Studio",
       subLabel: "Kantha Throw",
       price: 6200,
       oldPrice: null,
@@ -605,7 +605,7 @@
       name: "Vintage Royal Zari Border Kantha Dohar",
       category: "home-decor",
       subCategory: "kantha",
-      categoryLabel: "Living Atelier",
+      categoryLabel: "Living Studio",
       subLabel: "Kantha Dohar",
       price: 7400,
       oldPrice: 8500,
@@ -627,7 +627,7 @@
       name: "Royal Indigo Hand-Blocked Percale Bedsheet Set",
       category: "home-decor",
       subCategory: "bedsheet",
-      categoryLabel: "Living Atelier",
+      categoryLabel: "Living Studio",
       subLabel: "Bedsheet Set",
       price: 5400,
       oldPrice: 6200,
@@ -649,7 +649,7 @@
       name: "Champagne Sateen Silk-Cotton King Bedsheet",
       category: "home-decor",
       subCategory: "bedsheet",
-      categoryLabel: "Living Atelier",
+      categoryLabel: "Living Studio",
       subLabel: "Bedsheet Set",
       price: 7900,
       oldPrice: 9000,
@@ -671,7 +671,7 @@
       name: "Terracotta Floral Screen-Printed Cotton Sheet",
       category: "home-decor",
       subCategory: "bedsheet",
-      categoryLabel: "Living Atelier",
+      categoryLabel: "Living Studio",
       subLabel: "Bedsheet Set",
       price: 4200,
       oldPrice: null,
@@ -693,7 +693,7 @@
       name: "Embroidered Zari Velvet Cushion Cover Set (Pair)",
       category: "home-decor",
       subCategory: "cushion-cover",
-      categoryLabel: "Living Atelier",
+      categoryLabel: "Living Studio",
       subLabel: "Cushion Cover",
       price: 2600,
       oldPrice: 3200,
@@ -715,7 +715,7 @@
       name: "Nakshi Applique Raw Silk Cushion Cover Set",
       category: "home-decor",
       subCategory: "cushion-cover",
-      categoryLabel: "Living Atelier",
+      categoryLabel: "Living Studio",
       subLabel: "Cushion Cover",
       price: 2950,
       oldPrice: null,
@@ -737,7 +737,7 @@
       name: "Minimalist Noir & Indigo Handwoven Cushion Covers",
       category: "home-decor",
       subCategory: "cushion-cover",
-      categoryLabel: "Living Atelier",
+      categoryLabel: "Living Studio",
       subLabel: "Cushion Cover",
       price: 1950,
       oldPrice: 2400,
@@ -766,7 +766,7 @@
   const CATEGORY_META = {
     "women": {
       title: "Women's Collection",
-      eyebrow: "NOUS TELOS ATELIER",
+      eyebrow: "NOUS TELOS STUDIO",
       desc: "Artisanal sarees woven on heritage wooden looms, alongside impeccably tailored three-piece and modern co-ord ensembles.",
       subCategories: [
         { key: "all", label: "All Women" },
@@ -1268,7 +1268,7 @@
             ${formattedOldPrice}
             <span>${formattedPrice}</span>
           </div>
-          <span class="eq-product-stock-tag">${product.stockCount <= 3 ? `⚡ Only ${product.stockCount} left in atelier` : 'Ready to Ship'}</span>
+          <span class="eq-product-stock-tag">${product.stockCount <= 3 ? `⚡ Only ${product.stockCount} left in stock` : 'Ready to Ship'}</span>
         </div>
       </article>
     `;

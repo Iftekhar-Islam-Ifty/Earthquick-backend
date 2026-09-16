@@ -31,6 +31,8 @@ class Order extends Model
         'address',
         'order_notes',
         'payment_method',
+        'coupon_code',
+        'discount_amount',
         'subtotal',
         'delivery_fee',
         'total',
@@ -39,6 +41,21 @@ class Order extends Model
         'tracking_number',
         'admin_notes',
     ];
+
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'subtotal'        => 'float',
+            'discount_amount' => 'float',
+            'delivery_fee'    => 'float',
+            'total'           => 'float',
+        ];
+    }
 
     /* =========================================================================
      * RELATIONSHIPS

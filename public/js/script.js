@@ -207,7 +207,7 @@ function initNavbar() {
       link.addEventListener("click", (e) => {
         const parentDropdown = link.closest(".eq-nav-item--has-dropdown");
         // If clicking category header ("Women" or "Home Decor") on mobile, toggle subcategory accordion
-        if (parentDropdown && link.parentElement && link.parentElement.classList.contains("eq-nav-link-wrapper") && window.innerWidth <= 768) {
+        if (parentDropdown && link.parentElement && link.parentElement.classList.contains("eq-nav-link-wrapper") && (window.innerWidth <= 991 || (links && links.classList.contains("is-open")))) {
           e.preventDefault();
           e.stopPropagation();
           const isExpanded = parentDropdown.classList.toggle("is-expanded");
@@ -352,7 +352,7 @@ function initSearchModal() {
             <circle cx="12" cy="12" r="10" stroke-opacity="0.25"></circle>
             <path d="M12 2a10 10 0 0 1 10 10" stroke-linecap="round"></path>
           </svg>
-          <span>Searching handcrafted atelier pieces...</span>
+          <span>Searching handcrafted pieces...</span>
         </div>
       `;
     }
@@ -463,6 +463,9 @@ const EarthquickCart = {
   items: [],
   subtotal: 0,
   count: 0,
+  coupon: null,
+  discount: 0,
+  total: 0,
 
   getCsrfToken() {
     const meta = document.querySelector('meta[name="csrf-token"]');
@@ -494,6 +497,9 @@ const EarthquickCart = {
         this.items = data.items || [];
         this.count = data.count || 0;
         this.subtotal = data.subtotal || 0;
+        this.coupon = data.coupon || null;
+        this.discount = data.discount || 0;
+        this.total = data.total || data.subtotal || 0;
         this.updateBadges();
         this.renderDrawer();
       }
@@ -534,6 +540,9 @@ const EarthquickCart = {
         this.items = data.items || [];
         this.count = data.count || 0;
         this.subtotal = data.subtotal || 0;
+        this.coupon = data.coupon || null;
+        this.discount = data.discount || 0;
+        this.total = data.total || data.subtotal || 0;
         this.updateBadges();
         this.renderDrawer();
         this.openDrawer();
@@ -568,6 +577,9 @@ const EarthquickCart = {
         this.items = data.items || [];
         this.count = data.count || 0;
         this.subtotal = data.subtotal || 0;
+        this.coupon = data.coupon || null;
+        this.discount = data.discount || 0;
+        this.total = data.total || data.subtotal || 0;
         this.updateBadges();
         this.renderDrawer();
       }
@@ -596,6 +608,9 @@ const EarthquickCart = {
         this.items = data.items || [];
         this.count = data.count || 0;
         this.subtotal = data.subtotal || 0;
+        this.coupon = data.coupon || null;
+        this.discount = data.discount || 0;
+        this.total = data.total || data.subtotal || 0;
         this.updateBadges();
         this.renderDrawer();
         Toast.show(data.message || "Item removed from bag.");
@@ -620,10 +635,76 @@ const EarthquickCart = {
       this.items = [];
       this.count = 0;
       this.subtotal = 0;
+      this.coupon = null;
+      this.discount = 0;
+      this.total = 0;
       this.updateBadges();
       this.renderDrawer();
     } catch (e) {
       console.error("Cart clear error:", e);
+    }
+  },
+
+  async applyCoupon(code) {
+    const input = this.drawerEl ? this.drawerEl.querySelector("#eq-drawer-coupon-input") : null;
+    const finalCode = code || (input ? input.value.trim() : "");
+    if (!finalCode) {
+      Toast.show("Please enter a promo code.");
+      return;
+    }
+
+    try {
+      const res = await fetch("/cart/coupon/apply", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+          "X-CSRF-TOKEN": this.getCsrfToken(),
+          "X-Requested-With": "XMLHttpRequest"
+        },
+        body: JSON.stringify({ code: finalCode })
+      });
+
+      const data = await res.json();
+      if (data.success) {
+        this.coupon = data.coupon;
+        this.discount = data.discount || 0;
+        this.total = data.total;
+        this.subtotal = data.subtotal;
+        this.renderDrawer();
+        Toast.show(data.message || "Promo code applied!");
+      } else {
+        Toast.show(data.message || "Invalid promo code.");
+      }
+    } catch (e) {
+      console.error("Apply coupon error:", e);
+      Toast.show("Could not apply promo code.");
+    }
+  },
+
+  async removeCoupon() {
+    try {
+      const res = await fetch("/cart/coupon/remove", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+          "X-CSRF-TOKEN": this.getCsrfToken(),
+          "X-Requested-With": "XMLHttpRequest"
+        }
+      });
+
+      const data = await res.json();
+      if (data.success) {
+        this.coupon = null;
+        this.discount = 0;
+        this.total = data.total;
+        this.subtotal = data.subtotal;
+        this.renderDrawer();
+        Toast.show(data.message || "Promo code removed.");
+      }
+    } catch (e) {
+      console.error("Remove coupon error:", e);
     }
   },
 
@@ -677,9 +758,20 @@ const EarthquickCart = {
       </div>
 
       <div class="eq-cart-drawer__footer">
-        <div class="eq-cart-drawer__subtotal-row">
+        <div id="eq-drawer-coupon-box" style="margin-bottom: 0.75rem;">
+          <!-- Injected dynamically in renderDrawer -->
+        </div>
+        <div class="eq-cart-drawer__subtotal-row" id="eq-drawer-subtotal-row">
           <span class="eq-cart-drawer__subtotal-label">Subtotal</span>
           <span class="eq-cart-drawer__subtotal-amount" id="eq-cart-subtotal">৳0</span>
+        </div>
+        <div class="eq-cart-drawer__subtotal-row" id="eq-drawer-discount-row" style="display: none; color: #28a745;">
+          <span class="eq-cart-drawer__subtotal-label" id="eq-drawer-discount-label">Promo Discount</span>
+          <span class="eq-cart-drawer__subtotal-amount" id="eq-cart-discount">-৳0</span>
+        </div>
+        <div class="eq-cart-drawer__subtotal-row" id="eq-drawer-total-row" style="display: none; font-weight: 700;">
+          <span class="eq-cart-drawer__subtotal-label">Total</span>
+          <span class="eq-cart-drawer__subtotal-amount" id="eq-cart-total">৳0</span>
         </div>
         <p class="eq-cart-drawer__note">Delivery fee and taxes calculated at checkout</p>
         <button type="button" class="eq-cart-drawer__btn-checkout" id="eq-btn-checkout">
@@ -762,6 +854,12 @@ const EarthquickCart = {
           <p class="eq-cart-empty__desc">Explore our handpicked collection and discover pieces crafted for you.</p>
         </div>
       `;
+      const couponBox = this.drawerEl.querySelector("#eq-drawer-coupon-box");
+      const discountRow = this.drawerEl.querySelector("#eq-drawer-discount-row");
+      const totalRow = this.drawerEl.querySelector("#eq-drawer-total-row");
+      if (couponBox) couponBox.innerHTML = "";
+      if (discountRow) discountRow.style.display = "none";
+      if (totalRow) totalRow.style.display = "none";
       return;
     }
 
@@ -801,6 +899,46 @@ const EarthquickCart = {
         `;
       })
       .join("");
+
+    // Promo Code & Price Breakdown Rendering
+    const couponBox = this.drawerEl.querySelector("#eq-drawer-coupon-box");
+    const discountRow = this.drawerEl.querySelector("#eq-drawer-discount-row");
+    const discountLabel = this.drawerEl.querySelector("#eq-drawer-discount-label");
+    const discountEl = this.drawerEl.querySelector("#eq-cart-discount");
+    const totalRow = this.drawerEl.querySelector("#eq-drawer-total-row");
+    const totalEl = this.drawerEl.querySelector("#eq-cart-total");
+
+    if (couponBox) {
+      if (this.coupon && this.discount > 0) {
+        couponBox.innerHTML = `
+          <div style="display: flex; align-items: center; justify-content: space-between; background: rgba(40, 167, 69, 0.08); border: 1px dashed #28a745; border-radius: 6px; padding: 0.45rem 0.65rem; font-size: 0.8rem;">
+            <div style="display: flex; align-items: center; gap: 0.4rem;">
+              <span style="background: #28a745; color: #fff; font-weight: 700; font-size: 0.72rem; padding: 2px 6px; border-radius: 4px; letter-spacing: 0.5px;">${this.coupon.code}</span>
+              <span style="color: #1e7e34; font-weight: 600;">-${this.formatMoney(this.discount)}</span>
+            </div>
+            <button type="button" onclick="EarthquickCart.removeCoupon()" style="background: none; border: none; color: #dc3545; font-size: 0.75rem; font-weight: 600; cursor: pointer; text-decoration: underline; padding: 0;">Remove</button>
+          </div>
+        `;
+        if (discountRow) {
+          discountRow.style.display = "flex";
+          if (discountLabel) discountLabel.textContent = `Promo (${this.coupon.code})`;
+          if (discountEl) discountEl.textContent = `-${this.formatMoney(this.discount)}`;
+        }
+        if (totalRow) {
+          totalRow.style.display = "flex";
+          if (totalEl) totalEl.textContent = this.formatMoney(this.total || Math.max(0, subtotal - this.discount));
+        }
+      } else {
+        couponBox.innerHTML = `
+          <form onsubmit="event.preventDefault(); EarthquickCart.applyCoupon();" style="display: flex; gap: 0.35rem; margin: 0;">
+            <input type="text" id="eq-drawer-coupon-input" placeholder="Promo code" style="flex: 1; min-height: 34px; padding: 0.3rem 0.55rem; font-size: 0.78rem; text-transform: uppercase; border: 1px solid #d1d5db; border-radius: 4px; font-family: monospace;" />
+            <button type="submit" style="min-height: 34px; padding: 0 0.75rem; background: var(--eq-charcoal, #1a1a1a); color: #fff; font-size: 0.76rem; font-weight: 600; border: none; border-radius: 4px; cursor: pointer;">Apply</button>
+          </form>
+        `;
+        if (discountRow) discountRow.style.display = "none";
+        if (totalRow) totalRow.style.display = "none";
+      }
+    }
   },
 
   openDrawer() {
@@ -926,19 +1064,27 @@ function initCarousels() {
     // Calculate dynamic step per card based on card width + gap
     function cardStep() {
       const card = track.querySelector(".eq-product-card");
-      if (!card) return 300;
+      if (!card) return 220;
       const style = window.getComputedStyle(track);
       const gap = parseFloat(style.columnGap || style.gap || "0");
       return card.getBoundingClientRect().width + gap;
     }
 
-    // Maximum scroll boundary
+    // Maximum scroll boundary for desktop
     function maxScroll() {
       return Math.max(0, track.scrollWidth - viewport.clientWidth);
     }
 
     // Update track position and toggle arrow disabled state
     function update() {
+      if (window.innerWidth <= 768) {
+        track.style.transform = "none";
+        const maxScrollLeft = viewport.scrollWidth - viewport.clientWidth;
+        if (prevBtn) prevBtn.disabled = viewport.scrollLeft <= 4;
+        if (nextBtn) nextBtn.disabled = viewport.scrollLeft >= maxScrollLeft - 4;
+        return;
+      }
+
       const max = maxScroll();
       position = Math.min(Math.max(position, 0), max);
       track.style.transform = `translateX(-${position}px)`;
@@ -950,19 +1096,37 @@ function initCarousels() {
     // Arrow button controls
     if (prevBtn) {
       prevBtn.addEventListener("click", () => {
-        position -= cardStep();
-        update();
+        if (window.innerWidth <= 768) {
+          viewport.scrollBy({ left: -cardStep() * 2, behavior: "smooth" });
+        } else {
+          position -= cardStep();
+          update();
+        }
       });
     }
 
     if (nextBtn) {
       nextBtn.addEventListener("click", () => {
-        position += cardStep();
-        update();
+        if (window.innerWidth <= 768) {
+          viewport.scrollBy({ left: cardStep() * 2, behavior: "smooth" });
+        } else {
+          position += cardStep();
+          update();
+        }
       });
     }
 
     // Touch Swipe Support for Mobile & Tablet
+    // On mobile, listen to native smooth scroll events to update arrow buttons
+    viewport.addEventListener("scroll", () => {
+      if (window.innerWidth <= 768) {
+        const maxScrollLeft = viewport.scrollWidth - viewport.clientWidth;
+        if (prevBtn) prevBtn.disabled = viewport.scrollLeft <= 4;
+        if (nextBtn) nextBtn.disabled = viewport.scrollLeft >= maxScrollLeft - 4;
+      }
+    }, { passive: true });
+
+    // Touch Swipe Support for desktop / tablet (> 768px)
     let startX = 0;
     let currentX = 0;
     let isSwiping = false;
@@ -970,6 +1134,7 @@ function initCarousels() {
     viewport.addEventListener(
       "touchstart",
       (e) => {
+        if (window.innerWidth <= 768) return; // Let native hardware touch scrolling handle mobile
         if (!e.touches[0]) return;
         startX = e.touches[0].clientX;
         currentX = startX;
@@ -981,6 +1146,7 @@ function initCarousels() {
     viewport.addEventListener(
       "touchmove",
       (e) => {
+        if (window.innerWidth <= 768) return;
         if (!isSwiping || !e.touches[0]) return;
         currentX = e.touches[0].clientX;
       },
@@ -988,6 +1154,7 @@ function initCarousels() {
     );
 
     viewport.addEventListener("touchend", () => {
+      if (window.innerWidth <= 768) return;
       if (!isSwiping) return;
       isSwiping = false;
       const diffX = startX - currentX;
@@ -1006,6 +1173,12 @@ function initCarousels() {
 
     // Re-evaluate on window resize & image load completion
     window.addEventListener("resize", update);
+    window.addEventListener("resize", () => {
+      if (window.innerWidth > 768) {
+        viewport.scrollLeft = 0;
+      }
+      update();
+    });
     window.addEventListener("load", update);
     update();
   });

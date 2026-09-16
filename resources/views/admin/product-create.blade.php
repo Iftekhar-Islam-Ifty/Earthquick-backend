@@ -12,7 +12,7 @@
         &larr; Back to Products Portfolio
       </a>
       <h2 style="font-family: var(--font-display); font-size: 1.5rem; color: var(--eq-navy); margin-top: 0.25rem;">
-        Create New Atelier Masterpiece
+        Create New Product
       </h2>
     </div>
   </div>
@@ -33,10 +33,10 @@
   <form method="POST" action="{{ route('admin.products.store') }}" enctype="multipart/form-data">
     @csrf
 
-    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem;">
+    <div class="eq-admin-2col-grid">
       
       <!-- LEFT COLUMN: Primary Product Attributes -->
-      <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+      <div style="display: flex; flex-direction: column; gap: 1.25rem;">
         
         <!-- Basic Information Card -->
         <div class="eq-admin-card" style="margin-bottom: 0;">
@@ -138,9 +138,9 @@
 
         </div>
 
-        <!-- Specifications & Artisan Details Card -->
+        <!-- Specifications & Details Card -->
         <div class="eq-admin-card" style="margin-bottom: 0;">
-          <h3 class="eq-admin-card__title" style="margin-bottom: 1.25rem; font-size: 1.05rem;">Atelier Specifications</h3>
+          <h3 class="eq-admin-card__title" style="margin-bottom: 1.25rem; font-size: 1.05rem;">Product Specifications</h3>
 
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.25rem;">
             <div>
@@ -159,7 +159,7 @@
 
             <div>
               <label for="input-stock-quantity" style="display: block; font-size: 0.84rem; font-weight: 600; color: var(--eq-charcoal); margin-bottom: 0.4rem;">
-                Atelier Stock Units
+                Stock Units Available
               </label>
               <input 
                 type="number" 
@@ -225,7 +225,7 @@
 
           <div>
             <label for="textarea-description" style="display: block; font-size: 0.84rem; font-weight: 600; color: var(--eq-charcoal); margin-bottom: 0.4rem;">
-              Full Atelier Description
+              Full Product Description
             </label>
             <textarea 
               name="description" 
@@ -320,7 +320,7 @@
               class="eq-admin-btn eq-admin-btn--primary" 
               style="width: 100%; justify-content: center; padding: 0.8rem; font-size: 0.95rem; font-weight: 600;"
             >
-              Publish Atelier Product
+              Publish Product
             </button>
             <a 
               href="{{ route('admin.products') }}" 

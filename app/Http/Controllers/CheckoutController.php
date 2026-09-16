@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Coupon;
 use App\Models\Order;
 use App\Models\OrderItem;
 use Illuminate\Http\RedirectResponse;
@@ -39,11 +40,41 @@ class CheckoutController extends Controller
             $count += (int) $item['quantity'];
         }
 
+        // Validate and compute coupon discount if active in session
+        $coupon = null;
+        $discount = 0.00;
+        if (session()->has('coupon')) {
+            $sessionCoupon = session('coupon');
+            $couponModel = Coupon::find($sessionCoupon['id'] ?? null);
+            if ($couponModel && $couponModel->isValid($subtotal)['valid']) {
+                $discount = $couponModel->calculateDiscount($subtotal);
+                $coupon = [
+                    'id'       => $couponModel->id,
+                    'code'     => $couponModel->code,
+                    'name'     => $couponModel->name,
+                    'type'     => $couponModel->type,
+                    'value'    => $couponModel->value,
+                    'discount' => $discount,
+                ];
+                session()->put('coupon', $coupon);
+            } else {
+                session()->forget('coupon');
+            }
+        }
+
         // Chattogram delivery rates: BDT 80 inside city, BDT 150 outside city
         $deliveryFeeInside = 80;
         $deliveryFeeOutside = 150;
 
-        return view('checkout', compact('cart', 'subtotal', 'count', 'deliveryFeeInside', 'deliveryFeeOutside'));
+        return view('checkout', compact(
+            'cart',
+            'subtotal',
+            'count',
+            'deliveryFeeInside',
+            'deliveryFeeOutside',
+            'coupon',
+            'discount'
+        ));
     }
 
     /* =========================================================================
@@ -93,30 +124,47 @@ class CheckoutController extends Controller
 
         // Apply geographic delivery tariff
         $deliveryFee = ($request->delivery_zone === 'inside_ctg') ? 80.00 : 150.00;
-        $total = $subtotal + $deliveryFee;
         $paymentMethod = $request->input('payment_method', 'cod');
 
         // Human-readable invoice number: EQ-2026-XXXX-XXXX
         $orderNumber = 'EQ-' . date('Y') . '-' . strtoupper(Str::random(4)) . '-' . rand(1000, 9999);
 
         // Execute atomic order persistence transaction
-        $order = DB::transaction(function () use ($request, $orderNumber, $subtotal, $deliveryFee, $total, $paymentMethod, $cart) {
+        $order = DB::transaction(function () use ($request, $orderNumber, $subtotal, $deliveryFee, $paymentMethod, $cart) {
+            // Re-validate and apply coupon discount safely inside transaction
+            $couponCode = null;
+            $discountAmount = 0.00;
+
+            if (session()->has('coupon')) {
+                $sessionCoupon = session('coupon');
+                $coupon = Coupon::find($sessionCoupon['id'] ?? null);
+                if ($coupon && $coupon->isValid($subtotal)['valid']) {
+                    $discountAmount = $coupon->calculateDiscount($subtotal);
+                    $couponCode = $coupon->code;
+                    $coupon->increment('used_count');
+                }
+            }
+
+            $total = max(0, $subtotal - $discountAmount) + $deliveryFee;
+
             $newOrder = Order::create([
-                'order_number'   => $orderNumber,
-                'user_id'        => auth()->id(),
-                'customer_name'  => $request->customer_name,
-                'customer_phone' => $request->customer_phone,
-                'customer_email' => $request->customer_email,
-                'delivery_zone'  => $request->delivery_zone,
-                'district'       => $request->district,
-                'area'           => $request->area,
-                'address'        => $request->address,
-                'order_notes'    => $request->order_notes,
-                'payment_method' => $paymentMethod,
-                'subtotal'       => $subtotal,
-                'delivery_fee'   => $deliveryFee,
-                'total'          => $total,
-                'status'         => 'pending',
+                'order_number'    => $orderNumber,
+                'user_id'         => auth()->id(),
+                'customer_name'   => $request->customer_name,
+                'customer_phone'  => $request->customer_phone,
+                'customer_email'  => $request->customer_email,
+                'delivery_zone'   => $request->delivery_zone,
+                'district'        => $request->district,
+                'area'            => $request->area,
+                'address'         => $request->address,
+                'order_notes'     => $request->order_notes,
+                'payment_method'  => $paymentMethod,
+                'coupon_code'     => $couponCode,
+                'discount_amount' => $discountAmount,
+                'subtotal'        => $subtotal,
+                'delivery_fee'    => $deliveryFee,
+                'total'           => $total,
+                'status'          => 'pending',
             ]);
 
             foreach ($cart as $item) {
@@ -134,8 +182,9 @@ class CheckoutController extends Controller
             return $newOrder;
         });
 
-        // Clear active shopping cart session upon successful placement
+        // Clear active shopping cart and applied coupon upon successful placement
         session()->forget('cart');
+        session()->forget('coupon');
 
         return redirect()->route('checkout.success', ['order_number' => $order->order_number]);
     }

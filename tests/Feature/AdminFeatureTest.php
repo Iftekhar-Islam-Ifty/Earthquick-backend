@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Category;
+use App\Models\Coupon;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
@@ -57,7 +58,7 @@ class AdminFeatureTest extends TestCase
 
         $response = $this->actingAs($admin)->get('/admin');
         $response->assertStatus(200);
-        $response->assertSee('Atelier Executive Dashboard');
+        $response->assertSee('Executive Store Dashboard');
         $response->assertSee('Total Orders');
         $response->assertSee('Net Sales Revenue');
     }
@@ -268,7 +269,7 @@ class AdminFeatureTest extends TestCase
 
         $response = $this->actingAs($admin)->get('/admin/products/create');
         $response->assertStatus(200);
-        $response->assertSee('Create New Atelier Masterpiece');
+        $response->assertSee('Create New Product');
         $response->assertSee('Selling Price (BDT ৳)');
     }
 
@@ -342,7 +343,7 @@ class AdminFeatureTest extends TestCase
 
         $response = $this->actingAs($admin)->get("/admin/products/{$product->id}/edit");
         $response->assertStatus(200);
-        $response->assertSee('Edit Atelier Piece');
+        $response->assertSee('Edit Product:');
         $response->assertSee(e($product->name));
     }
 
@@ -720,6 +721,127 @@ class AdminFeatureTest extends TestCase
         $csv = $response->streamedContent();
         $this->assertStringContainsString($deliveredOrder->order_number, $csv);
         $this->assertStringNotContainsString($pendingOrder->order_number, $csv);
+    }
+
+    /**
+     * Test admin can view coupons list page and KPI metrics.
+     */
+    public function test_admin_can_view_coupons_list(): void
+    {
+        $admin = User::create([
+            'name'     => 'Coupon Admin',
+            'email'    => 'couponadmin' . rand(1000, 9999) . '@earthquick.com',
+            'phone'    => '01711' . rand(100000, 999999),
+            'password' => Hash::make('password123'),
+            'is_admin' => true,
+        ]);
+
+        $coupon = Coupon::create([
+            'code'             => 'TESTEID' . rand(10, 99),
+            'name'             => 'Eid Festive Special',
+            'type'             => 'percent',
+            'value'            => 15.00,
+            'min_order_amount' => 2000,
+            'is_active'        => true,
+        ]);
+
+        $response = $this->actingAs($admin)->get('/admin/coupons');
+        $response->assertStatus(200);
+        $response->assertSee($coupon->code);
+        $response->assertSee('Eid Festive Special');
+    }
+
+    /**
+     * Test admin can create a new promo campaign coupon.
+     */
+    public function test_admin_can_create_coupon(): void
+    {
+        $admin = User::create([
+            'name'     => 'Campaign Creator',
+            'email'    => 'creator' . rand(1000, 9999) . '@earthquick.com',
+            'phone'    => '01822' . rand(100000, 999999),
+            'password' => Hash::make('password123'),
+            'is_admin' => true,
+        ]);
+
+        $code = 'PUJA' . rand(100, 999);
+
+        $response = $this->actingAs($admin)->post('/admin/coupons', [
+            'code'             => $code,
+            'name'             => 'Durga Puja Celebrations',
+            'type'             => 'fixed',
+            'value'            => 500,
+            'min_order_amount' => 3000,
+            'usage_limit'      => 50,
+            'is_active'        => 1,
+        ]);
+
+        $response->assertRedirect(route('admin.coupons'));
+        $this->assertDatabaseHas('coupons', [
+            'code'  => $code,
+            'name'  => 'Durga Puja Celebrations',
+            'type'  => 'fixed',
+            'value' => 500,
+        ]);
+    }
+
+    /**
+     * Test admin can toggle coupon active status.
+     */
+    public function test_admin_can_toggle_coupon_status(): void
+    {
+        $admin = User::create([
+            'name'     => 'Toggle Admin',
+            'email'    => 'toggle' . rand(1000, 9999) . '@earthquick.com',
+            'phone'    => '01833' . rand(100000, 999999),
+            'password' => Hash::make('password123'),
+            'is_admin' => true,
+        ]);
+
+        $coupon = Coupon::create([
+            'code'      => 'TOGGLE' . rand(10, 99),
+            'type'      => 'percent',
+            'value'     => 10.00,
+            'is_active' => true,
+        ]);
+
+        $response = $this->actingAs($admin)->post("/admin/coupons/{$coupon->id}/toggle");
+        $response->assertRedirect(route('admin.coupons'));
+
+        $this->assertDatabaseHas('coupons', [
+            'id'        => $coupon->id,
+            'is_active' => false,
+        ]);
+    }
+
+    /**
+     * Test admin can delete a coupon.
+     */
+    public function test_admin_can_delete_coupon(): void
+    {
+        $admin = User::create([
+            'name'     => 'Delete Coupon Admin',
+            'email'    => 'delcoupon' . rand(1000, 9999) . '@earthquick.com',
+            'phone'    => '01844' . rand(100000, 999999),
+            'password' => Hash::make('password123'),
+            'is_admin' => true,
+        ]);
+
+        $coupon = Coupon::create([
+            'code'      => 'DEL' . rand(100, 999),
+            'type'      => 'fixed',
+            'value'     => 200,
+            'is_active' => true,
+        ]);
+
+        $couponId = $coupon->id;
+
+        $response = $this->actingAs($admin)->delete("/admin/coupons/{$couponId}");
+        $response->assertRedirect(route('admin.coupons'));
+
+        $this->assertDatabaseMissing('coupons', [
+            'id' => $couponId,
+        ]);
     }
 }
 

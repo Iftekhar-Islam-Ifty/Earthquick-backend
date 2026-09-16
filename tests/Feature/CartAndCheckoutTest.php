@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Coupon;
 use App\Models\Product;
 use App\Models\Order;
 use App\Models\OrderItem;
@@ -273,6 +274,277 @@ class CartAndCheckoutTest extends TestCase
         $successResponse->assertSee($orderNumber);
         $successResponse->assertSee('Iftekhar Islam Ifty');
         $successResponse->assertSee('01793123456');
+    }
+
+    /**
+     * Test applying a valid percentage coupon via AJAX.
+     */
+    public function test_apply_valid_percentage_coupon_ajax(): void
+    {
+        $product = Product::first();
+        $code = 'PERC' . rand(10, 99);
+        $coupon = Coupon::create([
+            'code'             => $code,
+            'name'             => '10% Seasonal Voucher',
+            'type'             => 'percent',
+            'value'            => 10.00,
+            'min_order_amount' => 1000,
+            'is_active'        => true,
+        ]);
+
+        $key = $product->id . '_standard';
+        session(['cart' => [
+            $key => [
+                'key'        => $key,
+                'id'         => $product->id,
+                'product_id' => $product->id,
+                'name'       => $product->name,
+                'slug'       => $product->slug,
+                'price'      => 4000.00,
+                'image'      => $product->image,
+                'size'       => 'Standard',
+                'quantity'   => 1,
+            ]
+        ]]);
+
+        $response = $this->postJson('/cart/coupon/apply', [
+            'code' => $code,
+        ]);
+
+        $response->assertStatus(200);
+        $response->assertJson([
+            'success'  => true,
+            'subtotal' => 4000,
+            'discount' => 400,
+            'total'    => 3600,
+        ]);
+
+        $this->assertTrue(session()->has('coupon'));
+        $this->assertEquals(400, session('coupon.discount'));
+    }
+
+    /**
+     * Test applying a valid fixed amount coupon via AJAX.
+     */
+    public function test_apply_valid_fixed_coupon_ajax(): void
+    {
+        $product = Product::first();
+        $code = 'FIXED' . rand(10, 99);
+        $coupon = Coupon::create([
+            'code'             => $code,
+            'name'             => '৳500 Eid Special',
+            'type'             => 'fixed',
+            'value'            => 500.00,
+            'min_order_amount' => 2000,
+            'is_active'        => true,
+        ]);
+
+        $key = $product->id . '_standard';
+        session(['cart' => [
+            $key => [
+                'key'        => $key,
+                'id'         => $product->id,
+                'product_id' => $product->id,
+                'name'       => $product->name,
+                'slug'       => $product->slug,
+                'price'      => 3500.00,
+                'image'      => $product->image,
+                'size'       => 'Standard',
+                'quantity'   => 1,
+            ]
+        ]]);
+
+        $response = $this->postJson('/cart/coupon/apply', [
+            'code' => $code,
+        ]);
+
+        $response->assertStatus(200);
+        $response->assertJson([
+            'success'  => true,
+            'subtotal' => 3500,
+            'discount' => 500,
+            'total'    => 3000,
+        ]);
+
+        $this->assertEquals(500, session('coupon.discount'));
+    }
+
+    /**
+     * Test applying an invalid or non-existent coupon code.
+     */
+    public function test_apply_invalid_coupon_rejected(): void
+    {
+        $product = Product::first();
+        $key = $product->id . '_standard';
+        session(['cart' => [
+            $key => [
+                'key'        => $key,
+                'id'         => $product->id,
+                'product_id' => $product->id,
+                'name'       => $product->name,
+                'slug'       => $product->slug,
+                'price'      => 3000.00,
+                'image'      => $product->image,
+                'size'       => 'Standard',
+                'quantity'   => 1,
+            ]
+        ]]);
+
+        $response = $this->postJson('/cart/coupon/apply', [
+            'code' => 'NONEXISTENT999',
+        ]);
+
+        $response->assertStatus(404);
+        $response->assertJson([
+            'success' => false,
+        ]);
+        $this->assertFalse(session()->has('coupon'));
+    }
+
+    /**
+     * Test coupon rejected when minimum spend is not met.
+     */
+    public function test_apply_coupon_minimum_spend_not_met(): void
+    {
+        $code = 'HIGHSPEND' . rand(10, 99);
+        Coupon::create([
+            'code'             => $code,
+            'type'             => 'fixed',
+            'value'            => 1000.00,
+            'min_order_amount' => 5000.00,
+            'is_active'        => true,
+        ]);
+
+        $product = Product::first();
+        $key = $product->id . '_standard';
+        session(['cart' => [
+            $key => [
+                'key'        => $key,
+                'id'         => $product->id,
+                'product_id' => $product->id,
+                'name'       => $product->name,
+                'slug'       => $product->slug,
+                'price'      => 2000.00,
+                'image'      => $product->image,
+                'size'       => 'Standard',
+                'quantity'   => 1,
+            ]
+        ]]);
+
+        $response = $this->postJson('/cart/coupon/apply', [
+            'code' => $code,
+        ]);
+
+        $response->assertStatus(422);
+        $response->assertJson([
+            'success' => false,
+        ]);
+        $this->assertFalse(session()->has('coupon'));
+    }
+
+    /**
+     * Test removing an applied coupon via AJAX.
+     */
+    public function test_remove_coupon_ajax(): void
+    {
+        session(['coupon' => [
+            'id'       => 1,
+            'code'     => 'REMOVE10',
+            'name'     => 'Remove Me',
+            'type'     => 'fixed',
+            'value'    => 200,
+            'discount' => 200,
+        ]]);
+
+        $response = $this->postJson('/cart/coupon/remove');
+        $response->assertStatus(200);
+        $response->assertJson([
+            'success'  => true,
+            'coupon'   => null,
+            'discount' => 0,
+        ]);
+
+        $this->assertFalse(session()->has('coupon'));
+    }
+
+    /**
+     * Test order placement persists coupon code, discount amount, and correctly updates total.
+     */
+    public function test_order_placement_persists_coupon_and_discount(): void
+    {
+        $code = 'EIDORDER' . rand(10, 99);
+        $coupon = Coupon::create([
+            'code'             => $code,
+            'name'             => 'Eid Checkout Promotion',
+            'type'             => 'fixed',
+            'value'            => 400.00,
+            'min_order_amount' => 1500.00,
+            'is_active'        => true,
+        ]);
+
+        $product = Product::first();
+        $key = $product->id . '_standard';
+        $subtotal = 3000.00;
+        $deliveryFee = 80.00;
+        $discount = 400.00;
+        $expectedTotal = ($subtotal - $discount) + $deliveryFee;
+
+        session([
+            'cart' => [
+                $key => [
+                    'key'        => $key,
+                    'id'         => $product->id,
+                    'product_id' => $product->id,
+                    'name'       => $product->name,
+                    'slug'       => $product->slug,
+                    'price'      => $subtotal,
+                    'image'      => $product->image,
+                    'size'       => 'Standard',
+                    'quantity'   => 1,
+                ]
+            ],
+            'coupon' => [
+                'id'       => $coupon->id,
+                'code'     => $coupon->code,
+                'name'     => $coupon->name,
+                'type'     => $coupon->type,
+                'value'    => $coupon->value,
+                'discount' => $discount,
+            ]
+        ]);
+
+        $response = $this->post('/checkout/order', [
+            'customer_name'  => 'Promo Customer',
+            'customer_phone' => '01711223344',
+            'customer_email' => 'promo@earthquick.com',
+            'delivery_zone'  => 'inside_ctg',
+            'district'       => 'Chattogram',
+            'area'           => 'Panchlaish',
+            'address'        => 'House 10, Road 4',
+            'payment_method' => 'cod',
+        ]);
+
+        $response->assertStatus(302);
+        $targetUrl = $response->headers->get('Location');
+        preg_match('#/checkout/success/(EQ-[^/]+)#', $targetUrl, $matches);
+        $orderNumber = $matches[1];
+
+        $this->assertDatabaseHas('orders', [
+            'order_number'    => $orderNumber,
+            'coupon_code'     => $code,
+            'discount_amount' => 400.00,
+            'subtotal'        => $subtotal,
+            'delivery_fee'    => $deliveryFee,
+            'total'           => $expectedTotal,
+        ]);
+
+        // Verify coupon used_count was incremented
+        $coupon->refresh();
+        $this->assertEquals(1, $coupon->used_count);
+
+        // Verify coupon and cart cleared from session
+        $this->assertFalse(session()->has('cart'));
+        $this->assertFalse(session()->has('coupon'));
     }
 }
 

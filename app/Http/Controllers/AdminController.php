@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Coupon;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\Subcategory;
@@ -634,6 +635,120 @@ class AdminController extends Controller
         return redirect()->route('admin.products')->with(
             'success',
             "Product '{$productName}' deleted successfully."
+        );
+    }
+
+    /* =========================================================================
+     * COUPON & CAMPAIGN DISCOUNT MANAGEMENT
+     * Seasonal marketing promotions, discount rules, limits, and redemptions.
+     * ========================================================================= */
+
+    /**
+     * Display promotional campaign coupons list with KPI overview.
+     *
+     * @return \Illuminate\View\View
+     */
+    public function coupons(): View
+    {
+        $coupons = Coupon::orderByDesc('created_at')->paginate(15);
+
+        $totalCampaigns = Coupon::count();
+        $activeCampaigns = Coupon::where('is_active', true)
+            ->where(function ($query) {
+                $query->whereNull('expires_at')
+                      ->orWhere('expires_at', '>', now());
+            })
+            ->count();
+        $totalRedemptions = Coupon::sum('used_count');
+        $totalDiscountGiven = (float) Order::whereNotNull('coupon_code')
+            ->where('status', '!=', 'cancelled')
+            ->sum('discount_amount');
+
+        return view('admin.coupons', compact(
+            'coupons',
+            'totalCampaigns',
+            'activeCampaigns',
+            'totalRedemptions',
+            'totalDiscountGiven'
+        ));
+    }
+
+    /**
+     * Display the campaign coupon creation form.
+     *
+     * @return \Illuminate\View\View
+     */
+    public function couponCreate(): View
+    {
+        return view('admin.coupon-create');
+    }
+
+    /**
+     * Store a newly created promotional coupon.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function couponStore(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'code'             => ['required', 'string', 'max:50', 'unique:coupons,code'],
+            'name'             => ['nullable', 'string', 'max:255'],
+            'type'             => ['required', 'in:percent,fixed'],
+            'value'            => ['required', 'numeric', 'min:0.01'],
+            'min_order_amount' => ['nullable', 'numeric', 'min:0'],
+            'max_discount'     => ['nullable', 'numeric', 'min:0'],
+            'usage_limit'      => ['nullable', 'integer', 'min:1'],
+            'expires_at'       => ['nullable', 'date'],
+            'is_active'        => ['nullable'],
+        ]);
+
+        $validated['code'] = strtoupper(trim($validated['code']));
+        $validated['is_active'] = $request->has('is_active') ? $request->boolean('is_active') : true;
+
+        Coupon::create($validated);
+
+        return redirect()->route('admin.coupons')->with(
+            'success',
+            "Campaign Coupon '{$validated['code']}' created successfully!"
+        );
+    }
+
+    /**
+     * Toggle active status for a promotional coupon.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function couponToggle(int $id): RedirectResponse
+    {
+        $coupon = Coupon::findOrFail($id);
+        $coupon->is_active = !$coupon->is_active;
+        $coupon->save();
+
+        $statusText = $coupon->is_active ? 'activated' : 'deactivated';
+
+        return redirect()->route('admin.coupons')->with(
+            'success',
+            "Campaign Coupon '{$coupon->code}' has been {$statusText}."
+        );
+    }
+
+    /**
+     * Delete a promotional coupon from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function couponDestroy(int $id): RedirectResponse
+    {
+        $coupon = Coupon::findOrFail($id);
+        $code = $coupon->code;
+        $coupon->delete();
+
+        return redirect()->route('admin.coupons')->with(
+            'success',
+            "Campaign Coupon '{$code}' deleted successfully."
         );
     }
 }

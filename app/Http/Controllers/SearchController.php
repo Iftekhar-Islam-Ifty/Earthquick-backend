@@ -66,7 +66,7 @@ class SearchController extends Controller
                     'price'           => (float) $product->price,
                     'formatted_price' => '৳' . number_format($product->price),
                     'image'           => asset($product->image),
-                    'category_name'   => $product->subcategory ? $product->subcategory->name : ($product->category ? $product->category->name : 'Nous Telos Atelier'),
+                    'category_name'   => $product->subcategory ? $product->subcategory->name : ($product->category ? $product->category->name : 'Nous Telos Studio'),
                     'url'             => route('product.show', $product->slug),
                 ];
             });

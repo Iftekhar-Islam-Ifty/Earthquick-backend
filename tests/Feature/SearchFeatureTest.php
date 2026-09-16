@@ -198,7 +198,7 @@ class SearchFeatureTest extends TestCase
         $response->assertSee('No matching pieces found');
         $response->assertSee('NonExistentSuperUnlikelyProductKeywordXYZ999');
         $response->assertSee('Explore All Sarees &rarr;', false);
-        $response->assertSee('Popular Atelier Collections');
+        $response->assertSee('Popular Featured Collections');
         $response->assertSee('Three Piece');
         $response->assertSee('Bags');
     }

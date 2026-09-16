@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Coupon;
 use App\Models\Product;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -41,6 +42,11 @@ class CartController extends Controller
             $count += (int) $item['quantity'];
         }
 
+        $couponInfo = $this->calculateCouponDiscount($subtotal);
+        $coupon = $couponInfo['coupon'];
+        $discount = $couponInfo['discount'];
+        $total = $couponInfo['total'];
+
         // Return JSON payload if requested via AJAX
         if ($request->wantsJson() || $request->ajax()) {
             return response()->json([
@@ -50,13 +56,18 @@ class CartController extends Controller
                 'count'                   => $count,
                 'subtotal'                => $subtotal,
                 'formatted_subtotal'      => '৳' . number_format($subtotal),
+                'coupon'                  => $coupon,
+                'discount'                => $discount,
+                'formatted_discount'      => $discount > 0 ? '-৳' . number_format($discount) : '৳0',
+                'total'                   => $total,
+                'formatted_total'         => '৳' . number_format($total),
                 'free_shipping_threshold' => 3000,
                 'free_shipping_unlocked'  => ($subtotal >= 3000),
                 'free_shipping_remaining' => max(0, 3000 - $subtotal),
             ]);
         }
 
-        return view('cart', compact('cart', 'subtotal', 'count'));
+        return view('cart', compact('cart', 'subtotal', 'count', 'coupon', 'discount', 'total'));
     }
 
     /* =========================================================================
@@ -113,6 +124,11 @@ class CartController extends Controller
             $count += (int) $item['quantity'];
         }
 
+        $couponInfo = $this->calculateCouponDiscount($subtotal);
+        $coupon = $couponInfo['coupon'];
+        $discount = $couponInfo['discount'];
+        $total = $couponInfo['total'];
+
         // Instant checkout redirect when triggered via 'Buy Now' action
         if ($request->input('buy_now')) {
             return redirect()->route('checkout.index');
@@ -127,6 +143,11 @@ class CartController extends Controller
                 'count'                   => $count,
                 'subtotal'                => $subtotal,
                 'formatted_subtotal'      => '৳' . number_format($subtotal),
+                'coupon'                  => $coupon,
+                'discount'                => $discount,
+                'formatted_discount'      => $discount > 0 ? '-৳' . number_format($discount) : '৳0',
+                'total'                   => $total,
+                'formatted_total'         => '৳' . number_format($total),
                 'free_shipping_threshold' => 3000,
                 'free_shipping_unlocked'  => ($subtotal >= 3000),
                 'free_shipping_remaining' => max(0, 3000 - $subtotal),
@@ -180,6 +201,11 @@ class CartController extends Controller
             $count += (int) $item['quantity'];
         }
 
+        $couponInfo = $this->calculateCouponDiscount($subtotal);
+        $coupon = $couponInfo['coupon'];
+        $discount = $couponInfo['discount'];
+        $total = $couponInfo['total'];
+
         return response()->json([
             'success'                 => true,
             'message'                 => 'Shopping bag updated successfully.',
@@ -188,6 +214,11 @@ class CartController extends Controller
             'count'                   => $count,
             'subtotal'                => $subtotal,
             'formatted_subtotal'      => '৳' . number_format($subtotal),
+            'coupon'                  => $coupon,
+            'discount'                => $discount,
+            'formatted_discount'      => $discount > 0 ? '-৳' . number_format($discount) : '৳0',
+            'total'                   => $total,
+            'formatted_total'         => '৳' . number_format($total),
             'free_shipping_threshold' => 3000,
             'free_shipping_unlocked'  => ($subtotal >= 3000),
             'free_shipping_remaining' => max(0, 3000 - $subtotal),
@@ -228,6 +259,11 @@ class CartController extends Controller
             $count += (int) $item['quantity'];
         }
 
+        $couponInfo = $this->calculateCouponDiscount($subtotal);
+        $coupon = $couponInfo['coupon'];
+        $discount = $couponInfo['discount'];
+        $total = $couponInfo['total'];
+
         return response()->json([
             'success'                 => true,
             'message'                 => $removedName ? "{$removedName} removed from bag." : 'Item removed from bag.',
@@ -236,6 +272,11 @@ class CartController extends Controller
             'count'                   => $count,
             'subtotal'                => $subtotal,
             'formatted_subtotal'      => '৳' . number_format($subtotal),
+            'coupon'                  => $coupon,
+            'discount'                => $discount,
+            'formatted_discount'      => $discount > 0 ? '-৳' . number_format($discount) : '৳0',
+            'total'                   => $total,
+            'formatted_total'         => '৳' . number_format($total),
             'free_shipping_threshold' => 3000,
             'free_shipping_unlocked'  => ($subtotal >= 3000),
             'free_shipping_remaining' => max(0, 3000 - $subtotal),
@@ -255,8 +296,9 @@ class CartController extends Controller
      */
     public function clear(Request $request): JsonResponse
     {
-        // Flush cart key from session storage
+        // Flush cart key and applied coupon from session storage
         session()->forget('cart');
+        session()->forget('coupon');
 
         return response()->json([
             'success'                 => true,
@@ -266,9 +308,178 @@ class CartController extends Controller
             'count'                   => 0,
             'subtotal'                => 0,
             'formatted_subtotal'      => '৳0',
+            'coupon'                  => null,
+            'discount'                => 0.00,
+            'formatted_discount'      => '৳0',
+            'total'                   => 0,
+            'formatted_total'         => '৳0',
             'free_shipping_threshold' => 3000,
             'free_shipping_unlocked'  => false,
             'free_shipping_remaining' => 3000,
         ]);
+    }
+
+    /* =========================================================================
+     * PROMOTIONAL COUPON & CAMPAIGN ENGINE
+     * Validates promo codes, calculates discounts, and synchronizes cart drawer.
+     * ========================================================================= */
+
+    /**
+     * Apply promotional coupon code to active shopping cart session.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
+     */
+    public function applyCoupon(Request $request): JsonResponse|RedirectResponse
+    {
+        $request->validate([
+            'code' => 'required|string|max:50',
+        ]);
+
+        $code = strtoupper(trim($request->input('code')));
+        $cart = session()->get('cart', []);
+
+        if (empty($cart)) {
+            $msg = 'Your shopping bag is empty. Add products before applying promo codes.';
+            if ($request->wantsJson() || $request->ajax()) {
+                return response()->json(['success' => false, 'message' => $msg], 422);
+            }
+            return redirect()->back()->with('error', $msg);
+        }
+
+        $subtotal = 0;
+        foreach ($cart as $item) {
+            $subtotal += ((float) $item['price']) * ((int) $item['quantity']);
+        }
+
+        $coupon = Coupon::where('code', $code)->first();
+
+        if (!$coupon) {
+            $msg = "Invalid promo code '{$code}'. Please check and try again.";
+            if ($request->wantsJson() || $request->ajax()) {
+                return response()->json(['success' => false, 'message' => $msg], 404);
+            }
+            return redirect()->back()->with('error', $msg);
+        }
+
+        $check = $coupon->isValid($subtotal);
+        if (!$check['valid']) {
+            if ($request->wantsJson() || $request->ajax()) {
+                return response()->json(['success' => false, 'message' => $check['message']], 422);
+            }
+            return redirect()->back()->with('error', $check['message']);
+        }
+
+        $discount = $coupon->calculateDiscount($subtotal);
+        $couponData = [
+            'id'       => $coupon->id,
+            'code'     => $coupon->code,
+            'name'     => $coupon->name,
+            'type'     => $coupon->type,
+            'value'    => $coupon->value,
+            'discount' => $discount,
+        ];
+
+        session()->put('coupon', $couponData);
+        $total = max(0, $subtotal - $discount);
+
+        $successMsg = "Promo code '{$coupon->code}' applied successfully!";
+
+        if ($request->wantsJson() || $request->ajax()) {
+            return response()->json([
+                'success'            => true,
+                'message'            => $successMsg,
+                'coupon'             => $couponData,
+                'subtotal'           => $subtotal,
+                'formatted_subtotal' => '৳' . number_format($subtotal),
+                'discount'           => $discount,
+                'formatted_discount' => '-৳' . number_format($discount),
+                'total'              => $total,
+                'formatted_total'    => '৳' . number_format($total),
+            ]);
+        }
+
+        return redirect()->back()->with('success', $successMsg);
+    }
+
+    /**
+     * Remove applied coupon discount from the session cart.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
+     */
+    public function removeCoupon(Request $request): JsonResponse|RedirectResponse
+    {
+        session()->forget('coupon');
+
+        $cart = session()->get('cart', []);
+        $subtotal = 0;
+        foreach ($cart as $item) {
+            $subtotal += ((float) $item['price']) * ((int) $item['quantity']);
+        }
+
+        $msg = 'Promo code removed successfully.';
+
+        if ($request->wantsJson() || $request->ajax()) {
+            return response()->json([
+                'success'            => true,
+                'message'            => $msg,
+                'coupon'             => null,
+                'subtotal'           => $subtotal,
+                'formatted_subtotal' => '৳' . number_format($subtotal),
+                'discount'           => 0.00,
+                'formatted_discount' => '৳0',
+                'total'              => $subtotal,
+                'formatted_total'    => '৳' . number_format($subtotal),
+            ]);
+        }
+
+        return redirect()->back()->with('success', $msg);
+    }
+
+    /**
+     * Compute and synchronize applied coupon discount for current subtotal.
+     *
+     * @param  float  $subtotal
+     * @return array{coupon: ?array, discount: float, total: float}
+     */
+    protected function calculateCouponDiscount(float $subtotal): array
+    {
+        $sessionCoupon = session()->get('coupon');
+        if (!$sessionCoupon || empty($sessionCoupon['id'])) {
+            return [
+                'coupon'   => null,
+                'discount' => 0.00,
+                'total'    => $subtotal,
+            ];
+        }
+
+        $coupon = Coupon::find($sessionCoupon['id']);
+        if (!$coupon || !$coupon->isValid($subtotal)['valid']) {
+            session()->forget('coupon');
+            return [
+                'coupon'   => null,
+                'discount' => 0.00,
+                'total'    => $subtotal,
+            ];
+        }
+
+        $discount = $coupon->calculateDiscount($subtotal);
+        $couponData = [
+            'id'       => $coupon->id,
+            'code'     => $coupon->code,
+            'name'     => $coupon->name,
+            'type'     => $coupon->type,
+            'value'    => $coupon->value,
+            'discount' => $discount,
+        ];
+
+        session()->put('coupon', $couponData);
+
+        return [
+            'coupon'   => $couponData,
+            'discount' => $discount,
+            'total'    => max(0, $subtotal - $discount),
+        ];
     }
 }

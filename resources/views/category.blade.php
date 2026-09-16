@@ -33,7 +33,7 @@
     <section class="eq-cat-banner" id="cat-banner">
       <div class="eq-container">
         <div class="eq-cat-banner__inner">
-          <span class="eq-cat-banner__eyebrow" id="cat-banner-eyebrow">NOUS TELOS ATELIER</span>
+          <span class="eq-cat-banner__eyebrow" id="cat-banner-eyebrow">NOUS TELOS STUDIO</span>
           <h1 class="eq-cat-banner__title" id="cat-banner-title">
             {{ isset($subcategory) ? $subcategory->name : $category->name }} Collection
           </h1>
@@ -271,7 +271,7 @@
                     @endif
                     <span>৳{{ number_format($product->price) }}</span>
                   </div>
-                  <span class="eq-product-stock-tag">{{ $product->stock_quantity <= 3 ? '⚡ Only ' . $product->stock_quantity . ' left in atelier' : 'Ready to Ship' }}</span>
+                  <span class="eq-product-stock-tag">{{ $product->stock_quantity <= 3 ? '⚡ Only ' . $product->stock_quantity . ' left in stock' : 'Ready to Ship' }}</span>
                 </div>
               </article>
             @empty
