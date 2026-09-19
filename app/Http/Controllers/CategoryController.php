@@ -23,16 +23,12 @@ class CategoryController extends Controller
 
     /**
      * Display a main category catalog page.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  string  $slug
-     * @return \Illuminate\View\View
      */
     public function showCategory(Request $request, string $slug): View
     {
         $category = Category::where('slug', $slug)->where('is_active', true)->firstOrFail();
-        
-        $query = Product::where('category_id', $category->id);
+
+        $query = Product::publiclyAvailable()->where('category_id', $category->id);
 
         // Apply inventory availability filter
         if ($request->filled('in_stock')) {
@@ -41,8 +37,8 @@ class CategoryController extends Controller
 
         // Apply fabric attribute filter (supports single or multi-select arrays)
         if ($request->filled('fabric')) {
-            $fabrics = is_array($request->query('fabric')) 
-                ? $request->query('fabric') 
+            $fabrics = is_array($request->query('fabric'))
+                ? $request->query('fabric')
                 : explode(',', $request->query('fabric'));
             $query->whereIn('fabric', $fabrics);
         }
@@ -57,18 +53,18 @@ class CategoryController extends Controller
 
         // Apply sorting criteria
         match ($request->query('sort')) {
-            'price-asc', 'price-low'   => $query->orderBy('price', 'asc'),
+            'price-asc', 'price-low' => $query->orderBy('price', 'asc'),
             'price-desc', 'price-high' => $query->orderBy('price', 'desc'),
-            'rating'                   => $query->orderBy('rating', 'desc'),
-            'newest'                   => $query->latest(),
-            default                    => $query->latest()
+            'rating' => $query->orderBy('rating', 'desc'),
+            'newest' => $query->latest(),
+            default => $query->latest()
         };
 
         $products = $query->paginate(12)->withQueryString();
         $subcategories = $category->subcategories;
 
         // Retrieve distinct fabrics in category for dynamic filter sidebar
-        $availableFabrics = Product::where('category_id', $category->id)
+        $availableFabrics = Product::publiclyAvailable()->where('category_id', $category->id)
             ->whereNotNull('fabric')
             ->distinct()
             ->pluck('fabric');
@@ -83,18 +79,13 @@ class CategoryController extends Controller
 
     /**
      * Display a subcategory catalog page.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  string  $categorySlug
-     * @param  string  $subcategorySlug
-     * @return \Illuminate\View\View
      */
     public function showSubcategory(Request $request, string $categorySlug, string $subcategorySlug): View
     {
         $category = Category::where('slug', $categorySlug)->where('is_active', true)->firstOrFail();
         $subcategory = Subcategory::where('slug', $subcategorySlug)->where('category_id', $category->id)->firstOrFail();
 
-        $query = Product::where('subcategory_id', $subcategory->id);
+        $query = Product::publiclyAvailable()->where('subcategory_id', $subcategory->id);
 
         // Apply inventory availability filter
         if ($request->filled('in_stock')) {
@@ -103,8 +94,8 @@ class CategoryController extends Controller
 
         // Apply fabric attribute filter
         if ($request->filled('fabric')) {
-            $fabrics = is_array($request->query('fabric')) 
-                ? $request->query('fabric') 
+            $fabrics = is_array($request->query('fabric'))
+                ? $request->query('fabric')
                 : explode(',', $request->query('fabric'));
             $query->whereIn('fabric', $fabrics);
         }
@@ -119,18 +110,18 @@ class CategoryController extends Controller
 
         // Apply sorting criteria
         match ($request->query('sort')) {
-            'price-asc', 'price-low'   => $query->orderBy('price', 'asc'),
+            'price-asc', 'price-low' => $query->orderBy('price', 'asc'),
             'price-desc', 'price-high' => $query->orderBy('price', 'desc'),
-            'rating'                   => $query->orderBy('rating', 'desc'),
-            'newest'                   => $query->latest(),
-            default                    => $query->latest()
+            'rating' => $query->orderBy('rating', 'desc'),
+            'newest' => $query->latest(),
+            default => $query->latest()
         };
 
         $products = $query->paginate(12)->withQueryString();
         $subcategories = $category->subcategories;
 
         // Retrieve distinct fabrics in subcategory for dynamic filter sidebar
-        $availableFabrics = Product::where('subcategory_id', $subcategory->id)
+        $availableFabrics = Product::publiclyAvailable()->where('subcategory_id', $subcategory->id)
             ->whereNotNull('fabric')
             ->distinct()
             ->pluck('fabric');

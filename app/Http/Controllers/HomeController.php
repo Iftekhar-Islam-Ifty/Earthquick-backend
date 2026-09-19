@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\Vendor;
 use Illuminate\View\View;
 
 /* =========================================================================
@@ -21,19 +22,26 @@ class HomeController extends Controller
 
     /**
      * Render the Earthquick / Nous Telos flagship homepage.
-     *
-     * @return \Illuminate\View\View
      */
     public function index(): View
     {
+        $nousTelos = Vendor::where('slug', 'nous-telos')->where('is_active', true)->first();
+
         // Active categories sorted by administrative sort order
         $categories = Category::where('is_active', true)->orderBy('sort_order')->get();
-        $products = Product::where('in_stock', true)->latest()->take(8)->get();
-        $featuredProducts = Product::where('is_featured', true)->where('in_stock', true)->take(8)->get();
-        $newArrivals = Product::where('is_new_arrival', true)->where('in_stock', true)->latest()->take(8)->get();
+        $flagshipProducts = Product::publiclyAvailable()
+            ->where('in_stock', true);
+        if ($nousTelos) {
+            $flagshipProducts->where('vendor_id', $nousTelos->id);
+        } else {
+            $flagshipProducts->whereRaw('1 = 0');
+        }
+        $products = (clone $flagshipProducts)->latest()->take(8)->get();
+        $featuredProducts = (clone $flagshipProducts)->where('is_featured', true)->take(8)->get();
+        $newArrivals = (clone $flagshipProducts)->where('is_new_arrival', true)->latest()->take(8)->get();
 
         // Authentic handloom Sarees for flagship atelier showcase
-        $sarees = Product::whereHas('subcategory', function ($q) {
+        $sarees = (clone $flagshipProducts)->whereHas('subcategory', function ($q) {
             $q->where('slug', 'saree');
         })->where('in_stock', true)->get();
 
@@ -41,12 +49,13 @@ class HomeController extends Controller
         $sareeSpotlight = $sarees->first() ?? $featuredProducts->first();
 
         // Handcrafted Bags collection
-        $bags = Product::whereHas('category', function ($q) {
+        $bags = (clone $flagshipProducts)->whereHas('category', function ($q) {
             $q->where('slug', 'bags');
         })->where('in_stock', true)->get();
 
         return view('home', compact(
             'categories',
+            'nousTelos',
             'products',
             'featuredProducts',
             'newArrivals',

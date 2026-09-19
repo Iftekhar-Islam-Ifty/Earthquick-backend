@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AdminVendorController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
@@ -10,10 +11,12 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SearchController;
+use App\Http\Controllers\VendorController;
 use Illuminate\Support\Facades\Route;
 
 /* =========================================================================
  * WEB ROUTE ARCHITECTURE - EARTHQUICK (NOUS TELOS)
+ * WEB ROUTE ARCHITECTURE - EARTHQUICK
  * Defines public catalog browsing, customer checkout flows, authenticated
  * account management, and administrative control panel endpoints.
  * ========================================================================= */
@@ -28,8 +31,18 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
  * 2. CATEGORY & SUBCATEGORY CATALOGS
  * Dynamic product catalogs with price, fabric, and inventory filters.
  * ========================================================================= */
+Route::get('/shop', function () {
+    return redirect()->route('category.show', 'women');
+})->name('shop.index');
 Route::get('/shop/{slug}', [CategoryController::class, 'showCategory'])->name('category.show');
 Route::get('/shop/{categorySlug}/{subcategorySlug}', [CategoryController::class, 'showSubcategory'])->name('subcategory.show');
+
+/* =========================================================================
+ * 2b. BRAND STORES & MULTI-VENDOR SHOWCASE
+ * Public directory of brand partners and dedicated storefront showcases.
+ * ========================================================================= */
+Route::get('/stores', [VendorController::class, 'index'])->name('stores.index');
+Route::get('/stores/{slug}', [VendorController::class, 'show'])->name('stores.show');
 
 /* =========================================================================
  * 3. PRODUCT DETAIL & ATELIER SHOWCASE
@@ -115,4 +128,12 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::post('/coupons', [AdminController::class, 'couponStore'])->name('coupons.store');
     Route::post('/coupons/{id}/toggle', [AdminController::class, 'couponToggle'])->name('coupons.toggle');
     Route::delete('/coupons/{id}', [AdminController::class, 'couponDestroy'])->name('coupons.destroy');
+
+    // Vendor & Multi-Brand Store Management
+    Route::get('/vendors', [AdminVendorController::class, 'index'])->name('vendors.index');
+    Route::get('/vendors/create', [AdminVendorController::class, 'create'])->name('vendors.create');
+    Route::post('/vendors', [AdminVendorController::class, 'store'])->name('vendors.store');
+    Route::get('/vendors/{id}/edit', [AdminVendorController::class, 'edit'])->name('vendors.edit');
+    Route::put('/vendors/{id}', [AdminVendorController::class, 'update'])->name('vendors.update');
+    Route::post('/vendors/{id}/toggle', [AdminVendorController::class, 'toggleActive'])->name('vendors.toggle');
 });

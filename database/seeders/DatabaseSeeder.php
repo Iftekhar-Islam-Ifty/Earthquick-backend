@@ -15,17 +15,18 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             EarthquickSeeder::class,
+            VendorSeeder::class,
         ]);
 
         // Seed or update master Earthquick Admin user
         User::updateOrCreate(
             ['email' => 'admin@earthquick.com'],
             [
-                'name'     => 'Earthquick Admin',
-                'phone'    => '01700000000',
+                'name' => 'Earthquick Admin',
+                'phone' => '01700000000',
                 'password' => Hash::make('password123'),
                 'is_admin' => true,
-                'city'     => 'Chattogram',
+                'city' => 'Chattogram',
             ]
         );
     }

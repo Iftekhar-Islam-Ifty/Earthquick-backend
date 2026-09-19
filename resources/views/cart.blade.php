@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Shopping Bag — Earthquick / Nous Telos')
+@section('title', 'Shopping Bag — Earthquick')
 @section('body_class', 'eq-cart-page')
 
 @section('content')
@@ -113,4 +113,3 @@
   </div>
 </main>
 @endsection
-

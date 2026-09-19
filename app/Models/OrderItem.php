@@ -21,6 +21,7 @@ class OrderItem extends Model
     protected $fillable = [
         'order_id',
         'product_id',
+        'vendor_id',
         'product_name',
         'product_image',
         'unit_price',
@@ -33,9 +34,15 @@ class OrderItem extends Model
      * ========================================================================= */
 
     /**
+     * Vendor/brand fulfilling this order line item.
+     */
+    public function vendor(): BelongsTo
+    {
+        return $this->belongsTo(Vendor::class);
+    }
+
+    /**
      * Parent order to which this line item belongs.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function order(): BelongsTo
     {
@@ -44,8 +51,6 @@ class OrderItem extends Model
 
     /**
      * Associated catalog product model.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function product(): BelongsTo
     {

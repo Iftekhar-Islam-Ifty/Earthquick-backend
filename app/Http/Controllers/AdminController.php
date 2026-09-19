@@ -7,11 +7,13 @@ use App\Models\Coupon;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\Subcategory;
+use App\Models\Vendor;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
@@ -32,8 +34,6 @@ class AdminController extends Controller
      * Display executive dashboard overview with KPIs and recent order stream.
      * Display executive dashboard overview with KPIs, trendlines, category distributions,
      * best-selling creations, and recent order stream.
-     *
-     * @return \Illuminate\View\View
      */
     public function dashboard(): View
     {
@@ -168,9 +168,6 @@ class AdminController extends Controller
 
     /**
      * Stream a complete or status-filtered sales orders ledger in Excel-compatible CSV format.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Symfony\Component\HttpFoundation\StreamedResponse
      */
     public function exportOrders(Request $request): StreamedResponse
     {
@@ -181,21 +178,21 @@ class AdminController extends Controller
             $query->where('status', $status);
         }
 
-        $filename = 'earthquick_sales_orders_' . date('Y-m-d_His') . '.csv';
+        $filename = 'earthquick_sales_orders_'.date('Y-m-d_His').'.csv';
 
         $headers = [
-            'Content-Type'        => 'text/csv; charset=UTF-8',
+            'Content-Type' => 'text/csv; charset=UTF-8',
             'Content-Disposition' => "attachment; filename=\"{$filename}\"",
-            'Pragma'              => 'no-cache',
-            'Cache-Control'       => 'must-revalidate, post-check=0, pre-check=0',
-            'Expires'             => '0',
+            'Pragma' => 'no-cache',
+            'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+            'Expires' => '0',
         ];
 
         $callback = function () use ($query) {
             $handle = fopen('php://output', 'w');
 
             // Write UTF-8 BOM so Excel opens Bengali & special characters flawlessly
-            fprintf($handle, chr(0xEF) . chr(0xBB) . chr(0xBF));
+            fprintf($handle, chr(0xEF).chr(0xBB).chr(0xBF));
 
             // CSV Column Headers
             fputcsv($handle, [
@@ -251,9 +248,6 @@ class AdminController extends Controller
 
     /**
      * Display paginated orders portfolio with status filtering.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\View\View
      */
     public function orders(Request $request): View
     {
@@ -266,8 +260,8 @@ class AdminController extends Controller
         if ($search !== '') {
             $query->where(function ($q) use ($search) {
                 $q->where('order_number', 'like', "%{$search}%")
-                  ->orWhere('customer_phone', 'like', "%{$search}%")
-                  ->orWhere('customer_name', 'like', "%{$search}%");
+                    ->orWhere('customer_phone', 'like', "%{$search}%")
+                    ->orWhere('customer_name', 'like', "%{$search}%");
             });
         }
 
@@ -280,13 +274,13 @@ class AdminController extends Controller
 
         // Aggregate counts for navigation filter tabs
         $statusCounts = [
-            'all'         => Order::count(),
-            'pending'     => Order::where('status', 'pending')->count(),
-            'confirmed'   => Order::where('status', 'confirmed')->count(),
-            'processing'  => Order::where('status', 'processing')->count(),
-            'in_transit'  => Order::where('status', 'in_transit')->count(),
-            'delivered'   => Order::where('status', 'delivered')->count(),
-            'cancelled'   => Order::where('status', 'cancelled')->count(),
+            'all' => Order::count(),
+            'pending' => Order::where('status', 'pending')->count(),
+            'confirmed' => Order::where('status', 'confirmed')->count(),
+            'processing' => Order::where('status', 'processing')->count(),
+            'in_transit' => Order::where('status', 'in_transit')->count(),
+            'delivered' => Order::where('status', 'delivered')->count(),
+            'cancelled' => Order::where('status', 'cancelled')->count(),
         ];
 
         return view('admin.orders', compact('orders', 'status', 'statusCounts', 'search'));
@@ -294,9 +288,6 @@ class AdminController extends Controller
 
     /**
      * Display full order invoice, customer shipping address, and item list.
-     *
-     * @param  int  $id
-     * @return \Illuminate\View\View
      */
     public function showOrder(int $id): View
     {
@@ -307,9 +298,6 @@ class AdminController extends Controller
 
     /**
      * Display printable packing slip and invoice for an order.
-     *
-     * @param  int  $id
-     * @return \Illuminate\View\View
      */
     public function orderInvoice(int $id): View
     {
@@ -320,27 +308,23 @@ class AdminController extends Controller
 
     /**
      * Update customer order lifecycle status and fulfillment tracking logistics.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\RedirectResponse
      */
     public function updateOrderStatus(Request $request, int $id): RedirectResponse
     {
         $request->validate([
-            'status'          => 'required|string|in:pending,confirmed,processing,in_transit,delivered,cancelled',
-            'courier_name'    => 'nullable|string|max:100',
+            'status' => 'required|string|in:pending,confirmed,processing,in_transit,delivered,cancelled',
+            'courier_name' => 'nullable|string|max:100',
             'tracking_number' => 'nullable|string|max:100',
-            'admin_notes'     => 'nullable|string|max:2000',
+            'admin_notes' => 'nullable|string|max:2000',
         ]);
 
         $order = Order::findOrFail($id);
         $oldStatus = $order->status;
         $order->update([
-            'status'          => $request->status,
-            'courier_name'    => $request->courier_name,
+            'status' => $request->status,
+            'courier_name' => $request->courier_name,
             'tracking_number' => $request->tracking_number,
-            'admin_notes'     => $request->admin_notes,
+            'admin_notes' => $request->admin_notes,
         ]);
 
         return redirect()->back()->with(
@@ -356,21 +340,26 @@ class AdminController extends Controller
 
     /**
      * Display product catalog inventory with stock status controls.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\View\View
      */
     public function products(Request $request): View
     {
         $categorySlug = $request->input('category');
+        $vendorSlug = $request->input('vendor');
         $stockFilter = $request->input('stock');
 
-        $query = Product::with(['category', 'subcategory'])->latest();
+        $query = Product::with(['category', 'subcategory', 'vendor'])->latest();
 
         // Apply category filter
         if ($categorySlug) {
             $query->whereHas('category', function ($q) use ($categorySlug) {
                 $q->where('slug', $categorySlug);
+            });
+        }
+
+        // Apply vendor filter
+        if ($vendorSlug) {
+            $query->whereHas('vendor', function ($q) use ($vendorSlug) {
+                $q->where('slug', $vendorSlug);
             });
         }
 
@@ -383,30 +372,28 @@ class AdminController extends Controller
 
         $products = $query->paginate(15)->withQueryString();
         $categories = Category::all();
+        $vendors = Vendor::orderBy('name')->get();
 
-        return view('admin.products', compact('products', 'categories', 'categorySlug', 'stockFilter'));
+        return view('admin.products', compact('products', 'categories', 'vendors', 'categorySlug', 'vendorSlug', 'stockFilter'));
     }
 
     /**
      * Toggle product availability status (in stock vs out of stock).
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
      */
     public function toggleStock(int $id): JsonResponse|RedirectResponse
     {
         $product = Product::findOrFail($id);
         $product->update([
-            'in_stock' => !$product->in_stock,
+            'in_stock' => ! $product->in_stock,
         ]);
 
         $statusText = $product->in_stock ? 'In Stock (Ready to Ship)' : 'Out of Stock';
 
         if (request()->wantsJson()) {
             return response()->json([
-                'success'  => true,
+                'success' => true,
                 'in_stock' => $product->in_stock,
-                'message'  => "'{$product->name}' is now marked as {$statusText}.",
+                'message' => "'{$product->name}' is now marked as {$statusText}.",
             ]);
         }
 
@@ -420,84 +407,92 @@ class AdminController extends Controller
 
     /**
      * Show product creation form.
-     *
-     * @return \Illuminate\View\View
      */
     public function createProduct(): View
     {
         $categories = Category::with('subcategories')->orderBy('sort_order')->orderBy('name')->get();
+        $vendors = Vendor::where('is_active', true)->orderBy('name')->get();
 
-        return view('admin.product-create', compact('categories'));
+        return view('admin.product-create', compact('categories', 'vendors'));
     }
 
     /**
      * Store newly created product in database with uploaded image.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\RedirectResponse
      */
     public function storeProduct(Request $request): RedirectResponse
     {
         $request->validate([
-            'name'           => 'required|string|max:255',
-            'category_id'    => 'required|exists:categories,id',
+            'name' => 'required|string|max:255',
+            'vendor_id' => 'nullable|exists:vendors,id',
+            'category_id' => 'required|exists:categories,id',
             'subcategory_id' => 'nullable|exists:subcategories,id',
-            'price'          => 'required|numeric|min:0',
-            'old_price'      => 'nullable|numeric|min:0',
-            'fabric'         => 'nullable|string|max:100',
+            'price' => 'required|numeric|min:0',
+            'old_price' => 'nullable|numeric|min:0',
+            'fabric' => 'nullable|string|max:100',
             'stock_quantity' => 'nullable|integer|min:0',
-            'in_stock'       => 'nullable|boolean',
-            'is_featured'    => 'nullable|boolean',
+            'in_stock' => 'nullable|boolean',
+            'is_featured' => 'nullable|boolean',
             'is_new_arrival' => 'nullable|boolean',
-            'badge'          => 'nullable|string|max:50',
-            'badge_type'     => 'nullable|string|max:50',
-            'short_desc'     => 'nullable|string|max:1000',
-            'description'    => 'nullable|string|max:10000',
-            'image'          => 'required|image|mimes:jpeg,png,jpg,webp,svg|max:5120',
+            'badge' => 'nullable|string|max:50',
+            'badge_type' => 'nullable|string|max:50',
+            'short_desc' => 'nullable|string|max:1000',
+            'description' => 'nullable|string|max:10000',
+            'image' => 'required|image|mimes:jpeg,png,jpg,webp,svg|max:5120',
         ]);
+        $this->ensureSubcategoryMatchesCategory($request);
+
+        $vendor = null;
+        if ($request->filled('vendor_id')) {
+            $vendor = Vendor::find($request->vendor_id);
+        }
+        if (! $vendor) {
+            $vendor = Vendor::where('slug', 'nous-telos')->first() ?? Vendor::first();
+        }
 
         // Generate collision-resistant unique slug
         $baseSlug = Str::slug($request->name);
         $slug = $baseSlug;
         $counter = 1;
         while (Product::where('slug', $slug)->exists()) {
-            $slug = $baseSlug . '-' . $counter++;
+            $slug = $baseSlug.'-'.$counter++;
         }
 
         // Ensure public storage destination directory exists
         $destinationPath = public_path('images/products');
-        if (!file_exists($destinationPath)) {
+        if (! file_exists($destinationPath)) {
             mkdir($destinationPath, 0755, true);
         }
 
         $imageFile = $request->file('image');
-        $filename = time() . '_' . Str::slug(pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME)) . '.' . $imageFile->getClientOriginalExtension();
+        $filename = time().'_'.Str::slug(pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME)).'.'.$imageFile->getClientOriginalExtension();
         $imageFile->move($destinationPath, $filename);
-        $imagePath = 'images/products/' . $filename;
+        $imagePath = 'images/products/'.$filename;
 
-        // Generate human-readable SKU
-        $sku = 'NT-' . strtoupper(Str::random(3)) . '-' . rand(100, 999);
+        // Generate human-readable dynamic SKU based on vendor code
+        $vendorCode = $vendor ? $vendor->vendor_code : 'EQ';
+        $sku = $vendorCode.'-'.strtoupper(Str::random(3)).'-'.rand(100, 999);
 
         $product = Product::create([
-            'name'           => $request->name,
-            'slug'           => $slug,
-            'sku'            => $sku,
-            'category_id'    => $request->category_id,
+            'name' => $request->name,
+            'vendor_id' => $vendor ? $vendor->id : null,
+            'slug' => $slug,
+            'sku' => $sku,
+            'category_id' => $request->category_id,
             'subcategory_id' => $request->subcategory_id ?: null,
-            'price'          => (float) $request->price,
-            'old_price'      => $request->filled('old_price') ? (float) $request->old_price : null,
-            'fabric'         => $request->fabric ?: 'Handloom',
+            'price' => (float) $request->price,
+            'old_price' => $request->filled('old_price') ? (float) $request->old_price : null,
+            'fabric' => $request->filled('fabric') ? $request->fabric : null,
             'stock_quantity' => (int) $request->input('stock_quantity', 10),
-            'in_stock'       => $request->boolean('in_stock', true),
-            'is_featured'    => $request->boolean('is_featured', false),
+            'in_stock' => $request->boolean('in_stock', true),
+            'is_featured' => $request->boolean('is_featured', false),
             'is_new_arrival' => $request->boolean('is_new_arrival', true),
-            'badge'          => $request->badge,
-            'badge_type'     => $request->badge_type ?: 'ready',
-            'short_desc'     => $request->short_desc,
-            'description'    => $request->description,
-            'image'          => $imagePath,
-            'rating'         => 5.0,
-            'reviews_count'  => 0,
+            'badge' => $request->badge,
+            'badge_type' => $request->badge_type ?: 'ready',
+            'short_desc' => $request->short_desc,
+            'description' => $request->description,
+            'image' => $imagePath,
+            'rating' => 5.0,
+            'reviews_count' => 0,
         ]);
 
         return redirect()->route('admin.products')->with(
@@ -513,63 +508,63 @@ class AdminController extends Controller
 
     /**
      * Show product edit form pre-populated with existing details.
-     *
-     * @param  int  $id
-     * @return \Illuminate\View\View
      */
     public function editProduct(int $id): View
     {
         $product = Product::findOrFail($id);
         $categories = Category::with('subcategories')->orderBy('sort_order')->orderBy('name')->get();
+        $vendors = Vendor::where('is_active', true)->orderBy('name')->get();
 
-        return view('admin.product-edit', compact('product', 'categories'));
+        return view('admin.product-edit', compact('product', 'categories', 'vendors'));
     }
 
     /**
      * Update existing product details in database.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\RedirectResponse
      */
     public function updateProduct(Request $request, int $id): RedirectResponse
     {
         $product = Product::findOrFail($id);
 
         $request->validate([
-            'name'           => 'required|string|max:255',
-            'category_id'    => 'required|exists:categories,id',
+            'name' => 'required|string|max:255',
+            'vendor_id' => 'nullable|exists:vendors,id',
+            'category_id' => 'required|exists:categories,id',
             'subcategory_id' => 'nullable|exists:subcategories,id',
-            'price'          => 'required|numeric|min:0',
-            'old_price'      => 'nullable|numeric|min:0',
-            'fabric'         => 'nullable|string|max:100',
+            'price' => 'required|numeric|min:0',
+            'old_price' => 'nullable|numeric|min:0',
+            'fabric' => 'nullable|string|max:100',
             'stock_quantity' => 'nullable|integer|min:0',
-            'in_stock'       => 'nullable|boolean',
-            'is_featured'    => 'nullable|boolean',
+            'in_stock' => 'nullable|boolean',
+            'is_featured' => 'nullable|boolean',
             'is_new_arrival' => 'nullable|boolean',
-            'badge'          => 'nullable|string|max:50',
-            'badge_type'     => 'nullable|string|max:50',
-            'short_desc'     => 'nullable|string|max:1000',
-            'description'    => 'nullable|string|max:10000',
-            'image'          => 'nullable|image|mimes:jpeg,png,jpg,webp,svg|max:5120',
+            'badge' => 'nullable|string|max:50',
+            'badge_type' => 'nullable|string|max:50',
+            'short_desc' => 'nullable|string|max:1000',
+            'description' => 'nullable|string|max:10000',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,webp,svg|max:5120',
         ]);
+        $this->ensureSubcategoryMatchesCategory($request);
 
         $updateData = [
-            'name'           => $request->name,
-            'category_id'    => $request->category_id,
+            'name' => $request->name,
+            'category_id' => $request->category_id,
             'subcategory_id' => $request->subcategory_id ?: null,
-            'price'          => (float) $request->price,
-            'old_price'      => $request->filled('old_price') ? (float) $request->old_price : null,
-            'fabric'         => $request->fabric ?: 'Handloom',
+            'price' => (float) $request->price,
+            'old_price' => $request->filled('old_price') ? (float) $request->old_price : null,
+            'fabric' => $request->filled('fabric') ? $request->fabric : null,
             'stock_quantity' => (int) $request->input('stock_quantity', 0),
-            'in_stock'       => $request->boolean('in_stock', false),
-            'is_featured'    => $request->boolean('is_featured', false),
+            'in_stock' => $request->boolean('in_stock', false),
+            'is_featured' => $request->boolean('is_featured', false),
             'is_new_arrival' => $request->boolean('is_new_arrival', false),
-            'badge'          => $request->badge,
-            'badge_type'     => $request->badge_type ?: 'ready',
-            'short_desc'     => $request->short_desc,
-            'description'    => $request->description,
+            'badge' => $request->badge,
+            'badge_type' => $request->badge_type ?: 'ready',
+            'short_desc' => $request->short_desc,
+            'description' => $request->description,
         ];
+
+        if ($request->has('vendor_id')) {
+            $updateData['vendor_id'] = $request->filled('vendor_id') ? $request->vendor_id : $product->vendor_id;
+        }
 
         // If product name has changed, update slug avoiding collisions
         if ($request->name !== $product->name) {
@@ -577,7 +572,7 @@ class AdminController extends Controller
             $slug = $baseSlug;
             $counter = 1;
             while (Product::where('slug', $slug)->where('id', '!=', $product->id)->exists()) {
-                $slug = $baseSlug . '-' . $counter++;
+                $slug = $baseSlug.'-'.$counter++;
             }
             $updateData['slug'] = $slug;
         }
@@ -585,12 +580,12 @@ class AdminController extends Controller
         // Handle optional replacement image upload
         if ($request->hasFile('image')) {
             $destinationPath = public_path('images/products');
-            if (!file_exists($destinationPath)) {
+            if (! file_exists($destinationPath)) {
                 mkdir($destinationPath, 0755, true);
             }
 
             $imageFile = $request->file('image');
-            $filename = time() . '_' . Str::slug(pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME)) . '.' . $imageFile->getClientOriginalExtension();
+            $filename = time().'_'.Str::slug(pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME)).'.'.$imageFile->getClientOriginalExtension();
             $imageFile->move($destinationPath, $filename);
 
             // Clean up previous image if it was a custom upload
@@ -598,7 +593,7 @@ class AdminController extends Controller
                 @unlink(public_path($product->image));
             }
 
-            $updateData['image'] = 'images/products/' . $filename;
+            $updateData['image'] = 'images/products/'.$filename;
         }
 
         $product->update($updateData);
@@ -609,6 +604,27 @@ class AdminController extends Controller
         );
     }
 
+    /**
+     * Keep the catalog hierarchy consistent when an admin assigns a subcategory.
+     */
+    private function ensureSubcategoryMatchesCategory(Request $request): void
+    {
+        if (! $request->filled('subcategory_id')) {
+            return;
+        }
+
+        $belongsToCategory = Subcategory::query()
+            ->whereKey($request->input('subcategory_id'))
+            ->where('category_id', $request->input('category_id'))
+            ->exists();
+
+        if (! $belongsToCategory) {
+            throw ValidationException::withMessages([
+                'subcategory_id' => 'The selected subcategory does not belong to the selected category.',
+            ]);
+        }
+    }
+
     /* =========================================================================
      * PRODUCT DELETION
      * Removes product database record and purges associated custom uploaded images.
@@ -616,9 +632,6 @@ class AdminController extends Controller
 
     /**
      * Delete product from database and remove custom image files.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\RedirectResponse
      */
     public function deleteProduct(int $id): RedirectResponse
     {
@@ -645,8 +658,6 @@ class AdminController extends Controller
 
     /**
      * Display promotional campaign coupons list with KPI overview.
-     *
-     * @return \Illuminate\View\View
      */
     public function coupons(): View
     {
@@ -656,7 +667,7 @@ class AdminController extends Controller
         $activeCampaigns = Coupon::where('is_active', true)
             ->where(function ($query) {
                 $query->whereNull('expires_at')
-                      ->orWhere('expires_at', '>', now());
+                    ->orWhere('expires_at', '>', now());
             })
             ->count();
         $totalRedemptions = Coupon::sum('used_count');
@@ -675,8 +686,6 @@ class AdminController extends Controller
 
     /**
      * Display the campaign coupon creation form.
-     *
-     * @return \Illuminate\View\View
      */
     public function couponCreate(): View
     {
@@ -685,22 +694,19 @@ class AdminController extends Controller
 
     /**
      * Store a newly created promotional coupon.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\RedirectResponse
      */
     public function couponStore(Request $request): RedirectResponse
     {
         $validated = $request->validate([
-            'code'             => ['required', 'string', 'max:50', 'unique:coupons,code'],
-            'name'             => ['nullable', 'string', 'max:255'],
-            'type'             => ['required', 'in:percent,fixed'],
-            'value'            => ['required', 'numeric', 'min:0.01'],
+            'code' => ['required', 'string', 'max:50', 'unique:coupons,code'],
+            'name' => ['nullable', 'string', 'max:255'],
+            'type' => ['required', 'in:percent,fixed'],
+            'value' => ['required', 'numeric', 'min:0.01'],
             'min_order_amount' => ['nullable', 'numeric', 'min:0'],
-            'max_discount'     => ['nullable', 'numeric', 'min:0'],
-            'usage_limit'      => ['nullable', 'integer', 'min:1'],
-            'expires_at'       => ['nullable', 'date'],
-            'is_active'        => ['nullable'],
+            'max_discount' => ['nullable', 'numeric', 'min:0'],
+            'usage_limit' => ['nullable', 'integer', 'min:1'],
+            'expires_at' => ['nullable', 'date'],
+            'is_active' => ['nullable'],
         ]);
 
         $validated['code'] = strtoupper(trim($validated['code']));
@@ -716,14 +722,11 @@ class AdminController extends Controller
 
     /**
      * Toggle active status for a promotional coupon.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\RedirectResponse
      */
     public function couponToggle(int $id): RedirectResponse
     {
         $coupon = Coupon::findOrFail($id);
-        $coupon->is_active = !$coupon->is_active;
+        $coupon->is_active = ! $coupon->is_active;
         $coupon->save();
 
         $statusText = $coupon->is_active ? 'activated' : 'deactivated';
@@ -736,9 +739,6 @@ class AdminController extends Controller
 
     /**
      * Delete a promotional coupon from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\RedirectResponse
      */
     public function couponDestroy(int $id): RedirectResponse
     {

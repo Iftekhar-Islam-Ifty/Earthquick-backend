@@ -63,6 +63,25 @@
             />
           </div>
 
+          <!-- Brand / Vendor Partner -->
+          <div style="margin-bottom: 1.25rem;">
+            <label for="select-vendor" style="display: block; font-size: 0.84rem; font-weight: 600; color: var(--eq-charcoal); margin-bottom: 0.4rem;">
+              Brand / Vendor Partner <span style="color: #dc2626;">*</span>
+            </label>
+            <select 
+              name="vendor_id" 
+              id="select-vendor" 
+              required
+              style="width: 100%; padding: 0.65rem 0.85rem; border-radius: 6px; border: 1px solid var(--eq-line); font-size: 0.88rem; background: #ffffff; cursor: pointer;"
+            >
+              @foreach($vendors as $v)
+                <option value="{{ $v->id }}" {{ old('vendor_id', $product->vendor_id) == $v->id ? 'selected' : '' }}>
+                  {{ $v->name }} ({{ $v->vendor_code }}){{ $v->tagline ? ' — ' . $v->tagline : '' }}
+                </option>
+              @endforeach
+            </select>
+          </div>
+
           <!-- Category & Subcategory Row -->
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.25rem;">
             <div>

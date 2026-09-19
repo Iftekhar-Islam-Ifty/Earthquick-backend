@@ -2,10 +2,10 @@
 
 namespace Tests\Feature;
 
+use App\Http\Controllers\CartController;
 use App\Models\Coupon;
-use App\Models\Product;
 use App\Models\Order;
-use App\Models\OrderItem;
+use App\Models\Product;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 
@@ -32,14 +32,14 @@ class CartAndCheckoutTest extends TestCase
 
         $response = $this->postJson('/cart/add', [
             'product_id' => $product->id,
-            'quantity'   => 2,
-            'size'       => 'Standard',
+            'quantity' => 2,
+            'size' => 'Standard',
         ]);
 
         $response->assertStatus(200)
             ->assertJson([
                 'success' => true,
-                'count'   => 2,
+                'count' => 2,
             ]);
 
         $this->assertTrue(session()->has('cart'));
@@ -51,33 +51,33 @@ class CartAndCheckoutTest extends TestCase
     public function test_update_cart_quantity_ajax(): void
     {
         $product = Product::first();
-        $key = $product->id . '_standard';
+        $key = $product->id.'_standard';
 
         $cart = [
             $key => [
-                'key'        => $key,
-                'id'         => $product->id,
+                'key' => $key,
+                'id' => $product->id,
                 'product_id' => $product->id,
-                'name'       => $product->name,
-                'slug'       => $product->slug,
-                'price'      => (float) $product->price,
-                'image'      => $product->image,
-                'size'       => 'Standard',
-                'quantity'   => 2,
-            ]
+                'name' => $product->name,
+                'slug' => $product->slug,
+                'price' => (float) $product->price,
+                'image' => $product->image,
+                'size' => 'Standard',
+                'quantity' => 2,
+            ],
         ];
 
         session(['cart' => $cart]);
 
         $response = $this->postJson('/cart/update', [
-            'key'   => $key,
+            'key' => $key,
             'delta' => 1,
         ]);
 
         $response->assertStatus(200)
             ->assertJson([
                 'success' => true,
-                'count'   => 3,
+                'count' => 3,
             ]);
     }
 
@@ -87,20 +87,20 @@ class CartAndCheckoutTest extends TestCase
     public function test_remove_item_from_cart_ajax(): void
     {
         $product = Product::first();
-        $key = $product->id . '_standard';
+        $key = $product->id.'_standard';
 
         $cart = [
             $key => [
-                'key'        => $key,
-                'id'         => $product->id,
+                'key' => $key,
+                'id' => $product->id,
                 'product_id' => $product->id,
-                'name'       => $product->name,
-                'slug'       => $product->slug,
-                'price'      => (float) $product->price,
-                'image'      => $product->image,
-                'size'       => 'Standard',
-                'quantity'   => 1,
-            ]
+                'name' => $product->name,
+                'slug' => $product->slug,
+                'price' => (float) $product->price,
+                'image' => $product->image,
+                'size' => 'Standard',
+                'quantity' => 1,
+            ],
         ];
 
         session(['cart' => $cart]);
@@ -112,7 +112,7 @@ class CartAndCheckoutTest extends TestCase
         $response->assertStatus(200)
             ->assertJson([
                 'success' => true,
-                'count'   => 0,
+                'count' => 0,
             ]);
     }
 
@@ -122,7 +122,7 @@ class CartAndCheckoutTest extends TestCase
     public function test_clear_cart_ajax(): void
     {
         $product = Product::first();
-        $key = $product->id . '_standard';
+        $key = $product->id.'_standard';
 
         session(['cart' => [$key => ['quantity' => 2, 'price' => 1000]]]);
 
@@ -131,7 +131,7 @@ class CartAndCheckoutTest extends TestCase
         $response->assertStatus(200)
             ->assertJson([
                 'success' => true,
-                'count'   => 0,
+                'count' => 0,
             ]);
     }
 
@@ -141,20 +141,20 @@ class CartAndCheckoutTest extends TestCase
     public function test_checkout_page_renders_with_session_cart(): void
     {
         $product = Product::first();
-        $key = $product->id . '_standard';
+        $key = $product->id.'_standard';
 
         session(['cart' => [
             $key => [
-                'key'        => $key,
-                'id'         => $product->id,
+                'key' => $key,
+                'id' => $product->id,
                 'product_id' => $product->id,
-                'name'       => $product->name,
-                'slug'       => $product->slug,
-                'price'      => (float) $product->price,
-                'image'      => $product->image,
-                'size'       => 'Standard',
-                'quantity'   => 1,
-            ]
+                'name' => $product->name,
+                'slug' => $product->slug,
+                'price' => (float) $product->price,
+                'image' => $product->image,
+                'size' => 'Standard',
+                'quantity' => 1,
+            ],
         ]]);
 
         $response = $this->get('/checkout');
@@ -169,28 +169,28 @@ class CartAndCheckoutTest extends TestCase
     public function test_order_placement_rejects_invalid_phone(): void
     {
         $product = Product::first();
-        $key = $product->id . '_standard';
+        $key = $product->id.'_standard';
         session(['cart' => [
             $key => [
-                'key'        => $key,
-                'id'         => $product->id,
+                'key' => $key,
+                'id' => $product->id,
                 'product_id' => $product->id,
-                'name'       => $product->name,
-                'slug'       => $product->slug,
-                'price'      => (float) $product->price,
-                'image'      => $product->image,
-                'size'       => 'Standard',
-                'quantity'   => 1,
-            ]
+                'name' => $product->name,
+                'slug' => $product->slug,
+                'price' => (float) $product->price,
+                'image' => $product->image,
+                'size' => 'Standard',
+                'quantity' => 1,
+            ],
         ]]);
 
         $response = $this->post('/checkout/order', [
-            'customer_name'  => 'Test Invalid Phone',
+            'customer_name' => 'Test Invalid Phone',
             'customer_phone' => '12345', // Invalid BD phone
-            'delivery_zone'  => 'inside_ctg',
-            'district'       => 'Chattogram',
-            'area'           => 'GEC',
-            'address'        => 'Test Address',
+            'delivery_zone' => 'inside_ctg',
+            'district' => 'Chattogram',
+            'area' => 'GEC',
+            'address' => 'Test Address',
             'payment_method' => 'cod',
         ]);
 
@@ -203,36 +203,36 @@ class CartAndCheckoutTest extends TestCase
     public function test_successful_order_placement_in_db(): void
     {
         $product = Product::first();
-        $key = $product->id . '_standard';
+        $key = $product->id.'_standard';
         $itemPrice = (float) $product->price;
         $quantity = 2;
         $subtotal = $itemPrice * $quantity;
-        $deliveryFee = 80.00; // inside_ctg
+        $deliveryFee = $subtotal >= CartController::FREE_SHIPPING_THRESHOLD ? 0.00 : 80.00;
         $expectedTotal = $subtotal + $deliveryFee;
 
         session(['cart' => [
             $key => [
-                'key'        => $key,
-                'id'         => $product->id,
+                'key' => $key,
+                'id' => $product->id,
                 'product_id' => $product->id,
-                'name'       => $product->name,
-                'slug'       => $product->slug,
-                'price'      => $itemPrice,
-                'image'      => $product->image,
-                'size'       => 'Standard',
-                'quantity'   => $quantity,
-            ]
+                'name' => $product->name,
+                'slug' => $product->slug,
+                'price' => $itemPrice,
+                'image' => $product->image,
+                'size' => 'Standard',
+                'quantity' => $quantity,
+            ],
         ]]);
 
         $response = $this->post('/checkout/order', [
-            'customer_name'  => 'Iftekhar Islam Ifty',
+            'customer_name' => 'Iftekhar Islam Ifty',
             'customer_phone' => '01793123456',
             'customer_email' => 'ifty@earthquick.com',
-            'delivery_zone'  => 'inside_ctg',
-            'district'       => 'Chattogram',
-            'area'           => 'Nasirabad',
-            'address'        => 'House 42, Road 3, Nasirabad Housing Society',
-            'order_notes'    => 'Ring doorbell twice on arrival',
+            'delivery_zone' => 'inside_ctg',
+            'district' => 'Chattogram',
+            'area' => 'Nasirabad',
+            'address' => 'House 42, Road 3, Nasirabad Housing Society',
+            'order_notes' => 'Ring doorbell twice on arrival',
             'payment_method' => 'cod',
         ]);
 
@@ -247,21 +247,21 @@ class CartAndCheckoutTest extends TestCase
 
         // Assert Order saved in database
         $this->assertDatabaseHas('orders', [
-            'order_number'    => $orderNumber,
-            'customer_name'   => 'Iftekhar Islam Ifty',
-            'customer_phone'  => '01793123456',
-            'delivery_zone'   => 'inside_ctg',
-            'delivery_fee'    => $deliveryFee,
-            'subtotal'        => $subtotal,
-            'total'           => $expectedTotal,
-            'status'          => 'pending',
+            'order_number' => $orderNumber,
+            'customer_name' => 'Iftekhar Islam Ifty',
+            'customer_phone' => '01793123456',
+            'delivery_zone' => 'inside_ctg',
+            'delivery_fee' => $deliveryFee,
+            'subtotal' => $subtotal,
+            'total' => $expectedTotal,
+            'status' => 'pending',
         ]);
 
         // Assert Order Items saved in database
         $this->assertDatabaseHas('order_items', [
-            'product_id'  => $product->id,
-            'unit_price'  => $itemPrice,
-            'quantity'    => $quantity,
+            'product_id' => $product->id,
+            'unit_price' => $itemPrice,
+            'quantity' => $quantity,
             'total_price' => $subtotal,
         ]);
 
@@ -269,7 +269,7 @@ class CartAndCheckoutTest extends TestCase
         $this->assertFalse(session()->has('cart'));
 
         // Assert confirmation receipt page displays order number and 200 OK
-        $successResponse = $this->get('/checkout/success/' . $orderNumber);
+        $successResponse = $this->get('/checkout/success/'.$orderNumber);
         $successResponse->assertStatus(200);
         $successResponse->assertSee($orderNumber);
         $successResponse->assertSee('Iftekhar Islam Ifty');
@@ -282,29 +282,29 @@ class CartAndCheckoutTest extends TestCase
     public function test_apply_valid_percentage_coupon_ajax(): void
     {
         $product = Product::first();
-        $code = 'PERC' . rand(10, 99);
+        $code = 'PERC'.rand(10, 99);
         $coupon = Coupon::create([
-            'code'             => $code,
-            'name'             => '10% Seasonal Voucher',
-            'type'             => 'percent',
-            'value'            => 10.00,
+            'code' => $code,
+            'name' => '10% Seasonal Voucher',
+            'type' => 'percent',
+            'value' => 10.00,
             'min_order_amount' => 1000,
-            'is_active'        => true,
+            'is_active' => true,
         ]);
 
-        $key = $product->id . '_standard';
+        $key = $product->id.'_standard';
         session(['cart' => [
             $key => [
-                'key'        => $key,
-                'id'         => $product->id,
+                'key' => $key,
+                'id' => $product->id,
                 'product_id' => $product->id,
-                'name'       => $product->name,
-                'slug'       => $product->slug,
-                'price'      => 4000.00,
-                'image'      => $product->image,
-                'size'       => 'Standard',
-                'quantity'   => 1,
-            ]
+                'name' => $product->name,
+                'slug' => $product->slug,
+                'price' => 4000.00,
+                'image' => $product->image,
+                'size' => 'Standard',
+                'quantity' => 1,
+            ],
         ]]);
 
         $response = $this->postJson('/cart/coupon/apply', [
@@ -313,10 +313,10 @@ class CartAndCheckoutTest extends TestCase
 
         $response->assertStatus(200);
         $response->assertJson([
-            'success'  => true,
+            'success' => true,
             'subtotal' => 4000,
             'discount' => 400,
-            'total'    => 3600,
+            'total' => 3600,
         ]);
 
         $this->assertTrue(session()->has('coupon'));
@@ -329,29 +329,29 @@ class CartAndCheckoutTest extends TestCase
     public function test_apply_valid_fixed_coupon_ajax(): void
     {
         $product = Product::first();
-        $code = 'FIXED' . rand(10, 99);
+        $code = 'FIXED'.rand(10, 99);
         $coupon = Coupon::create([
-            'code'             => $code,
-            'name'             => '৳500 Eid Special',
-            'type'             => 'fixed',
-            'value'            => 500.00,
+            'code' => $code,
+            'name' => '৳500 Eid Special',
+            'type' => 'fixed',
+            'value' => 500.00,
             'min_order_amount' => 2000,
-            'is_active'        => true,
+            'is_active' => true,
         ]);
 
-        $key = $product->id . '_standard';
+        $key = $product->id.'_standard';
         session(['cart' => [
             $key => [
-                'key'        => $key,
-                'id'         => $product->id,
+                'key' => $key,
+                'id' => $product->id,
                 'product_id' => $product->id,
-                'name'       => $product->name,
-                'slug'       => $product->slug,
-                'price'      => 3500.00,
-                'image'      => $product->image,
-                'size'       => 'Standard',
-                'quantity'   => 1,
-            ]
+                'name' => $product->name,
+                'slug' => $product->slug,
+                'price' => 3500.00,
+                'image' => $product->image,
+                'size' => 'Standard',
+                'quantity' => 1,
+            ],
         ]]);
 
         $response = $this->postJson('/cart/coupon/apply', [
@@ -360,10 +360,10 @@ class CartAndCheckoutTest extends TestCase
 
         $response->assertStatus(200);
         $response->assertJson([
-            'success'  => true,
+            'success' => true,
             'subtotal' => 3500,
             'discount' => 500,
-            'total'    => 3000,
+            'total' => 3000,
         ]);
 
         $this->assertEquals(500, session('coupon.discount'));
@@ -375,19 +375,19 @@ class CartAndCheckoutTest extends TestCase
     public function test_apply_invalid_coupon_rejected(): void
     {
         $product = Product::first();
-        $key = $product->id . '_standard';
+        $key = $product->id.'_standard';
         session(['cart' => [
             $key => [
-                'key'        => $key,
-                'id'         => $product->id,
+                'key' => $key,
+                'id' => $product->id,
                 'product_id' => $product->id,
-                'name'       => $product->name,
-                'slug'       => $product->slug,
-                'price'      => 3000.00,
-                'image'      => $product->image,
-                'size'       => 'Standard',
-                'quantity'   => 1,
-            ]
+                'name' => $product->name,
+                'slug' => $product->slug,
+                'price' => 3000.00,
+                'image' => $product->image,
+                'size' => 'Standard',
+                'quantity' => 1,
+            ],
         ]]);
 
         $response = $this->postJson('/cart/coupon/apply', [
@@ -406,29 +406,29 @@ class CartAndCheckoutTest extends TestCase
      */
     public function test_apply_coupon_minimum_spend_not_met(): void
     {
-        $code = 'HIGHSPEND' . rand(10, 99);
+        $code = 'HIGHSPEND'.rand(10, 99);
         Coupon::create([
-            'code'             => $code,
-            'type'             => 'fixed',
-            'value'            => 1000.00,
+            'code' => $code,
+            'type' => 'fixed',
+            'value' => 1000.00,
             'min_order_amount' => 5000.00,
-            'is_active'        => true,
+            'is_active' => true,
         ]);
 
         $product = Product::first();
-        $key = $product->id . '_standard';
+        $key = $product->id.'_standard';
         session(['cart' => [
             $key => [
-                'key'        => $key,
-                'id'         => $product->id,
+                'key' => $key,
+                'id' => $product->id,
                 'product_id' => $product->id,
-                'name'       => $product->name,
-                'slug'       => $product->slug,
-                'price'      => 2000.00,
-                'image'      => $product->image,
-                'size'       => 'Standard',
-                'quantity'   => 1,
-            ]
+                'name' => $product->name,
+                'slug' => $product->slug,
+                'price' => 2000.00,
+                'image' => $product->image,
+                'size' => 'Standard',
+                'quantity' => 1,
+            ],
         ]]);
 
         $response = $this->postJson('/cart/coupon/apply', [
@@ -448,19 +448,19 @@ class CartAndCheckoutTest extends TestCase
     public function test_remove_coupon_ajax(): void
     {
         session(['coupon' => [
-            'id'       => 1,
-            'code'     => 'REMOVE10',
-            'name'     => 'Remove Me',
-            'type'     => 'fixed',
-            'value'    => 200,
+            'id' => 1,
+            'code' => 'REMOVE10',
+            'name' => 'Remove Me',
+            'type' => 'fixed',
+            'value' => 200,
             'discount' => 200,
         ]]);
 
         $response = $this->postJson('/cart/coupon/remove');
         $response->assertStatus(200);
         $response->assertJson([
-            'success'  => true,
-            'coupon'   => null,
+            'success' => true,
+            'coupon' => null,
             'discount' => 0,
         ]);
 
@@ -472,55 +472,56 @@ class CartAndCheckoutTest extends TestCase
      */
     public function test_order_placement_persists_coupon_and_discount(): void
     {
-        $code = 'EIDORDER' . rand(10, 99);
+        $code = 'EIDORDER'.rand(10, 99);
         $coupon = Coupon::create([
-            'code'             => $code,
-            'name'             => 'Eid Checkout Promotion',
-            'type'             => 'fixed',
-            'value'            => 400.00,
+            'code' => $code,
+            'name' => 'Eid Checkout Promotion',
+            'type' => 'fixed',
+            'value' => 400.00,
             'min_order_amount' => 1500.00,
-            'is_active'        => true,
+            'is_active' => true,
         ]);
 
         $product = Product::first();
-        $key = $product->id . '_standard';
+        $product->update(['price' => 3000.00]);
+        $key = $product->id.'_standard';
         $subtotal = 3000.00;
-        $deliveryFee = 80.00;
+        $deliveryFee = 0.00;
         $discount = 400.00;
         $expectedTotal = ($subtotal - $discount) + $deliveryFee;
 
         session([
             'cart' => [
                 $key => [
-                    'key'        => $key,
-                    'id'         => $product->id,
+                    'key' => $key,
+                    'id' => $product->id,
                     'product_id' => $product->id,
-                    'name'       => $product->name,
-                    'slug'       => $product->slug,
-                    'price'      => $subtotal,
-                    'image'      => $product->image,
-                    'size'       => 'Standard',
-                    'quantity'   => 1,
-                ]
+                    'name' => $product->name,
+                    'slug' => $product->slug,
+                    'price' => $subtotal,
+                    'image' => $product->image,
+                    'size' => 'Standard',
+                    'quantity' => 1,
+                ],
             ],
             'coupon' => [
-                'id'       => $coupon->id,
-                'code'     => $coupon->code,
-                'name'     => $coupon->name,
-                'type'     => $coupon->type,
-                'value'    => $coupon->value,
+                'id' => $coupon->id,
+                'code' => $coupon->code,
+                'name' => $coupon->name,
+                'type' => $coupon->type,
+                'value' => $coupon->value,
                 'discount' => $discount,
-            ]
+            ],
         ]);
 
         $response = $this->post('/checkout/order', [
-            'customer_name'  => 'Promo Customer',
+            'customer_name' => 'Promo Customer',
             'customer_phone' => '01711223344',
             'customer_email' => 'promo@earthquick.com',
-            'delivery_zone'  => 'inside_ctg',
-            'district'       => 'Chattogram',
-            'area'           => 'Panchlaish',
-            'address'        => 'House 10, Road 4',
+            'delivery_zone' => 'inside_ctg',
+            'district' => 'Chattogram',
+            'area' => 'Panchlaish',
+            'address' => 'House 10, Road 4',
             'payment_method' => 'cod',
         ]);
 
@@ -530,12 +531,12 @@ class CartAndCheckoutTest extends TestCase
         $orderNumber = $matches[1];
 
         $this->assertDatabaseHas('orders', [
-            'order_number'    => $orderNumber,
-            'coupon_code'     => $code,
+            'order_number' => $orderNumber,
+            'coupon_code' => $code,
             'discount_amount' => 400.00,
-            'subtotal'        => $subtotal,
-            'delivery_fee'    => $deliveryFee,
-            'total'           => $expectedTotal,
+            'subtotal' => $subtotal,
+            'delivery_fee' => $deliveryFee,
+            'total' => $expectedTotal,
         ]);
 
         // Verify coupon used_count was incremented
@@ -547,4 +548,3 @@ class CartAndCheckoutTest extends TestCase
         $this->assertFalse(session()->has('coupon'));
     }
 }
-

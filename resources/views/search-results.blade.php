@@ -132,7 +132,7 @@
                   @endif
 
                   <!-- Quick Inspect / View Button -->
-                  <button type="button" class="eq-product-card__quick-add" onclick="window.location.href='{{ route('product.show', $product->slug) }}'">
+                  <button type="button" class="eq-product-card__quick-add" data-action="quick-view">
                     Quick Inspect &bull; Add
                   </button>
                 </div>

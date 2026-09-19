@@ -21,6 +21,33 @@
    Provides non-intrusive, styled alerts matching Earthquick brand tokens.
    Replaces window.alert() which is blocked in sandboxed iframes.
    ===================================================================== */
+// Resolve paths against Laravel's root, including subfolder installations.
+function appUrl(path = "") {
+  const base = document.querySelector('meta[name="app-url"]')?.getAttribute("content") || "";
+  return base.replace(/\/$/, "") + "/" + path.replace(/^\//, "");
+}
+
+function escapeMarkup(value) {
+  return String(value).replace(/[&<>"']/g, (char) => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+  })[char]);
+}
+
+// Replace an existing component listener when markup is initialized again.
+const componentListeners = new WeakMap();
+function bindEvent(target, type, scope, handler, options) {
+  let listeners = componentListeners.get(target);
+  if (!listeners) {
+    listeners = new Map();
+    componentListeners.set(target, listeners);
+  }
+  const key = scope + ":" + type;
+  const previous = listeners.get(key);
+  if (previous) target.removeEventListener(type, previous.handler, previous.options);
+  target.addEventListener(type, handler, options);
+  listeners.set(key, { handler, options });
+}
+
 const Toast = {
   container: null,
 
@@ -75,14 +102,9 @@ const Toast = {
    Handles sticky scroll elevation and mobile navigation drawer.
    ===================================================================== */
 function initNavbar() {
+  const on = (target, type, handler, options) => bindEvent(target, type, "navbar", handler, options);
   const navbar = document.querySelector("#eq-main-navbar") || document.querySelector(".eq-navbar");
   if (!navbar) return;
-
-  // Prevent duplicate initialization on the same DOM element
-  if (navbar.dataset.eqNavbarInitialized === "true") {
-    return;
-  }
-  navbar.dataset.eqNavbarInitialized = "true";
 
   const toggle = document.querySelector("#eq-nav-toggle") || document.querySelector(".eq-navbar__toggle");
   const links = document.querySelector("#eq-nav-links") || document.querySelector(".eq-navbar__links");
@@ -92,7 +114,7 @@ function initNavbar() {
     navbar.classList.toggle("is-scrolled", window.scrollY > 15);
   };
   onScroll();
-  window.addEventListener("scroll", onScroll, { passive: true });
+  on(window, "scroll", onScroll, { passive: true });
 
   let backdrop = document.getElementById("eq-nav-backdrop") || navbar.querySelector(".eq-drawer-backdrop");
   if (backdrop && backdrop.parentElement !== document.body) {
@@ -150,12 +172,12 @@ function initNavbar() {
 
   // Mobile toggle behavior
   if (toggle) {
-    toggle.addEventListener("click", toggleMobileNav);
+    on(toggle, "click", toggleMobileNav);
   }
 
   // Drawer close button inside drawer header
   if (drawerCloseBtn) {
-    drawerCloseBtn.addEventListener("click", (e) => {
+    on(drawerCloseBtn, "click", (e) => {
       e.preventDefault();
       e.stopPropagation();
       closeMobileNav();
@@ -169,16 +191,16 @@ function initNavbar() {
       e.stopPropagation();
       closeMobileNav();
     };
-    backdrop.addEventListener("click", handleBackdropDismiss);
-    backdrop.addEventListener("touchstart", handleBackdropDismiss, { passive: false });
-    backdrop.addEventListener("touchmove", (e) => {
+    on(backdrop, "click", handleBackdropDismiss);
+    on(backdrop, "touchstart", handleBackdropDismiss, { passive: false });
+    on(backdrop, "touchmove", (e) => {
       e.preventDefault();
       e.stopPropagation();
     }, { passive: false });
   }
 
   // Intercept touchmove on background when drawer is open to prevent page scrolling behind drawer
-  document.addEventListener("touchmove", (e) => {
+  on(document, "touchmove", (e) => {
     if (!document.body.classList.contains("eq-drawer-open")) return;
     // Allow touch scrolling ONLY inside the drawer links container
     if (links && !links.contains(e.target)) {
@@ -187,7 +209,7 @@ function initNavbar() {
   }, { passive: false });
 
   // Handle window resize: auto-close mobile drawer if resized to desktop
-  window.addEventListener("resize", () => {
+  on(window, "resize", () => {
     if (window.innerWidth > 768 && links && links.classList.contains("is-open")) {
       closeMobileNav();
     }
@@ -196,7 +218,7 @@ function initNavbar() {
   // Close menu when clicking navigation links, or toggle subcategories when tapping category parent header on mobile
   if (links) {
     links.querySelectorAll("a").forEach((link) => {
-      link.addEventListener("click", (e) => {
+      on(link, "click", (e) => {
         const parentDropdown = link.closest(".eq-nav-item--has-dropdown");
         // If clicking category header ("Women" or "Home Decor") on mobile, toggle subcategory accordion
         if (parentDropdown && link.parentElement && link.parentElement.classList.contains("eq-nav-link-wrapper") && (window.innerWidth <= 991 || (links && links.classList.contains("is-open")))) {
@@ -215,14 +237,14 @@ function initNavbar() {
   }
 
   // Close on Escape key press
-  document.addEventListener("keydown", (e) => {
+  on(document, "keydown", (e) => {
     if (e.key === "Escape" && links && links.classList.contains("is-open")) {
       closeMobileNav();
     }
   });
 
   // Global click outside drawer check
-  document.addEventListener("click", (e) => {
+  on(document, "click", (e) => {
     if (!links || !toggle || !links.classList.contains("is-open")) return;
     if (!links.contains(e.target) && !toggle.contains(e.target)) {
       closeMobileNav();
@@ -232,7 +254,7 @@ function initNavbar() {
   // Dropdown toggle chevron handling
   const dropdownToggles = navbar.querySelectorAll(".eq-dropdown-toggle-btn");
   dropdownToggles.forEach((btn) => {
-    btn.addEventListener("click", (e) => {
+    on(btn, "click", (e) => {
       e.preventDefault();
       e.stopPropagation();
       const parentDropdown = btn.closest(".eq-nav-item--has-dropdown");
@@ -246,7 +268,7 @@ function initNavbar() {
   // Nested subcategory toggle chevron handling (Women > Saree > Subcategories)
   const nestedToggles = navbar.querySelectorAll(".eq-nested-toggle-btn");
   nestedToggles.forEach((btn) => {
-    btn.addEventListener("click", (e) => {
+    on(btn, "click", (e) => {
       e.preventDefault();
       e.stopPropagation();
       const parentNested = btn.closest(".eq-submenu-nested");
@@ -265,6 +287,8 @@ function initNavbar() {
    instant suggestions via AJAX, and full-catalog redirection.
    ===================================================================== */
 function initSearchModal() {
+  initSearchModal.cleanup?.();
+  const on = (target, type, handler, options) => bindEvent(target, type, "search", handler, options);
   const openButtons = document.querySelectorAll('[data-action="open-search"]');
   const modal = document.querySelector("#eq-search-modal");
   const closeButton = document.querySelector("#eq-search-close");
@@ -275,6 +299,10 @@ function initSearchModal() {
   let searchLastFocused = null;
   let debounceTimer = null;
   let currentAbortController = null;
+  initSearchModal.cleanup = () => {
+    clearTimeout(debounceTimer);
+    currentAbortController?.abort();
+  };
 
   if (!modal) return;
 
@@ -297,16 +325,16 @@ function initSearchModal() {
     }
   };
 
-  openButtons.forEach((btn) => btn.addEventListener("click", openSearch));
-  if (closeButton) closeButton.addEventListener("click", closeSearch);
+  openButtons.forEach((btn) => on(btn, "click", openSearch));
+  if (closeButton) on(closeButton, "click", closeSearch);
 
   // Close when clicking modal backdrop
-  modal.addEventListener("click", (e) => {
+  on(modal, "click", (e) => {
     if (e.target === modal) closeSearch();
   });
 
   // Close on Escape key press
-  document.addEventListener("keydown", (e) => {
+  on(document, "keydown", (e) => {
     if (e.key === "Escape" && modal.classList.contains("is-open")) {
       closeSearch();
     }
@@ -322,6 +350,7 @@ function initSearchModal() {
 
   // Fetch Live Instant Suggestions
   const fetchSuggestions = (query) => {
+    if (currentAbortController) currentAbortController.abort();
     if (!query || query.length < 2) {
       if (liveDropdown) {
         liveDropdown.style.display = "none";
@@ -331,10 +360,8 @@ function initSearchModal() {
       return;
     }
 
-    if (currentAbortController) {
-      currentAbortController.abort();
-    }
-    currentAbortController = new AbortController();
+    const requestController = new AbortController();
+    currentAbortController = requestController;
 
     if (liveDropdown) {
       liveDropdown.style.display = "block";
@@ -350,8 +377,8 @@ function initSearchModal() {
     }
     if (popularTags) popularTags.style.display = "none";
 
-    fetch(`/api/search/suggestions?q=${encodeURIComponent(query)}`, {
-      signal: currentAbortController.signal,
+    fetch(`${appUrl("/api/search/suggestions")}?q=${encodeURIComponent(query)}`, {
+      signal: requestController.signal,
       headers: {
         "Accept": "application/json",
         "X-Requested-With": "XMLHttpRequest"
@@ -359,7 +386,7 @@ function initSearchModal() {
     })
       .then((res) => res.json())
       .then((data) => {
-        if (!liveDropdown) return;
+        if (!liveDropdown || requestController.signal.aborted) return;
 
         const items = data.suggestions || [];
         if (items.length > 0) {
@@ -378,7 +405,7 @@ function initSearchModal() {
           });
 
           html += `
-            <a href="/search?q=${encodeURIComponent(query)}" class="eq-search-view-all-btn">
+            <a href="${appUrl("/search")}?q=${encodeURIComponent(query)}" class="eq-search-view-all-btn">
               View all results for &ldquo;${escapeHtml(query)}&rdquo; (${data.count} items) &rarr;
             </a>
           `;
@@ -388,7 +415,7 @@ function initSearchModal() {
             <div class="eq-search-no-results">
               No creations found for &ldquo;<strong>${escapeHtml(query)}</strong>&rdquo;.
               <div style="margin-top: 0.65rem;">
-                <a href="/search?q=${encodeURIComponent(query)}" class="eq-search-view-all-btn">
+                <a href="${appUrl("/search")}?q=${encodeURIComponent(query)}" class="eq-search-view-all-btn">
                   Explore full catalog for &ldquo;${escapeHtml(query)}&rdquo; &rarr;
                 </a>
               </div>
@@ -401,7 +428,7 @@ function initSearchModal() {
         if (liveDropdown) {
           liveDropdown.innerHTML = `
             <div class="eq-search-no-results">
-              <a href="/search?q=${encodeURIComponent(query)}" class="eq-search-view-all-btn">
+              <a href="${appUrl("/search")}?q=${encodeURIComponent(query)}" class="eq-search-view-all-btn">
                 Search &ldquo;${escapeHtml(query)}&rdquo; in catalog &rarr;
               </a>
             </div>
@@ -412,7 +439,7 @@ function initSearchModal() {
 
   // Debounced input handler (300ms)
   if (searchInput) {
-    searchInput.addEventListener("input", (e) => {
+    on(searchInput, "input", (e) => {
       const val = e.target.value.trim();
       clearTimeout(debounceTimer);
       debounceTimer = setTimeout(() => {
@@ -422,19 +449,19 @@ function initSearchModal() {
 
     // Handle Form Submit / Enter Key
     if (searchForm) {
-      searchForm.addEventListener("submit", (e) => {
+      on(searchForm, "submit", (e) => {
         const query = searchInput.value.trim();
         if (!query) {
           e.preventDefault();
         }
       });
     } else {
-      searchInput.addEventListener("keydown", (e) => {
+      on(searchInput, "keydown", (e) => {
         if (e.key === "Enter") {
           e.preventDefault();
           const query = searchInput.value.trim();
           if (query) {
-            window.location.href = `/search?q=${encodeURIComponent(query)}`;
+            window.location.href = `${appUrl("/search")}?q=${encodeURIComponent(query)}`;
           }
         }
       });
@@ -478,7 +505,7 @@ const EarthquickCart = {
 
   async fetchCart() {
     try {
-      const res = await fetch("/cart", {
+      const res = await fetch(appUrl("/cart"), {
         headers: {
           "Accept": "application/json",
           "X-Requested-With": "XMLHttpRequest"
@@ -512,7 +539,7 @@ const EarthquickCart = {
     }
 
     try {
-      const res = await fetch("/cart/add", {
+      const res = await fetch(appUrl("/cart/add"), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -550,7 +577,7 @@ const EarthquickCart = {
 
   async updateQty(key, delta) {
     try {
-      const res = await fetch("/cart/update", {
+      const res = await fetch(appUrl("/cart/update"), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -582,7 +609,7 @@ const EarthquickCart = {
 
   async removeItem(key) {
     try {
-      const res = await fetch("/cart/remove", {
+      const res = await fetch(appUrl("/cart/remove"), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -614,7 +641,7 @@ const EarthquickCart = {
 
   async clearCart() {
     try {
-      const res = await fetch("/cart/clear", {
+      const res = await fetch(appUrl("/cart/clear"), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -646,7 +673,7 @@ const EarthquickCart = {
     }
 
     try {
-      const res = await fetch("/cart/coupon/apply", {
+      const res = await fetch(appUrl("/cart/coupon/apply"), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -676,7 +703,7 @@ const EarthquickCart = {
 
   async removeCoupon() {
     try {
-      const res = await fetch("/cart/coupon/remove", {
+      const res = await fetch(appUrl("/cart/coupon/remove"), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -790,7 +817,7 @@ const EarthquickCart = {
       }
       Toast.show("Directing to secure checkout...");
       setTimeout(() => {
-        window.location.href = "/checkout";
+        window.location.href = appUrl("/checkout");
       }, 250);
     });
 
@@ -859,14 +886,14 @@ const EarthquickCart = {
       .map((item) => {
         let imgSrc = item.image || "images/hero/hero-main.jpg";
         if (!imgSrc.startsWith("/") && !imgSrc.startsWith("http")) {
-          imgSrc = "/" + imgSrc;
+          imgSrc = appUrl(imgSrc);
         }
 
         const safeKey = item.key || (item.id + "_" + (item.size || "Standard"));
 
         return `
           <div class="eq-cart-item" data-key="${safeKey}">
-            <img class="eq-cart-item__image" src="${imgSrc}" alt="${item.name}" onerror="this.src='/images/hero/hero-main.jpg'" />
+            <img class="eq-cart-item__image" src="${imgSrc}" alt="${item.name}" onerror="this.onerror=null;this.src='${appUrl('images/hero/hero-main.jpg')}'" />
             <div class="eq-cart-item__info">
               <div>
                 <h4 class="eq-cart-item__title">${item.name}</h4>
@@ -960,12 +987,13 @@ const EarthquickCart = {
   },
 
   init() {
+    const on = (target, type, handler) => bindEvent(target, type, "cart", handler);
     this.buildDrawerDOM();
     this.fetchCart();
 
     // Attach to any open-cart buttons
     document.querySelectorAll('[data-action="open-cart"], #eq-btn-cart').forEach((btn) => {
-      btn.addEventListener("click", (e) => {
+      on(btn, "click", (e) => {
         e.preventDefault();
         this.openDrawer();
       });
@@ -974,7 +1002,7 @@ const EarthquickCart = {
     // Product detail page AJAX intercept
     const productForm = document.querySelector("#product-actions-form");
     if (productForm) {
-      productForm.addEventListener("submit", (e) => {
+      on(productForm, "submit", (e) => {
         if (productForm.querySelector('input[name="buy_now"]')) {
           return; // Let standard form submission proceed to checkout
         }
@@ -995,15 +1023,19 @@ const EarthquickCart = {
     }
 
     // Quick add handlers on product cards
-    document.querySelectorAll(".eq-product-card__quick-add").forEach((btn) => {
-      btn.addEventListener("click", (event) => {
+    document.querySelectorAll('[data-action="add-to-cart"], [data-action="quick-view"]').forEach((btn) => {
+      on(btn, "click", (event) => {
         const card = btn.closest(".eq-product-card") || btn.closest(".eq-saree-masterpiece");
         const prodId = card ? (card.dataset.id || card.id?.replace("card-", "")) : null;
 
         if (prodId && !isNaN(parseInt(prodId, 10))) {
           event.preventDefault();
           event.stopPropagation();
-          EarthquickCart.addItem(parseInt(prodId, 10), 1, "Standard");
+          if (btn.dataset.action === "quick-view") {
+            window.openQuickView?.(card);
+          } else {
+            EarthquickCart.addItem(parseInt(prodId, 10), 1, "Standard");
+          }
         }
       });
     });
@@ -1335,6 +1367,7 @@ function initHeroSlider() {
    without interrupting page flow.
    ===================================================================== */
 function initQuickViewModal() {
+  const on = (target, type, handler) => bindEvent(target, type, "quickview", handler);
   const modal = document.querySelector("#eq-quickview-modal");
   const backdrop = document.querySelector("#eq-quickview-backdrop");
   const closeBtn = document.querySelector("#eq-quickview-close");
@@ -1352,10 +1385,10 @@ function initQuickViewModal() {
     }
   };
 
-  if (backdrop) backdrop.addEventListener("click", closeModal);
-  if (closeBtn) closeBtn.addEventListener("click", closeModal);
+  if (backdrop) on(backdrop, "click", closeModal);
+  if (closeBtn) on(closeBtn, "click", closeModal);
 
-  document.addEventListener("keydown", (e) => {
+  on(document, "keydown", (e) => {
     if (e.key === "Escape" && modal.classList.contains("is-open")) {
       closeModal();
     }
@@ -1370,9 +1403,9 @@ function initQuickViewModal() {
     const priceEl = card.querySelector(".eq-product-card__price, .eq-saree-masterpiece__price");
     const priceHtml = priceEl ? priceEl.innerHTML.trim() : "৳4,200";
     const imgEl = card.querySelector(".eq-product-card__frame img, .eq-saree-masterpiece__frame img");
-    const imgSrc = imgEl ? imgEl.getAttribute("src") : "images/saree/saree-01.jpg";
+    const imgSrc = imgEl ? imgEl.getAttribute("src") : appUrl("images/saree/saree-01.jpg");
     const linkEl = card.querySelector(".eq-product-card__link, .eq-saree-masterpiece__link");
-    const linkHref = linkEl ? linkEl.getAttribute("href") : "pages/product.html";
+    const linkHref = linkEl ? linkEl.getAttribute("href") : appUrl();
 
     const isSaree = category.toLowerCase().includes("saree") || name.toLowerCase().includes("saree");
 
@@ -1380,12 +1413,12 @@ function initQuickViewModal() {
       <div class="eq-quickview-layout">
         <div class="eq-quickview-gallery">
           <div class="eq-quickview-main-image">
-            <img src="${imgSrc}" alt="${name}" />
+            <img src="${escapeMarkup(imgSrc)}" alt="${escapeMarkup(name)}" />
           </div>
         </div>
         <div class="eq-quickview-details">
-          <span class="eq-quickview-category">${category}</span>
-          <h2 class="eq-quickview-title">${name}</h2>
+          <span class="eq-quickview-category">${escapeMarkup(category)}</span>
+          <h2 class="eq-quickview-title">${escapeMarkup(name)}</h2>
           <div class="eq-quickview-price-row">
             <span class="eq-quickview-price">${priceHtml}</span>
           </div>
@@ -1410,7 +1443,7 @@ function initQuickViewModal() {
             <button type="button" class="eq-btn eq-btn--primary eq-btn--pill" id="quickview-add-bag">
               Add to Bag
             </button>
-            <a href="${linkHref}" class="eq-btn eq-btn--outline eq-btn--pill">
+            <a href="${escapeMarkup(linkHref)}" class="eq-btn eq-btn--outline eq-btn--pill">
               View Full Details
             </a>
           </div>
@@ -1421,15 +1454,11 @@ function initQuickViewModal() {
     // Bind Add to Bag button inside modal
     const addBagBtn = body.querySelector("#quickview-add-bag");
     if (addBagBtn) {
-      addBagBtn.addEventListener("click", () => {
-        cartCount++;
-        const countBadge = document.querySelector("#eq-cart-count") || document.querySelector(".eq-cart-count");
-        if (countBadge) {
-          countBadge.textContent = String(cartCount);
-          countBadge.style.display = "flex";
-        }
-        Toast.show(`Added "${name}" to your shopping bag.`);
+      on(addBagBtn, "click", () => {
+        const productId = Number(card.dataset.id || card.id?.replace("card-", ""));
+        if (!Number.isInteger(productId) || productId < 1) return;
         closeModal();
+        EarthquickCart.addItem(productId, 1, "Standard");
       });
     }
 
@@ -1799,6 +1828,7 @@ document.addEventListener("eq:components-loaded", () => {
   Toast.init();
   initNavbar();
   initSearchModal();
+  initQuickViewModal();
   if (window.EarthquickCart && typeof window.EarthquickCart.init === "function") {
     window.EarthquickCart.init();
   }
@@ -1815,4 +1845,3 @@ if (document.readyState === "loading") {
 } else {
   initEarthquickApp();
 }
-

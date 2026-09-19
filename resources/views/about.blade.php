@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
-@section('title', 'About Us & Contact Support — Earthquick by Nous Telos')
-@section('meta_description', 'Learn about Earthquick & Nous Telos, our Bengal handloom heritage, artisanal vendor collective, showroom address, and customer care support.')
+@section('title', 'About Earthquick — Independent Bangladeshi brands')
+@section('meta_description', 'Learn about Earthquick, the marketplace for independent Bangladeshi brands, including Nous Telos heritage handloom and Bright electronics.')
 @section('body_class', 'eq-about-page')
 
 @section('content')
@@ -23,11 +23,11 @@
     <!-- Hero Section with Quick Navigation Pills -->
     <section class="eq-about-hero" id="about-hero">
       <div class="eq-container">
-        <span class="eq-eyebrow">NOUS TELOS &bull; EARTHQUICK</span>
-        <h1 class="eq-heading-xl">Heritage Craft. Modern Living.</h1>
+        <span class="eq-eyebrow">EARTHQUICK MARKETPLACE</span>
+        <h1 class="eq-heading-xl">Independent Brands. Thoughtful Choice.</h1>
         <p class="eq-about-hero__lead">
-          Earthquick is a curated fashion and lifestyle destination rooted in Bengal's handloom mastery, 
-          uniting ethical artisans, independent maker studios, and discerning contemporary design.
+          Earthquick brings independent Bangladeshi brands together in one considered marketplace.
+          Nous Telos leads with heritage handloom, while Bright is preparing its electronics storefront.
         </p>
 
         <!-- Quick Anchor Pill Links -->
@@ -38,7 +38,7 @@
           </a>
           <a href="#brand-ecosystem" class="eq-about-pill" id="pill-ecosystem">
             <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
-            Maker &amp; Vendor Collective
+            Our Stores
           </a>
           <a href="#contact-support" class="eq-about-pill" id="pill-contact">
             <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
@@ -128,15 +128,14 @@
             <span class="eq-eyebrow">OUR CURATED HOUSE</span>
             <h2 class="eq-heading-lg">The Earthquick Maker Collective</h2>
           </div>
-          <a href="#contact-support" class="eq-text-link" id="link-join-collective" onclick="prefillVendorInquiry()">
-            Become a Partner Maker &rarr;
+          <a href="{{ route('stores.index') }}" class="eq-text-link" id="link-join-collective">
+            Explore Our Stores &rarr;
           </a>
         </div>
 
         <p class="eq-body-lg eq-about-intro">
-          Earthquick is built not merely as a single storefront, but as an expansive ecosystem. 
-          While <strong>Nous Telos</strong> leads as our cornerstone fashion house, our platform is structured 
-          to champion emerging local designers, specialized artisan clusters, and sustainable regional vendors.
+          Earthquick is a marketplace for independent Bangladeshi brands. <strong>Nous Telos</strong> is our
+          flagship heritage handloom store, while <strong>Bright</strong> is our electronics storefront in preparation.
         </p>
 
         <!-- Brand Collective Cards Grid -->
@@ -169,98 +168,56 @@
             </div>
           </article>
 
-          <!-- Brand 2: Nous Telos Living -->
-          <article class="eq-vendor-card" id="vendor-card-nous-living">
+          <!-- Brand 2: Bright electronics -->
+          <article class="eq-vendor-card" id="vendor-card-bright">
             <div class="eq-vendor-card__header">
               <div>
-                <span class="eq-vendor-card__badge">Home &amp; Sanctuary</span>
+                <span class="eq-vendor-card__badge">Electronics</span>
               </div>
-              <span style="font-size: 0.8rem; color: var(--eq-charcoal-soft); font-weight: 500;">Living Line</span>
+              <span style="font-size: 0.8rem; color: var(--eq-charcoal-soft); font-weight: 500;">Store in Preparation</span>
             </div>
             <div class="eq-vendor-card__body">
-              <h3 class="eq-vendor-card__name">Nous Telos Living</h3>
-              <div class="eq-vendor-card__specialty">Nakshi Kantha &bull; Bedding &bull; Cushions</div>
+              <h3 class="eq-vendor-card__name">Bright</h3>
+              <div class="eq-vendor-card__specialty">Electronics &bull; Everyday Technology</div>
               <p class="eq-vendor-card__story">
-                Translating Bengal's rural needlecraft tradition into serene, tactile home sanctuaries. Hand-stitched quilts, 
-                breathable cotton bedspreads, and artful cushion accents.
+                Bright is Earthquick's second storefront, being prepared as a focused home for practical electronics
+                and everyday technology.
               </p>
               <div class="eq-vendor-card__tags">
-                <span class="eq-vendor-card__tag">Nakshi Kantha</span>
-                <span class="eq-vendor-card__tag">Pure Cotton</span>
-                <span class="eq-vendor-card__tag">Hand-Embroidered</span>
+                <span class="eq-vendor-card__tag">Electronics</span>
+                <span class="eq-vendor-card__tag">Coming Soon</span>
               </div>
               <div class="eq-vendor-card__footer">
-                <a href="{{ route('category.show', 'home-decor') }}" class="eq-text-link" style="font-weight: 600;">Explore Living &rarr;</a>
+                <a href="{{ route('stores.show', 'bright') }}" class="eq-text-link" style="font-weight: 600;">Visit Bright &rarr;</a>
               </div>
             </div>
           </article>
 
-          <!-- Brand 3: Earthquick Studio (Modern Essentials) -->
-          <article class="eq-vendor-card" id="vendor-card-eq-studio">
+          <!-- Brand 3: Future independent brands -->
+          <article class="eq-vendor-card" id="vendor-card-future-stores">
             <div class="eq-vendor-card__header">
               <div>
-                <span class="eq-vendor-card__badge">Contemporary Cut</span>
+                <span class="eq-vendor-card__badge">Marketplace</span>
               </div>
-              <span style="font-size: 0.8rem; color: var(--eq-charcoal-soft); font-weight: 500;">Everyday Studio</span>
+              <span style="font-size: 0.8rem; color: var(--eq-charcoal-soft); font-weight: 500;">Growing Carefully</span>
             </div>
             <div class="eq-vendor-card__body">
-              <h3 class="eq-vendor-card__name">Earthquick Studio</h3>
-              <div class="eq-vendor-card__specialty">Two-Piece &bull; Men's &bull; Leather Bags</div>
+              <h3 class="eq-vendor-card__name">More Independent Stores</h3>
+              <div class="eq-vendor-card__specialty">New Categories &bull; New Brands</div>
               <p class="eq-vendor-card__story">
-                Clean architectural tailoring designed for modern city pacing. Premium linen coords, everyday Punjabi staples, 
-                and supple leather slings built to withstand years of travel.
+                Earthquick will add independently managed brands and categories over time, while keeping the
+                marketplace clear and dependable for customers.
               </p>
               <div class="eq-vendor-card__tags">
-                <span class="eq-vendor-card__tag">Tailored Coords</span>
-                <span class="eq-vendor-card__tag">Leather Slings</span>
-                <span class="eq-vendor-card__tag">Minimalist Men</span>
+                <span class="eq-vendor-card__tag">Curated Growth</span>
+                <span class="eq-vendor-card__tag">Future Categories</span>
               </div>
               <div class="eq-vendor-card__footer">
-                <a href="{{ route('subcategory.show', ['categorySlug' => 'women', 'subcategorySlug' => 'two-piece']) }}" class="eq-text-link" style="font-weight: 600;">Shop Studio &rarr;</a>
+                <a href="{{ route('stores.index') }}" class="eq-text-link" style="font-weight: 600;">View Stores &rarr;</a>
               </div>
             </div>
           </article>
 
-          <!-- Brand 4: Future Artisan Guilds & Vendor Partners -->
-          <article class="eq-vendor-card" id="vendor-card-future-partners">
-            <div class="eq-vendor-card__header">
-              <div>
-                <span class="eq-vendor-card__badge eq-vendor-card__badge--open">Accepting Makers</span>
-              </div>
-              <span style="font-size: 0.8rem; color: #2b7a78; font-weight: 600;">Expansion Phase</span>
-            </div>
-            <div class="eq-vendor-card__body">
-              <h3 class="eq-vendor-card__name">Artisan Guilds &amp; Boutique Vendors</h3>
-              <div class="eq-vendor-card__specialty">Jewelry &bull; Pottery &bull; Handcrafts</div>
-              <p class="eq-vendor-card__story">
-                We are actively partnering with verified ethical makers, organic textile producers, brass and terracotta 
-                jewelers, and sustainable lifestyle creators looking for nationwide reach.
-              </p>
-              <div class="eq-vendor-card__tags">
-                <span class="eq-vendor-card__tag">Artisan Onboarding</span>
-                <span class="eq-vendor-card__tag">Fair Trade</span>
-                <span class="eq-vendor-card__tag">Local Sourcing</span>
-              </div>
-              <div class="eq-vendor-card__footer">
-                <a href="#contact-support" class="eq-text-link" style="font-weight: 600;" onclick="prefillVendorInquiry()">Join the Guild &rarr;</a>
-              </div>
-            </div>
-          </article>
-
-        </div>
-
-        <!-- Vendor Invitation Callout Banner -->
-        <div class="eq-vendor-invite-box" id="vendor-invite-box">
-          <div>
-            <h3>Are you an Artisan, Weaver, or Independent Boutique?</h3>
-            <p>
-              We provide digital storefront reach, transparent inventory integration, fair pricing structures, and nationwide delivery logistics. 
-              Partner with the House of Earthquick and share your craftsmanship with conscious shoppers.
-            </p>
-          </div>
-          <button type="button" class="eq-btn eq-btn--primary" id="btn-inquire-vendor" onclick="prefillVendorInquiry()">
-            Submit Maker Application &rarr;
-          </button>
         </div>
 
       </div>

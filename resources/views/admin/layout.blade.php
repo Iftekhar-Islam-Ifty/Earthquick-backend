@@ -873,6 +873,15 @@
           <span>Coupons &amp; Offers</span>
         </a>
       </li>
+      <li>
+        <a href="{{ route('admin.vendors.index') }}" class="eq-admin-nav__link {{ request()->routeIs('admin.vendors*') ? 'is-active' : '' }}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+          </svg>
+          <span>Vendors &amp; Stores</span>
+        </a>
+      </li>
 
       <li class="eq-admin-nav__heading">Live Store</li>
       <li>

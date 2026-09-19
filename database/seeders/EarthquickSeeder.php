@@ -2,10 +2,12 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\Category;
-use App\Models\Subcategory;
 use App\Models\Product;
+use App\Models\ProductImage;
+use App\Models\Subcategory;
+use App\Models\Vendor;
+use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
 class EarthquickSeeder extends Seeder
@@ -13,11 +15,17 @@ class EarthquickSeeder extends Seeder
     public function run(): void
     {
         // Clear previous entries
-        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        $usesMySql = DB::connection()->getDriverName() === 'mysql';
+        if ($usesMySql) {
+            DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        }
+        ProductImage::truncate();
         Product::truncate();
         Subcategory::truncate();
         Category::truncate();
-        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        if ($usesMySql) {
+            DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        }
 
         /* =========================================================================
          * 1. PRIMARY CATEGORIES
@@ -28,7 +36,7 @@ class EarthquickSeeder extends Seeder
             'slug' => 'men',
             'image' => 'images/categories/men.svg',
             'description' => 'Heritage punjabis, casual wear and accessories for men.',
-            'sort_order' => 1
+            'sort_order' => 1,
         ]);
 
         $women = Category::create([
@@ -36,7 +44,7 @@ class EarthquickSeeder extends Seeder
             'slug' => 'women',
             'image' => 'images/categories/women.jpg',
             'description' => 'Handcrafted Sarees, Three-piece and Two-piece sets by Nous Telos.',
-            'sort_order' => 2
+            'sort_order' => 2,
         ]);
 
         $kids = Category::create([
@@ -44,7 +52,7 @@ class EarthquickSeeder extends Seeder
             'slug' => 'kids',
             'image' => 'images/categories/kids.svg',
             'description' => 'Comfortable and festive artisanal wear for children.',
-            'sort_order' => 3
+            'sort_order' => 3,
         ]);
 
         $ornaments = Category::create([
@@ -52,7 +60,7 @@ class EarthquickSeeder extends Seeder
             'slug' => 'ornaments',
             'image' => 'images/categories/ornaments.svg',
             'description' => 'Artisanal brass, silver, and clay handmade jewelry.',
-            'sort_order' => 4
+            'sort_order' => 4,
         ]);
 
         $bags = Category::create([
@@ -60,7 +68,7 @@ class EarthquickSeeder extends Seeder
             'slug' => 'bags',
             'image' => 'images/categories/bags.jpg',
             'description' => 'Genuine leather totes, handcrafted jute clutches and slings.',
-            'sort_order' => 5
+            'sort_order' => 5,
         ]);
 
         $homeDecor = Category::create([
@@ -68,7 +76,7 @@ class EarthquickSeeder extends Seeder
             'slug' => 'home-decor',
             'image' => 'images/categories/home-decor.svg',
             'description' => 'Nakshi Kantha, cotton bedsheets and artistic cushion covers.',
-            'sort_order' => 6
+            'sort_order' => 6,
         ]);
 
         /* =========================================================================
@@ -79,21 +87,21 @@ class EarthquickSeeder extends Seeder
             'category_id' => $women->id,
             'name' => 'Saree',
             'slug' => 'saree',
-            'sort_order' => 1
+            'sort_order' => 1,
         ]);
 
         $subThreePiece = Subcategory::create([
             'category_id' => $women->id,
             'name' => 'Three Piece',
             'slug' => 'three-piece',
-            'sort_order' => 2
+            'sort_order' => 2,
         ]);
 
         $subTwoPiece = Subcategory::create([
             'category_id' => $women->id,
             'name' => 'Two Piece',
             'slug' => 'two-piece',
-            'sort_order' => 3
+            'sort_order' => 3,
         ]);
 
         /* =========================================================================
@@ -104,21 +112,21 @@ class EarthquickSeeder extends Seeder
             'category_id' => $homeDecor->id,
             'name' => 'Kantha',
             'slug' => 'kantha',
-            'sort_order' => 1
+            'sort_order' => 1,
         ]);
 
         $subBedsheet = Subcategory::create([
             'category_id' => $homeDecor->id,
             'name' => 'Bedsheet',
             'slug' => 'bedsheet',
-            'sort_order' => 2
+            'sort_order' => 2,
         ]);
 
         $subCushion = Subcategory::create([
             'category_id' => $homeDecor->id,
             'name' => 'Cushion Cover',
             'slug' => 'cushion-cover',
-            'sort_order' => 3
+            'sort_order' => 3,
         ]);
 
         /* =========================================================================
@@ -147,7 +155,7 @@ class EarthquickSeeder extends Seeder
                 'stock_quantity' => 3,
                 'in_stock' => true,
                 'is_featured' => true,
-                'is_new_arrival' => false
+                'is_new_arrival' => false,
             ],
             [
                 'category_id' => $women->id,
@@ -169,7 +177,7 @@ class EarthquickSeeder extends Seeder
                 'stock_quantity' => 8,
                 'in_stock' => true,
                 'is_featured' => true,
-                'is_new_arrival' => true
+                'is_new_arrival' => true,
             ],
             [
                 'category_id' => $women->id,
@@ -191,7 +199,7 @@ class EarthquickSeeder extends Seeder
                 'stock_quantity' => 5,
                 'in_stock' => true,
                 'is_featured' => true,
-                'is_new_arrival' => true
+                'is_new_arrival' => true,
             ],
             [
                 'category_id' => $women->id,
@@ -213,7 +221,7 @@ class EarthquickSeeder extends Seeder
                 'stock_quantity' => 2,
                 'in_stock' => true,
                 'is_featured' => true,
-                'is_new_arrival' => false
+                'is_new_arrival' => false,
             ],
 
             // Women's Collection: Three Piece Ensembles
@@ -237,7 +245,7 @@ class EarthquickSeeder extends Seeder
                 'stock_quantity' => 6,
                 'in_stock' => true,
                 'is_featured' => true,
-                'is_new_arrival' => true
+                'is_new_arrival' => true,
             ],
             [
                 'category_id' => $women->id,
@@ -259,7 +267,7 @@ class EarthquickSeeder extends Seeder
                 'stock_quantity' => 4,
                 'in_stock' => true,
                 'is_featured' => true,
-                'is_new_arrival' => false
+                'is_new_arrival' => false,
             ],
 
             // Women's Collection: Two Piece Co-ord Ensembles
@@ -283,7 +291,7 @@ class EarthquickSeeder extends Seeder
                 'stock_quantity' => 14,
                 'in_stock' => true,
                 'is_featured' => true,
-                'is_new_arrival' => false
+                'is_new_arrival' => false,
             ],
             [
                 'category_id' => $women->id,
@@ -305,7 +313,7 @@ class EarthquickSeeder extends Seeder
                 'stock_quantity' => 7,
                 'in_stock' => true,
                 'is_featured' => true,
-                'is_new_arrival' => false
+                'is_new_arrival' => false,
             ],
 
             // Artisan Accessories: Handcrafted Leather & Canvas Bags
@@ -329,7 +337,7 @@ class EarthquickSeeder extends Seeder
                 'stock_quantity' => 5,
                 'in_stock' => true,
                 'is_featured' => true,
-                'is_new_arrival' => true
+                'is_new_arrival' => true,
             ],
             [
                 'category_id' => $bags->id,
@@ -351,7 +359,7 @@ class EarthquickSeeder extends Seeder
                 'stock_quantity' => 10,
                 'in_stock' => true,
                 'is_featured' => true,
-                'is_new_arrival' => false
+                'is_new_arrival' => false,
             ],
 
             // Living Sanctuary: Home Decor & Nakshi Kantha
@@ -375,7 +383,7 @@ class EarthquickSeeder extends Seeder
                 'stock_quantity' => 4,
                 'in_stock' => true,
                 'is_featured' => true,
-                'is_new_arrival' => false
+                'is_new_arrival' => false,
             ],
             [
                 'category_id' => $homeDecor->id,
@@ -397,7 +405,7 @@ class EarthquickSeeder extends Seeder
                 'stock_quantity' => 9,
                 'in_stock' => true,
                 'is_featured' => false,
-                'is_new_arrival' => true
+                'is_new_arrival' => true,
             ],
             [
                 'category_id' => $homeDecor->id,
@@ -419,11 +427,15 @@ class EarthquickSeeder extends Seeder
                 'stock_quantity' => 15,
                 'in_stock' => true,
                 'is_featured' => false,
-                'is_new_arrival' => false
-            ]
+                'is_new_arrival' => false,
+            ],
         ];
 
+        $nousTelos = Vendor::where('slug', 'nous-telos')->first();
         foreach ($products as $prod) {
+            if ($nousTelos) {
+                $prod['vendor_id'] = $nousTelos->id;
+            }
             Product::create($prod);
         }
     }

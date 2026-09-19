@@ -1,12 +1,12 @@
 @extends('layouts.app')
 
-@section('title', $product->name . ' — Earthquick / Nous Telos')
-@section('meta_description', $product->short_desc ?? 'Discover artisanal luxury and authentic Bangladeshi handlooms with ' . $product->name . ' from Nous Telos at Earthquick.')
-@section('meta_keywords', $product->name . ', ' . ($product->fabric ? $product->fabric . ' fabric, ' : '') . ($product->category ? $product->category->name . ', ' : '') . 'nous telos, earthquick, artisanal fashion')
+@section('title', $product->name . ' — ' . ($product->vendor ? $product->vendor->name . ' | Earthquick' : 'Earthquick'))
+@section('meta_description', $product->short_desc ?? ('Discover authentic craftsmanship with ' . $product->name . ' from ' . ($product->vendor->name ?? 'Earthquick') . '.'))
+@section('meta_keywords', $product->name . ', ' . ($product->fabric ? $product->fabric . ' fabric, ' : '') . ($product->category ? $product->category->name . ', ' : '') . ($product->vendor ? strtolower($product->vendor->name) . ', ' : '') . 'earthquick')
 @section('canonical_url', route('product.show', $product->slug))
 @section('og_type', 'product')
-@section('og_title', $product->name . ' — Nous Telos | Earthquick')
-@section('og_description', $product->short_desc ?? ($product->description ?? 'Discover artisanal luxury and authentic handlooms by Nous Telos.'))
+@section('og_title', $product->name . ' — ' . ($product->vendor->name ?? 'Earthquick') . ' | Earthquick')
+@section('og_description', $product->short_desc ?? ($product->description ?? 'Discover curated collections at Earthquick.'))
 @section('og_image', asset($product->image))
 @section('body_class', 'eq-product-page')
 
@@ -71,7 +71,7 @@
           <!-- RIGHT: PRIMARY INFO (SITS BESIDE THE PICTURE) -->
           <div class="eq-product-header">
             <div class="eq-product-info__category" id="product-category-label">
-              NOUS TELOS &bull; {{ strtoupper($product->category->name) }}{{ $product->subcategory ? ' &bull; ' . strtoupper($product->subcategory->name) : '' }}
+              {{ strtoupper($product->vendor->name ?? 'EARTHQUICK') }} &bull; {{ strtoupper($product->category->name) }}{{ $product->subcategory ? ' &bull; ' . strtoupper($product->subcategory->name) : '' }}
             </div>
             <h1 id="product-name">{{ $product->name }}</h1>
 
@@ -256,7 +256,7 @@
                   @if($rel->alt_image)
                     <img src="{{ asset($rel->alt_image) }}" alt="{{ $rel->name }} alternate" class="eq-product-card__img--alt" loading="lazy" />
                   @endif
-                  <button type="button" class="eq-product-card__quick-add" onclick="window.location.href='{{ route('product.show', $rel->slug) }}'">
+                  <button type="button" class="eq-product-card__quick-add" data-action="quick-view">
                     Quick Inspect &bull; Add
                   </button>
                 </div>
@@ -337,7 +337,7 @@
   'sku' => $product->sku ?? ('NT-' . $product->id),
   'brand' => [
     '@type' => 'Brand',
-    'name' => 'Nous Telos',
+    'name' => $product->vendor->name ?? 'Earthquick',
   ],
   'offers' => [
     '@type' => 'Offer',

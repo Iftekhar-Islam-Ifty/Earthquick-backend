@@ -18,6 +18,8 @@ use Illuminate\View\View;
 
 class CartController extends Controller
 {
+    public const FREE_SHIPPING_THRESHOLD = 3000;
+
     /* =========================================================================
      * CART DISPLAY & DATA SYNCHRONIZATION
      * Returns full cart page view or serialized JSON for reactive drawer.
@@ -25,9 +27,6 @@ class CartController extends Controller
 
     /**
      * Display the shopping cart page or return serialized JSON for AJAX drawer.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\View\View|\Illuminate\Http\JsonResponse
      */
     public function index(Request $request): View|JsonResponse
     {
@@ -50,20 +49,20 @@ class CartController extends Controller
         // Return JSON payload if requested via AJAX
         if ($request->wantsJson() || $request->ajax()) {
             return response()->json([
-                'success'                 => true,
-                'cart'                    => $cart,
-                'items'                   => array_values($cart),
-                'count'                   => $count,
-                'subtotal'                => $subtotal,
-                'formatted_subtotal'      => '৳' . number_format($subtotal),
-                'coupon'                  => $coupon,
-                'discount'                => $discount,
-                'formatted_discount'      => $discount > 0 ? '-৳' . number_format($discount) : '৳0',
-                'total'                   => $total,
-                'formatted_total'         => '৳' . number_format($total),
-                'free_shipping_threshold' => 3000,
-                'free_shipping_unlocked'  => ($subtotal >= 3000),
-                'free_shipping_remaining' => max(0, 3000 - $subtotal),
+                'success' => true,
+                'cart' => $cart,
+                'items' => array_values($cart),
+                'count' => $count,
+                'subtotal' => $subtotal,
+                'formatted_subtotal' => '৳'.number_format($subtotal),
+                'coupon' => $coupon,
+                'discount' => $discount,
+                'formatted_discount' => $discount > 0 ? '-৳'.number_format($discount) : '৳0',
+                'total' => $total,
+                'formatted_total' => '৳'.number_format($total),
+                'free_shipping_threshold' => self::FREE_SHIPPING_THRESHOLD,
+                'free_shipping_unlocked' => ($subtotal >= self::FREE_SHIPPING_THRESHOLD),
+                'free_shipping_remaining' => max(0, self::FREE_SHIPPING_THRESHOLD - $subtotal),
             ]);
         }
 
@@ -77,39 +76,58 @@ class CartController extends Controller
 
     /**
      * Add a product variant to the session shopping cart.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
      */
     public function add(Request $request): JsonResponse|RedirectResponse
     {
         $request->validate([
             'product_id' => 'required|exists:products,id',
-            'quantity'   => 'nullable|integer|min:1',
-            'size'       => 'nullable|string|max:100',
+            'quantity' => 'nullable|integer|min:1',
+            'size' => 'nullable|string|max:100',
         ]);
 
-        $product = Product::findOrFail($request->product_id);
+        $product = Product::with('vendor')->findOrFail($request->product_id);
+        if (! $product->isPubliclyAvailable()) {
+            $message = 'This product is no longer available.';
+
+            if ($request->wantsJson() || $request->ajax()) {
+                return response()->json(['success' => false, 'message' => $message], 422);
+            }
+
+            return redirect()->back()->with('error', $message);
+        }
         $quantity = max(1, (int) $request->input('quantity', 1));
         $size = $request->input('size', 'Standard');
-        
+
         $cart = session()->get('cart', []);
         // Generate unique cart key based on product ID and selected variant size
-        $cartKey = $product->id . '_' . Str::slug($size);
+        $cartKey = $product->id.'_'.Str::slug($size);
+        $requestedQuantity = $quantity + (int) ($cart[$cartKey]['quantity'] ?? 0);
+
+        if (! $product->in_stock || $product->stock_quantity < $requestedQuantity) {
+            $message = 'The requested quantity is no longer available.';
+
+            if ($request->wantsJson() || $request->ajax()) {
+                return response()->json(['success' => false, 'message' => $message], 422);
+            }
+
+            return redirect()->back()->with('error', $message);
+        }
 
         if (isset($cart[$cartKey])) {
             $cart[$cartKey]['quantity'] += $quantity;
         } else {
             $cart[$cartKey] = [
-                'key'        => $cartKey,
-                'id'         => $product->id,
+                'key' => $cartKey,
+                'id' => $product->id,
                 'product_id' => $product->id,
-                'name'       => $product->name,
-                'slug'       => $product->slug,
-                'price'      => (float) $product->price,
-                'image'      => $product->image,
-                'size'       => $size,
-                'quantity'   => $quantity,
+                'vendor_id' => $product->vendor_id,
+                'vendor_name' => $product->vendor ? $product->vendor->name : 'Earthquick',
+                'name' => $product->name,
+                'slug' => $product->slug,
+                'price' => (float) $product->price,
+                'image' => $product->image,
+                'size' => $size,
+                'quantity' => $quantity,
             ];
         }
 
@@ -136,21 +154,21 @@ class CartController extends Controller
 
         if ($request->wantsJson() || $request->ajax()) {
             return response()->json([
-                'success'                 => true,
-                'message'                 => 'Item added to shopping bag successfully.',
-                'cart'                    => $cart,
-                'items'                   => array_values($cart),
-                'count'                   => $count,
-                'subtotal'                => $subtotal,
-                'formatted_subtotal'      => '৳' . number_format($subtotal),
-                'coupon'                  => $coupon,
-                'discount'                => $discount,
-                'formatted_discount'      => $discount > 0 ? '-৳' . number_format($discount) : '৳0',
-                'total'                   => $total,
-                'formatted_total'         => '৳' . number_format($total),
-                'free_shipping_threshold' => 3000,
-                'free_shipping_unlocked'  => ($subtotal >= 3000),
-                'free_shipping_remaining' => max(0, 3000 - $subtotal),
+                'success' => true,
+                'message' => 'Item added to shopping bag successfully.',
+                'cart' => $cart,
+                'items' => array_values($cart),
+                'count' => $count,
+                'subtotal' => $subtotal,
+                'formatted_subtotal' => '৳'.number_format($subtotal),
+                'coupon' => $coupon,
+                'discount' => $discount,
+                'formatted_discount' => $discount > 0 ? '-৳'.number_format($discount) : '৳0',
+                'total' => $total,
+                'formatted_total' => '৳'.number_format($total),
+                'free_shipping_threshold' => self::FREE_SHIPPING_THRESHOLD,
+                'free_shipping_unlocked' => ($subtotal >= self::FREE_SHIPPING_THRESHOLD),
+                'free_shipping_remaining' => max(0, self::FREE_SHIPPING_THRESHOLD - $subtotal),
             ]);
         }
 
@@ -164,16 +182,13 @@ class CartController extends Controller
 
     /**
      * Update item quantity in the cart session.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\JsonResponse
      */
     public function update(Request $request): JsonResponse
     {
         $request->validate([
-            'key'      => 'required|string',
+            'key' => 'required|string',
             'quantity' => 'nullable|integer',
-            'delta'    => 'nullable|integer',
+            'delta' => 'nullable|integer',
         ]);
 
         $cart = session()->get('cart', []);
@@ -189,6 +204,17 @@ class CartController extends Controller
             // Remove line item automatically if quantity falls below 1
             if ($cart[$key]['quantity'] <= 0) {
                 unset($cart[$key]);
+            } else {
+                $productId = $cart[$key]['product_id'] ?? $cart[$key]['id'] ?? null;
+                $product = Product::with('vendor')->find($productId);
+
+                if (! $product || ! $product->isPubliclyAvailable() || ! $product->in_stock
+                    || $product->stock_quantity < $cart[$key]['quantity']) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'The requested quantity is no longer available.',
+                    ], 422);
+                }
             }
 
             session()->put('cart', $cart);
@@ -207,21 +233,21 @@ class CartController extends Controller
         $total = $couponInfo['total'];
 
         return response()->json([
-            'success'                 => true,
-            'message'                 => 'Shopping bag updated successfully.',
-            'cart'                    => $cart,
-            'items'                   => array_values($cart),
-            'count'                   => $count,
-            'subtotal'                => $subtotal,
-            'formatted_subtotal'      => '৳' . number_format($subtotal),
-            'coupon'                  => $coupon,
-            'discount'                => $discount,
-            'formatted_discount'      => $discount > 0 ? '-৳' . number_format($discount) : '৳0',
-            'total'                   => $total,
-            'formatted_total'         => '৳' . number_format($total),
-            'free_shipping_threshold' => 3000,
-            'free_shipping_unlocked'  => ($subtotal >= 3000),
-            'free_shipping_remaining' => max(0, 3000 - $subtotal),
+            'success' => true,
+            'message' => 'Shopping bag updated successfully.',
+            'cart' => $cart,
+            'items' => array_values($cart),
+            'count' => $count,
+            'subtotal' => $subtotal,
+            'formatted_subtotal' => '৳'.number_format($subtotal),
+            'coupon' => $coupon,
+            'discount' => $discount,
+            'formatted_discount' => $discount > 0 ? '-৳'.number_format($discount) : '৳0',
+            'total' => $total,
+            'formatted_total' => '৳'.number_format($total),
+            'free_shipping_threshold' => self::FREE_SHIPPING_THRESHOLD,
+            'free_shipping_unlocked' => ($subtotal >= self::FREE_SHIPPING_THRESHOLD),
+            'free_shipping_remaining' => max(0, self::FREE_SHIPPING_THRESHOLD - $subtotal),
         ]);
     }
 
@@ -232,9 +258,6 @@ class CartController extends Controller
 
     /**
      * Remove an item from the session cart.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\JsonResponse
      */
     public function remove(Request $request): JsonResponse
     {
@@ -265,21 +288,21 @@ class CartController extends Controller
         $total = $couponInfo['total'];
 
         return response()->json([
-            'success'                 => true,
-            'message'                 => $removedName ? "{$removedName} removed from bag." : 'Item removed from bag.',
-            'cart'                    => $cart,
-            'items'                   => array_values($cart),
-            'count'                   => $count,
-            'subtotal'                => $subtotal,
-            'formatted_subtotal'      => '৳' . number_format($subtotal),
-            'coupon'                  => $coupon,
-            'discount'                => $discount,
-            'formatted_discount'      => $discount > 0 ? '-৳' . number_format($discount) : '৳0',
-            'total'                   => $total,
-            'formatted_total'         => '৳' . number_format($total),
-            'free_shipping_threshold' => 3000,
-            'free_shipping_unlocked'  => ($subtotal >= 3000),
-            'free_shipping_remaining' => max(0, 3000 - $subtotal),
+            'success' => true,
+            'message' => $removedName ? "{$removedName} removed from bag." : 'Item removed from bag.',
+            'cart' => $cart,
+            'items' => array_values($cart),
+            'count' => $count,
+            'subtotal' => $subtotal,
+            'formatted_subtotal' => '৳'.number_format($subtotal),
+            'coupon' => $coupon,
+            'discount' => $discount,
+            'formatted_discount' => $discount > 0 ? '-৳'.number_format($discount) : '৳0',
+            'total' => $total,
+            'formatted_total' => '৳'.number_format($total),
+            'free_shipping_threshold' => self::FREE_SHIPPING_THRESHOLD,
+            'free_shipping_unlocked' => ($subtotal >= self::FREE_SHIPPING_THRESHOLD),
+            'free_shipping_remaining' => max(0, self::FREE_SHIPPING_THRESHOLD - $subtotal),
         ]);
     }
 
@@ -290,9 +313,6 @@ class CartController extends Controller
 
     /**
      * Clear all items from the shopping cart session.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\JsonResponse
      */
     public function clear(Request $request): JsonResponse
     {
@@ -301,21 +321,21 @@ class CartController extends Controller
         session()->forget('coupon');
 
         return response()->json([
-            'success'                 => true,
-            'message'                 => 'Shopping bag cleared successfully.',
-            'cart'                    => [],
-            'items'                   => [],
-            'count'                   => 0,
-            'subtotal'                => 0,
-            'formatted_subtotal'      => '৳0',
-            'coupon'                  => null,
-            'discount'                => 0.00,
-            'formatted_discount'      => '৳0',
-            'total'                   => 0,
-            'formatted_total'         => '৳0',
-            'free_shipping_threshold' => 3000,
-            'free_shipping_unlocked'  => false,
-            'free_shipping_remaining' => 3000,
+            'success' => true,
+            'message' => 'Shopping bag cleared successfully.',
+            'cart' => [],
+            'items' => [],
+            'count' => 0,
+            'subtotal' => 0,
+            'formatted_subtotal' => '৳0',
+            'coupon' => null,
+            'discount' => 0.00,
+            'formatted_discount' => '৳0',
+            'total' => 0,
+            'formatted_total' => '৳0',
+            'free_shipping_threshold' => self::FREE_SHIPPING_THRESHOLD,
+            'free_shipping_unlocked' => false,
+            'free_shipping_remaining' => self::FREE_SHIPPING_THRESHOLD,
         ]);
     }
 
@@ -326,9 +346,6 @@ class CartController extends Controller
 
     /**
      * Apply promotional coupon code to active shopping cart session.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
      */
     public function applyCoupon(Request $request): JsonResponse|RedirectResponse
     {
@@ -344,6 +361,7 @@ class CartController extends Controller
             if ($request->wantsJson() || $request->ajax()) {
                 return response()->json(['success' => false, 'message' => $msg], 422);
             }
+
             return redirect()->back()->with('error', $msg);
         }
 
@@ -354,29 +372,31 @@ class CartController extends Controller
 
         $coupon = Coupon::where('code', $code)->first();
 
-        if (!$coupon) {
+        if (! $coupon) {
             $msg = "Invalid promo code '{$code}'. Please check and try again.";
             if ($request->wantsJson() || $request->ajax()) {
                 return response()->json(['success' => false, 'message' => $msg], 404);
             }
+
             return redirect()->back()->with('error', $msg);
         }
 
         $check = $coupon->isValid($subtotal);
-        if (!$check['valid']) {
+        if (! $check['valid']) {
             if ($request->wantsJson() || $request->ajax()) {
                 return response()->json(['success' => false, 'message' => $check['message']], 422);
             }
+
             return redirect()->back()->with('error', $check['message']);
         }
 
         $discount = $coupon->calculateDiscount($subtotal);
         $couponData = [
-            'id'       => $coupon->id,
-            'code'     => $coupon->code,
-            'name'     => $coupon->name,
-            'type'     => $coupon->type,
-            'value'    => $coupon->value,
+            'id' => $coupon->id,
+            'code' => $coupon->code,
+            'name' => $coupon->name,
+            'type' => $coupon->type,
+            'value' => $coupon->value,
             'discount' => $discount,
         ];
 
@@ -387,15 +407,15 @@ class CartController extends Controller
 
         if ($request->wantsJson() || $request->ajax()) {
             return response()->json([
-                'success'            => true,
-                'message'            => $successMsg,
-                'coupon'             => $couponData,
-                'subtotal'           => $subtotal,
-                'formatted_subtotal' => '৳' . number_format($subtotal),
-                'discount'           => $discount,
-                'formatted_discount' => '-৳' . number_format($discount),
-                'total'              => $total,
-                'formatted_total'    => '৳' . number_format($total),
+                'success' => true,
+                'message' => $successMsg,
+                'coupon' => $couponData,
+                'subtotal' => $subtotal,
+                'formatted_subtotal' => '৳'.number_format($subtotal),
+                'discount' => $discount,
+                'formatted_discount' => '-৳'.number_format($discount),
+                'total' => $total,
+                'formatted_total' => '৳'.number_format($total),
             ]);
         }
 
@@ -404,9 +424,6 @@ class CartController extends Controller
 
     /**
      * Remove applied coupon discount from the session cart.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
      */
     public function removeCoupon(Request $request): JsonResponse|RedirectResponse
     {
@@ -422,15 +439,15 @@ class CartController extends Controller
 
         if ($request->wantsJson() || $request->ajax()) {
             return response()->json([
-                'success'            => true,
-                'message'            => $msg,
-                'coupon'             => null,
-                'subtotal'           => $subtotal,
-                'formatted_subtotal' => '৳' . number_format($subtotal),
-                'discount'           => 0.00,
+                'success' => true,
+                'message' => $msg,
+                'coupon' => null,
+                'subtotal' => $subtotal,
+                'formatted_subtotal' => '৳'.number_format($subtotal),
+                'discount' => 0.00,
                 'formatted_discount' => '৳0',
-                'total'              => $subtotal,
-                'formatted_total'    => '৳' . number_format($subtotal),
+                'total' => $subtotal,
+                'formatted_total' => '৳'.number_format($subtotal),
             ]);
         }
 
@@ -440,46 +457,46 @@ class CartController extends Controller
     /**
      * Compute and synchronize applied coupon discount for current subtotal.
      *
-     * @param  float  $subtotal
      * @return array{coupon: ?array, discount: float, total: float}
      */
     protected function calculateCouponDiscount(float $subtotal): array
     {
         $sessionCoupon = session()->get('coupon');
-        if (!$sessionCoupon || empty($sessionCoupon['id'])) {
+        if (! $sessionCoupon || empty($sessionCoupon['id'])) {
             return [
-                'coupon'   => null,
+                'coupon' => null,
                 'discount' => 0.00,
-                'total'    => $subtotal,
+                'total' => $subtotal,
             ];
         }
 
         $coupon = Coupon::find($sessionCoupon['id']);
-        if (!$coupon || !$coupon->isValid($subtotal)['valid']) {
+        if (! $coupon || ! $coupon->isValid($subtotal)['valid']) {
             session()->forget('coupon');
+
             return [
-                'coupon'   => null,
+                'coupon' => null,
                 'discount' => 0.00,
-                'total'    => $subtotal,
+                'total' => $subtotal,
             ];
         }
 
         $discount = $coupon->calculateDiscount($subtotal);
         $couponData = [
-            'id'       => $coupon->id,
-            'code'     => $coupon->code,
-            'name'     => $coupon->name,
-            'type'     => $coupon->type,
-            'value'    => $coupon->value,
+            'id' => $coupon->id,
+            'code' => $coupon->code,
+            'name' => $coupon->name,
+            'type' => $coupon->type,
+            'value' => $coupon->value,
             'discount' => $discount,
         ];
 
         session()->put('coupon', $couponData);
 
         return [
-            'coupon'   => $couponData,
+            'coupon' => $couponData,
             'discount' => $discount,
-            'total'    => max(0, $subtotal - $discount),
+            'total' => max(0, $subtotal - $discount),
         ];
     }
 }

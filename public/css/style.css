@@ -631,8 +631,24 @@ p {
   width: 490px;
 }
 
+.eq-megamenu--shop {
+  width: 780px;
+}
+
+.eq-megamenu--stores {
+  width: 320px;
+}
+
 .eq-megamenu__grid--2col {
   grid-template-columns: 1.25fr 190px;
+}
+
+.eq-megamenu__grid--shop {
+  grid-template-columns: 1fr 1fr 1fr 190px;
+}
+
+.eq-megamenu__grid--stores {
+  grid-template-columns: 1fr;
 }
 
 .eq-megamenu__col {

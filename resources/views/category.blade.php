@@ -188,18 +188,15 @@
           </div>
 
           <!-- Filter Group 2: Fabric & Material -->
+          <!-- Filter Group 2: Fabric & Material (Only shown when category has fabric items) -->
+          @if($availableFabrics && $availableFabrics->isNotEmpty())
           <div class="eq-filter-group" id="filter-group-fabric">
             <button type="button" class="eq-filter-group__header" aria-expanded="true">
               <span>Fabric &amp; Weave</span>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
             </button>
             <div class="eq-filter-group__body">
-              @php
-                $defaultFabrics = ['Jamdani', 'Tangail', 'Pure Silk', 'Half Silk', 'Mulmul', 'Linen', 'Leather', 'Cotton', 'Muslin'];
-                $displayFabrics = ($availableFabrics && $availableFabrics->count() > 0) ? $availableFabrics : $defaultFabrics;
-              @endphp
-
-              @foreach($displayFabrics as $fab)
+              @foreach($availableFabrics as $fab)
                 <label class="eq-filter-option">
                   <span class="eq-filter-option__left">
                     <input type="checkbox" data-filter="fabric" value="{{ $fab }}" {{ request('fabric') == $fab ? 'checked' : '' }} onchange="updateFilterParam('fabric', this.checked ? this.value : null)" />
@@ -209,6 +206,7 @@
               @endforeach
             </div>
           </div>
+          @endif
 
           <!-- Filter Group 3: Availability -->
           <div class="eq-filter-group" id="filter-group-stock">
@@ -255,13 +253,13 @@
                   @endif
 
                   <!-- Quick View / Add Button -->
-                  <button type="button" class="eq-product-card__quick-add" data-action="quick-view" onclick="window.location.href='{{ route('product.show', $product->slug) }}'">
+                  <button type="button" class="eq-product-card__quick-add" data-action="quick-view">
                     Quick Inspect &bull; Add
                   </button>
                 </div>
 
                 <div class="eq-product-card__body">
-                  <span class="eq-product-card__category">{{ $product->subcategory ? $product->subcategory->name : $product->category->name }} &bull; {{ $product->fabric ?? 'Handloom' }}</span>
+                  <span class="eq-product-card__category">{{ $product->subcategory ? $product->subcategory->name : $product->category->name }}{{ $product->fabric ? ' &bull; ' . $product->fabric : '' }}</span>
                   <h3 class="eq-product-card__name">
                     <a href="{{ route('product.show', $product->slug) }}" class="eq-product-card__link">{{ $product->name }}</a>
                   </h3>

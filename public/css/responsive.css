@@ -1415,7 +1415,9 @@
 
   /* Clean Vertical Stacking: Override all desktop multi-column grids */
   .eq-megamenu__grid,
-  .eq-megamenu__grid--2col {
+  .eq-megamenu__grid--2col,
+  .eq-megamenu__grid--shop,
+  .eq-megamenu__grid--stores {
     display: flex !important;
     flex-direction: column !important;
     grid-template-columns: none !important;

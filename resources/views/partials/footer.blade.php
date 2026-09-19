@@ -11,7 +11,7 @@
         <a href="{{ route('home') }}" style="display: block; text-decoration: none;">
           <img src="{{ asset('images/logo/earthquick-logo.png') }}" alt="Earthquick" />
         </a>
-        <p>Premium fashion and lifestyle pieces from Nous Telos — handloom sarees, tailored sets and considered accessories.</p>
+        <p>A curated marketplace for independent Bangladeshi brands. Explore Nous Telos heritage handloom, Bright electronics, and partner stores.</p>
         <div class="eq-footer__social" aria-label="Social links">
           <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook" id="social-facebook">
             <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
@@ -35,6 +35,7 @@
           <li><a href="{{ route('category.show', 'ornaments') }}" id="footer-link-ornaments">Ornaments</a></li>
           <li><a href="{{ route('category.show', 'bags') }}" id="footer-link-bags">Bags</a></li>
           <li><a href="{{ route('category.show', 'home-decor') }}" id="footer-link-decor">Home Decor</a></li>
+          <li><a href="{{ route('stores.index') }}" id="footer-link-stores">Brand Stores</a></li>
         </ul>
       </div>
 
@@ -65,7 +66,7 @@
     <!-- Footer bottom copyright bar -->
     <div class="eq-footer__bottom" id="footer-bottom-bar">
       <span>&copy; {{ date('Y') }} Earthquick. All rights reserved.</span>
-      <span>A Nous Telos brand.</span>
+      <span>Bangladesh's curated multi-vendor marketplace.</span>
     </div>
   </div>
 </footer>

@@ -1,9 +1,12 @@
 @extends('layouts.app')
 
-@section('title', 'Secure Checkout — Earthquick by Nous Telos')
+@section('title', 'Secure Checkout — Earthquick')
 @section('body_class', 'eq-checkout-page')
 
 @section('content')
+@php
+  $initialDeliveryFee = $subtotal >= $freeShippingThreshold ? 0 : $deliveryFeeInside;
+@endphp
 <!-- Breadcrumb Bar -->
 <nav class="eq-breadcrumb" aria-label="Breadcrumb" style="padding: 0.9rem 0; border-bottom: 1px solid var(--eq-line); background: var(--eq-white);">
   <div class="eq-container">
@@ -21,7 +24,7 @@
 <section class="eq-checkout-hero">
   <div class="eq-container">
     <h1 class="eq-checkout-hero__title" id="checkout-main-title">Secure Checkout</h1>
-    <p class="eq-checkout-hero__desc">Please provide your delivery information to finalize your Nous Telos order.</p>
+    <p class="eq-checkout-hero__desc">Please provide your delivery information to finalize your Earthquick order.</p>
   </div>
 </section>
 
@@ -107,7 +110,7 @@
                 <div class="eq-method-card__content">
                   <div class="eq-method-card__name">
                     <span>Inside Chattogram (Ctg)</span>
-                    <span class="eq-method-card__price" id="shipping-rate-inside">৳80</span>
+                    <span class="eq-method-card__price" id="shipping-rate-inside">৳{{ number_format($initialDeliveryFee) }}</span>
                   </div>
                   <div class="eq-method-card__desc">Same / Next day delivery within Chattogram City (Within 48 hours)</div>
                 </div>
@@ -119,7 +122,7 @@
                 <div class="eq-method-card__content">
                   <div class="eq-method-card__name">
                     <span>Outside Chattogram (Nationwide)</span>
-                    <span class="eq-method-card__price" id="shipping-rate-outside">৳150</span>
+                    <span class="eq-method-card__price" id="shipping-rate-outside">৳{{ number_format($subtotal >= $freeShippingThreshold ? 0 : $deliveryFeeOutside) }}</span>
                   </div>
                   <div class="eq-method-card__desc">Dhaka &amp; All 64 Districts via Courier in 2–4 days</div>
                 </div>
@@ -209,7 +212,7 @@
           <div style="margin-top: 1.5rem; display: flex; align-items: flex-start; gap: 0.65rem; font-size: 0.84rem; color: var(--eq-charcoal-soft);">
             <input type="checkbox" id="accept-terms" checked required style="accent-color: var(--eq-gold); margin-top: 0.2rem;" />
             <label for="accept-terms">
-              I agree to the <a href="{{ route('about') }}" style="color: var(--eq-charcoal); text-decoration: underline;">Terms &amp; Conditions</a> and <a href="{{ route('about') }}" style="color: var(--eq-charcoal); text-decoration: underline;">Privacy Policy</a> of Earthquick / Nous Telos.
+              I agree to the <a href="{{ route('about') }}" style="color: var(--eq-charcoal); text-decoration: underline;">Terms &amp; Conditions</a> and <a href="{{ route('about') }}" style="color: var(--eq-charcoal); text-decoration: underline;">Privacy Policy</a> of Earthquick.
             </label>
           </div>
 
@@ -222,7 +225,7 @@
               <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
               <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
             </svg>
-            <span>Confirm &amp; Place Order &bull; <span class="order-total-display">৳{{ number_format(max(0, $subtotal - ($discount ?? 0)) + 80) }}</span></span>
+            <span>Confirm &amp; Place Order &bull; <span class="order-total-display">৳{{ number_format(max(0, $subtotal - ($discount ?? 0)) + $initialDeliveryFee) }}</span></span>
           </button>
         </div>
 
@@ -291,11 +294,11 @@
           @endif
           <div class="eq-price-row">
             <span>Delivery Fee</span>
-            <span id="price-shipping">৳80</span>
+            <span id="price-shipping">৳{{ number_format($initialDeliveryFee) }}</span>
           </div>
           <div class="eq-price-row eq-price-row--total">
             <span>Grand Total</span>
-            <span class="eq-total-amount" id="price-grand-total">৳{{ number_format(max(0, $subtotal - ($discount ?? 0)) + 80) }}</span>
+            <span class="eq-total-amount" id="price-grand-total">৳{{ number_format(max(0, $subtotal - ($discount ?? 0)) + $initialDeliveryFee) }}</span>
           </div>
         </div>
 
@@ -327,6 +330,7 @@
 <script>
   const checkoutSubtotal = {{ (float) $subtotal }};
   const checkoutDiscount = {{ (float) ($discount ?? 0) }};
+  const freeShippingThreshold = {{ $freeShippingThreshold }};
 
   function selectShippingZone(zone, fee) {
     const cardInside = document.getElementById('card-shipping-inside');
@@ -343,10 +347,11 @@
       if (cardInside) cardInside.classList.remove('is-selected');
     }
 
-    const total = Math.max(0, checkoutSubtotal - checkoutDiscount) + fee;
+    const deliveryFee = checkoutSubtotal >= freeShippingThreshold ? 0 : fee;
+    const total = Math.max(0, checkoutSubtotal - checkoutDiscount) + deliveryFee;
     const formattedTotal = '৳' + total.toLocaleString('en-IN');
 
-    if (shippingEl) shippingEl.textContent = '৳' + fee;
+    if (shippingEl) shippingEl.textContent = '৳' + deliveryFee;
     if (grandTotalEl) grandTotalEl.textContent = formattedTotal;
     totalDisplays.forEach(el => el.textContent = formattedTotal);
   }

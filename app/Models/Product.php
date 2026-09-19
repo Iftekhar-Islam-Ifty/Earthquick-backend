@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -20,6 +21,7 @@ class Product extends Model
      * @var list<string>
      */
     protected $fillable = [
+        'vendor_id',
         'category_id',
         'subcategory_id',
         'sku',
@@ -50,10 +52,11 @@ class Product extends Model
     protected function casts(): array
     {
         return [
-            'price'          => 'float',
-            'old_price'      => 'float',
-            'in_stock'       => 'boolean',
-            'is_featured'    => 'boolean',
+            'price' => 'float',
+            'old_price' => 'float',
+            'in_stock' => 'boolean',
+            'stock_quantity' => 'integer',
+            'is_featured' => 'boolean',
             'is_new_arrival' => 'boolean',
         ];
     }
@@ -63,9 +66,15 @@ class Product extends Model
      * ========================================================================= */
 
     /**
+     * Primary vendor/brand supplying this product.
+     */
+    public function vendor(): BelongsTo
+    {
+        return $this->belongsTo(Vendor::class);
+    }
+
+    /**
      * Primary category association.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function category(): BelongsTo
     {
@@ -74,8 +83,6 @@ class Product extends Model
 
     /**
      * Specific subcategory association.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function subcategory(): BelongsTo
     {
@@ -84,11 +91,30 @@ class Product extends Model
 
     /**
      * Associated product gallery images.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function images(): HasMany
     {
         return $this->hasMany(ProductImage::class)->orderBy('sort_order');
+    }
+
+    /**
+     * Limit a public catalog query to legacy unassigned products and products
+     * whose assigned vendor is currently published.
+     */
+    public function scopePubliclyAvailable(Builder $query): Builder
+    {
+        return $query->where(function (Builder $query) {
+            $query->whereNull('vendor_id')
+                ->orWhereHas('vendor', fn (Builder $vendorQuery) => $vendorQuery->where('is_active', true));
+        });
+    }
+
+    /**
+     * Determine whether this product may be added from the public storefront.
+     */
+    public function isPubliclyAvailable(): bool
+    {
+        return $this->vendor_id === null
+            || $this->vendor()->where('is_active', true)->exists();
     }
 }

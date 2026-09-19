@@ -371,6 +371,7 @@
       <div>
         <div class="eq-brand-title">EARTHQUICK</div>
         <div class="eq-brand-sub">NOUS TELOS &bull; DESIGN STUDIO</div>
+        <div class="eq-brand-sub">ATELIER &amp; MULTI-BRAND COLLECTIVE</div>
         <div class="eq-brand-address">
           Chattogram Metropolitan, Bangladesh<br>
           Direct line: +880 1812-345678 &bull; concierge@earthquick.com<br>
@@ -449,6 +450,9 @@
                 @endif
                 <div>
                   <div style="font-weight: 600; color: var(--eq-navy);">{{ $item->product_name }}</div>
+                  @if($item->vendor)
+                    <div style="font-size: 0.74rem; color: var(--eq-gold-dark); font-weight: 600;">Brand: {{ $item->vendor->name }}</div>
+                  @endif
                   @if($item->size)
                     <div style="font-size: 0.78rem; color: var(--eq-charcoal-soft);">Size: {{ $item->size }}</div>
                   @endif

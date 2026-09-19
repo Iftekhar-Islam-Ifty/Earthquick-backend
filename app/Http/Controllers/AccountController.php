@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\View\View;
 
 /* =========================================================================
  * ACCOUNT CONTROLLER
@@ -16,23 +18,16 @@ class AccountController extends Controller
     /**
      * Display customer account dashboard with profile details and order history.
      *
-     * @return \Illuminate\View\View
+     * @return View
      */
     public function index()
     {
         $user = Auth::user();
 
-        // Retrieve orders associated by user ID or customer contact credentials
+        // Guest orders remain private to the checkout session; accounts only see
+        // orders explicitly linked to their authenticated user ID.
         $orders = Order::with('items')
-            ->where(function ($query) use ($user) {
-                $query->where('user_id', $user->id);
-                if (!empty($user->phone)) {
-                    $query->orWhere('customer_phone', $user->phone);
-                }
-                if (!empty($user->email)) {
-                    $query->orWhere('customer_email', $user->email);
-                }
-            })
+            ->where('user_id', $user->id)
             ->latest()
             ->get();
 
@@ -43,24 +38,16 @@ class AccountController extends Controller
      * Display individual order details, tracking stepper, and item breakdown.
      *
      * @param  string  $order_number
-     * @return \Illuminate\View\View
+     * @return View
      */
     public function showOrder($order_number)
     {
         $user = Auth::user();
 
-        // Ensure order belongs to authenticated customer
+        // Contact details are not proof of ownership; require the account link.
         $order = Order::with('items')
             ->where('order_number', $order_number)
-            ->where(function ($query) use ($user) {
-                $query->where('user_id', $user->id);
-                if (!empty($user->phone)) {
-                    $query->orWhere('customer_phone', $user->phone);
-                }
-                if (!empty($user->email)) {
-                    $query->orWhere('customer_email', $user->email);
-                }
-            })
+            ->where('user_id', $user->id)
             ->firstOrFail();
 
         return view('account.order-detail', compact('order', 'user'));
@@ -69,8 +56,7 @@ class AccountController extends Controller
     /**
      * Update customer profile details and default shipping address.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
     public function updateProfile(Request $request)
     {
@@ -78,28 +64,28 @@ class AccountController extends Controller
 
         // Validate personal and shipping address inputs
         $request->validate([
-            'name'    => 'required|string|max:255',
-            'email'   => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . $user->id],
-            'phone'   => ['required', 'string', 'regex:/^(?:\+?88)?01[3-9]\d{8}$/', 'unique:users,phone,' . $user->id],
-            'city'    => 'nullable|string|max:100',
-            'area'    => 'nullable|string|max:100',
+            'name' => 'required|string|max:255',
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,'.$user->id],
+            'phone' => ['required', 'string', 'regex:/^(?:\+?88)?01[3-9]\d{8}$/', 'unique:users,phone,'.$user->id],
+            'city' => 'nullable|string|max:100',
+            'area' => 'nullable|string|max:100',
             'address' => 'nullable|string|max:1000',
         ], [
-            'name.required'  => 'Full name is required.',
+            'name.required' => 'Full name is required.',
             'email.required' => 'Email address is required.',
-            'email.unique'   => 'This email address is already associated with another account.',
+            'email.unique' => 'This email address is already associated with another account.',
             'phone.required' => 'Mobile phone number is required.',
-            'phone.regex'    => 'Please provide a valid 11-digit Bangladeshi phone number (e.g. 017XXXXXXXX).',
-            'phone.unique'   => 'This phone number is already registered.',
+            'phone.regex' => 'Please provide a valid 11-digit Bangladeshi phone number (e.g. 017XXXXXXXX).',
+            'phone.unique' => 'This phone number is already registered.',
         ]);
 
         // Persist sanitized customer credentials
         $user->update([
-            'name'    => trim($request->name),
-            'email'   => strtolower(trim($request->email)),
-            'phone'   => trim($request->phone),
-            'city'    => $request->city,
-            'area'    => $request->area,
+            'name' => trim($request->name),
+            'email' => strtolower(trim($request->email)),
+            'phone' => trim($request->phone),
+            'city' => $request->city,
+            'area' => $request->area,
             'address' => $request->address,
         ]);
 

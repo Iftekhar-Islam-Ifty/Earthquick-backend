@@ -43,6 +43,19 @@
         </select>
       </div>
 
+      <!-- Vendor / Brand Filter -->
+      <div style="display: flex; align-items: center; gap: 0.5rem;">
+        <label for="filter-vendor" style="font-size: 0.8rem; font-weight: 500; color: var(--eq-charcoal-soft);">Brand:</label>
+        <select name="vendor" id="filter-vendor" onchange="this.form.submit()" style="padding: 0.4rem 0.65rem; border-radius: 5px; border: 1px solid var(--eq-line); font-size: 0.84rem; background: #ffffff;">
+          <option value="">All Brands</option>
+          @foreach($vendors as $v)
+            <option value="{{ $v->slug }}" {{ ($vendorSlug ?? '') === $v->slug ? 'selected' : '' }}>
+              {{ $v->name }}
+            </option>
+          @endforeach
+        </select>
+      </div>
+
       <!-- Stock Status Filter -->
       <div style="display: flex; align-items: center; gap: 0.5rem;">
         <label for="filter-stock" style="font-size: 0.8rem; font-weight: 500; color: var(--eq-charcoal-soft);">Stock Status:</label>
@@ -53,7 +66,7 @@
         </select>
       </div>
 
-      @if($categorySlug || $stockFilter)
+      @if($categorySlug || ($vendorSlug ?? false) || $stockFilter)
         <a href="{{ route('admin.products') }}" class="eq-admin-btn eq-admin-btn--outline" style="padding: 0.35rem 0.65rem; font-size: 0.78rem;">
           Clear Filters
         </a>
@@ -75,6 +88,7 @@
           <thead>
             <tr>
               <th>Product Creation</th>
+              <th>Brand</th>
               <th>Category</th>
               <th>Fabric</th>
               <th>Unit Price</th>
@@ -103,6 +117,11 @@
                       @endif
                     </div>
                   </div>
+                </td>
+                <td>
+                  <span style="font-weight: 600; color: var(--eq-navy); font-size: 0.86rem;">
+                    {{ $product->vendor ? $product->vendor->name : 'Nous Telos' }}
+                  </span>
                 </td>
                 <td>
                   <span style="font-weight: 500; color: var(--eq-navy);">{{ $product->category ? $product->category->name : 'N/A' }}</span>
@@ -213,6 +232,7 @@
 
                 <div class="eq-card-item__meta">
                   <span>SKU: {{ $product->sku ?? ('NT-' . $product->id) }}</span>
+                  <span>&bull; <strong>{{ $product->vendor ? $product->vendor->name : 'Nous Telos' }}</strong></span>
                   @if($product->category)
                     <span>&bull; {{ $product->category->name }}</span>
                   @endif

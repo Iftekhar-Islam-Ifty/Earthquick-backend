@@ -20,18 +20,15 @@ class ProductController extends Controller
 
     /**
      * Display a single product detail page.
-     *
-     * @param  string  $slug
-     * @return \Illuminate\View\View
      */
     public function show(string $slug): View
     {
-        $product = Product::with(['category', 'subcategory', 'images'])
+        $product = Product::publiclyAvailable()->with(['category', 'subcategory', 'images', 'vendor'])
             ->where('slug', $slug)
             ->firstOrFail();
 
         // Curate related products from the same category for recommendation carousel
-        $relatedProducts = Product::where('category_id', $product->category_id)
+        $relatedProducts = Product::publiclyAvailable()->where('category_id', $product->category_id)
             ->where('id', '!=', $product->id)
             ->where('in_stock', true)
             ->take(4)

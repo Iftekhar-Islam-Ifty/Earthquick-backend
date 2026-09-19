@@ -1,3 +1,29 @@
+# Earthquick
+
+Earthquick is a multivendor marketplace built with Laravel and Blade. **Nous Telos**
+is the primary initial vendor, specializing in Bengali heritage and handloom.
+**Bright** is an initial example electronics vendor to develop further later.
+The project will support additional vendors through incremental improvements.
+
+Read [Project memory and architecture review](PROJECT_MEMORY.md) for the owner's
+intent, current implementation, known gaps, and suggested next steps. Future
+coding sessions should also read [AGENTS.md](AGENTS.md).
+
+Phase 1 testing setup is documented in [Baseline and isolated tests](docs/PHASE_1_BASELINE.md).
+Run `composer test` for the isolated passing PHP and JavaScript suites.
+[Phase 2 shared UI fixes](docs/PHASE_2_SHARED_UI.md) cover URLs, quick view and
+event handling. [Phase 3 catalog/vendor integrity](docs/PHASE_3_CATALOG_VENDOR.md)
+covers public vendor availability, catalog validation and seed ordering. Pending
+backend issues remain in `composer test:regressions`.
+Run `composer test:frontend` to check only the frontend interactions.
+
+The review records source findings as of 2026-09-18; it does not claim all
+marketplace capabilities are implemented or tested.
+
+---
+
+The original Laravel framework reference follows.
+
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
 <p align="center">

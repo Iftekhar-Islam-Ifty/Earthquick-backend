@@ -23,9 +23,6 @@ class SearchController extends Controller
     /**
      * AJAX Live Search Suggestions Endpoint.
      * Returns up to 6 in-stock products matching name, fabric, or categories.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\JsonResponse
      */
     public function suggestions(Request $request): JsonResponse
     {
@@ -34,47 +31,47 @@ class SearchController extends Controller
         // Return empty payload if search term is blank
         if (mb_strlen($query) < 1) {
             return response()->json([
-                'success'     => true,
-                'query'       => '',
-                'count'       => 0,
+                'success' => true,
+                'query' => '',
+                'count' => 0,
                 'suggestions' => [],
             ]);
         }
 
         // Query active inventory across product metadata and category associations
-        $products = Product::with(['category', 'subcategory'])
+        $products = Product::publiclyAvailable()->with(['category', 'subcategory'])
             ->where('in_stock', true)
             ->where(function ($q) use ($query) {
                 $q->where('name', 'like', "%{$query}%")
-                  ->orWhere('fabric', 'like', "%{$query}%")
-                  ->orWhere('description', 'like', "%{$query}%")
-                  ->orWhere('short_desc', 'like', "%{$query}%")
-                  ->orWhereHas('category', function ($cq) use ($query) {
-                      $cq->where('name', 'like', "%{$query}%");
-                  })
-                  ->orWhereHas('subcategory', function ($sq) use ($query) {
-                      $sq->where('name', 'like', "%{$query}%");
-                  });
+                    ->orWhere('fabric', 'like', "%{$query}%")
+                    ->orWhere('description', 'like', "%{$query}%")
+                    ->orWhere('short_desc', 'like', "%{$query}%")
+                    ->orWhereHas('category', function ($cq) use ($query) {
+                        $cq->where('name', 'like', "%{$query}%");
+                    })
+                    ->orWhereHas('subcategory', function ($sq) use ($query) {
+                        $sq->where('name', 'like', "%{$query}%");
+                    });
             })
             ->take(6)
             ->get()
             ->map(function ($product) {
                 return [
-                    'id'              => $product->id,
-                    'name'            => $product->name,
-                    'slug'            => $product->slug,
-                    'price'           => (float) $product->price,
-                    'formatted_price' => '৳' . number_format($product->price),
-                    'image'           => asset($product->image),
-                    'category_name'   => $product->subcategory ? $product->subcategory->name : ($product->category ? $product->category->name : 'Nous Telos Studio'),
-                    'url'             => route('product.show', $product->slug),
+                    'id' => $product->id,
+                    'name' => $product->name,
+                    'slug' => $product->slug,
+                    'price' => (float) $product->price,
+                    'formatted_price' => '৳'.number_format($product->price),
+                    'image' => asset($product->image),
+                    'category_name' => $product->subcategory ? $product->subcategory->name : ($product->category ? $product->category->name : 'Nous Telos Studio'),
+                    'url' => route('product.show', $product->slug),
                 ];
             });
 
         return response()->json([
-            'success'     => true,
-            'query'       => $query,
-            'count'       => $products->count(),
+            'success' => true,
+            'query' => $query,
+            'count' => $products->count(),
             'suggestions' => $products,
         ]);
     }
@@ -86,29 +83,26 @@ class SearchController extends Controller
 
     /**
      * Dedicated Search Results Page.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\View\View
      */
     public function index(Request $request): View
     {
         $query = trim($request->input('q', ''));
         $sort = $request->input('sort', 'featured');
 
-        $productsQuery = Product::with(['category', 'subcategory']);
+        $productsQuery = Product::publiclyAvailable()->with(['category', 'subcategory']);
 
-        if (!empty($query)) {
+        if (! empty($query)) {
             $productsQuery->where(function ($q) use ($query) {
                 $q->where('name', 'like', "%{$query}%")
-                  ->orWhere('fabric', 'like', "%{$query}%")
-                  ->orWhere('description', 'like', "%{$query}%")
-                  ->orWhere('short_desc', 'like', "%{$query}%")
-                  ->orWhereHas('category', function ($cq) use ($query) {
-                      $cq->where('name', 'like', "%{$query}%");
-                  })
-                  ->orWhereHas('subcategory', function ($sq) use ($query) {
-                      $sq->where('name', 'like', "%{$query}%");
-                  });
+                    ->orWhere('fabric', 'like', "%{$query}%")
+                    ->orWhere('description', 'like', "%{$query}%")
+                    ->orWhere('short_desc', 'like', "%{$query}%")
+                    ->orWhereHas('category', function ($cq) use ($query) {
+                        $cq->where('name', 'like', "%{$query}%");
+                    })
+                    ->orWhereHas('subcategory', function ($sq) use ($query) {
+                        $sq->where('name', 'like', "%{$query}%");
+                    });
             });
         }
 

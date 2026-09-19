@@ -68,6 +68,9 @@
                         @endif
                         <div>
                           <div style="font-weight: 500; color: var(--eq-navy);">{{ $item->product_name }}</div>
+                          @if($item->vendor)
+                            <div style="font-size: 0.72rem; color: var(--eq-gold-dark); font-weight: 600;">Brand: {{ $item->vendor->name }}</div>
+                          @endif
                           @if($item->size)
                             <div style="font-size: 0.74rem; color: var(--eq-charcoal-soft);">Size: {{ $item->size }}</div>
                           @endif
@@ -96,6 +99,9 @@
                 @endif
                 <div style="flex: 1; min-width: 0;">
                   <div style="font-weight: 600; font-size: 0.86rem; color: var(--eq-navy); line-height: 1.3;">{{ $item->product_name }}</div>
+                  @if($item->vendor)
+                    <div style="font-size: 0.7rem; color: var(--eq-gold-dark); font-weight: 600;">Brand: {{ $item->vendor->name }}</div>
+                  @endif
                   @if($item->size)
                     <div style="font-size: 0.72rem; color: var(--eq-charcoal-soft); margin-top: 1px;">Size: {{ $item->size }}</div>
                   @endif
