@@ -28,6 +28,16 @@ class PlatformIdentityTest extends TestCase
     {
         $response = $this->get('/')->assertOk();
         $response->assertSee('id="nav-link-shop"', false);
+        $response->assertSee('aria-controls="megamenu-shop"', false);
+        $response->assertSee('Fashion &amp; Accessories', false);
+        $response->assertSee('Home &amp; Living', false);
+        $response->assertSee('Electronics &amp; Smart Living', false);
+        $response->assertSee('Coming Soon', false);
+        $response->assertSee(route('category.show', 'women'), false);
+        $response->assertSee(route('category.show', 'home-decor'), false);
+        $response->assertSee(route('subcategory.show', ['categorySlug' => 'home-decor', 'subcategorySlug' => 'cushion-cover']), false);
+        $response->assertSee(route('stores.show', 'nous-telos'), false);
+        $response->assertSee(route('stores.show', 'bright'), false);
         $response->assertSee('id="nav-link-stores"', false);
         $response->assertSee('id="nav-link-about"', false);
         $response->assertSee("Bangladesh's curated multi-vendor marketplace", false);

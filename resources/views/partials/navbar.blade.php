@@ -31,7 +31,7 @@
         <li class="eq-nav-item eq-nav-item--has-dropdown" id="nav-item-shop">
           <div class="eq-nav-link-wrapper">
             <a href="{{ route('shop.index') }}" id="nav-link-shop" class="{{ request()->is('shop*') ? 'is-active' : '' }}">Shop</a>
-            <button type="button" class="eq-dropdown-toggle-btn" id="btn-toggle-shop-sub" aria-expanded="false" aria-label="Toggle Shop categories">
+            <button type="button" class="eq-dropdown-toggle-btn" id="btn-toggle-shop-sub" aria-expanded="false" aria-controls="megamenu-shop" aria-label="Toggle Shop categories">
               <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <polyline points="6 9 12 15 18 9"></polyline>
               </svg>
@@ -41,63 +41,41 @@
           <!-- Shop Dropdown Mega-Panel -->
           <div class="eq-megamenu eq-megamenu--shop" id="megamenu-shop" role="region" aria-label="Shop Categories">
             <div class="eq-megamenu__grid eq-megamenu__grid--shop">
-              <!-- Column 1: Women's Hub -->
-              <div class="eq-megamenu__col eq-submenu-nested" id="submenu-women-hub">
+              <div class="eq-megamenu__col eq-submenu-nested eq-shop-menu-section" id="submenu-fashion-hub">
                 <div class="eq-nested-header">
-                  <a href="{{ route('category.show', 'women') }}" class="eq-megamenu__heading eq-nested-title">Women</a>
-                  <button type="button" class="eq-nested-toggle-btn" id="btn-toggle-women-nested" aria-expanded="false" aria-label="Toggle Women subcategories">
+                  <div class="eq-megamenu__heading eq-nested-title">Fashion &amp; Accessories</div>
+                  <button type="button" class="eq-nested-toggle-btn" id="btn-toggle-fashion-nested" aria-expanded="false" aria-label="Toggle Fashion and Accessories categories">
                     <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                       <polyline points="6 9 12 15 18 9"></polyline>
                     </svg>
                   </button>
                 </div>
-                <ul class="eq-megamenu__list eq-nested-list" id="list-women-nested">
-                  <li><a href="{{ route('subcategory.show', ['categorySlug' => 'women', 'subcategorySlug' => 'saree']) }}">Jamdani &amp; Sarees</a></li>
-                  <li><a href="{{ route('subcategory.show', ['categorySlug' => 'women', 'subcategorySlug' => 'three-piece']) }}">Three Piece Sets</a></li>
-                  <li><a href="{{ route('subcategory.show', ['categorySlug' => 'women', 'subcategorySlug' => 'two-piece']) }}">Two Piece Ensembles</a></li>
-                  <li><a href="{{ route('subcategory.show', ['categorySlug' => 'women', 'subcategorySlug' => 'saree']) }}?fabric=Jamdani">Jamdani Weaves</a></li>
-                  <li><a href="{{ route('category.show', 'women') }}" class="eq-megamenu__view-all">All Women &rarr;</a></li>
+                <ul class="eq-megamenu__list eq-nested-list" id="list-fashion-nested">
+                  <li><a href="{{ route('category.show', 'women') }}">Women</a></li>
+                  <li><a href="{{ route('category.show', 'men') }}">Men</a></li>
+                  <li><a href="{{ route('category.show', 'kids') }}">Kids</a></li>
+                  <li><a href="{{ route('category.show', 'bags') }}">Bags</a></li>
+                  <li><a href="{{ route('category.show', 'ornaments') }}">Ornaments</a></li>
                 </ul>
               </div>
 
-              <!-- Column 2: Men, Kids & Accessories -->
-              <div class="eq-megamenu__col eq-submenu-nested" id="submenu-men-kids-hub">
+              <div class="eq-megamenu__col eq-submenu-nested eq-shop-menu-section" id="submenu-home-living-hub">
                 <div class="eq-nested-header">
-                  <a href="{{ route('category.show', 'men') }}" class="eq-megamenu__heading eq-nested-title">Men &amp; Lifestyle</a>
-                  <button type="button" class="eq-nested-toggle-btn" id="btn-toggle-men-kids-nested" aria-expanded="false" aria-label="Toggle Men & Kids subcategories">
+                  <div class="eq-megamenu__heading eq-nested-title">Home &amp; Living</div>
+                  <button type="button" class="eq-nested-toggle-btn" id="btn-toggle-home-living-nested" aria-expanded="false" aria-label="Toggle Home and Living categories">
                     <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                       <polyline points="6 9 12 15 18 9"></polyline>
                     </svg>
                   </button>
                 </div>
-                <ul class="eq-megamenu__list eq-nested-list" id="list-men-kids-nested">
-                  <li><a href="{{ route('category.show', 'men') }}" id="nav-link-men">Men's Panjabi &amp; Wear</a></li>
-                  <li><a href="{{ route('category.show', 'kids') }}" id="nav-link-kids">Kids Collection</a></li>
-                  <li><a href="{{ route('category.show', 'ornaments') }}" id="nav-link-ornaments">Artisanal Ornaments</a></li>
-                  <li><a href="{{ route('category.show', 'bags') }}" id="nav-link-bags">Bags &amp; Leathercraft</a></li>
+                <ul class="eq-megamenu__list eq-nested-list" id="list-home-living-nested">
+                  <li><a href="{{ route('category.show', 'home-decor') }}">Home Decor</a></li>
+                  <li><a href="{{ route('subcategory.show', ['categorySlug' => 'home-decor', 'subcategorySlug' => 'kantha']) }}">Kantha</a></li>
+                  <li><a href="{{ route('subcategory.show', ['categorySlug' => 'home-decor', 'subcategorySlug' => 'bedsheet']) }}">Bedsheet</a></li>
+                  <li><a href="{{ route('subcategory.show', ['categorySlug' => 'home-decor', 'subcategorySlug' => 'cushion-cover']) }}">Cushion Cover</a></li>
                 </ul>
               </div>
 
-              <!-- Column 3: Home Decor & Tech -->
-              <div class="eq-megamenu__col eq-submenu-nested" id="submenu-home-tech-hub">
-                <div class="eq-nested-header">
-                  <a href="{{ route('category.show', 'home-decor') }}" class="eq-megamenu__heading eq-nested-title">Home &amp; Modern</a>
-                  <button type="button" class="eq-nested-toggle-btn" id="btn-toggle-home-tech-nested" aria-expanded="false" aria-label="Toggle Home & Tech subcategories">
-                    <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                      <polyline points="6 9 12 15 18 9"></polyline>
-                    </svg>
-                  </button>
-                </div>
-                <ul class="eq-megamenu__list eq-nested-list" id="list-home-tech-nested">
-                  <li><a href="{{ route('subcategory.show', ['categorySlug' => 'home-decor', 'subcategorySlug' => 'kantha']) }}">Nakshi Kantha</a></li>
-                  <li><a href="{{ route('subcategory.show', ['categorySlug' => 'home-decor', 'subcategorySlug' => 'bedsheet']) }}">Bedsheet Sets</a></li>
-                  <li><a href="{{ route('category.show', 'home-decor') }}?sub=cushion-cover">Cushion Covers</a></li>
-                  <li><a href="{{ route('stores.show', 'bright') }}">Bright Electronics <span style="font-size: 0.68rem; padding: 2px 6px; background: rgba(201,150,47,0.12); color: var(--eq-gold-dark); border-radius: 4px; font-weight: 600; margin-left: 4px;">Soon</span></a></li>
-                  <li><a href="{{ route('category.show', 'home-decor') }}" class="eq-megamenu__view-all">All Home Sanctuary &rarr;</a></li>
-                </ul>
-              </div>
-
-              <!-- Column 4: Marketplace Spotlight Card -->
               <div class="eq-megamenu__feature">
                 <a href="{{ route('category.show', 'women') }}" class="eq-megamenu__feature-card">
                   <div class="eq-megamenu__feature-media">
@@ -114,45 +92,35 @@
           </div>
         </li>
 
-        <!-- 2. Stores Dropdown -->
+        <!-- 2. Brand Dropdown -->
         <li class="eq-nav-item eq-nav-item--has-dropdown" id="nav-item-stores">
           <div class="eq-nav-link-wrapper">
-            <a href="{{ route('stores.index') }}" id="nav-link-stores" class="{{ request()->is('stores*') ? 'is-active' : '' }}">Stores</a>
-            <button type="button" class="eq-dropdown-toggle-btn" id="btn-toggle-stores-sub" aria-expanded="false" aria-label="Toggle Stores list">
+            <a href="{{ route('stores.index') }}" id="nav-link-stores" class="{{ request()->is('stores*') ? 'is-active' : '' }}">Brand</a>
+            <button type="button" class="eq-dropdown-toggle-btn" id="btn-toggle-stores-sub" aria-expanded="false" aria-label="Toggle Brand list">
               <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <polyline points="6 9 12 15 18 9"></polyline>
               </svg>
             </button>
           </div>
 
-          <!-- Stores Dropdown Panel -->
-          <div class="eq-megamenu eq-megamenu--stores" id="megamenu-stores" role="region" aria-label="Brand Stores">
+          <!-- Brand Dropdown Panel -->
+          <div class="eq-megamenu eq-megamenu--stores" id="megamenu-stores" role="region" aria-label="Brands">
             <div class="eq-megamenu__grid eq-megamenu__grid--stores">
               <div class="eq-megamenu__col">
-                <div class="eq-megamenu__heading">Brand Partners &amp; Ateliers</div>
-                <ul class="eq-megamenu__list">
-                  @php
-                    try {
-                      $navVendors = \App\Models\Vendor::where('is_active', true)->orderBy('display_order')->orderBy('name')->get();
-                    } catch (\Throwable $e) {
-                      $navVendors = collect();
-                    }
-                  @endphp
-                  @forelse($navVendors as $nv)
-                    <li>
-                      <a href="{{ route('stores.show', $nv->slug) }}" style="display: flex; align-items: center; justify-content: space-between; gap: 0.5rem;">
-                        <span>{{ $nv->name }}</span>
-                        <span style="font-size: 0.72rem; color: var(--eq-charcoal-soft); font-weight: 500;">{{ $nv->vendor_code }}</span>
-                      </a>
-                    </li>
-                  @empty
-                    <li><a href="{{ route('stores.show', 'nous-telos') }}">Nous Telos</a></li>
-                    <li><a href="{{ route('stores.show', 'bright') }}">Bright</a></li>
-                  @endforelse
-                  <li style="margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid var(--eq-line);">
-                    <a href="{{ route('stores.index') }}" class="eq-megamenu__view-all" style="font-weight: 600; color: var(--eq-gold-dark);">All Brand Stores &rarr;</a>
-                  </li>
-                </ul>
+                <div class="eq-megamenu__heading">Featured Brands</div>
+                <div class="eq-brand-highlights" aria-label="Featured brands">
+                  <div class="eq-brand-highlight">
+                    <a href="{{ route('stores.show', 'nous-telos') }}" class="eq-brand-highlight__title">Nous Telos</a>
+                    <span class="eq-brand-highlight__text">Bengali Heritage &amp; Handloom</span>
+                    <a href="{{ route('stores.show', 'nous-telos') }}" class="eq-brand-highlight__link">Visit Brand <span aria-hidden="true">&rarr;</span></a>
+                  </div>
+                  <div class="eq-brand-highlight">
+                    <strong class="eq-brand-highlight__title">Bright</strong>
+                    <span class="eq-brand-highlight__badge">Coming Soon</span>
+                    <span class="eq-brand-highlight__text">Electronics &amp; Smart Living</span>
+                    <a href="{{ route('stores.show', 'bright') }}" class="eq-brand-highlight__link">Preview Brand <span aria-hidden="true">&rarr;</span></a>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

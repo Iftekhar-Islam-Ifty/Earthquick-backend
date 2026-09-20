@@ -632,7 +632,8 @@ p {
 }
 
 .eq-megamenu--shop {
-  width: 780px;
+  width: 680px;
+  padding-right: 0;
 }
 
 .eq-megamenu--stores {
@@ -644,7 +645,16 @@ p {
 }
 
 .eq-megamenu__grid--shop {
-  grid-template-columns: 1fr 1fr 1fr 190px;
+  grid-template-columns: 1fr 1fr 190px;
+}
+
+.eq-megamenu--shop .eq-megamenu__feature {
+  border-left: none;
+  padding-left: 0;
+}
+
+.eq-megamenu--shop .eq-megamenu__feature-card {
+  width: 100%;
 }
 
 .eq-megamenu__grid--stores {
@@ -731,6 +741,86 @@ p {
   display: inline-flex !important;
   align-items: center;
   gap: 4px;
+}
+
+/* Shop marketplace sections */
+.eq-megamenu__grid--shop {
+  grid-template-columns: 1fr 1fr 190px;
+}
+
+.eq-shop-menu-section .eq-nested-header {
+  min-height: 2.05rem;
+}
+
+.eq-brand-highlights {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  margin: -0.1rem 0 0.9rem;
+}
+
+.eq-brand-highlight {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.18rem;
+  padding: 0.1rem 0 0.75rem;
+}
+
+.eq-brand-highlight + .eq-brand-highlight {
+  border-top: 1px solid var(--eq-line);
+  padding-top: 0.8rem;
+}
+
+.eq-brand-highlight__eyebrow {
+  color: var(--eq-gold-dark);
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.eq-brand-highlight__title {
+  color: var(--eq-navy);
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 600;
+  line-height: 1.2;
+  text-decoration: none;
+}
+
+.eq-brand-highlight .eq-brand-highlight__title {
+  font-size: 1.05rem;
+}
+
+.eq-brand-highlight__title:hover,
+.eq-brand-highlight__link:hover {
+  color: var(--eq-gold-dark);
+}
+
+.eq-brand-highlight__text {
+  color: var(--eq-charcoal-soft);
+  font-size: 0.78rem;
+  line-height: 1.4;
+}
+
+.eq-brand-highlight__badge {
+  background: rgba(201, 150, 47, 0.12);
+  border-radius: 999px;
+  color: var(--eq-gold-dark);
+  font-size: 0.64rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  padding: 0.16rem 0.45rem;
+  text-transform: uppercase;
+}
+
+.eq-brand-highlight__link {
+  color: var(--eq-charcoal);
+  font-size: 0.76rem;
+  font-weight: 600;
+  margin-top: 0.2rem;
+  text-decoration: none;
 }
 
 /* Mega-menu Spotlight Feature */
