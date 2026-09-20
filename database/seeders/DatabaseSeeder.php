@@ -14,8 +14,9 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
-            EarthquickSeeder::class,
             VendorSeeder::class,
+            EarthquickSeeder::class,
+            NousTelosBagSeeder::class,
         ]);
 
         // Seed or update master Earthquick Admin user

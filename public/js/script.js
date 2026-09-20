@@ -527,16 +527,24 @@ const EarthquickCart = {
     }
   },
 
-  async addItem(productOrId, qty = 1, size = "Standard") {
+  async addItem(productOrId, qty = 1, size = "Standard", variantId = null) {
     let productId = null;
 
     if (typeof productOrId === "object" && productOrId !== null) {
       productId = productOrId.product_id || productOrId.id;
       if (productOrId.size) size = productOrId.size;
       if (productOrId.qty) qty = productOrId.qty;
+      if (productOrId.variant_id) variantId = productOrId.variant_id;
     } else {
       productId = productOrId;
     }
+
+    const payload = {
+      product_id: productId,
+      quantity: qty,
+      size: size
+    };
+    if (variantId) payload.variant_id = variantId;
 
     try {
       const res = await fetch(appUrl("/cart/add"), {
@@ -547,11 +555,7 @@ const EarthquickCart = {
           "X-CSRF-TOKEN": this.getCsrfToken(),
           "X-Requested-With": "XMLHttpRequest"
         },
-        body: JSON.stringify({
-          product_id: productId,
-          quantity: qty,
-          size: size
-        })
+        body: JSON.stringify(payload)
       });
 
       const data = await res.json();
@@ -1009,13 +1013,15 @@ const EarthquickCart = {
         e.preventDefault();
         const prodIdInput = productForm.querySelector('input[name="product_id"]');
         const sizeInput = productForm.querySelector('input[name="size"]');
+        const variantInput = productForm.querySelector('input[name="variant_id"]');
         const qtyInput = productForm.querySelector('input[name="quantity"]');
         const prodId = prodIdInput ? prodIdInput.value : null;
         const size = sizeInput ? sizeInput.value : "Standard";
+        const variantId = variantInput ? variantInput.value : null;
         const qty = qtyInput ? parseInt(qtyInput.value, 10) || 1 : 1;
 
         if (prodId) {
-          EarthquickCart.addItem(prodId, qty, size);
+          EarthquickCart.addItem(prodId, qty, size, variantId);
         } else {
           productForm.submit();
         }
@@ -1206,6 +1212,34 @@ function initCarousels() {
     window.addEventListener("load", update);
     update();
   });
+}
+
+/* Mobile-only controls for the compact Two Piece row. */
+function initTwoPieceMobileCarousel() {
+  const row = document.querySelector("#two-piece-container");
+  const prev = document.querySelector("#two-piece-mobile-prev");
+  const next = document.querySelector("#two-piece-mobile-next");
+  if (!row || !prev || !next) return;
+
+  const step = () => {
+    const card = row.querySelector(".eq-two-piece__feature, .eq-product-card");
+    if (!card) return 160;
+    const styles = window.getComputedStyle(row);
+    const gap = parseFloat(styles.columnGap || styles.gap || "0");
+    return card.getBoundingClientRect().width + gap;
+  };
+
+  const update = () => {
+    const max = row.scrollWidth - row.clientWidth;
+    prev.disabled = row.scrollLeft <= 4;
+    next.disabled = row.scrollLeft >= max - 4;
+  };
+
+  prev.addEventListener("click", () => row.scrollBy({ left: -step() * 2, behavior: "smooth" }));
+  next.addEventListener("click", () => row.scrollBy({ left: step() * 2, behavior: "smooth" }));
+  row.addEventListener("scroll", update, { passive: true });
+  window.addEventListener("resize", update);
+  update();
 }
 
 
@@ -1817,6 +1851,7 @@ function initEarthquickApp() {
   initCart();
   initAccount();
   initCarousels();
+  initTwoPieceMobileCarousel();
   init3DCoverflow();
   initScrollReveal();
   initNewsletterForm();

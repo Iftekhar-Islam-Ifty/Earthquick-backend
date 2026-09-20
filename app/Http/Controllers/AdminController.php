@@ -412,8 +412,9 @@ class AdminController extends Controller
     {
         $categories = Category::with('subcategories')->orderBy('sort_order')->orderBy('name')->get();
         $vendors = Vendor::where('is_active', true)->orderBy('name')->get();
+        $catalogSchema = config('catalog');
 
-        return view('admin.product-create', compact('categories', 'vendors'));
+        return view('admin.product-create', compact('categories', 'vendors', 'catalogSchema'));
     }
 
     /**
@@ -426,20 +427,26 @@ class AdminController extends Controller
             'vendor_id' => 'nullable|exists:vendors,id',
             'category_id' => 'required|exists:categories,id',
             'subcategory_id' => 'nullable|exists:subcategories,id',
+            'product_type' => 'nullable|in:apparel,accessories,electronics,home,general',
             'price' => 'required|numeric|min:0',
             'old_price' => 'nullable|numeric|min:0',
             'fabric' => 'nullable|string|max:100',
             'stock_quantity' => 'nullable|integer|min:0',
             'in_stock' => 'nullable|boolean',
+            'is_active' => 'nullable|boolean',
             'is_featured' => 'nullable|boolean',
             'is_new_arrival' => 'nullable|boolean',
             'badge' => 'nullable|string|max:50',
             'badge_type' => 'nullable|string|max:50',
             'short_desc' => 'nullable|string|max:1000',
             'description' => 'nullable|string|max:10000',
+            'specifications' => 'nullable|json',
+            'variants' => 'nullable|json',
+            'warranty_info' => 'nullable|string|max:255',
             'image' => 'required|image|mimes:jpeg,png,jpg,webp,svg|max:5120',
         ]);
         $this->ensureSubcategoryMatchesCategory($request);
+        $variants = $request->has('variants') ? $this->decodeVariants($request) : null;
 
         $vendor = null;
         if ($request->filled('vendor_id')) {
@@ -479,21 +486,29 @@ class AdminController extends Controller
             'sku' => $sku,
             'category_id' => $request->category_id,
             'subcategory_id' => $request->subcategory_id ?: null,
+            'product_type' => $request->input('product_type', 'general'),
             'price' => (float) $request->price,
             'old_price' => $request->filled('old_price') ? (float) $request->old_price : null,
             'fabric' => $request->filled('fabric') ? $request->fabric : null,
             'stock_quantity' => (int) $request->input('stock_quantity', 10),
             'in_stock' => $request->boolean('in_stock', true),
+            'is_active' => $request->boolean('is_active', true),
             'is_featured' => $request->boolean('is_featured', false),
             'is_new_arrival' => $request->boolean('is_new_arrival', true),
             'badge' => $request->badge,
             'badge_type' => $request->badge_type ?: 'ready',
             'short_desc' => $request->short_desc,
             'description' => $request->description,
+            'specifications' => $this->decodeSpecifications($request),
+            'warranty_info' => $request->warranty_info,
             'image' => $imagePath,
             'rating' => 5.0,
             'reviews_count' => 0,
         ]);
+
+        if ($variants !== null) {
+            $this->syncVariants($product, $variants);
+        }
 
         return redirect()->route('admin.products')->with(
             'success',
@@ -511,11 +526,12 @@ class AdminController extends Controller
      */
     public function editProduct(int $id): View
     {
-        $product = Product::findOrFail($id);
+        $product = Product::with('variants')->findOrFail($id);
         $categories = Category::with('subcategories')->orderBy('sort_order')->orderBy('name')->get();
         $vendors = Vendor::where('is_active', true)->orderBy('name')->get();
+        $catalogSchema = config('catalog');
 
-        return view('admin.product-edit', compact('product', 'categories', 'vendors'));
+        return view('admin.product-edit', compact('product', 'categories', 'vendors', 'catalogSchema'));
     }
 
     /**
@@ -530,36 +546,46 @@ class AdminController extends Controller
             'vendor_id' => 'nullable|exists:vendors,id',
             'category_id' => 'required|exists:categories,id',
             'subcategory_id' => 'nullable|exists:subcategories,id',
+            'product_type' => 'nullable|in:apparel,accessories,electronics,home,general',
             'price' => 'required|numeric|min:0',
             'old_price' => 'nullable|numeric|min:0',
             'fabric' => 'nullable|string|max:100',
             'stock_quantity' => 'nullable|integer|min:0',
             'in_stock' => 'nullable|boolean',
+            'is_active' => 'nullable|boolean',
             'is_featured' => 'nullable|boolean',
             'is_new_arrival' => 'nullable|boolean',
             'badge' => 'nullable|string|max:50',
             'badge_type' => 'nullable|string|max:50',
             'short_desc' => 'nullable|string|max:1000',
             'description' => 'nullable|string|max:10000',
+            'specifications' => 'nullable|json',
+            'variants' => 'nullable|json',
+            'warranty_info' => 'nullable|string|max:255',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,webp,svg|max:5120',
         ]);
         $this->ensureSubcategoryMatchesCategory($request);
+        $variants = $request->has('variants') ? $this->decodeVariants($request, $product) : null;
 
         $updateData = [
             'name' => $request->name,
             'category_id' => $request->category_id,
             'subcategory_id' => $request->subcategory_id ?: null,
+            'product_type' => $request->input('product_type', 'general'),
             'price' => (float) $request->price,
             'old_price' => $request->filled('old_price') ? (float) $request->old_price : null,
             'fabric' => $request->filled('fabric') ? $request->fabric : null,
             'stock_quantity' => (int) $request->input('stock_quantity', 0),
             'in_stock' => $request->boolean('in_stock', false),
+            'is_active' => $request->boolean('is_active', false),
             'is_featured' => $request->boolean('is_featured', false),
             'is_new_arrival' => $request->boolean('is_new_arrival', false),
             'badge' => $request->badge,
             'badge_type' => $request->badge_type ?: 'ready',
             'short_desc' => $request->short_desc,
             'description' => $request->description,
+            'specifications' => $this->decodeSpecifications($request),
+            'warranty_info' => $request->warranty_info,
         ];
 
         if ($request->has('vendor_id')) {
@@ -598,6 +624,10 @@ class AdminController extends Controller
 
         $product->update($updateData);
 
+        if ($variants !== null) {
+            $this->syncVariants($product, $variants);
+        }
+
         return redirect()->route('admin.products')->with(
             'success',
             "Product '{$product->name}' updated successfully."
@@ -623,6 +653,187 @@ class AdminController extends Controller
                 'subcategory_id' => 'The selected subcategory does not belong to the selected category.',
             ]);
         }
+    }
+
+    /**
+     * Normalize optional category-specific catalog attributes from the admin
+     * JSON field while keeping the database value consistently structured.
+     */
+    private function decodeSpecifications(Request $request): ?array
+    {
+        if (! $request->filled('specifications')) {
+            return null;
+        }
+
+        $specifications = json_decode($request->input('specifications'), true);
+
+        if ($specifications === [] || $specifications === null) {
+            return null;
+        }
+
+        if (array_is_list($specifications) || count($specifications) > 20) {
+            throw ValidationException::withMessages([
+                'specifications' => 'Specifications must be a JSON object with no more than 20 label/value pairs.',
+            ]);
+        }
+
+        $normalized = [];
+        foreach ($specifications as $label => $value) {
+            $label = trim((string) $label);
+            if ($label === '' || mb_strlen($label) > 80 || (! is_scalar($value) && $value !== null)) {
+                throw ValidationException::withMessages([
+                    'specifications' => 'Specification labels must be under 80 characters and values must be simple text or numbers.',
+                ]);
+            }
+
+            if (is_string($value) && mb_strlen($value) > 500) {
+                throw ValidationException::withMessages([
+                    'specifications' => 'Specification values must be 500 characters or fewer.',
+                ]);
+            }
+
+            $normalized[$label] = is_string($value) ? trim($value) : $value;
+        }
+
+        return $normalized;
+    }
+
+    /**
+     * Validate and normalize the admin JSON variant editor.
+     *
+     * @return list<array{sku: string, label: string, attributes: ?array, price: ?float, stock_quantity: int, is_active: bool}>
+     */
+    private function decodeVariants(Request $request, ?Product $product = null): array
+    {
+        if (! $request->filled('variants')) {
+            return [];
+        }
+
+        $variants = json_decode($request->input('variants'), true);
+        if (! is_array($variants) || ! array_is_list($variants) || count($variants) > 100) {
+            throw ValidationException::withMessages([
+                'variants' => 'Variants must be a JSON array containing no more than 100 options.',
+            ]);
+        }
+
+        $normalized = [];
+        $seenSkus = [];
+
+        foreach ($variants as $index => $variant) {
+            if (! is_array($variant)) {
+                throw ValidationException::withMessages([
+                    'variants' => 'Every variant must be a JSON object.',
+                ]);
+            }
+
+            $sku = strtoupper(trim((string) ($variant['sku'] ?? '')));
+            $label = trim((string) ($variant['label'] ?? ''));
+            $attributes = $variant['attributes'] ?? null;
+            $price = $variant['price'] ?? null;
+            $stock = $variant['stock_quantity'] ?? 0;
+
+            if ($sku === '' || mb_strlen($sku) > 100 || $label === '' || mb_strlen($label) > 255) {
+                throw ValidationException::withMessages([
+                    'variants' => 'Each variant requires a SKU (max 100 characters) and label (max 255 characters).',
+                ]);
+            }
+
+            if (isset($seenSkus[$sku])) {
+                throw ValidationException::withMessages([
+                    'variants' => "Variant SKU {$sku} is duplicated in the JSON list.",
+                ]);
+            }
+            $seenSkus[$sku] = true;
+
+            if ($attributes !== null && (! is_array($attributes) || array_is_list($attributes) || count($attributes) > 10)) {
+                throw ValidationException::withMessages([
+                    'variants' => 'Variant #'.($index + 1).' attributes must be a JSON object with no more than 10 label/value pairs.',
+                ]);
+            }
+
+            $normalizedAttributes = [];
+            foreach ($attributes ?? [] as $attribute => $value) {
+                $attribute = trim((string) $attribute);
+                if ($attribute === '' || mb_strlen($attribute) > 80 || (! is_scalar($value) && $value !== null)) {
+                    throw ValidationException::withMessages([
+                        'variants' => 'Variant attribute labels must be under 80 characters and values must be simple text or numbers.',
+                    ]);
+                }
+                $normalizedAttributes[$attribute] = is_string($value) ? trim($value) : $value;
+            }
+
+            if ($price !== null && $price !== '' && (! is_numeric($price) || (float) $price < 0)) {
+                throw ValidationException::withMessages([
+                    'variants' => "Variant {$sku} price must be empty or a non-negative number.",
+                ]);
+            }
+            if (filter_var($stock, FILTER_VALIDATE_INT) === false || (int) $stock < 0) {
+                throw ValidationException::withMessages([
+                    'variants' => "Variant {$sku} stock_quantity must be a non-negative integer.",
+                ]);
+            }
+
+            $normalized[] = [
+                'sku' => $sku,
+                'label' => $label,
+                'attributes' => $normalizedAttributes ?: null,
+                'price' => ($price === null || $price === '') ? null : (float) $price,
+                'stock_quantity' => (int) $stock,
+                'is_active' => array_key_exists('is_active', $variant) ? (bool) $variant['is_active'] : true,
+            ];
+        }
+
+        if ($seenSkus !== []) {
+            $conflictingSku = DB::table('product_variants')
+                ->whereIn('sku', array_keys($seenSkus))
+                ->when($product, fn ($query) => $query->where('product_id', '!=', $product->id))
+                ->value('sku');
+
+            if ($conflictingSku) {
+                throw ValidationException::withMessages([
+                    'variants' => "Variant SKU {$conflictingSku} is already used by another product.",
+                ]);
+            }
+        }
+
+        return $normalized;
+    }
+
+    /**
+     * Replace the product's variant set and keep its summary stock in sync.
+     *
+     * @param  list<array<string, mixed>>  $variants
+     */
+    private function syncVariants(Product $product, array $variants): void
+    {
+        DB::transaction(function () use ($product, $variants) {
+            $keptIds = [];
+
+            foreach ($variants as $variantData) {
+                $variant = $product->variants()->updateOrCreate(
+                    ['sku' => $variantData['sku']],
+                    $variantData
+                );
+                $keptIds[] = $variant->id;
+            }
+
+            $deleteQuery = $product->variants();
+            if ($keptIds !== []) {
+                $deleteQuery->whereNotIn('id', $keptIds);
+            }
+            $deleteQuery->delete();
+
+            if ($variants !== []) {
+                $activeStock = (int) $product->variants()
+                    ->where('is_active', true)
+                    ->sum('stock_quantity');
+
+                $product->update([
+                    'stock_quantity' => $activeStock,
+                    'in_stock' => $activeStock > 0,
+                ]);
+            }
+        });
     }
 
     /* =========================================================================

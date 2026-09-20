@@ -28,6 +28,9 @@ class ProductPageTest extends TestCase
             'price'          => 12500,
             'old_price'      => 15000,
             'fabric'         => 'Pure Silk',
+            'product_type'   => 'apparel',
+            'specifications' => ['Color' => 'Indigo', 'Size' => 'Free Size'],
+            'warranty_info'  => '7-day quality support',
             'short_desc'     => 'An artisanal handloom dress.',
             'description'    => 'Detailed description for test product.',
             'image'          => 'images/products/test-product.jpg',
@@ -44,6 +47,7 @@ class ProductPageTest extends TestCase
         $response->assertSee('15,000');
         $response->assertSee('https://schema.org/');
         $response->assertSee('Product');
+        $response->assertSee('Indigo');
+        $response->assertSee('7-day quality support');
     }
 }
-

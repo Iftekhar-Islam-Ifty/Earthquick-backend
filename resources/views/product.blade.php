@@ -11,6 +11,12 @@
 @section('body_class', 'eq-product-page')
 
 @section('content')
+  @php
+    $initialVariant = $product->variants->first(fn ($variant) => $variant->stock_quantity > 0)
+      ?? $product->variants->first();
+    $displayPrice = $initialVariant?->price ?? $product->price;
+    $displayStock = $initialVariant?->stock_quantity ?? $product->stock_quantity;
+  @endphp
   <!-- ===================================================================
        BREADCRUMB BAR
        =================================================================== -->
@@ -83,11 +89,11 @@
 
             <!-- Price row -->
             <div class="eq-product-info__price" id="product-price-row">
-              <span id="product-price">৳{{ number_format($product->price) }}</span>
+              <span id="product-price">৳{{ number_format($displayPrice) }}</span>
               @if($product->old_price)
                 <span id="product-old-price">৳{{ number_format($product->old_price) }}</span>
                 @php
-                  $savings = round((($product->old_price - $product->price) / $product->old_price) * 100);
+                  $savings = round((($product->old_price - $displayPrice) / $product->old_price) * 100);
                 @endphp
                 <span id="product-discount-tag">SAVE {{ $savings }}%</span>
               @endif
@@ -99,22 +105,41 @@
                 <polyline points="20 6 9 17 4 12"></polyline>
               </svg>
               <span id="stock-text">
-                @if($product->stock_quantity > 0)
-                  In Stock &mdash; Ready to ship ({{ $product->stock_quantity }} left in stock)
+                @if($displayStock > 0)
+                  In Stock &mdash; Ready to ship ({{ $displayStock }} left in stock)
                 @else
                   Available to Order &mdash; Ready to ship
                 @endif
               </span>
             </div>
 
-            <!-- Size / Dimensions Option -->
-            <div class="eq-product-info__row eq-size-row" id="product-size-row">
-              <span class="eq-product-info__label">Size / Fit:</span>
-              <div class="eq-size-options" id="size-options">
-                <button type="button" class="is-active" data-size="Standard / Free Size" onclick="selectSize(this, 'Standard / Free Size')">Free Size (5.5m)</button>
-                <button type="button" data-size="Custom Stitched" onclick="selectSize(this, 'Custom Stitched')">Custom Blouse</button>
+            @if($product->variants->isNotEmpty())
+              <div class="eq-product-info__row eq-size-row" id="product-size-row">
+                <span class="eq-product-info__label">Choose Option:</span>
+                <div class="eq-size-options" id="size-options">
+                  @foreach($product->variants as $variant)
+                    <button
+                      type="button"
+                      class="{{ $initialVariant?->id === $variant->id ? 'is-active' : '' }}"
+                      data-variant-id="{{ $variant->id }}"
+                      data-label="{{ $variant->label }}"
+                      data-price="{{ $variant->price ?? $product->price }}"
+                      data-stock="{{ $variant->stock_quantity }}"
+                      onclick="selectVariant(this)"
+                      {{ $variant->stock_quantity < 1 ? 'disabled' : '' }}
+                    >{{ $variant->label }}{{ $variant->stock_quantity < 1 ? ' — Sold Out' : '' }}</button>
+                  @endforeach
+                </div>
               </div>
-            </div>
+            @elseif(($product->product_type ?? 'general') === 'apparel')
+              <div class="eq-product-info__row eq-size-row" id="product-size-row">
+                <span class="eq-product-info__label">Size / Fit:</span>
+                <div class="eq-size-options" id="size-options">
+                  <button type="button" class="is-active" data-size="Standard / Free Size" onclick="selectSize(this, 'Standard / Free Size')">Free Size (5.5m)</button>
+                  <button type="button" data-size="Custom Stitched" onclick="selectSize(this, 'Custom Stitched')">Custom Blouse</button>
+                </div>
+              </div>
+            @endif
           </div>
         </div>
 
@@ -124,7 +149,8 @@
           <form action="{{ route('cart.add') }}" method="POST" id="product-actions-form">
             @csrf
             <input type="hidden" name="product_id" value="{{ $product->id }}">
-            <input type="hidden" name="size" id="product-size-input" value="Standard / Free Size">
+            <input type="hidden" name="variant_id" id="product-variant-input" value="{{ $initialVariant?->id }}">
+            <input type="hidden" name="size" id="product-size-input" value="{{ $initialVariant?->label ?? ((($product->product_type ?? 'general') === 'apparel') ? 'Standard / Free Size' : 'Standard') }}">
             <input type="hidden" name="quantity" id="product-qty-input" value="1">
 
             <div class="eq-product-actions" id="product-actions-bar">
@@ -162,7 +188,7 @@
             <div class="eq-product-meta-list__item">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <rect x="1" y="3" width="15" height="13"></rect>
-                <polygon points="16 8 20 8 23 11 23 16 16 16 8"></polygon>
+                <polygon points="16 8 20 8 23 11 23 16 16 16"></polygon>
                 <circle cx="5.5" cy="18.5" r="2.5"></circle>
                 <circle cx="18.5" cy="18.5" r="2.5"></circle>
               </svg>
@@ -199,10 +225,30 @@
             <!-- Tab 1 -->
             <details open class="eq-product-accordion__item">
               <summary class="eq-product-accordion__summary">
-                Fabric &amp; Artisan Origin
+                Product Details
               </summary>
               <div class="eq-product-accordion__body" id="tab-fabric-desc">
-                {{ $product->description ?? 'Hand-spun pure threads woven by master craftsmen. Each warp and weft is tensioned manually to achieve supreme drape, softness, and resilience that softens with every wash.' }}
+                @if($product->fabric)
+                  <p><strong>Material:</strong> {{ $product->fabric }}</p>
+                @endif
+                @if($product->description)
+                  <p>{{ $product->description }}</p>
+                @endif
+                @if(!$product->fabric && !$product->description)
+                  <p>Product details are being prepared by the Earthquick team.</p>
+                @endif
+                @if(is_array($product->specifications) && count($product->specifications) > 0)
+                  <dl class="eq-product-spec-list">
+                    @foreach($product->specifications as $label => $value)
+                      @if(is_scalar($value) && $value !== '')
+                        <div class="eq-product-spec-list__item">
+                          <dt>{{ $label }}</dt>
+                          <dd>{{ $value }}</dd>
+                        </div>
+                      @endif
+                    @endforeach
+                  </dl>
+                @endif
               </div>
             </details>
 
@@ -225,7 +271,10 @@
                 Delivery, Returns &amp; Warranty
               </summary>
               <div class="eq-product-accordion__body">
-                Every order is packaged with utmost care in our signature eco-friendly cloth bag. We offer 7-day hassle-free doorstep returns across Bangladesh. Cash on Delivery is available in all major metropolitan areas.
+                Every order is packaged with utmost care. We offer 7-day hassle-free doorstep returns across Bangladesh. Cash on Delivery is available in all major metropolitan areas.
+                @if($product->warranty_info)
+                  <br /><strong>Warranty / Support:</strong> {{ $product->warranty_info }}
+                @endif
               </div>
             </details>
           </div>
@@ -298,6 +347,29 @@
     button.classList.add('is-active');
     const input = document.getElementById('product-size-input');
     if (input) input.value = size;
+  }
+
+  // Database-backed option selector (size, color, storage, or any combination)
+  function selectVariant(button) {
+    if (button.disabled) return;
+    document.querySelectorAll('#size-options button').forEach(btn => btn.classList.remove('is-active'));
+    button.classList.add('is-active');
+
+    const variantInput = document.getElementById('product-variant-input');
+    const sizeInput = document.getElementById('product-size-input');
+    const price = document.getElementById('product-price');
+    const stock = document.getElementById('stock-text');
+    const amount = Number(button.dataset.price || 0);
+    const available = Number(button.dataset.stock || 0);
+
+    if (variantInput) variantInput.value = button.dataset.variantId || '';
+    if (sizeInput) sizeInput.value = button.dataset.label || 'Standard';
+    if (price) price.textContent = '৳' + amount.toLocaleString('en-IN');
+    if (stock) {
+      stock.textContent = available > 0
+        ? `In Stock — Ready to ship (${available} left in stock)`
+        : 'This option is currently sold out';
+    }
   }
 
   // Quantity stepper

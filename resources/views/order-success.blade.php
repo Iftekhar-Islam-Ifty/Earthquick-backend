@@ -91,6 +91,9 @@
                   @endif
                   <div>
                     <div style="font-weight: 500; color: var(--eq-charcoal);">{{ $item->product_name }}</div>
+                    @if($item->variant_label)
+                      <div style="font-size: 0.76rem; color: var(--eq-charcoal-soft);">{{ $item->variant_label }}</div>
+                    @endif
                     <div style="font-size: 0.78rem; color: var(--eq-charcoal-soft);">৳{{ number_format($item->unit_price) }} each</div>
                   </div>
                 </div>
@@ -133,4 +136,3 @@
 
 </main>
 @endsection
-

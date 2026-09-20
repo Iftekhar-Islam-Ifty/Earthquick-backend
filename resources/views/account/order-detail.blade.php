@@ -68,7 +68,7 @@
           <div class="eq-tracking-title">
             <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <rect x="1" y="3" width="15" height="13"></rect>
-              <polygon points="16 8 20 8 23 11 23 16 16 16 8"></polygon>
+              <polygon points="16 8 20 8 23 11 23 16 16 16"></polygon>
               <circle cx="5.5" cy="18.5" r="2.5"></circle>
               <circle cx="18.5" cy="18.5" r="2.5"></circle>
             </svg>
@@ -169,6 +169,9 @@
                   @endif
                   <div>
                     <div style="font-weight: 500; color: var(--eq-charcoal);">{{ $item->product_name }}</div>
+                    @if($item->variant_label)
+                      <div style="font-size: 0.76rem; color: var(--eq-charcoal-soft);">{{ $item->variant_label }}</div>
+                    @endif
                     <div style="font-size: 0.78rem; color: var(--eq-charcoal-soft);">৳{{ number_format($item->unit_price) }} each</div>
                   </div>
                 </div>
@@ -200,4 +203,3 @@
   </div>
 </main>
 @endsection
-

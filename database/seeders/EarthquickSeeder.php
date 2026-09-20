@@ -4,34 +4,22 @@ namespace Database\Seeders;
 
 use App\Models\Category;
 use App\Models\Product;
-use App\Models\ProductImage;
 use App\Models\Subcategory;
 use App\Models\Vendor;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 
 class EarthquickSeeder extends Seeder
 {
     public function run(): void
     {
-        // Clear previous entries
-        $usesMySql = DB::connection()->getDriverName() === 'mysql';
-        if ($usesMySql) {
-            DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-        }
-        ProductImage::truncate();
-        Product::truncate();
-        Subcategory::truncate();
-        Category::truncate();
-        if ($usesMySql) {
-            DB::statement('SET FOREIGN_KEY_CHECKS=1;');
-        }
+        // Intentionally non-destructive: preserve administrator-managed data,
+        // historical products and product galleries during routine seed runs.
 
         /* =========================================================================
          * 1. PRIMARY CATEGORIES
          * Seed foundational shop departments with assets and display order.
          * ========================================================================= */
-        $men = Category::create([
+        $men = Category::firstOrCreate(['slug' => 'men'], [
             'name' => 'Men',
             'slug' => 'men',
             'image' => 'images/categories/men.svg',
@@ -39,7 +27,7 @@ class EarthquickSeeder extends Seeder
             'sort_order' => 1,
         ]);
 
-        $women = Category::create([
+        $women = Category::firstOrCreate(['slug' => 'women'], [
             'name' => 'Women',
             'slug' => 'women',
             'image' => 'images/categories/women.jpg',
@@ -47,7 +35,7 @@ class EarthquickSeeder extends Seeder
             'sort_order' => 2,
         ]);
 
-        $kids = Category::create([
+        $kids = Category::firstOrCreate(['slug' => 'kids'], [
             'name' => 'Kids',
             'slug' => 'kids',
             'image' => 'images/categories/kids.svg',
@@ -55,7 +43,7 @@ class EarthquickSeeder extends Seeder
             'sort_order' => 3,
         ]);
 
-        $ornaments = Category::create([
+        $ornaments = Category::firstOrCreate(['slug' => 'ornaments'], [
             'name' => 'Ornaments',
             'slug' => 'ornaments',
             'image' => 'images/categories/ornaments.svg',
@@ -63,7 +51,7 @@ class EarthquickSeeder extends Seeder
             'sort_order' => 4,
         ]);
 
-        $bags = Category::create([
+        $bags = Category::firstOrCreate(['slug' => 'bags'], [
             'name' => 'Bags',
             'slug' => 'bags',
             'image' => 'images/categories/bags.jpg',
@@ -71,7 +59,7 @@ class EarthquickSeeder extends Seeder
             'sort_order' => 5,
         ]);
 
-        $homeDecor = Category::create([
+        $homeDecor = Category::firstOrCreate(['slug' => 'home-decor'], [
             'name' => 'Home Decor',
             'slug' => 'home-decor',
             'image' => 'images/categories/home-decor.svg',
@@ -83,21 +71,21 @@ class EarthquickSeeder extends Seeder
          * 2. WOMEN SUBCATEGORIES
          * Authentic fashion divisions: Saree, Three Piece, Two Piece ensembles.
          * ========================================================================= */
-        $subSaree = Subcategory::create([
+        $subSaree = Subcategory::firstOrCreate(['slug' => 'saree'], [
             'category_id' => $women->id,
             'name' => 'Saree',
             'slug' => 'saree',
             'sort_order' => 1,
         ]);
 
-        $subThreePiece = Subcategory::create([
+        $subThreePiece = Subcategory::firstOrCreate(['slug' => 'three-piece'], [
             'category_id' => $women->id,
             'name' => 'Three Piece',
             'slug' => 'three-piece',
             'sort_order' => 2,
         ]);
 
-        $subTwoPiece = Subcategory::create([
+        $subTwoPiece = Subcategory::firstOrCreate(['slug' => 'two-piece'], [
             'category_id' => $women->id,
             'name' => 'Two Piece',
             'slug' => 'two-piece',
@@ -108,21 +96,21 @@ class EarthquickSeeder extends Seeder
          * 3. HOME DECOR SUBCATEGORIES
          * Living sanctuary collections: Kantha quilts, bedsheets, cushion covers.
          * ========================================================================= */
-        $subKantha = Subcategory::create([
+        $subKantha = Subcategory::firstOrCreate(['slug' => 'kantha'], [
             'category_id' => $homeDecor->id,
             'name' => 'Kantha',
             'slug' => 'kantha',
             'sort_order' => 1,
         ]);
 
-        $subBedsheet = Subcategory::create([
+        $subBedsheet = Subcategory::firstOrCreate(['slug' => 'bedsheet'], [
             'category_id' => $homeDecor->id,
             'name' => 'Bedsheet',
             'slug' => 'bedsheet',
             'sort_order' => 2,
         ]);
 
-        $subCushion = Subcategory::create([
+        $subCushion = Subcategory::firstOrCreate(['slug' => 'cushion-cover'], [
             'category_id' => $homeDecor->id,
             'name' => 'Cushion Cover',
             'slug' => 'cushion-cover',
@@ -436,7 +424,7 @@ class EarthquickSeeder extends Seeder
             if ($nousTelos) {
                 $prod['vendor_id'] = $nousTelos->id;
             }
-            Product::create($prod);
+            Product::firstOrCreate(['slug' => $prod['slug']], $prod);
         }
     }
 }

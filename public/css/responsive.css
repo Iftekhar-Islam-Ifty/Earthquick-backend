@@ -2477,8 +2477,12 @@
   }
 
   .eq-bags__layout .eq-product-card__frame {
-    max-height: 135px !important;
-    aspect-ratio: 1 / 1 !important;
+    max-height: 145px !important;
+    aspect-ratio: 4 / 3 !important;
+  }
+
+  .eq-bags__layout .eq-product-card:nth-child(5) {
+    display: none !important;
   }
 
   .eq-bags__layout .eq-product-card__name {
@@ -2642,6 +2646,404 @@
   }
 }
 
+/* --- Homepage mobile refinement: compact stores and editorial product layouts --- */
+@media (max-width: 600px) {
+  /* Keep the store discovery useful without letting it dominate the first screen. */
+  .eq-home-stores {
+    padding: 1.35rem 0 1.5rem;
+  }
+
+  .eq-home-stores__intro {
+    margin-bottom: 0.8rem;
+  }
+
+  .eq-home-stores__intro h2 {
+    font-size: 1.4rem;
+    margin-bottom: 0.2rem;
+  }
+
+  .eq-home-stores__intro p {
+    font-size: 0.76rem;
+  }
+
+  .eq-home-stores__grid {
+    gap: 0.55rem;
+  }
+
+  .eq-home-store-card__media {
+    min-height: 112px;
+    max-height: 132px;
+  }
+
+  .eq-home-store-card__body {
+    padding: 0.72rem 0.8rem 0.8rem;
+  }
+
+  .eq-home-store-card__eyebrow {
+    font-size: 0.56rem;
+  }
+
+  .eq-home-store-card h3 {
+    font-size: 1.12rem;
+    margin-top: 0.22rem;
+  }
+
+  .eq-home-store-card__specialty {
+    font-size: 0.7rem;
+  }
+
+  .eq-home-store-card__description {
+    margin: 0.42rem 0 0.65rem;
+    font-size: 0.7rem;
+    line-height: 1.4;
+  }
+
+  .eq-home-store-card__cta {
+    min-height: 2.2rem;
+    padding: 0.45rem 0.75rem;
+    font-size: 0.7rem;
+  }
+
+  /* Preserve the Saree section's signature spotlight + gallery composition,
+     but keep both columns visible on a phone. */
+  .eq-saree-showcase {
+    grid-template-columns: minmax(104px, 0.78fr) minmax(0, 1.22fr);
+    gap: 0.65rem;
+    align-items: start !important;
+  }
+
+  .eq-saree-masterpiece {
+    max-width: none !important;
+    margin: 0 !important;
+    text-align: left !important;
+  }
+
+  .eq-saree-masterpiece__frame {
+    max-height: 206px !important;
+    aspect-ratio: 3 / 4 !important;
+  }
+
+  .eq-saree-masterpiece__name,
+  .eq-saree-masterpiece__price {
+    text-align: left !important;
+  }
+
+  .eq-saree-gallery {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 0.42rem !important;
+    max-width: none !important;
+    margin: 0 !important;
+  }
+
+  .eq-saree-card {
+    max-width: none !important;
+    margin: 0 !important;
+  }
+
+  .eq-saree-card .eq-product-card__frame {
+    max-height: 102px !important;
+    aspect-ratio: 3 / 4 !important;
+  }
+
+  .eq-saree-card .eq-product-card__name {
+    font-size: 0.65rem !important;
+  }
+
+  .eq-saree-card .eq-product-card__price {
+    font-size: 0.64rem !important;
+  }
+
+  /* Three Piece shows a comfortable first row of three; remaining cards stay
+     available through horizontal touch scrolling. */
+  #three-piece-section .eq-product-card {
+    flex-basis: calc((100vw - 2rem - 0.9rem) / 3) !important;
+    width: calc((100vw - 2rem - 0.9rem) / 3) !important;
+    min-width: calc((100vw - 2rem - 0.9rem) / 3) !important;
+    max-width: calc((100vw - 2rem - 0.9rem) / 3) !important;
+  }
+
+  #three-piece-section .eq-carousel__track {
+    gap: 0.45rem !important;
+  }
+
+  /* Make Two Piece a compact supporting section rather than a second hero. */
+  #two-piece-section {
+    padding: 1rem 0 1.2rem !important;
+  }
+
+  .eq-two-piece__layout {
+    gap: 0.65rem !important;
+  }
+
+  .eq-two-piece__feature {
+    max-height: 182px !important;
+    max-width: 220px !important;
+  }
+
+  .eq-two-piece__feature-info {
+    padding: 0.8rem 0.85rem 0.7rem;
+  }
+
+  .eq-two-piece__feature-badge {
+    font-size: 0.56rem;
+    padding: 0.16rem 0.42rem;
+  }
+
+  .eq-two-piece__feature-title {
+    font-size: 0.92rem !important;
+  }
+
+  .eq-two-piece__feature-price {
+    font-size: 0.74rem !important;
+  }
+
+  .eq-two-piece__grid {
+    gap: 0.42rem !important;
+  }
+
+  .eq-two-piece__grid .eq-product-card__frame {
+    max-height: 92px !important;
+  }
+
+  .eq-two-piece__grid .eq-product-card__body {
+    padding: 0.42rem 0.5rem 0.5rem;
+  }
+
+  .eq-two-piece__grid .eq-product-card__name {
+    font-size: 0.7rem !important;
+  }
+
+  .eq-two-piece__grid .eq-product-card__price {
+    font-size: 0.68rem !important;
+  }
+}
+
+/* --- Mobile collection parity: taller three-card rows for Three Piece and Two Piece --- */
+@media (max-width: 600px) {
+  /* Keep the three-card density, but restore the taller portrait frame. */
+  #three-piece-section .eq-product-card__frame {
+    aspect-ratio: 3 / 4 !important;
+    max-height: 158px !important;
+  }
+
+  #three-piece-section .eq-product-card__frame img {
+    object-fit: cover !important;
+    object-position: center top !important;
+  }
+
+  /* Treat Two Piece like the Three Piece mobile carousel: three cards are
+     visible and the remaining cards are available by horizontal swipe. */
+  #two-piece-section .eq-two-piece__layout {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    gap: 0.45rem !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    padding-bottom: 0.35rem !important;
+    scroll-snap-type: x mandatory !important;
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+  }
+
+  #two-piece-section .eq-two-piece__layout::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  #two-piece-section .eq-two-piece__feature,
+  #two-piece-section .eq-two-piece__grid .eq-product-card {
+    flex: 0 0 calc((100vw - 2rem - 0.9rem) / 3) !important;
+    width: calc((100vw - 2rem - 0.9rem) / 3) !important;
+    min-width: calc((100vw - 2rem - 0.9rem) / 3) !important;
+    max-width: calc((100vw - 2rem - 0.9rem) / 3) !important;
+    scroll-snap-align: start !important;
+    margin: 0 !important;
+  }
+
+  #two-piece-section .eq-two-piece__feature {
+    max-height: 158px !important;
+    aspect-ratio: 3 / 4 !important;
+  }
+
+  #two-piece-section .eq-two-piece__grid {
+    display: contents !important;
+  }
+
+  #two-piece-section .eq-two-piece__grid .eq-product-card__frame {
+    aspect-ratio: 3 / 4 !important;
+    max-height: 158px !important;
+  }
+
+  #two-piece-section .eq-two-piece__grid .eq-product-card__frame img {
+    object-fit: cover !important;
+    object-position: center top !important;
+  }
+
+  #two-piece-section .eq-two-piece__grid .eq-product-card__body {
+    padding: 0.28rem 0.05rem 0 !important;
+  }
+
+  #two-piece-section .eq-two-piece__grid .eq-product-card__name {
+    font-size: 0.67rem !important;
+  }
+
+  #two-piece-section .eq-two-piece__grid .eq-product-card__price {
+    font-size: 0.67rem !important;
+  }
+}
+
+/* --- Mobile product frame height parity --- */
+@media (max-width: 600px) {
+  #three-piece-section .eq-product-card__frame,
+  #two-piece-section .eq-two-piece__feature,
+  #two-piece-section .eq-two-piece__grid .eq-product-card__frame {
+    aspect-ratio: 10 / 15.5 !important;
+    max-height: 178px !important;
+  }
+
+  #three-piece-section .eq-product-card__frame img,
+  #two-piece-section .eq-two-piece__feature img,
+  #two-piece-section .eq-two-piece__grid .eq-product-card__frame img {
+    object-fit: contain !important;
+    object-position: center !important;
+    background-color: var(--eq-sand) !important;
+  }
+
+  #two-piece-section .eq-two-piece__feature {
+    min-height: 0 !important;
+  }
+
+  #two-piece-section .eq-two-piece__feature-info {
+    padding: 0.55rem 0.6rem 0.5rem !important;
+  }
+
+  #two-piece-section .eq-two-piece__feature-title {
+    font-size: 0.7rem !important;
+  }
+
+  #two-piece-section .eq-two-piece__feature-price {
+    font-size: 0.65rem !important;
+  }
+}
+
+/* Keep the original filled image treatment; only the mobile frames are taller. */
+@media (max-width: 600px) {
+  #three-piece-section .eq-product-card__frame img,
+  #two-piece-section .eq-two-piece__feature img,
+  #two-piece-section .eq-two-piece__grid .eq-product-card__frame img {
+    object-fit: cover !important;
+    object-position: center top !important;
+    background-color: transparent !important;
+  }
+}
+
+/* --- Two Piece mobile cards match the clean Three Piece product treatment --- */
+@media (max-width: 600px) {
+  #two-piece-section .eq-two-piece__feature,
+  #two-piece-section .eq-two-piece__grid .eq-product-card {
+    background: transparent !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    overflow: visible !important;
+  }
+
+  #two-piece-section .eq-two-piece__feature img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 10 / 15.5;
+    border-radius: 6px;
+    object-fit: cover !important;
+    object-position: center top !important;
+  }
+
+  #two-piece-section .eq-two-piece__feature-info {
+    position: static !important;
+    padding: 0.28rem 0.05rem 0 !important;
+    background: transparent !important;
+    color: var(--eq-charcoal) !important;
+    display: flex;
+    gap: 0.02rem;
+  }
+
+  #two-piece-section .eq-two-piece__feature-badge {
+    display: none !important;
+  }
+
+  #two-piece-section .eq-two-piece__feature-title {
+    color: var(--eq-charcoal) !important;
+    font-family: var(--font-body) !important;
+    font-size: 0.67rem !important;
+    font-weight: 500 !important;
+    line-height: 1.2 !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  #two-piece-section .eq-two-piece__feature-price {
+    color: var(--eq-charcoal-soft) !important;
+    font-size: 0.67rem !important;
+    font-weight: 600 !important;
+  }
+
+  #two-piece-section .eq-two-piece__grid .eq-product-card__body {
+    background: transparent !important;
+    border: 0 !important;
+    padding: 0.28rem 0.05rem 0 !important;
+  }
+}
+
+/* --- Two Piece mobile carousel arrows --- */
+@media (max-width: 768px) {
+  .eq-two-piece-mobile-carousel {
+    position: relative;
+  }
+
+  .eq-two-piece-mobile-arrow {
+    display: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .eq-two-piece-mobile-arrow {
+    display: flex !important;
+    position: absolute !important;
+    top: 78px;
+    z-index: 20;
+    width: 26px !important;
+    height: 26px !important;
+    min-width: 26px !important;
+    min-height: 26px !important;
+    padding: 0 !important;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50% !important;
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    border: 1px solid var(--eq-line) !important;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.16) !important;
+  }
+
+  .eq-two-piece-mobile-arrow svg {
+    width: 13px !important;
+    height: 13px !important;
+    stroke: var(--eq-navy) !important;
+  }
+
+  .eq-two-piece-mobile-arrow--prev {
+    left: -4px;
+  }
+
+  .eq-two-piece-mobile-arrow--next {
+    right: -4px;
+  }
+
+  .eq-two-piece-mobile-arrow:disabled {
+    opacity: 0.25;
+    pointer-events: none;
+  }
+}
+
 /* --- Responsive Block #13: @media (max-width: 380px) --- */
 @media (max-width: 380px) {
   .eq-story {
@@ -2684,6 +3086,10 @@
   }
   .eq-trust-desc {
     font-size: 0.68rem;
+  }
+
+  .eq-home-store-card--flagship {
+    grid-template-columns: minmax(150px, 0.85fr) 1.15fr;
   }
 }
 
@@ -2733,6 +3139,40 @@
   }
   .eq-trust-desc {
     display: none; /* Keep super compact one-line badge on mobile */
+  }
+
+  .eq-home-stores {
+    padding: 2.25rem 0;
+  }
+
+  .eq-home-stores__intro {
+    margin-bottom: 1.25rem;
+  }
+
+  .eq-home-stores__intro p {
+    font-size: 0.86rem;
+  }
+
+  .eq-home-stores__grid {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .eq-home-store-card--flagship {
+    display: flex;
+  }
+
+  .eq-home-store-card__media {
+    min-height: 190px;
+    max-height: 230px;
+  }
+
+  .eq-home-store-card__body {
+    padding: 1.15rem;
+  }
+
+  .eq-home-store-card h3 {
+    font-size: 1.35rem;
   }
 }
 

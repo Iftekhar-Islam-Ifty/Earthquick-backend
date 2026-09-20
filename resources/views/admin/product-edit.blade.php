@@ -95,7 +95,7 @@
                 style="width: 100%; padding: 0.65rem 0.85rem; border-radius: 6px; border: 1px solid var(--eq-line); font-size: 0.88rem; background: #ffffff; cursor: pointer;"
               >
                 @foreach($categories as $cat)
-                  <option value="{{ $cat->id }}" {{ old('category_id', $product->category_id) == $cat->id ? 'selected' : '' }}>
+                  <option value="{{ $cat->id }}" data-slug="{{ $cat->slug }}" {{ old('category_id', $product->category_id) == $cat->id ? 'selected' : '' }}>
                     {{ $cat->name }}
                   </option>
                 @endforeach
@@ -165,6 +165,21 @@
 
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.25rem;">
             <div>
+              <label for="select-product-type" style="display: block; font-size: 0.84rem; font-weight: 600; color: var(--eq-charcoal); margin-bottom: 0.4rem;">Product Type</label>
+              <select name="product_type" id="select-product-type" style="width: 100%; padding: 0.65rem 0.85rem; border-radius: 6px; border: 1px solid var(--eq-line); font-size: 0.88rem; background: #ffffff; cursor: pointer;">
+                @foreach($catalogSchema['product_types'] as $type => $definition)
+                  <option value="{{ $type }}" {{ old('product_type', $product->product_type ?? 'general') === $type ? 'selected' : '' }}>{{ $definition['label'] }}</option>
+                @endforeach
+              </select>
+            </div>
+            <div>
+              <label for="input-warranty-info" style="display: block; font-size: 0.84rem; font-weight: 600; color: var(--eq-charcoal); margin-bottom: 0.4rem;">Warranty / Support</label>
+              <input type="text" name="warranty_info" id="input-warranty-info" value="{{ old('warranty_info', $product->warranty_info) }}" placeholder="e.g. 1 year manufacturer warranty" style="width: 100%; padding: 0.65rem 0.85rem; border-radius: 6px; border: 1px solid var(--eq-line); font-size: 0.9rem; font-family: inherit; background: #ffffff;" />
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.25rem;">
+            <div>
               <label for="input-fabric" style="display: block; font-size: 0.84rem; font-weight: 600; color: var(--eq-charcoal); margin-bottom: 0.4rem;">
                 Fabric / Material
               </label>
@@ -221,6 +236,25 @@
                 <option value="bestseller" {{ old('badge_type', $product->badge_type) == 'bestseller' ? 'selected' : '' }}>Bestseller (Dark Navy Tint)</option>
               </select>
             </div>
+          </div>
+
+          <div>
+            <label for="textarea-specifications" style="display: block; font-size: 0.84rem; font-weight: 600; color: var(--eq-charcoal); margin-bottom: 0.4rem;">Structured Specifications <span style="font-weight: 400; color: var(--eq-charcoal-muted);">(JSON label/value pairs, optional)</span></label>
+            <textarea name="specifications" id="textarea-specifications" rows="6" placeholder='{"Brand":"","Model":"","Color":""}' style="width: 100%; padding: 0.65rem 0.85rem; border-radius: 6px; border: 1px solid var(--eq-line); font-size: 0.82rem; font-family: monospace; background: #ffffff; resize: vertical;">{{ old('specifications', $product->specifications ? json_encode($product->specifications, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) : '') }}</textarea>
+            <p id="specification-template-help" style="margin: 0.4rem 0 0; color: var(--eq-charcoal-muted); font-size: 0.74rem;">Choose a product type to load its recommended specification labels.</p>
+          </div>
+
+          <div style="margin-top: 1.25rem;">
+            <label for="textarea-variants" style="display: block; font-size: 0.84rem; font-weight: 600; color: var(--eq-charcoal); margin-bottom: 0.4rem;">Product Variants <span style="font-weight: 400; color: var(--eq-charcoal-muted);">(JSON array, optional)</span></label>
+            <textarea name="variants" id="textarea-variants" rows="8" placeholder='[{"sku":"NT-SAR-001-RED","label":"Red / Free Size","attributes":{"Color":"Red","Size":"Free Size"},"price":18500,"stock_quantity":3,"is_active":true}]' style="width: 100%; padding: 0.65rem 0.85rem; border-radius: 6px; border: 1px solid var(--eq-line); font-size: 0.82rem; font-family: monospace; background: #ffffff; resize: vertical;">{{ old('variants', $product->variants->isNotEmpty() ? json_encode($product->variants->map(fn ($variant) => [
+              'sku' => $variant->sku,
+              'label' => $variant->label,
+              'attributes' => $variant->attributes,
+              'price' => $variant->price,
+              'stock_quantity' => $variant->stock_quantity,
+              'is_active' => $variant->is_active,
+            ])->values(), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) : '') }}</textarea>
+            <p style="margin: 0.4rem 0 0; color: var(--eq-charcoal-muted); font-size: 0.74rem;">Use one object per size, color or storage option. Leave price null to use the main product price. Removing an object removes that variant.</p>
           </div>
 
         </div>
@@ -304,6 +338,14 @@
             </label>
           </div>
 
+          <!-- Catalog Visibility Checkbox -->
+          <div style="margin-bottom: 0.85rem;">
+            <label style="display: flex; align-items: center; gap: 0.65rem; font-size: 0.88rem; cursor: pointer;">
+              <input type="checkbox" name="is_active" value="1" {{ old('is_active', $product->is_active) ? 'checked' : '' }} style="width: 18px; height: 18px; accent-color: var(--eq-navy);" />
+              <span><strong>Published</strong> (Visible in the public catalog)</span>
+            </label>
+          </div>
+
           <!-- Featured on Homepage Checkbox -->
           <div style="margin-bottom: 0.85rem;">
             <label style="display: flex; align-items: center; gap: 0.65rem; font-size: 0.88rem; cursor: pointer;">
@@ -352,6 +394,10 @@
   // Dynamic Subcategory Filtering based on Primary Category Selection
   const categorySelect = document.getElementById('select-category');
   const subcategorySelect = document.getElementById('select-subcategory');
+  const productTypeSelect = document.getElementById('select-product-type');
+  const specificationsField = document.getElementById('textarea-specifications');
+  const specificationHelp = document.getElementById('specification-template-help');
+  const specificationTemplates = @json(collect($catalogSchema['product_types'])->map(fn ($definition) => $definition['template']));
 
   function filterSubcategories() {
     const selectedCatId = categorySelect.value;
@@ -374,8 +420,18 @@
     });
   }
 
+  function updateSpecificationTemplate() {
+    const template = specificationTemplates[productTypeSelect.value] || specificationTemplates.general;
+    specificationsField.placeholder = JSON.stringify(template, null, 2);
+    specificationHelp.textContent = `Recommended ${productTypeSelect.options[productTypeSelect.selectedIndex].text} labels are shown in the placeholder. Existing specifications are never overwritten.`;
+  }
+
   categorySelect.addEventListener('change', filterSubcategories);
-  document.addEventListener('DOMContentLoaded', filterSubcategories);
+  productTypeSelect.addEventListener('change', updateSpecificationTemplate);
+  document.addEventListener('DOMContentLoaded', () => {
+    filterSubcategories();
+    updateSpecificationTemplate();
+  });
 
   // Instant Image Preview Handler
   function previewSelectedImage(input) {
@@ -391,4 +447,3 @@
   }
 </script>
 @endpush
-

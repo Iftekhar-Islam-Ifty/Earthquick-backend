@@ -71,8 +71,8 @@
                           @if($item->vendor)
                             <div style="font-size: 0.72rem; color: var(--eq-gold-dark); font-weight: 600;">Brand: {{ $item->vendor->name }}</div>
                           @endif
-                          @if($item->size)
-                            <div style="font-size: 0.74rem; color: var(--eq-charcoal-soft);">Size: {{ $item->size }}</div>
+                          @if($item->variant_label)
+                            <div style="font-size: 0.74rem; color: var(--eq-charcoal-soft);">Option: {{ $item->variant_label }}{{ $item->variant_sku ? ' · '.$item->variant_sku : '' }}</div>
                           @endif
                         </div>
                       </div>
@@ -102,8 +102,8 @@
                   @if($item->vendor)
                     <div style="font-size: 0.7rem; color: var(--eq-gold-dark); font-weight: 600;">Brand: {{ $item->vendor->name }}</div>
                   @endif
-                  @if($item->size)
-                    <div style="font-size: 0.72rem; color: var(--eq-charcoal-soft); margin-top: 1px;">Size: {{ $item->size }}</div>
+                  @if($item->variant_label)
+                    <div style="font-size: 0.72rem; color: var(--eq-charcoal-soft); margin-top: 1px;">Option: {{ $item->variant_label }}{{ $item->variant_sku ? ' · '.$item->variant_sku : '' }}</div>
                   @endif
                   <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.3rem; font-size: 0.8rem;">
                     <span style="color: var(--eq-charcoal-soft);">৳{{ number_format($item->unit_price) }} &times; {{ $item->quantity }}</span>

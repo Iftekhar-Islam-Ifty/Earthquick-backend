@@ -100,7 +100,7 @@
             <img src="{{ asset('images/hero/hero-three-piece-page.jpg') }}" alt="Contemporary Three Piece collection campaign" loading="lazy" decoding="async" />
           </div>
           <div class="eq-hero__content">
-            <span class="eq-eyebrow">FESTIVE & READY TO WEAR</span>
+            <span class="eq-eyebrow">NOUS TELOS &bull; READY TO WEAR</span>
             <h1>Poise in Every Silhouette</h1>
             <p>Breathable mulmul, organza dupattas, and delicate zardozi embroidery crafted for celebratory moments and everyday grace.</p>
             <div class="eq-hero__actions">
@@ -116,7 +116,7 @@
             <img src="{{ asset('images/hero/hero-bags-page.jpg') }}" alt="Handcrafted leather bags and everyday bags" loading="lazy" decoding="async" />
           </div>
           <div class="eq-hero__content">
-            <span class="eq-eyebrow">CONSIDERED ACCESSORIES</span>
+            <span class="eq-eyebrow">NOUS TELOS &bull; CRAFTED ACCESSORIES</span>
             <h1>Functional Form & Natural Texture</h1>
             <p>Handcrafted leather bags, archival totes, and easy everyday coordinates designed for purposeful, effortless movement.</p>
             <div class="eq-hero__actions">
@@ -164,7 +164,7 @@
           <div class="eq-category-strip__title-wrap">
             <h2 class="eq-category-strip__title">Shop by Category</h2>
           </div>
-          <p class="eq-category-strip__desc">Select a category to explore handcrafted collections</p>
+          <p class="eq-category-strip__desc">Discover collections from our featured stores</p>
         </div>
 
         <!-- 6 Main Categories Grid -->
@@ -249,8 +249,7 @@
 
     <!-- =================================================================
          TRUST & SERVICE PROPOSITION STRIP
-         Authentic handlooms, nationwide delivery, easy exchange, and complimentary
-         fall & pico service for discerning patrons.
+         Marketplace curation, nationwide delivery, and convenient exchange support.
          ================================================================= -->
     <section class="eq-trust-strip" id="trust-strip" aria-label="Earthquick promises and services">
       <div class="eq-container">
@@ -263,8 +262,8 @@
               </svg>
             </div>
             <div class="eq-trust-content">
-              <h3 class="eq-trust-title">Authentic Handlooms</h3>
-              <p class="eq-trust-desc">Direct from Tangail, Rajshahi &amp; Narayanganj master weavers</p>
+              <h3 class="eq-trust-title">Curated Brands</h3>
+              <p class="eq-trust-desc">Distinctive stores selected for quality and authenticity</p>
             </div>
           </div>
 
@@ -278,8 +277,8 @@
               </svg>
             </div>
             <div class="eq-trust-content">
-              <h3 class="eq-trust-title">Fast Home Delivery</h3>
-              <p class="eq-trust-desc">Reliable doorstep delivery across all Bangladesh &amp; worldwide</p>
+              <h3 class="eq-trust-title">Reliable Delivery</h3>
+              <p class="eq-trust-desc">Convenient doorstep delivery across Bangladesh</p>
             </div>
           </div>
 
@@ -290,11 +289,55 @@
               </svg>
             </div>
             <div class="eq-trust-content">
-              <h3 class="eq-trust-title">Easy 7-Day Exchange</h3>
-              <p class="eq-trust-desc">Hassle-free size and product exchange at your convenience</p>
+              <h3 class="eq-trust-title">Easy Exchange</h3>
+              <p class="eq-trust-desc">Clear and convenient exchange support</p>
             </div>
           </div>
 
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ================================================================
+         EXPLORE OUR STORES
+         A concise marketplace introduction for the current active brands.
+         ================================================================ -->
+    <section class="eq-home-stores" id="explore-stores" aria-labelledby="explore-stores-title">
+      <div class="eq-container">
+        <div class="eq-home-stores__intro eq-reveal">
+          <span class="eq-eyebrow">OUR STORES</span>
+          <h2 class="eq-heading-lg" id="explore-stores-title">Explore Earthquick</h2>
+          <p>Distinct brands, one curated marketplace</p>
+        </div>
+
+        <div class="eq-home-stores__grid eq-reveal">
+          @if($nousTelos)
+            <article class="eq-home-store-card eq-home-store-card--flagship" id="home-store-nous-telos">
+              <div class="eq-home-store-card__media">
+                <img src="{{ asset('images/hero/story-heritage.jpg') }}" alt="Nous Telos handloom heritage" loading="lazy" decoding="async" />
+              </div>
+              <div class="eq-home-store-card__body">
+                <span class="eq-home-store-card__eyebrow">FLAGSHIP STORE</span>
+                <h3>Nous Telos</h3>
+                <p class="eq-home-store-card__specialty">Bengali Heritage &amp; Handloom</p>
+                <p class="eq-home-store-card__description">Heritage fashion, handloom collections, accessories, and thoughtful home pieces rooted in Bengali craft.</p>
+                <a href="{{ route('stores.show', 'nous-telos') }}" class="eq-btn eq-btn--outline eq-home-store-card__cta">Visit Store <span aria-hidden="true">&rarr;</span></a>
+              </div>
+            </article>
+          @endif
+
+          @if($bright)
+            <article class="eq-home-store-card eq-home-store-card--upcoming" id="home-store-bright">
+              <div class="eq-home-store-card__body">
+                <span class="eq-home-store-card__eyebrow">COMING SOON</span>
+                <h3>Bright</h3>
+                <p class="eq-home-store-card__specialty">Electronics &amp; Smart Living</p>
+                <p class="eq-home-store-card__description">A new electronics store is being prepared for launch on Earthquick.</p>
+                <a href="{{ route('stores.show', 'bright') }}" class="eq-btn eq-btn--light eq-home-store-card__cta">Preview Store <span aria-hidden="true">&rarr;</span></a>
+              </div>
+            </article>
+          @endif
         </div>
       </div>
     </section>
@@ -309,7 +352,7 @@
         <!-- Section Header -->
         <div class="eq-section-head eq-reveal">
           <div class="eq-section-head__text">
-            <span class="eq-eyebrow">JUST LANDED</span>
+            <span class="eq-eyebrow">FROM NOUS TELOS</span>
             <h2 class="eq-heading-lg">New Arrivals</h2>
           </div>
           <div class="eq-carousel__controls" aria-label="New arrivals carousel navigation">
@@ -460,9 +503,9 @@
         <!-- Section Header with Flagship Atelier Identity -->
         <div class="eq-section-head eq-reveal">
           <div class="eq-section-head__text">
-            <span class="eq-eyebrow">FLAGSHIP ATELIER</span>
+            <span class="eq-eyebrow">THE NOUS TELOS EDIT</span>
             <h2 class="eq-heading-lg">The Saree Collection</h2>
-            <p class="eq-body-lg" style="margin-top: 0.35rem; max-width: 54ch;">Handwoven by master artisans across Narayanganj, Tangail and Rajshahi — Earthquick’s signature craft, cut for an effortless contemporary drape.</p>
+            <p class="eq-body-lg" style="margin-top: 0.35rem; max-width: 54ch;">Handwoven traditions from Tangail, Narayanganj and Rajshahi, curated by Nous Telos for contemporary wardrobes.</p>
           </div>
           <a href="{{ url('/shop/women/saree') }}" class="eq-text-link" id="link-view-all-sarees">
             View All Sarees
@@ -621,7 +664,7 @@
         <!-- Section Header -->
         <div class="eq-section-head eq-reveal">
           <div class="eq-section-head__text">
-            <span class="eq-eyebrow">READY TO WEAR</span>
+            <span class="eq-eyebrow">NOUS TELOS READY TO WEAR</span>
             <h2 class="eq-heading-lg">Three Piece</h2>
             <p class="eq-body-muted" style="margin-top: 0.75rem;">Kameez, salwar and dupatta sets built for daily rotation — from block-printed cotton to fine chikankari.</p>
           </div>
@@ -753,19 +796,20 @@
     <section class="eq-section eq-section--deep" id="two-piece-section">
       <div class="eq-container">
         <!-- Section Header -->
-        <div class="eq-section-head eq-reveal">
-          <div class="eq-section-head__text">
-            <span class="eq-eyebrow">EASY EVERYDAY</span>
-            <h2 class="eq-heading-lg">Two Piece</h2>
+          <div class="eq-section-head eq-reveal">
+            <div class="eq-section-head__text">
+              <span class="eq-eyebrow">CONTEMPORARY SETS BY NOUS TELOS</span>
+              <h2 class="eq-heading-lg">Two Piece</h2>
+            </div>
           </div>
-          <a href="{{ url('/shop/women/two-piece') }}" class="eq-text-link" id="link-view-all-two-piece">
-            View All Two Piece
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"></path><path d="M13 6l6 6-6 6"></path></svg>
-          </a>
-        </div>
 
         <!-- Featured Spotlight & Compact Grid Layout -->
-        <div class="eq-two-piece__layout eq-reveal" id="two-piece-container">
+        <div class="eq-two-piece-mobile-carousel">
+          <button type="button" class="eq-arrow-btn eq-two-piece-mobile-arrow eq-two-piece-mobile-arrow--prev" id="two-piece-mobile-prev" aria-label="Previous two piece products" disabled>
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg>
+          </button>
+
+          <div class="eq-two-piece__layout eq-reveal" id="two-piece-container">
           <!-- Featured Set (Larger than the grid items) -->
           <a href="{{ url('/shop/women/two-piece') }}" class="eq-two-piece__feature" id="two-piece-feature-card" aria-label="Selene Tunic Two Piece - Featured Set">
             <img src="{{ asset('images/two-piece/2pc-1.jpg') }}" alt="Selene Tunic Two Piece" loading="lazy" decoding="async" />
@@ -836,6 +880,18 @@
               </a>
             </article>
           </div>
+          </div>
+
+          <button type="button" class="eq-arrow-btn eq-two-piece-mobile-arrow eq-two-piece-mobile-arrow--next" id="two-piece-mobile-next" aria-label="Next two piece products">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"></path></svg>
+          </button>
+        </div>
+
+        <div class="eq-reveal" style="margin-top: var(--space-lg); text-align:center;">
+          <a href="{{ url('/shop/women/two-piece') }}" class="eq-text-link" id="link-view-all-two-piece">
+            View All Two Piece
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"></path><path d="M13 6l6 6-6 6"></path></svg>
+          </a>
         </div>
       </div>
     </section>
@@ -854,16 +910,16 @@
       <div class="eq-container">
         <div class="eq-story eq-reveal">
           <div class="eq-story__media" id="story-media-container">
-            <img src="{{ asset('images/hero/story-heritage.jpg') }}" alt="Traditional weaving craft behind Earthquick pieces" loading="lazy" decoding="async" />
+            <img src="{{ asset('images/hero/story-heritage.jpg') }}" alt="Nous Telos handloom heritage" loading="lazy" decoding="async" />
           </div>
           <div class="eq-story__text" id="story-text-container">
             <svg class="eq-story__mark" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true">
               <path d="M4 30c8 0 8-16 16-16s8 16 16 16" />
             </svg>
-            <span class="eq-eyebrow">OUR PHILOSOPHY</span>
+            <span class="eq-eyebrow">NOUS TELOS STORY</span>
             <h2 class="eq-heading-lg">Tradition, Reimagined.</h2>
-            <p class="eq-body-lg eq-story__desc-desktop">Nous Telos has spent years working directly with handloom weavers and embroidery collectives across Bangladesh. Earthquick takes that same material honesty and cuts it for how people actually get dressed today — considered, uncomplicated, built to last past one season.</p>
-            <p class="eq-story__desc-mobile">Rooted in Bengal handlooms — crafted with master artisans for effortless contemporary living.</p>
+            <p class="eq-body-lg eq-story__desc-desktop">Nous Telos works with Bangladesh’s handloom traditions and craft communities, bringing material heritage into thoughtful collections for contemporary living.</p>
+            <p class="eq-story__desc-mobile">Rooted in Bengal handlooms and craft communities, Nous Telos brings material heritage into thoughtful contemporary collections.</p>
           </div>
         </div>
       </div>
@@ -884,7 +940,7 @@
         <!-- Section Header -->
         <div class="eq-section-head eq-reveal">
           <div class="eq-section-head__text">
-            <span class="eq-eyebrow">FINISHING TOUCH</span>
+            <span class="eq-eyebrow">CRAFTED ACCESSORIES BY NOUS TELOS</span>
             <h2 class="eq-heading-lg">Bags</h2>
           </div>
           <a href="{{ route('category.show', 'bags') }}" class="eq-text-link" id="link-view-all-bags">
@@ -893,154 +949,37 @@
           </a>
         </div>
 
-        <!-- Bags 5x2 Compact Grid (10 items total, 5 per row) -->
+        <!-- Bags grid populated from real, active Nous Telos inventory. -->
         <div class="eq-bags__layout eq-reveal" id="bags-grid">
-          <!-- Row 1: Item 1 -->
-          <article class="eq-product-card" id="card-bag-01">
-            <a href="{{ url('/product/artisanal-terracotta-leather-tote-bag') }}" class="eq-product-card__link">
-              <div class="eq-product-card__frame">
-                <span class="eq-badge">Popular</span>
-                <img src="{{ asset('images/bags/bag-1.jpg') }}" alt="Heritage Canvas Tote" loading="lazy" decoding="async" />
-                <span class="eq-product-card__quick-add">View product</span>
-              </div>
-              <div class="eq-product-card__body">
-                <h3 class="eq-product-card__name">Heritage Canvas Tote</h3>
-                <p class="eq-product-card__price">৳3,800</p>
-              </div>
-            </a>
-          </article>
-
-          <!-- Row 1: Item 2 -->
-          <article class="eq-product-card" id="card-bag-02">
-            <a href="{{ url('/product/saddle-brown-crossbody-sling') }}" class="eq-product-card__link">
-              <div class="eq-product-card__frame">
-                <span class="eq-badge">New</span>
-                <img src="{{ asset('images/bags/bag-2.jpg') }}" alt="Nomad Leather Sling" loading="lazy" decoding="async" />
-                <span class="eq-product-card__quick-add">View product</span>
-              </div>
-              <div class="eq-product-card__body">
-                <h3 class="eq-product-card__name">Nomad Leather Sling</h3>
-                <p class="eq-product-card__price">৳4,500</p>
-              </div>
-            </a>
-          </article>
-
-          <!-- Row 1: Item 3 -->
-          <article class="eq-product-card" id="card-bag-03">
-            <a href="{{ route('category.show', 'bags') }}" class="eq-product-card__link">
-              <div class="eq-product-card__frame">
-                <span class="eq-badge">Sale</span>
-                <img src="{{ asset('images/bags/bag-3.jpg') }}" alt="Terra Structured Handbag" loading="lazy" decoding="async" />
-                <span class="eq-product-card__quick-add">View product</span>
-              </div>
-              <div class="eq-product-card__body">
-                <h3 class="eq-product-card__name">Terra Handbag</h3>
-                <p class="eq-product-card__price"><span class="eq-price--old">৳5,800</span>৳5,200</p>
-              </div>
-            </a>
-          </article>
-
-          <!-- Row 1: Item 4 -->
-          <article class="eq-product-card" id="card-bag-04">
-            <a href="{{ route('category.show', 'bags') }}" class="eq-product-card__link">
-              <div class="eq-product-card__frame">
-                <img src="{{ asset('images/bags/bag-4.jpg') }}" alt="Wicker Weekend Bag" loading="lazy" decoding="async" />
-                <span class="eq-product-card__quick-add">View product</span>
-              </div>
-              <div class="eq-product-card__body">
-                <h3 class="eq-product-card__name">Wicker Weekend Bag</h3>
-                <p class="eq-product-card__price">৳3,200</p>
-              </div>
-            </a>
-          </article>
-
-          <!-- Row 1: Item 5 -->
-          <article class="eq-product-card" id="card-bag-05">
-            <a href="{{ route('category.show', 'bags') }}" class="eq-product-card__link">
-              <div class="eq-product-card__frame">
-                <span class="eq-badge">New</span>
-                <img src="{{ asset('images/bags/bag-5.jpg') }}" alt="Mini Canvas Crossbody" loading="lazy" decoding="async" />
-                <span class="eq-product-card__quick-add">View product</span>
-              </div>
-              <div class="eq-product-card__body">
-                <h3 class="eq-product-card__name">Mini Crossbody</h3>
-                <p class="eq-product-card__price">৳2,900</p>
-              </div>
-            </a>
-          </article>
-
-          <!-- Row 2: Item 6 -->
-          <article class="eq-product-card" id="card-bag-06">
-            <a href="{{ route('category.show', 'bags') }}" class="eq-product-card__link">
-              <div class="eq-product-card__frame">
-                <img src="{{ asset('images/bags/bag-6.jpg') }}" alt="Saddle Leather Clutch" loading="lazy" decoding="async" />
-                <span class="eq-product-card__quick-add">View product</span>
-              </div>
-              <div class="eq-product-card__body">
-                <h3 class="eq-product-card__name">Saddle Clutch</h3>
-                <p class="eq-product-card__price">৳3,600</p>
-              </div>
-            </a>
-          </article>
-
-          <!-- Row 2: Item 7 -->
-          <article class="eq-product-card" id="card-bag-07">
-            <a href="{{ route('category.show', 'bags') }}" class="eq-product-card__link">
-              <div class="eq-product-card__frame">
-                <span class="eq-badge">Popular</span>
-                <img src="{{ asset('images/bags/bag-7.jpg') }}" alt="Olive Structured Satchel" loading="lazy" decoding="async" />
-                <span class="eq-product-card__quick-add">View product</span>
-              </div>
-              <div class="eq-product-card__body">
-                <h3 class="eq-product-card__name">Olive Satchel</h3>
-                <p class="eq-product-card__price">৳4,800</p>
-              </div>
-            </a>
-          </article>
-
-          <!-- Row 2: Item 8 -->
-          <article class="eq-product-card" id="card-bag-08">
-            <a href="{{ route('category.show', 'bags') }}" class="eq-product-card__link">
-              <div class="eq-product-card__frame">
-                <img src="{{ asset('images/bags/bag-8.jpg') }}" alt="Woven Raffia Shoulder Bag" loading="lazy" decoding="async" />
-                <span class="eq-product-card__quick-add">View product</span>
-              </div>
-              <div class="eq-product-card__body">
-                <h3 class="eq-product-card__name">Woven Raffia</h3>
-                <p class="eq-product-card__price">৳3,400</p>
-              </div>
-            </a>
-          </article>
-
-          <!-- Row 2: Item 9 -->
-          <article class="eq-product-card" id="card-bag-09">
-            <a href="{{ route('category.show', 'bags') }}" class="eq-product-card__link">
-              <div class="eq-product-card__frame">
-                <img src="{{ asset('images/bags/bag-9.jpg') }}" alt="Handcrafted Stitch Tote" loading="lazy" decoding="async" />
-                <span class="eq-product-card__quick-add">View product</span>
-              </div>
-              <div class="eq-product-card__body">
-                <h3 class="eq-product-card__name">Stitch Canvas Tote</h3>
-                <p class="eq-product-card__price">৳4,100</p>
-              </div>
-            </a>
-          </article>
-
-          <!-- Row 2: Item 10 -->
-          <article class="eq-product-card" id="card-bag-10">
-            <a href="{{ route('category.show', 'bags') }}" class="eq-product-card__link">
-              <div class="eq-product-card__frame">
-                <span class="eq-badge">Sale</span>
-                <img src="{{ asset('images/bags/bag-10.jpg') }}" alt="Sienna Leather Pouch" loading="lazy" decoding="async" />
-                <span class="eq-product-card__quick-add">View product</span>
-              </div>
-              <div class="eq-product-card__body">
-                <h3 class="eq-product-card__name">Sienna Pouch</h3>
-                <p class="eq-product-card__price"><span class="eq-price--old">৳3,200</span>৳2,800</p>
-              </div>
-            </a>
-          </article>
+          @forelse($bags as $bag)
+            <article class="eq-product-card" id="card-bag-{{ $bag->id }}" data-id="{{ $bag->id }}">
+              <a href="{{ route('product.show', $bag->slug) }}" class="eq-product-card__link">
+                <div class="eq-product-card__frame">
+                  @if($bag->badge)
+                    <span class="eq-badge">{{ $bag->badge }}</span>
+                  @endif
+                  <img src="{{ asset($bag->image) }}" alt="{{ $bag->name }}" loading="eager" decoding="async" />
+                  @if($bag->alt_image)
+                    <img class="eq-product-card__img--alt" src="{{ asset($bag->alt_image) }}" alt="" loading="lazy" decoding="async" />
+                  @endif
+                  <span class="eq-product-card__quick-add">View product</span>
+                </div>
+                <div class="eq-product-card__body">
+                  <h3 class="eq-product-card__name">{{ $bag->name }}</h3>
+                  <p class="eq-product-card__price">
+                    @if($bag->old_price)
+                      <span class="eq-price--old">৳{{ number_format($bag->old_price) }}</span>
+                    @endif
+                    ৳{{ number_format($bag->price) }}
+                  </p>
+                </div>
+              </a>
+            </article>
+          @empty
+            <p class="eq-bags__empty">Nous Telos bags will appear here as the collection becomes available.</p>
+          @endforelse
         </div>
+
       </div>
     </section>
 
@@ -1053,38 +992,23 @@
     <section class="eq-section eq-coverflow-section" id="styled-by-you" aria-label="Styled by our community">
       <div class="eq-container">
         
-        <!-- Section Header (Centered display with Glassy Facebook community button) -->
+        <!-- Section Header -->
         <div class="eq-coverflow-header eq-reveal">
-          <span class="eq-eyebrow">COMMUNITY &bull; @RTHQUICK ON FACEBOOK</span>
+          <span class="eq-eyebrow">EARTHQUICK COMMUNITY</span>
           <h2 class="eq-heading-lg">Styled by You</h2>
           <p class="eq-body-lg">
-            Real moments, archival draping, and daily movement: tagged by our patrons across Bangladesh and beyond.
+            Real looks and everyday moments shared by the Nous Telos community on Earthquick.
           </p>
-          <div class="eq-coverflow-header__actions">
-            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" class="eq-glassy-fb-btn" id="btn-fb-community" aria-label="Join our Facebook Community">
-              <svg class="eq-fb-icon" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true">
-                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-              </svg>
-              <span>Follow on Facebook</span>
-            </a>
-          </div>
         </div>
 
-        <!-- Filter Pills Bar (matching the pill buttons in reference + glassy Facebook option) -->
+        <!-- Filter Pills Bar -->
         <div class="eq-coverflow-pills eq-reveal" role="tablist" aria-label="Filter looks by style">
           <button type="button" class="eq-coverflow-pill is-active" data-coverflow-filter="all" id="pill-all">All Looks</button>
-          <button type="button" class="eq-coverflow-pill" data-coverflow-filter="saree" id="pill-saree">Saree</button>
-          <button type="button" class="eq-coverflow-pill" data-coverflow-filter="jamdani" id="pill-jamdani">Jamdani</button>
-          <button type="button" class="eq-coverflow-pill" data-coverflow-filter="two-piece" id="pill-twopiece">Two Piece</button>
-          <button type="button" class="eq-coverflow-pill" data-coverflow-filter="three-piece" id="pill-threepiece">Three Piece</button>
-          <button type="button" class="eq-coverflow-pill" data-coverflow-filter="bags" id="pill-bags">Bags</button>
-          <button type="button" class="eq-coverflow-pill" data-coverflow-filter="silk" id="pill-silk">Pure Silk</button>
-          <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" class="eq-coverflow-pill eq-coverflow-pill--fb-glassy" id="pill-view-more" aria-label="Visit Facebook Page">
-            <svg class="eq-fb-icon" viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true">
-              <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-            </svg>
-            <span>Facebook Page &rarr;</span>
-          </a>
+          <button type="button" class="eq-coverflow-pill" data-coverflow-filter="full-look" id="pill-saree">The Full Look</button>
+          <button type="button" class="eq-coverflow-pill" data-coverflow-filter="celebration" id="pill-jamdani">Celebration Edit</button>
+          <button type="button" class="eq-coverflow-pill" data-coverflow-filter="everyday" id="pill-twopiece">Everyday Rituals</button>
+          <button type="button" class="eq-coverflow-pill" data-coverflow-filter="heritage" id="pill-threepiece">Heritage Stories</button>
+          <button type="button" class="eq-coverflow-pill" data-coverflow-filter="details" id="pill-bags">Details &amp; Accents</button>
         </div>
 
         <!-- 3D Coverflow Stage Viewport (Clean, sharp, unobstructed photography cards) -->
@@ -1092,37 +1016,37 @@
           <div class="eq-coverflow-track" id="eq-coverflow-track">
             
             <!-- Slide 1: Jamdani Saree -->
-            <div class="eq-coverflow-card" data-category="saree jamdani" id="coverflow-card-1" role="group" aria-roledescription="slide" aria-label="1 of 7">
+            <div class="eq-coverflow-card" data-category="full-look heritage" id="coverflow-card-1" role="group" aria-roledescription="slide" aria-label="1 of 7">
               <img src="{{ asset('images/saree/saree-01.jpg') }}" alt="Muslin Jamdani draped by Tasnia in Banani" class="eq-coverflow-card__img" loading="lazy" />
             </div>
 
             <!-- Slide 2: Aria Linen Two Piece -->
-            <div class="eq-coverflow-card" data-category="two-piece" id="coverflow-card-2" role="group" aria-roledescription="slide" aria-label="2 of 7">
+            <div class="eq-coverflow-card" data-category="full-look everyday" id="coverflow-card-2" role="group" aria-roledescription="slide" aria-label="2 of 7">
               <img src="{{ asset('images/two-piece/2pc-1.jpg') }}" alt="Aria Linen Two Piece styled by Samira" class="eq-coverflow-card__img" loading="lazy" />
             </div>
 
             <!-- Slide 3: Heritage Canvas Bag -->
-            <div class="eq-coverflow-card" data-category="bags" id="coverflow-card-3" role="group" aria-roledescription="slide" aria-label="3 of 7">
+            <div class="eq-coverflow-card" data-category="details everyday" id="coverflow-card-3" role="group" aria-roledescription="slide" aria-label="3 of 7">
               <img src="{{ asset('images/bags/bag-1.jpg') }}" alt="Heritage Canvas Tote with Zarin in Gulshan" class="eq-coverflow-card__img" loading="lazy" />
             </div>
 
             <!-- Slide 4: Tangail Handloom Saree -->
-            <div class="eq-coverflow-card" data-category="saree" id="coverflow-card-4" role="group" aria-roledescription="slide" aria-label="4 of 7">
+            <div class="eq-coverflow-card" data-category="heritage full-look" id="coverflow-card-4" role="group" aria-roledescription="slide" aria-label="4 of 7">
               <img src="{{ asset('images/saree/saree-03.jpg') }}" alt="Tangail Handloom Saree styled by Nawrin" class="eq-coverflow-card__img" loading="lazy" />
             </div>
 
             <!-- Slide 5: Three Piece Kurti Set -->
-            <div class="eq-coverflow-card" data-category="three-piece" id="coverflow-card-5" role="group" aria-roledescription="slide" aria-label="5 of 7">
+            <div class="eq-coverflow-card" data-category="celebration full-look" id="coverflow-card-5" role="group" aria-roledescription="slide" aria-label="5 of 7">
               <img src="{{ asset('images/three-piece/three-piece-01.jpg') }}" alt="Artisanal Three Piece ensemble styled by Anika" class="eq-coverflow-card__img" loading="lazy" />
             </div>
 
             <!-- Slide 6: Terra Leather Bag -->
-            <div class="eq-coverflow-card" data-category="bags" id="coverflow-card-6" role="group" aria-roledescription="slide" aria-label="6 of 7">
+            <div class="eq-coverflow-card" data-category="details celebration" id="coverflow-card-6" role="group" aria-roledescription="slide" aria-label="6 of 7">
               <img src="{{ asset('images/bags/bag-3.jpg') }}" alt="Terra Handbag styled by Maheen in Chattogram" class="eq-coverflow-card__img" loading="lazy" />
             </div>
 
             <!-- Slide 7: Emerald Rajshahi Pure Silk -->
-            <div class="eq-coverflow-card" data-category="saree silk" id="coverflow-card-7" role="group" aria-roledescription="slide" aria-label="7 of 7">
+            <div class="eq-coverflow-card" data-category="heritage celebration" id="coverflow-card-7" role="group" aria-roledescription="slide" aria-label="7 of 7">
               <img src="{{ asset('images/saree/saree-04.jpg') }}" alt="Rajshahi Pure Silk Saree draped by Fariha" class="eq-coverflow-card__img" loading="lazy" />
             </div>
 

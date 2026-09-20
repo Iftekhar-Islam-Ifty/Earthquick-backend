@@ -13,9 +13,6 @@
         </a>
         <p>A curated marketplace for independent Bangladeshi brands. Explore Nous Telos heritage handloom, Bright electronics, and partner stores.</p>
         <div class="eq-footer__social" aria-label="Social links">
-          <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook" id="social-facebook">
-            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
-          </a>
           <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram" id="social-instagram">
             <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
           </a>

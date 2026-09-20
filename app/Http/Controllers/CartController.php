@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Coupon;
 use App\Models\Product;
+use App\Models\ProductVariant;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -83,9 +84,10 @@ class CartController extends Controller
             'product_id' => 'required|exists:products,id',
             'quantity' => 'nullable|integer|min:1',
             'size' => 'nullable|string|max:100',
+            'variant_id' => 'nullable|integer|exists:product_variants,id',
         ]);
 
-        $product = Product::with('vendor')->findOrFail($request->product_id);
+        $product = Product::with(['vendor', 'variants'])->findOrFail($request->product_id);
         if (! $product->isPubliclyAvailable()) {
             $message = 'This product is no longer available.';
 
@@ -96,14 +98,34 @@ class CartController extends Controller
             return redirect()->back()->with('error', $message);
         }
         $quantity = max(1, (int) $request->input('quantity', 1));
-        $size = $request->input('size', 'Standard');
+        $variantId = $request->integer('variant_id') ?: null;
+        $variant = $variantId
+            ? $product->variants->firstWhere('id', $variantId)
+            : null;
+        $hasActiveVariants = $product->variants->contains('is_active', true);
+
+        if (($variantId && (! $variant || ! $variant->is_active)) || ($hasActiveVariants && ! $variant)) {
+            $message = 'Please choose an available product option before adding this item.';
+
+            if ($request->wantsJson() || $request->ajax()) {
+                return response()->json(['success' => false, 'message' => $message], 422);
+            }
+
+            return redirect()->back()->withErrors(['variant_id' => $message]);
+        }
+
+        $size = $variant?->label ?? $request->input('size', 'Standard');
+        $unitPrice = $variant?->effectivePrice() ?? (float) $product->price;
+        $availableStock = $variant?->stock_quantity ?? $product->stock_quantity;
 
         $cart = session()->get('cart', []);
-        // Generate unique cart key based on product ID and selected variant size
-        $cartKey = $product->id.'_'.Str::slug($size);
+        // A database variant ID is stable; legacy products continue using their size text.
+        $cartKey = $variant
+            ? $product->id.'_variant_'.$variant->id
+            : $product->id.'_'.Str::slug($size);
         $requestedQuantity = $quantity + (int) ($cart[$cartKey]['quantity'] ?? 0);
 
-        if (! $product->in_stock || $product->stock_quantity < $requestedQuantity) {
+        if (! $product->in_stock || $availableStock < $requestedQuantity) {
             $message = 'The requested quantity is no longer available.';
 
             if ($request->wantsJson() || $request->ajax()) {
@@ -124,9 +146,13 @@ class CartController extends Controller
                 'vendor_name' => $product->vendor ? $product->vendor->name : 'Earthquick',
                 'name' => $product->name,
                 'slug' => $product->slug,
-                'price' => (float) $product->price,
+                'price' => $unitPrice,
                 'image' => $product->image,
                 'size' => $size,
+                'variant_id' => $variant?->id,
+                'variant_sku' => $variant?->sku,
+                'variant_label' => $variant?->label,
+                'variant_attributes' => $variant?->attributes,
                 'quantity' => $quantity,
             ];
         }
@@ -206,14 +232,33 @@ class CartController extends Controller
                 unset($cart[$key]);
             } else {
                 $productId = $cart[$key]['product_id'] ?? $cart[$key]['id'] ?? null;
-                $product = Product::with('vendor')->find($productId);
+                $product = Product::with(['vendor', 'variants'])->find($productId);
+                $variantId = $cart[$key]['variant_id'] ?? null;
+                $variant = $variantId
+                    ? ProductVariant::query()
+                        ->whereKey($variantId)
+                        ->where('product_id', $productId)
+                        ->where('is_active', true)
+                        ->first()
+                    : null;
+                $hasActiveVariants = $product?->variants->contains('is_active', true) ?? false;
+                $availableStock = $variant?->stock_quantity ?? $product?->stock_quantity ?? 0;
 
                 if (! $product || ! $product->isPubliclyAvailable() || ! $product->in_stock
-                    || $product->stock_quantity < $cart[$key]['quantity']) {
+                    || ($variantId && ! $variant) || ($hasActiveVariants && ! $variant)
+                    || $availableStock < $cart[$key]['quantity']) {
                     return response()->json([
                         'success' => false,
                         'message' => 'The requested quantity is no longer available.',
                     ], 422);
+                }
+
+                $cart[$key]['price'] = $variant?->effectivePrice() ?? (float) $product->price;
+                if ($variant) {
+                    $cart[$key]['size'] = $variant->label;
+                    $cart[$key]['variant_sku'] = $variant->sku;
+                    $cart[$key]['variant_label'] = $variant->label;
+                    $cart[$key]['variant_attributes'] = $variant->attributes;
                 }
             }
 

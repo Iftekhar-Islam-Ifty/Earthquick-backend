@@ -28,6 +28,20 @@ class CatalogVendorIntegrityTest extends TestCase
             ->assertJsonPath('message', 'This product is no longer available.');
     }
 
+    public function test_inactive_products_are_hidden_from_public_catalogs_and_cart(): void
+    {
+        $product = Product::whereNotNull('vendor_id')->firstOrFail();
+        $product->update(['is_active' => false]);
+
+        $this->get('/')->assertDontSee($product->name);
+        $this->get('/product/'.$product->slug)->assertNotFound();
+        $this->get('/shop/'.$product->category->slug)->assertDontSee($product->name);
+        $this->get('/search?q='.urlencode($product->name))->assertDontSee('/product/'.$product->slug);
+        $this->postJson('/cart/add', ['product_id' => $product->id, 'quantity' => 1])
+            ->assertUnprocessable()
+            ->assertJsonPath('message', 'This product is no longer available.');
+    }
+
     public function test_legacy_unassigned_product_remains_public(): void
     {
         $product = Product::firstOrFail();
@@ -68,15 +82,18 @@ class CatalogVendorIntegrityTest extends TestCase
             ->assertOk()->assertDontSee('Commission')->assertDontSee('Homepage Collective');
     }
 
-    public function test_development_seed_preserves_electronics_and_assigns_legacy_catalog_to_nous_telos(): void
+    public function test_development_seed_is_idempotent_and_does_not_reassign_legacy_catalog(): void
     {
-        Artisan::call('db:seed', ['--force' => true]);
+        $legacyProduct = Product::firstOrFail();
+        $legacyProduct->update(['vendor_id' => null]);
 
-        $nousTelos = Vendor::where('slug', 'nous-telos')->firstOrFail();
+        Artisan::call('db:seed', ['--force' => true]);
+        $countAfterFirstSeed = Product::count();
+        Artisan::call('db:seed', ['--force' => true]);
 
         $this->assertDatabaseHas('vendors', ['slug' => 'bright', 'is_active' => true]);
         $this->assertDatabaseHas('categories', ['slug' => 'electronics', 'is_active' => true]);
-        $this->assertSame(0, Product::whereNull('vendor_id')->count());
-        $this->assertSame(0, Product::where('vendor_id', '!=', $nousTelos->id)->count());
+        $this->assertSame($countAfterFirstSeed, Product::count());
+        $this->assertNull($legacyProduct->fresh()->vendor_id);
     }
 }

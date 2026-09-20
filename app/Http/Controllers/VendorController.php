@@ -23,6 +23,7 @@ class VendorController extends Controller
         $vendors = Vendor::where('is_active', true)
             ->withCount(['products' => function ($q) {
                 $q->where('in_stock', true);
+                $q->where('is_active', true);
             }])
             ->orderBy('sort_order')
             ->orderBy('name')
@@ -42,7 +43,8 @@ class VendorController extends Controller
 
         $query = Product::where('vendor_id', $vendor->id)
             ->with(['category', 'subcategory'])
-            ->where('in_stock', true);
+            ->where('in_stock', true)
+            ->where('is_active', true);
 
         // Filter by category if specified
         if ($request->filled('category')) {
@@ -74,7 +76,8 @@ class VendorController extends Controller
         // Retrieve distinct categories currently represented by this vendor's in-stock inventory
         $categories = Category::whereHas('products', function ($q) use ($vendor) {
             $q->where('vendor_id', $vendor->id)
-                ->where('in_stock', true);
+                ->where('in_stock', true)
+                ->where('is_active', true);
         })->get();
 
         return view('vendor.show', compact('vendor', 'products', 'categories'));

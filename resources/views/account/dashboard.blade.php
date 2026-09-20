@@ -169,7 +169,7 @@
                     <div class="eq-tracking-title">
                       <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                         <rect x="1" y="3" width="15" height="13"></rect>
-                        <polygon points="16 8 20 8 23 11 23 16 16 16 8"></polygon>
+                        <polygon points="16 8 20 8 23 11 23 16 16 16"></polygon>
                         <circle cx="5.5" cy="18.5" r="2.5"></circle>
                         <circle cx="18.5" cy="18.5" r="2.5"></circle>
                       </svg>
@@ -217,6 +217,9 @@
                         </div>
                         <div class="eq-order-item-meta">
                           <div class="eq-order-item-name">{{ $item->product_name }}</div>
+                          @if($item->variant_label)
+                            <div class="eq-order-item-sub">{{ $item->variant_label }}</div>
+                          @endif
                           <div class="eq-order-item-sub">Qty: {{ $item->quantity }} &bull; ৳{{ number_format($item->unit_price) }} each</div>
                         </div>
                       </div>
@@ -362,4 +365,3 @@
   });
 </script>
 @endpush
-

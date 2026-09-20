@@ -24,6 +24,7 @@ class Product extends Model
         'vendor_id',
         'category_id',
         'subcategory_id',
+        'product_type',
         'sku',
         'name',
         'slug',
@@ -32,6 +33,8 @@ class Product extends Model
         'fabric',
         'short_desc',
         'description',
+        'specifications',
+        'warranty_info',
         'image',
         'alt_image',
         'badge',
@@ -40,6 +43,7 @@ class Product extends Model
         'reviews_count',
         'in_stock',
         'stock_quantity',
+        'is_active',
         'is_featured',
         'is_new_arrival',
     ];
@@ -56,8 +60,10 @@ class Product extends Model
             'old_price' => 'float',
             'in_stock' => 'boolean',
             'stock_quantity' => 'integer',
+            'is_active' => 'boolean',
             'is_featured' => 'boolean',
             'is_new_arrival' => 'boolean',
+            'specifications' => 'array',
         ];
     }
 
@@ -98,15 +104,32 @@ class Product extends Model
     }
 
     /**
+     * Purchasable options with their own SKU, attributes, price and stock.
+     */
+    public function variants(): HasMany
+    {
+        return $this->hasMany(ProductVariant::class)->orderBy('id');
+    }
+
+    /**
+     * Options currently selectable on the public storefront.
+     */
+    public function activeVariants(): HasMany
+    {
+        return $this->variants()->where('is_active', true);
+    }
+
+    /**
      * Limit a public catalog query to legacy unassigned products and products
      * whose assigned vendor is currently published.
      */
     public function scopePubliclyAvailable(Builder $query): Builder
     {
-        return $query->where(function (Builder $query) {
-            $query->whereNull('vendor_id')
-                ->orWhereHas('vendor', fn (Builder $vendorQuery) => $vendorQuery->where('is_active', true));
-        });
+        return $query->where('is_active', true)
+            ->where(function (Builder $query) {
+                $query->whereNull('vendor_id')
+                    ->orWhereHas('vendor', fn (Builder $vendorQuery) => $vendorQuery->where('is_active', true));
+            });
     }
 
     /**
@@ -114,7 +137,8 @@ class Product extends Model
      */
     public function isPubliclyAvailable(): bool
     {
-        return $this->vendor_id === null
-            || $this->vendor()->where('is_active', true)->exists();
+        return $this->is_active
+            && ($this->vendor_id === null
+                || $this->vendor()->where('is_active', true)->exists());
     }
 }

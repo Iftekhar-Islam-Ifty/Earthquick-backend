@@ -23,7 +23,13 @@ class ProductController extends Controller
      */
     public function show(string $slug): View
     {
-        $product = Product::publiclyAvailable()->with(['category', 'subcategory', 'images', 'vendor'])
+        $product = Product::publiclyAvailable()->with([
+            'category',
+            'subcategory',
+            'images',
+            'vendor',
+            'variants' => fn ($query) => $query->where('is_active', true)->orderBy('id'),
+        ])
             ->where('slug', $slug)
             ->firstOrFail();
 

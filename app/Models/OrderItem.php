@@ -21,13 +21,27 @@ class OrderItem extends Model
     protected $fillable = [
         'order_id',
         'product_id',
+        'variant_id',
         'vendor_id',
         'product_name',
+        'variant_sku',
+        'variant_label',
+        'variant_attributes',
         'product_image',
         'unit_price',
         'quantity',
         'total_price',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'variant_attributes' => 'array',
+            'unit_price' => 'float',
+            'total_price' => 'float',
+            'quantity' => 'integer',
+        ];
+    }
 
     /* =========================================================================
      * RELATIONSHIPS
@@ -55,5 +69,10 @@ class OrderItem extends Model
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class);
+    }
+
+    public function variant(): BelongsTo
+    {
+        return $this->belongsTo(ProductVariant::class, 'variant_id');
     }
 }

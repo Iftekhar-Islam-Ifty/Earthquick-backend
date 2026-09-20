@@ -453,8 +453,8 @@
                   @if($item->vendor)
                     <div style="font-size: 0.74rem; color: var(--eq-gold-dark); font-weight: 600;">Brand: {{ $item->vendor->name }}</div>
                   @endif
-                  @if($item->size)
-                    <div style="font-size: 0.78rem; color: var(--eq-charcoal-soft);">Size: {{ $item->size }}</div>
+                  @if($item->variant_label)
+                    <div style="font-size: 0.78rem; color: var(--eq-charcoal-soft);">Option: {{ $item->variant_label }}{{ $item->variant_sku ? ' · '.$item->variant_sku : '' }}</div>
                   @endif
                 </div>
               </div>
@@ -508,4 +508,3 @@
 
 </body>
 </html>
-

@@ -6,6 +6,7 @@ use App\Models\Coupon;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
+use App\Models\ProductVariant;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -134,20 +135,39 @@ class CheckoutController extends Controller
                 $productId = $item['product_id'] ?? $item['id'] ?? null;
                 $quantity = (int) ($item['quantity'] ?? 0);
                 $product = Product::with('vendor')->lockForUpdate()->find($productId);
+                $variantId = $item['variant_id'] ?? null;
+                $variant = $variantId
+                    ? ProductVariant::query()
+                        ->whereKey($variantId)
+                        ->where('product_id', $productId)
+                        ->lockForUpdate()
+                        ->first()
+                    : null;
+                $hasActiveVariants = $product?->variants()
+                    ->where('is_active', true)
+                    ->exists() ?? false;
+                $availableStock = $variant?->stock_quantity ?? $product?->stock_quantity ?? 0;
 
                 if (! $product || $quantity < 1 || ! $product->isPubliclyAvailable()
-                    || ! $product->in_stock || $product->stock_quantity < $quantity) {
+                    || ! $product->in_stock || ($variantId && (! $variant || ! $variant->is_active))
+                    || ($hasActiveVariants && ! $variant) || $availableStock < $quantity) {
                     throw ValidationException::withMessages([
                         'cart' => 'One or more items are no longer available in the requested quantity.',
                     ]);
                 }
 
+                $unitPrice = $variant?->price !== null
+                    ? (float) $variant->price
+                    : (float) $product->price;
+
                 $items[] = [
                     'product' => $product,
+                    'variant' => $variant,
                     'quantity' => $quantity,
-                    'size' => $item['size'] ?? 'Standard',
+                    'size' => $variant?->label ?? ($item['size'] ?? 'Standard'),
+                    'unit_price' => $unitPrice,
                 ];
-                $subtotal += $product->price * $quantity;
+                $subtotal += $unitPrice * $quantity;
             }
 
             $deliveryFee = $subtotal >= CartController::FREE_SHIPPING_THRESHOLD
@@ -194,24 +214,44 @@ class CheckoutController extends Controller
 
             foreach ($items as $item) {
                 $product = $item['product'];
+                $variant = $item['variant'];
                 $quantity = $item['quantity'];
                 $size = $item['size'];
-                $remainingStock = $product->stock_quantity - $quantity;
+                $unitPrice = $item['unit_price'];
 
-                $product->update([
-                    'stock_quantity' => $remainingStock,
-                    'in_stock' => $remainingStock > 0,
-                ]);
+                if ($variant) {
+                    $variant->update([
+                        'stock_quantity' => $variant->stock_quantity - $quantity,
+                    ]);
+
+                    $remainingStock = (int) $product->variants()
+                        ->where('is_active', true)
+                        ->sum('stock_quantity');
+                    $product->update([
+                        'stock_quantity' => $remainingStock,
+                        'in_stock' => $remainingStock > 0,
+                    ]);
+                } else {
+                    $remainingStock = $product->stock_quantity - $quantity;
+                    $product->update([
+                        'stock_quantity' => $remainingStock,
+                        'in_stock' => $remainingStock > 0,
+                    ]);
+                }
 
                 OrderItem::create([
                     'order_id' => $newOrder->id,
                     'vendor_id' => $product->vendor_id,
                     'product_id' => $product->id,
-                    'product_name' => $product->name.($size !== 'Standard' ? " ({$size})" : ''),
+                    'variant_id' => $variant?->id,
+                    'product_name' => $product->name.(! $variant && $size !== 'Standard' ? " ({$size})" : ''),
+                    'variant_sku' => $variant?->sku,
+                    'variant_label' => $variant?->label,
+                    'variant_attributes' => $variant?->attributes,
                     'product_image' => $product->image,
-                    'unit_price' => $product->price,
+                    'unit_price' => $unitPrice,
                     'quantity' => $quantity,
-                    'total_price' => $product->price * $quantity,
+                    'total_price' => $unitPrice * $quantity,
                 ]);
             }
 

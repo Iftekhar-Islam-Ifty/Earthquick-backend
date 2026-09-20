@@ -270,6 +270,8 @@ class AdminFeatureTest extends TestCase
         $response = $this->actingAs($admin)->get('/admin/products/create');
         $response->assertStatus(200);
         $response->assertSee('Create New Product');
+        $response->assertSee('Electronics');
+        $response->assertSee('Structured Specifications');
         $response->assertSee('Selling Price (BDT ৳)');
     }
 
@@ -296,6 +298,9 @@ class AdminFeatureTest extends TestCase
             'price'          => 14500,
             'old_price'      => 16000,
             'fabric'         => 'Pure Silk',
+            'product_type'   => 'apparel',
+            'specifications' => json_encode(['Color' => 'Crimson', 'Size' => 'Free Size']),
+            'warranty_info'  => '7-day quality support',
             'stock_quantity' => 8,
             'in_stock'       => 1,
             'is_featured'    => 1,
@@ -312,9 +317,14 @@ class AdminFeatureTest extends TestCase
             'category_id' => $category->id,
             'price'       => 14500,
             'fabric'      => 'Pure Silk',
+            'product_type' => 'apparel',
             'in_stock'    => true,
             'is_featured' => true,
         ]);
+
+        $createdProduct = Product::where('name', 'Heritage Jamdani Gold Zari')->firstOrFail();
+        $this->assertSame('Crimson', $createdProduct->specifications['Color']);
+        $this->assertSame('7-day quality support', $createdProduct->warranty_info);
 
         $product = Product::where('name', 'Heritage Jamdani Gold Zari')->first();
         $this->assertNotNull($product);
@@ -324,6 +334,29 @@ class AdminFeatureTest extends TestCase
         if (file_exists(public_path($product->image))) {
             @unlink(public_path($product->image));
         }
+    }
+
+    public function test_admin_catalog_rejects_nested_specification_values(): void
+    {
+        $admin = User::create([
+            'name' => 'Specification Validator',
+            'email' => 'spec-validator'.rand(1000, 9999).'@earthquick.com',
+            'password' => Hash::make('password123'),
+            'is_admin' => true,
+        ]);
+        $category = Category::firstOrFail();
+        $jpegBytes = base64_decode('/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAP//////////////////////////////////////////////////////////////////////////////////////wgALCAABAAEBAREA/8QAFBABAAAAAAAAAAAAAAAAAAAAAP/aAAgBAQABPxA=');
+
+        $this->actingAs($admin)->post('/admin/products', [
+            'name' => 'Invalid Nested Specification Product',
+            'category_id' => $category->id,
+            'product_type' => 'electronics',
+            'price' => 1000,
+            'specifications' => json_encode(['Power' => ['Minimum' => '10W']]),
+            'image' => UploadedFile::fake()->createWithContent('invalid-spec.jpg', $jpegBytes),
+        ])->assertSessionHasErrors('specifications');
+
+        $this->assertDatabaseMissing('products', ['name' => 'Invalid Nested Specification Product']);
     }
 
     /**
@@ -844,4 +877,3 @@ class AdminFeatureTest extends TestCase
         ]);
     }
 }
-

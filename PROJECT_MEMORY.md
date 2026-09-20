@@ -2,6 +2,15 @@
 
 ## Current scope update — Phase 2
 
+On 2026-09-20, the general marketplace catalog work added product types,
+structured specifications, warranty/support data and database-backed product
+variants. Variants carry their own SKU, attributes, optional price, active
+status and stock. Cart and checkout remain backward-compatible with products
+without variants; variant products are revalidated and decremented atomically,
+and order items retain variant snapshots. See
+`docs/PHASE_2_GENERAL_CATALOG.md`. The full suite passes 94 PHP tests / 517
+assertions and 10 frontend tests.
+
 The owner has authorized and completed Phase 1 (isolated test setup), Phase 2
 (shared frontend URL/event/quick-view/DOM corrections), Phase 3 (catalog and
 vendor integrity), Phase 4 (checkout and order correctness), and Phase 5
@@ -26,6 +35,16 @@ to develop fully later. More vendors will follow. The original implementation
 over-associated the platform with Nous Telos. Preserve the existing work and make
 targeted changes instead of rewriting the website. Nous Telos should remain the
 most detailed and prominent store without defining every vendor's identity.
+
+## Confirmed Phase 0 operating rules
+
+- Earthquick has one central admin for all vendors; no vendor dashboards or seller logins are required.
+- A customer may place products from multiple vendors in one combined order.
+- Delivery, customer-facing status and tracking remain order-wise.
+- Earthquick central admin owns cancellation, return and refund decisions.
+- The initial payment methods are COD and bKash.
+- Suspending a vendor stops new purchases while existing confirmed orders remain for admin review and resolution.
+- Commission, payout and vendor settlement systems are not in scope.
 
 ## Review scope and verification limits
 

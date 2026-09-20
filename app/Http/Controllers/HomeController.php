@@ -26,6 +26,7 @@ class HomeController extends Controller
     public function index(): View
     {
         $nousTelos = Vendor::where('slug', 'nous-telos')->where('is_active', true)->first();
+        $bright = Vendor::where('slug', 'bright')->where('is_active', true)->first();
 
         // Active categories sorted by administrative sort order
         $categories = Category::where('is_active', true)->orderBy('sort_order')->get();
@@ -51,11 +52,12 @@ class HomeController extends Controller
         // Handcrafted Bags collection
         $bags = (clone $flagshipProducts)->whereHas('category', function ($q) {
             $q->where('slug', 'bags');
-        })->where('in_stock', true)->get();
+        })->where('in_stock', true)->latest()->take(5)->get();
 
         return view('home', compact(
             'categories',
             'nousTelos',
+            'bright',
             'products',
             'featuredProducts',
             'newArrivals',

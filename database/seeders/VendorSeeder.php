@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\Category;
-use App\Models\Product;
 use App\Models\Vendor;
 use Illuminate\Database\Seeder;
 
@@ -15,7 +14,7 @@ class VendorSeeder extends Seeder
     public function run(): void
     {
         // 1. Primary Vendor: Nous Telos (Fashion & Handlooms)
-        $nousTelos = Vendor::updateOrCreate(
+        $nousTelos = Vendor::firstOrCreate(
             ['slug' => 'nous-telos'],
             [
                 'name' => 'Nous Telos',
@@ -31,7 +30,7 @@ class VendorSeeder extends Seeder
         );
 
         // 2. Architectural Vendor: Bright (Electronics & Lighting - Prototype)
-        Vendor::updateOrCreate(
+        Vendor::firstOrCreate(
             ['slug' => 'bright'],
             [
                 'name' => 'Bright',
@@ -47,7 +46,7 @@ class VendorSeeder extends Seeder
         );
 
         // 3. Top-Level Category: Electronics (Associated conceptually with Bright, currently 0 products, 0 subcategories)
-        Category::updateOrCreate(
+        Category::firstOrCreate(
             ['slug' => 'electronics'],
             [
                 'name' => 'Electronics',
@@ -58,9 +57,8 @@ class VendorSeeder extends Seeder
             ]
         );
 
-        // EarthquickSeeder establishes the original catalog first. Associate
-        // unassigned legacy products with the flagship vendor without changing
-        // any products that an administrator has already assigned elsewhere.
-        Product::whereNull('vendor_id')->update(['vendor_id' => $nousTelos->id]);
+        // Existing unassigned legacy products are intentionally not changed
+        // automatically. A reviewed backfill is safer than silently assigning
+        // real inventory during a routine seed run.
     }
 }
