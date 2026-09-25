@@ -2,14 +2,16 @@
 
 ## Current scope update — Phase 2
 
-On 2026-09-20, the general marketplace catalog work added product types,
+On 2026-09-20 through 2026-09-25, the completed general marketplace catalog work added product types,
 structured specifications, warranty/support data and database-backed product
 variants. Variants carry their own SKU, attributes, optional price, active
 status and stock. Cart and checkout remain backward-compatible with products
 without variants; variant products are revalidated and decremented atomically,
-and order items retain variant snapshots. See
-`docs/PHASE_2_GENERAL_CATALOG.md`. The full suite passes 94 PHP tests / 517
-assertions and 10 frontend tests.
+and order items retain variant snapshots. Products also carry delivery classes,
+return eligibility/windows/notes and role-based secondary media. General filters
+are available across category, search and brand storefront catalogs, while order
+items retain delivery/return snapshots. See `docs/PHASE_2_GENERAL_CATALOG.md`.
+The full suite passes 98 PHP tests / 545 assertions and 10 frontend tests.
 
 The owner has authorized and completed Phase 1 (isolated test setup), Phase 2
 (shared frontend URL/event/quick-view/DOM corrections), Phase 3 (catalog and

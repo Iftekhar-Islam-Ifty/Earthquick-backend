@@ -312,9 +312,7 @@
     </div>
 
     @if($products->hasPages())
-      <div style="margin-top: 1.25rem; padding-top: 0.85rem; border-top: 1px solid var(--eq-line); display: flex; justify-content: center;">
-        {{ $products->links() }}
-      </div>
+      @include('partials.pagination-polished', ['paginator' => $products])
     @endif
 
   </section>

@@ -27,6 +27,10 @@ class OrderItem extends Model
         'variant_sku',
         'variant_label',
         'variant_attributes',
+        'delivery_class',
+        'is_returnable',
+        'return_window_days',
+        'return_policy_note',
         'product_image',
         'unit_price',
         'quantity',
@@ -40,6 +44,8 @@ class OrderItem extends Model
             'unit_price' => 'float',
             'total_price' => 'float',
             'quantity' => 'integer',
+            'is_returnable' => 'boolean',
+            'return_window_days' => 'integer',
         ];
     }
 

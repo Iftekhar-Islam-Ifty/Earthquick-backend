@@ -101,10 +101,33 @@
 
         <!-- Sort Select -->
         @if($products->total() > 0)
-          <form method="GET" action="{{ route('stores.show', $vendor->slug) }}" style="margin: 0; display: flex; align-items: center; gap: 0.45rem;">
+          <form method="GET" action="{{ route('stores.show', $vendor->slug) }}" style="margin: 0; display: flex; align-items: center; justify-content: flex-end; flex-wrap: wrap; gap: 0.45rem;">
             @if(request('category'))
               <input type="hidden" name="category" value="{{ request('category') }}" />
             @endif
+            @if($availableProductTypes->isNotEmpty())
+              <select name="product_type" aria-label="Product type" onchange="this.form.submit()" style="padding: 0.35rem 0.65rem; border-radius: 4px; border: 1px solid var(--eq-line); font-size: 0.82rem; background: #ffffff;">
+                <option value="">All Types</option>
+                @foreach($availableProductTypes as $type)
+                  <option value="{{ $type }}" {{ request('product_type') === $type ? 'selected' : '' }}>{{ config("catalog.product_types.{$type}.label", ucfirst($type)) }}</option>
+                @endforeach
+              </select>
+            @endif
+            @if($availableDeliveryClasses->isNotEmpty())
+              <select name="delivery_class" aria-label="Delivery class" onchange="this.form.submit()" style="padding: 0.35rem 0.65rem; border-radius: 4px; border: 1px solid var(--eq-line); font-size: 0.82rem; background: #ffffff;">
+                <option value="">All Delivery</option>
+                @foreach($availableDeliveryClasses as $deliveryClass)
+                  <option value="{{ $deliveryClass }}" {{ request('delivery_class') === $deliveryClass ? 'selected' : '' }}>{{ config("catalog.delivery_classes.{$deliveryClass}", ucfirst($deliveryClass)) }}</option>
+                @endforeach
+              </select>
+            @endif
+            <select name="returnable" aria-label="Return eligibility" onchange="this.form.submit()" style="padding: 0.35rem 0.65rem; border-radius: 4px; border: 1px solid var(--eq-line); font-size: 0.82rem; background: #ffffff;">
+              <option value="">All Return Policies</option>
+              <option value="1" {{ request('returnable') === '1' ? 'selected' : '' }}>Return Eligible</option>
+              <option value="0" {{ request('returnable') === '0' ? 'selected' : '' }}>Final Sale</option>
+            </select>
+            <input type="number" name="min_price" value="{{ request('min_price') }}" min="0" step="100" placeholder="Min ৳" aria-label="Minimum price" style="width: 82px; padding: 0.35rem 0.5rem; border-radius: 4px; border: 1px solid var(--eq-line); font-size: 0.82rem;" />
+            <input type="number" name="max_price" value="{{ request('max_price') }}" min="0" step="100" placeholder="Max ৳" aria-label="Maximum price" style="width: 82px; padding: 0.35rem 0.5rem; border-radius: 4px; border: 1px solid var(--eq-line); font-size: 0.82rem;" />
             <label for="sort-select" style="font-size: 0.8rem; color: var(--eq-charcoal-soft);">Sort by:</label>
             <select name="sort" id="sort-select" onchange="this.form.submit()" style="padding: 0.35rem 0.65rem; border-radius: 4px; border: 1px solid var(--eq-line); font-size: 0.82rem; background: #ffffff; cursor: pointer;">
               <option value="newest" {{ request('sort') == 'newest' ? 'selected' : '' }}>Newest Arrivals</option>
@@ -112,6 +135,7 @@
               <option value="price-desc" {{ request('sort') == 'price-desc' ? 'selected' : '' }}>Price: High to Low</option>
               <option value="rating" {{ request('sort') == 'rating' ? 'selected' : '' }}>Highest Rated</option>
             </select>
+            <button type="submit" class="eq-btn eq-btn--outline" style="padding: 0.35rem 0.65rem; font-size: 0.78rem;">Apply</button>
           </form>
         @endif
 
@@ -179,9 +203,7 @@
 
       <!-- Pagination -->
       @if($products->hasPages())
-        <div style="margin-top: 3rem; display: flex; justify-content: center;">
-          {{ $products->links() }}
-        </div>
+        @include('partials.pagination-polished', ['paginator' => $products])
       @endif
 
     </div>
@@ -189,4 +211,3 @@
 
 </main>
 @endsection
-

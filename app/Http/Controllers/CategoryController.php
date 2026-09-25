@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\Subcategory;
+use App\Models\Vendor;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -28,28 +29,10 @@ class CategoryController extends Controller
     {
         $category = Category::where('slug', $slug)->where('is_active', true)->firstOrFail();
 
-        $query = Product::publiclyAvailable()->where('category_id', $category->id);
-
-        // Apply inventory availability filter
-        if ($request->filled('in_stock')) {
-            $query->where('in_stock', true);
-        }
-
-        // Apply fabric attribute filter (supports single or multi-select arrays)
-        if ($request->filled('fabric')) {
-            $fabrics = is_array($request->query('fabric'))
-                ? $request->query('fabric')
-                : explode(',', $request->query('fabric'));
-            $query->whereIn('fabric', $fabrics);
-        }
-
-        // Apply dynamic price boundary filters
-        if ($request->filled('min_price')) {
-            $query->where('price', '>=', (float) $request->query('min_price'));
-        }
-        if ($request->filled('max_price')) {
-            $query->where('price', '<=', (float) $request->query('max_price'));
-        }
+        $facetQuery = Product::publiclyAvailable()->where('category_id', $category->id);
+        $query = (clone $facetQuery)
+            ->with(['category', 'subcategory', 'vendor'])
+            ->applyCatalogFilters($request->query());
 
         // Apply sorting criteria
         match ($request->query('sort')) {
@@ -69,7 +52,22 @@ class CategoryController extends Controller
             ->distinct()
             ->pluck('fabric');
 
-        return view('category', compact('category', 'products', 'subcategories', 'availableFabrics'));
+        $availableProductTypes = (clone $facetQuery)->whereNotNull('product_type')->distinct()->pluck('product_type');
+        $availableDeliveryClasses = (clone $facetQuery)->whereNotNull('delivery_class')->distinct()->pluck('delivery_class');
+        $availableVendors = Vendor::where('is_active', true)
+            ->whereIn('id', (clone $facetQuery)->whereNotNull('vendor_id')->distinct()->pluck('vendor_id'))
+            ->orderBy('name')
+            ->get();
+
+        return view('category', compact(
+            'category',
+            'products',
+            'subcategories',
+            'availableFabrics',
+            'availableProductTypes',
+            'availableDeliveryClasses',
+            'availableVendors'
+        ));
     }
 
     /* =========================================================================
@@ -85,28 +83,10 @@ class CategoryController extends Controller
         $category = Category::where('slug', $categorySlug)->where('is_active', true)->firstOrFail();
         $subcategory = Subcategory::where('slug', $subcategorySlug)->where('category_id', $category->id)->firstOrFail();
 
-        $query = Product::publiclyAvailable()->where('subcategory_id', $subcategory->id);
-
-        // Apply inventory availability filter
-        if ($request->filled('in_stock')) {
-            $query->where('in_stock', true);
-        }
-
-        // Apply fabric attribute filter
-        if ($request->filled('fabric')) {
-            $fabrics = is_array($request->query('fabric'))
-                ? $request->query('fabric')
-                : explode(',', $request->query('fabric'));
-            $query->whereIn('fabric', $fabrics);
-        }
-
-        // Apply dynamic price boundary filters
-        if ($request->filled('min_price')) {
-            $query->where('price', '>=', (float) $request->query('min_price'));
-        }
-        if ($request->filled('max_price')) {
-            $query->where('price', '<=', (float) $request->query('max_price'));
-        }
+        $facetQuery = Product::publiclyAvailable()->where('subcategory_id', $subcategory->id);
+        $query = (clone $facetQuery)
+            ->with(['category', 'subcategory', 'vendor'])
+            ->applyCatalogFilters($request->query());
 
         // Apply sorting criteria
         match ($request->query('sort')) {
@@ -126,6 +106,22 @@ class CategoryController extends Controller
             ->distinct()
             ->pluck('fabric');
 
-        return view('category', compact('category', 'subcategory', 'products', 'subcategories', 'availableFabrics'));
+        $availableProductTypes = (clone $facetQuery)->whereNotNull('product_type')->distinct()->pluck('product_type');
+        $availableDeliveryClasses = (clone $facetQuery)->whereNotNull('delivery_class')->distinct()->pluck('delivery_class');
+        $availableVendors = Vendor::where('is_active', true)
+            ->whereIn('id', (clone $facetQuery)->whereNotNull('vendor_id')->distinct()->pluck('vendor_id'))
+            ->orderBy('name')
+            ->get();
+
+        return view('category', compact(
+            'category',
+            'subcategory',
+            'products',
+            'subcategories',
+            'availableFabrics',
+            'availableProductTypes',
+            'availableDeliveryClasses',
+            'availableVendors'
+        ));
     }
 }

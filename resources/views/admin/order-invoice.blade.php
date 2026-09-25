@@ -456,6 +456,9 @@
                   @if($item->variant_label)
                     <div style="font-size: 0.78rem; color: var(--eq-charcoal-soft);">Option: {{ $item->variant_label }}{{ $item->variant_sku ? ' · '.$item->variant_sku : '' }}</div>
                   @endif
+                  @if($item->delivery_class)
+                    <div style="font-size: 0.74rem; color: var(--eq-charcoal-soft);">{{ config('catalog.delivery_classes.'.$item->delivery_class, ucfirst($item->delivery_class)) }} · {{ $item->is_returnable ? ($item->return_window_days.'-day return') : 'Final sale' }}</div>
+                  @endif
                 </div>
               </div>
             </td>

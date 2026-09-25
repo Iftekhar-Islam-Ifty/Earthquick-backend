@@ -702,12 +702,7 @@
       @endforeach
     </div>
 
-    <!-- Pagination -->
-    @if($coupons->hasPages())
-      <div style="padding: 1rem 1.25rem; border-top: 1px solid var(--eq-line); background: #faf8f5;">
-        {{ $coupons->links() }}
-      </div>
-    @endif
+    @include('partials.pagination-polished', ['paginator' => $coupons])
   @endif
 </div>
 @endsection

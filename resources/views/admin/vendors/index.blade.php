@@ -226,13 +226,7 @@
       </div>
     </div>
 
-    <!-- Pagination -->
-    @if($vendors->hasPages())
-      <div style="margin-top: 1.5rem; display: flex; justify-content: center;">
-        {{ $vendors->links() }}
-      </div>
-    @endif
+    @include('partials.pagination-polished', ['paginator' => $vendors])
   </section>
 
 @endsection
-

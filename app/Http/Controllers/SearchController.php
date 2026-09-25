@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Product;
+use App\Models\Vendor;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -46,6 +48,8 @@ class SearchController extends Controller
                     ->orWhere('fabric', 'like', "%{$query}%")
                     ->orWhere('description', 'like', "%{$query}%")
                     ->orWhere('short_desc', 'like', "%{$query}%")
+                    ->orWhere('sku', 'like', "%{$query}%")
+                    ->orWhere('specifications', 'like', "%{$query}%")
                     ->orWhereHas('category', function ($cq) use ($query) {
                         $cq->where('name', 'like', "%{$query}%");
                     })
@@ -90,6 +94,7 @@ class SearchController extends Controller
         $sort = $request->input('sort', 'featured');
 
         $productsQuery = Product::publiclyAvailable()->with(['category', 'subcategory']);
+        $productsQuery->applyCatalogFilters($request->query());
 
         if (! empty($query)) {
             $productsQuery->where(function ($q) use ($query) {
@@ -97,6 +102,8 @@ class SearchController extends Controller
                     ->orWhere('fabric', 'like', "%{$query}%")
                     ->orWhere('description', 'like', "%{$query}%")
                     ->orWhere('short_desc', 'like', "%{$query}%")
+                    ->orWhere('sku', 'like', "%{$query}%")
+                    ->orWhere('specifications', 'like', "%{$query}%")
                     ->orWhereHas('category', function ($cq) use ($query) {
                         $cq->where('name', 'like', "%{$query}%");
                     })
@@ -127,6 +134,9 @@ class SearchController extends Controller
 
         $products = $productsQuery->paginate(12)->withQueryString();
 
-        return view('search-results', compact('products', 'query', 'sort'));
+        $categories = Category::where('is_active', true)->orderBy('name')->get();
+        $vendors = Vendor::where('is_active', true)->orderBy('name')->get();
+
+        return view('search-results', compact('products', 'query', 'sort', 'categories', 'vendors'));
     }
 }

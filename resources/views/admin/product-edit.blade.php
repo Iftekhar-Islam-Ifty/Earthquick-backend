@@ -123,6 +123,30 @@
             </div>
           </div>
 
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.25rem;">
+            <div>
+              <label for="select-delivery-class" style="display: block; font-size: 0.84rem; font-weight: 600; color: var(--eq-charcoal); margin-bottom: 0.4rem;">Delivery Class</label>
+              <select name="delivery_class" id="select-delivery-class" required style="width: 100%; padding: 0.65rem 0.85rem; border-radius: 6px; border: 1px solid var(--eq-line); font-size: 0.88rem; background: #ffffff;">
+                @foreach($catalogSchema['delivery_classes'] as $class => $label)
+                  <option value="{{ $class }}" {{ old('delivery_class', $product->delivery_class ?? 'standard') === $class ? 'selected' : '' }}>{{ $label }}</option>
+                @endforeach
+              </select>
+            </div>
+            <div>
+              <input type="hidden" name="is_returnable" value="0" />
+              <label style="display: flex; align-items: center; gap: 0.55rem; font-size: 0.84rem; font-weight: 600; color: var(--eq-charcoal); margin-bottom: 0.4rem;">
+                <input type="checkbox" name="is_returnable" value="1" {{ old('is_returnable', $product->is_returnable) ? 'checked' : '' }} style="width: 17px; height: 17px; accent-color: var(--eq-navy);" />
+                Return Eligible
+              </label>
+              <input type="number" name="return_window_days" value="{{ old('return_window_days', $product->return_window_days ?? 7) }}" min="1" max="365" placeholder="Return window in days" style="width: 100%; padding: 0.65rem 0.85rem; border-radius: 6px; border: 1px solid var(--eq-line); font-size: 0.9rem; background: #ffffff;" />
+            </div>
+          </div>
+
+          <div style="margin-bottom: 1.25rem;">
+            <label for="input-return-policy-note" style="display: block; font-size: 0.84rem; font-weight: 600; color: var(--eq-charcoal); margin-bottom: 0.4rem;">Return Policy Note <span style="font-weight: 400; color: var(--eq-charcoal-muted);">(Optional)</span></label>
+            <input type="text" name="return_policy_note" id="input-return-policy-note" value="{{ old('return_policy_note', $product->return_policy_note) }}" placeholder="e.g. Unused item with original tags and packaging" style="width: 100%; padding: 0.65rem 0.85rem; border-radius: 6px; border: 1px solid var(--eq-line); font-size: 0.9rem; background: #ffffff;" />
+          </div>
+
           <!-- Price & Old Price Row -->
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
             <div>
@@ -323,6 +347,46 @@
               onchange="previewSelectedImage(this)"
               style="width: 100%; font-size: 0.82rem;"
             />
+          </div>
+
+          @if($product->images->isNotEmpty())
+            <div style="margin-top: 1.25rem; padding-top: 1.25rem; border-top: 1px solid var(--eq-line);">
+              <div style="font-size: 0.82rem; font-weight: 600; color: var(--eq-charcoal); margin-bottom: 0.65rem;">Existing Additional Media</div>
+              <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                @foreach($product->images as $media)
+                  <div style="display: grid; grid-template-columns: 58px 1fr; gap: 0.65rem; padding: 0.65rem; border: 1px solid var(--eq-line); border-radius: 6px;">
+                    <img src="{{ asset($media->image_path) }}" alt="{{ $media->alt_text ?? $product->name }}" style="width: 58px; height: 68px; object-fit: cover; border-radius: 4px;" />
+                    <div style="display: grid; gap: 0.45rem; min-width: 0;">
+                      <select name="existing_media[{{ $media->id }}][role]" aria-label="Media role" style="width: 100%; padding: 0.4rem; border: 1px solid var(--eq-line); border-radius: 4px; font-size: 0.76rem; background: #fff;">
+                        @foreach($catalogSchema['media_roles'] as $role => $label)
+                          <option value="{{ $role }}" {{ old("existing_media.{$media->id}.role", $media->role) === $role ? 'selected' : '' }}>{{ $label }}</option>
+                        @endforeach
+                      </select>
+                      <input type="text" name="existing_media[{{ $media->id }}][alt_text]" value="{{ old("existing_media.{$media->id}.alt_text", $media->alt_text) }}" maxlength="255" placeholder="Image description" style="width: 100%; padding: 0.4rem; border: 1px solid var(--eq-line); border-radius: 4px; font-size: 0.76rem;" />
+                      <div style="display: flex; align-items: center; gap: 0.65rem;">
+                        <input type="number" name="existing_media[{{ $media->id }}][sort_order]" value="{{ old("existing_media.{$media->id}.sort_order", $media->sort_order) }}" min="0" max="999" aria-label="Sort order" style="width: 70px; padding: 0.35rem; border: 1px solid var(--eq-line); border-radius: 4px; font-size: 0.76rem;" />
+                        <label style="display: flex; align-items: center; gap: 0.3rem; color: #b91c1c; font-size: 0.74rem;">
+                          <input type="checkbox" name="existing_media[{{ $media->id }}][remove]" value="1" /> Remove
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                @endforeach
+              </div>
+            </div>
+          @endif
+
+          <div style="margin-top: 1.25rem; padding-top: 1.25rem; border-top: 1px solid var(--eq-line);">
+            <label for="input-gallery-images" style="display: block; font-size: 0.82rem; font-weight: 600; color: var(--eq-charcoal); margin-bottom: 0.4rem;">Add More Media <span style="font-weight: 400; color: var(--eq-charcoal-muted);">(Up to 8 files)</span></label>
+            <input type="file" name="gallery_images[]" id="input-gallery-images" accept="image/jpeg,image/png,image/webp,image/svg+xml" multiple style="width: 100%; font-size: 0.82rem;" />
+            <div style="display: grid; grid-template-columns: 1fr; gap: 0.65rem; margin-top: 0.8rem;">
+              <select name="gallery_role" aria-label="New media role" style="width: 100%; padding: 0.55rem 0.7rem; border-radius: 6px; border: 1px solid var(--eq-line); background: #ffffff; font-size: 0.82rem;">
+                @foreach($catalogSchema['media_roles'] as $role => $label)
+                  <option value="{{ $role }}" {{ old('gallery_role', 'gallery') === $role ? 'selected' : '' }}>{{ $label }}</option>
+                @endforeach
+              </select>
+              <input type="text" name="gallery_alt_text" value="{{ old('gallery_alt_text') }}" maxlength="255" placeholder="Accessible image description (optional)" style="width: 100%; padding: 0.55rem 0.7rem; border-radius: 6px; border: 1px solid var(--eq-line); font-size: 0.82rem;" />
+            </div>
           </div>
         </div>
 

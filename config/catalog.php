@@ -33,4 +33,18 @@ return [
         'home-decor' => 'home',
         'electronics' => 'electronics',
     ],
+
+    'delivery_classes' => [
+        'standard' => 'Standard Courier',
+        'fragile' => 'Fragile — Special Handling',
+        'oversized' => 'Oversized / Heavy',
+    ],
+
+    'media_roles' => [
+        'gallery' => 'Gallery',
+        'lifestyle' => 'Lifestyle / In Use',
+        'detail' => 'Detail / Close-up',
+        'packaging' => 'Packaging',
+        'size_chart' => 'Size Chart',
+    ],
 ];

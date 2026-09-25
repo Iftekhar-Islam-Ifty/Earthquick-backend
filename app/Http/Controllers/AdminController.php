@@ -443,7 +443,15 @@ class AdminController extends Controller
             'specifications' => 'nullable|json',
             'variants' => 'nullable|json',
             'warranty_info' => 'nullable|string|max:255',
+            'is_returnable' => 'nullable|boolean',
+            'return_window_days' => 'nullable|integer|min:1|max:365',
+            'return_policy_note' => 'nullable|string|max:255',
+            'delivery_class' => 'nullable|in:standard,fragile,oversized',
             'image' => 'required|image|mimes:jpeg,png,jpg,webp,svg|max:5120',
+            'gallery_images' => 'nullable|array|max:8',
+            'gallery_images.*' => 'image|mimes:jpeg,png,jpg,webp,svg|max:5120',
+            'gallery_role' => 'nullable|in:gallery,lifestyle,detail,packaging,size_chart',
+            'gallery_alt_text' => 'nullable|string|max:255',
         ]);
         $this->ensureSubcategoryMatchesCategory($request);
         $variants = $request->has('variants') ? $this->decodeVariants($request) : null;
@@ -501,6 +509,12 @@ class AdminController extends Controller
             'description' => $request->description,
             'specifications' => $this->decodeSpecifications($request),
             'warranty_info' => $request->warranty_info,
+            'is_returnable' => $request->has('is_returnable') ? $request->boolean('is_returnable') : true,
+            'return_window_days' => ($request->has('is_returnable') ? $request->boolean('is_returnable') : true)
+                ? (int) $request->input('return_window_days', 7)
+                : null,
+            'return_policy_note' => $request->return_policy_note,
+            'delivery_class' => $request->input('delivery_class', 'standard'),
             'image' => $imagePath,
             'rating' => 5.0,
             'reviews_count' => 0,
@@ -509,6 +523,7 @@ class AdminController extends Controller
         if ($variants !== null) {
             $this->syncVariants($product, $variants);
         }
+        $this->storeGalleryImages($request, $product);
 
         return redirect()->route('admin.products')->with(
             'success',
@@ -526,7 +541,7 @@ class AdminController extends Controller
      */
     public function editProduct(int $id): View
     {
-        $product = Product::with('variants')->findOrFail($id);
+        $product = Product::with(['variants', 'images'])->findOrFail($id);
         $categories = Category::with('subcategories')->orderBy('sort_order')->orderBy('name')->get();
         $vendors = Vendor::where('is_active', true)->orderBy('name')->get();
         $catalogSchema = config('catalog');
@@ -562,7 +577,20 @@ class AdminController extends Controller
             'specifications' => 'nullable|json',
             'variants' => 'nullable|json',
             'warranty_info' => 'nullable|string|max:255',
+            'is_returnable' => 'nullable|boolean',
+            'return_window_days' => 'nullable|integer|min:1|max:365',
+            'return_policy_note' => 'nullable|string|max:255',
+            'delivery_class' => 'nullable|in:standard,fragile,oversized',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,webp,svg|max:5120',
+            'gallery_images' => 'nullable|array|max:8',
+            'gallery_images.*' => 'image|mimes:jpeg,png,jpg,webp,svg|max:5120',
+            'gallery_role' => 'nullable|in:gallery,lifestyle,detail,packaging,size_chart',
+            'gallery_alt_text' => 'nullable|string|max:255',
+            'existing_media' => 'nullable|array',
+            'existing_media.*.role' => 'required|in:gallery,lifestyle,detail,packaging,size_chart',
+            'existing_media.*.alt_text' => 'nullable|string|max:255',
+            'existing_media.*.sort_order' => 'required|integer|min:0|max:999',
+            'existing_media.*.remove' => 'nullable|boolean',
         ]);
         $this->ensureSubcategoryMatchesCategory($request);
         $variants = $request->has('variants') ? $this->decodeVariants($request, $product) : null;
@@ -586,6 +614,16 @@ class AdminController extends Controller
             'description' => $request->description,
             'specifications' => $this->decodeSpecifications($request),
             'warranty_info' => $request->warranty_info,
+            'is_returnable' => $request->has('is_returnable')
+                ? $request->boolean('is_returnable')
+                : $product->is_returnable,
+            'return_window_days' => $request->has('is_returnable')
+                ? ($request->boolean('is_returnable') ? (int) $request->input('return_window_days', 7) : null)
+                : $product->return_window_days,
+            'return_policy_note' => $request->has('return_policy_note')
+                ? $request->return_policy_note
+                : $product->return_policy_note,
+            'delivery_class' => $request->input('delivery_class', $product->delivery_class ?? 'standard'),
         ];
 
         if ($request->has('vendor_id')) {
@@ -627,6 +665,8 @@ class AdminController extends Controller
         if ($variants !== null) {
             $this->syncVariants($product, $variants);
         }
+        $this->syncExistingMedia($request, $product);
+        $this->storeGalleryImages($request, $product);
 
         return redirect()->route('admin.products')->with(
             'success',
@@ -836,6 +876,69 @@ class AdminController extends Controller
         });
     }
 
+    /**
+     * Store optional secondary product media uploaded by the central admin.
+     */
+    private function storeGalleryImages(Request $request, Product $product): void
+    {
+        if (! $request->hasFile('gallery_images')) {
+            return;
+        }
+
+        $destinationPath = public_path('images/products');
+        if (! file_exists($destinationPath)) {
+            mkdir($destinationPath, 0755, true);
+        }
+
+        $nextSortOrder = ((int) $product->images()->max('sort_order')) + 1;
+        foreach ($request->file('gallery_images', []) as $imageFile) {
+            $filename = now()->format('YmdHis').'_gallery_'.$product->id.'_'.Str::lower(Str::random(8)).'.'.$imageFile->getClientOriginalExtension();
+            $imageFile->move($destinationPath, $filename);
+
+            $product->images()->create([
+                'image_path' => 'images/products/'.$filename,
+                'role' => $request->input('gallery_role', 'gallery'),
+                'alt_text' => $request->filled('gallery_alt_text') ? trim($request->gallery_alt_text) : null,
+                'sort_order' => $nextSortOrder++,
+            ]);
+        }
+    }
+
+    /**
+     * Update role/accessibility metadata or remove existing secondary media.
+     */
+    private function syncExistingMedia(Request $request, Product $product): void
+    {
+        $submittedMedia = $request->input('existing_media', []);
+
+        foreach ($product->images as $image) {
+            $mediaData = $submittedMedia[$image->id] ?? null;
+            if (! is_array($mediaData)) {
+                continue;
+            }
+
+            if (filter_var($mediaData['remove'] ?? false, FILTER_VALIDATE_BOOLEAN)) {
+                $this->deleteProductMediaFile($image->image_path);
+                $image->delete();
+
+                continue;
+            }
+
+            $image->update([
+                'role' => $mediaData['role'],
+                'alt_text' => filled($mediaData['alt_text'] ?? null) ? trim($mediaData['alt_text']) : null,
+                'sort_order' => (int) $mediaData['sort_order'],
+            ]);
+        }
+    }
+
+    private function deleteProductMediaFile(?string $path): void
+    {
+        if ($path && str_starts_with($path, 'images/products/') && file_exists(public_path($path))) {
+            @unlink(public_path($path));
+        }
+    }
+
     /* =========================================================================
      * PRODUCT DELETION
      * Removes product database record and purges associated custom uploaded images.
@@ -848,6 +951,10 @@ class AdminController extends Controller
     {
         $product = Product::findOrFail($id);
         $productName = $product->name;
+
+        foreach ($product->images as $image) {
+            $this->deleteProductMediaFile($image->image_path);
+        }
 
         // Clean up uploaded image if located in custom products folder
         if ($product->image && str_starts_with($product->image, 'images/products/') && file_exists(public_path($product->image))) {

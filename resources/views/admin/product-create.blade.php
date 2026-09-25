@@ -119,6 +119,30 @@
             </div>
           </div>
 
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.25rem;">
+            <div>
+              <label for="select-delivery-class" style="display: block; font-size: 0.84rem; font-weight: 600; color: var(--eq-charcoal); margin-bottom: 0.4rem;">Delivery Class</label>
+              <select name="delivery_class" id="select-delivery-class" required style="width: 100%; padding: 0.65rem 0.85rem; border-radius: 6px; border: 1px solid var(--eq-line); font-size: 0.88rem; background: #ffffff;">
+                @foreach($catalogSchema['delivery_classes'] as $class => $label)
+                  <option value="{{ $class }}" {{ old('delivery_class', 'standard') === $class ? 'selected' : '' }}>{{ $label }}</option>
+                @endforeach
+              </select>
+            </div>
+            <div>
+              <input type="hidden" name="is_returnable" value="0" />
+              <label style="display: flex; align-items: center; gap: 0.55rem; font-size: 0.84rem; font-weight: 600; color: var(--eq-charcoal); margin-bottom: 0.4rem;">
+                <input type="checkbox" name="is_returnable" value="1" {{ old('is_returnable', '1') ? 'checked' : '' }} style="width: 17px; height: 17px; accent-color: var(--eq-navy);" />
+                Return Eligible
+              </label>
+              <input type="number" name="return_window_days" value="{{ old('return_window_days', 7) }}" min="1" max="365" placeholder="Return window in days" style="width: 100%; padding: 0.65rem 0.85rem; border-radius: 6px; border: 1px solid var(--eq-line); font-size: 0.9rem; background: #ffffff;" />
+            </div>
+          </div>
+
+          <div style="margin-bottom: 1.25rem;">
+            <label for="input-return-policy-note" style="display: block; font-size: 0.84rem; font-weight: 600; color: var(--eq-charcoal); margin-bottom: 0.4rem;">Return Policy Note <span style="font-weight: 400; color: var(--eq-charcoal-muted);">(Optional)</span></label>
+            <input type="text" name="return_policy_note" id="input-return-policy-note" value="{{ old('return_policy_note') }}" placeholder="e.g. Unused item with original tags and packaging" style="width: 100%; padding: 0.65rem 0.85rem; border-radius: 6px; border: 1px solid var(--eq-line); font-size: 0.9rem; background: #ffffff;" />
+          </div>
+
           <!-- Price & Old Price Row -->
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
             <div>
@@ -328,6 +352,19 @@
               onchange="previewSelectedImage(this)"
               style="width: 100%; font-size: 0.82rem;"
             />
+          </div>
+
+          <div style="margin-top: 1.25rem; padding-top: 1.25rem; border-top: 1px solid var(--eq-line);">
+            <label for="input-gallery-images" style="display: block; font-size: 0.82rem; font-weight: 600; color: var(--eq-charcoal); margin-bottom: 0.4rem;">Additional Media <span style="font-weight: 400; color: var(--eq-charcoal-muted);">(Up to 8 files)</span></label>
+            <input type="file" name="gallery_images[]" id="input-gallery-images" accept="image/jpeg,image/png,image/webp,image/svg+xml" multiple style="width: 100%; font-size: 0.82rem;" />
+            <div style="display: grid; grid-template-columns: 1fr; gap: 0.65rem; margin-top: 0.8rem;">
+              <select name="gallery_role" aria-label="Additional media role" style="width: 100%; padding: 0.55rem 0.7rem; border-radius: 6px; border: 1px solid var(--eq-line); background: #ffffff; font-size: 0.82rem;">
+                @foreach($catalogSchema['media_roles'] as $role => $label)
+                  <option value="{{ $role }}" {{ old('gallery_role', 'gallery') === $role ? 'selected' : '' }}>{{ $label }}</option>
+                @endforeach
+              </select>
+              <input type="text" name="gallery_alt_text" value="{{ old('gallery_alt_text') }}" maxlength="255" placeholder="Accessible image description (optional)" style="width: 100%; padding: 0.55rem 0.7rem; border-radius: 6px; border: 1px solid var(--eq-line); font-size: 0.82rem;" />
+            </div>
           </div>
         </div>
 

@@ -19,7 +19,9 @@ class ProductImage extends Model
      */
     protected $fillable = [
         'product_id',
-        'image_url',
+        'image_path',
+        'role',
+        'alt_text',
         'sort_order',
     ];
 
@@ -29,8 +31,6 @@ class ProductImage extends Model
 
     /**
      * Associated parent product.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function product(): BelongsTo
     {

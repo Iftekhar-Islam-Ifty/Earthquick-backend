@@ -16,6 +16,9 @@
       ?? $product->variants->first();
     $displayPrice = $initialVariant?->price ?? $product->price;
     $displayStock = $initialVariant?->stock_quantity ?? $product->stock_quantity;
+    $galleryMedia = $product->images->where('role', '!=', 'size_chart');
+    $sizeChartMedia = $product->images->firstWhere('role', 'size_chart');
+    $deliveryLabel = config('catalog.delivery_classes.'.($product->delivery_class ?? 'standard'), 'Standard Courier');
   @endphp
   <!-- ===================================================================
        BREADCRUMB BAR
@@ -64,10 +67,10 @@
                   <img id="thumb-2" src="{{ asset($product->alt_image) }}" alt="{{ $product->name }} thumbnail 2" />
                 </button>
               @endif
-              @if($product->images && $product->images->count() > 0)
-                @foreach($product->images as $idx => $img)
-                  <button type="button" data-src="{{ asset($img->image_path) }}" aria-label="View product image {{ $idx + 3 }}" onclick="switchMainImage(this, '{{ asset($img->image_path) }}')">
-                    <img src="{{ asset($img->image_path) }}" alt="{{ $product->name }} thumbnail {{ $idx + 3 }}" />
+              @if($galleryMedia->isNotEmpty())
+                @foreach($galleryMedia as $idx => $img)
+                  <button type="button" data-src="{{ asset($img->image_path) }}" data-role="{{ $img->role }}" aria-label="View {{ config('catalog.media_roles.'.$img->role, 'gallery') }} image" onclick="switchMainImage(this, '{{ asset($img->image_path) }}')">
+                    <img src="{{ asset($img->image_path) }}" alt="{{ $img->alt_text ?? ($product->name.' image '.($idx + 3)) }}" />
                   </button>
                 @endforeach
               @endif
@@ -192,20 +195,27 @@
                 <circle cx="5.5" cy="18.5" r="2.5"></circle>
                 <circle cx="18.5" cy="18.5" r="2.5"></circle>
               </svg>
-              <span><strong>Free Delivery:</strong> Complimentary inside Chattogram within 48 hours (৳80). Express nationwide courier available (৳150).</span>
+              <span><strong>Delivery:</strong> {{ $deliveryLabel }}. Free shipping is applied when the cart reaches ৳{{ number_format(\App\Http\Controllers\CartController::FREE_SHIPPING_THRESHOLD) }}.</span>
             </div>
             <div class="eq-product-meta-list__item">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
               </svg>
-              <span><strong>100% Authentic Handloom:</strong> Certified craft heritage sourced directly from verified artisan looms.</span>
+              <span><strong>Verified Brand:</strong> Sold through {{ $product->vendor->name ?? 'Earthquick' }} with product details recorded by Earthquick.</span>
             </div>
             <div class="eq-product-meta-list__item">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <polyline points="23 4 23 10 17 10"></polyline>
                 <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
               </svg>
-              <span><strong>Easy Returns:</strong> 7-day doorstep exchange for sizing or quality assurance.</span>
+              <span>
+                <strong>Returns:</strong>
+                @if($product->is_returnable)
+                  Eligible within {{ $product->return_window_days ?? 7 }} days{{ $product->return_policy_note ? ' — '.$product->return_policy_note : '' }}.
+                @else
+                  Final sale; return is available only where required for damaged or incorrect items.
+                @endif
+              </span>
             </div>
           </div>
         </div>
@@ -218,7 +228,7 @@
       <section class="eq-product-accordion-section">
         <div style="max-width: 800px; margin: 0 auto;">
           <h2 class="eq-product-accordion-section__title">
-            Craftsmanship &amp; Details
+            Product Information
           </h2>
 
           <div class="eq-product-accordion">
@@ -255,13 +265,27 @@
             <!-- Tab 2 -->
             <details class="eq-product-accordion__item">
               <summary class="eq-product-accordion__summary">
-                Care &amp; Longevity Instructions
+                {{ in_array($product->product_type, ['apparel', 'home']) ? 'Care & Longevity Instructions' : 'Usage & Support' }}
               </summary>
               <div class="eq-product-accordion__body">
-                &bull; Dry clean recommended for initial cleaning to preserve dye radiance.<br />
-                &bull; Hand wash gently in cold water with mild silk/cotton detergent thereafter.<br />
-                &bull; Avoid wringing or direct harsh sunlight drying.<br />
-                &bull; Warm iron on reverse side under a cotton pressing cloth.
+                @if(in_array($product->product_type, ['apparel', 'home']))
+                  &bull; Follow the material-specific care information supplied with the product.<br />
+                  &bull; Use gentle cleaning methods and avoid prolonged harsh sunlight.<br />
+                  &bull; Store clean and dry to preserve colour, shape and finish.
+                @elseif($product->product_type === 'electronics')
+                  &bull; Read the supplied usage and safety instructions before operation.<br />
+                  &bull; Use only compatible power sources and accessories.<br />
+                  &bull; Contact Earthquick support for warranty or technical assistance.
+                @else
+                  &bull; Follow the brand's supplied use, cleaning and storage instructions.<br />
+                  &bull; Contact Earthquick support if product-specific guidance is required.
+                @endif
+
+                @if($sizeChartMedia)
+                  <figure style="margin: 1rem 0 0;">
+                    <img src="{{ asset($sizeChartMedia->image_path) }}" alt="{{ $sizeChartMedia->alt_text ?? ($product->name.' size chart') }}" style="max-width: 100%; height: auto; border: 1px solid var(--eq-line); border-radius: 6px;" />
+                  </figure>
+                @endif
               </div>
             </details>
 
@@ -271,7 +295,13 @@
                 Delivery, Returns &amp; Warranty
               </summary>
               <div class="eq-product-accordion__body">
-                Every order is packaged with utmost care. We offer 7-day hassle-free doorstep returns across Bangladesh. Cash on Delivery is available in all major metropolitan areas.
+                Delivery class: <strong>{{ $deliveryLabel }}</strong>.<br />
+                @if($product->is_returnable)
+                  This item is return eligible within {{ $product->return_window_days ?? 7 }} days.
+                  {{ $product->return_policy_note }}
+                @else
+                  This item is marked as final sale. Damaged or incorrect deliveries remain subject to Earthquick support review.
+                @endif
                 @if($product->warranty_info)
                   <br /><strong>Warranty / Support:</strong> {{ $product->warranty_info }}
                 @endif

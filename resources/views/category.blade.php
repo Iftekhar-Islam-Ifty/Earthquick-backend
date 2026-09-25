@@ -119,17 +119,50 @@
       <!-- Active Filter Tags / Chips -->
       <div class="eq-active-filters" id="active-filter-chips">
         @php
-          $hasActiveFilters = request('fabric') || request('in_stock') || (request('max_price') && request('max_price') < 30000);
+          $selectedFabrics = collect(is_array(request('fabric')) ? request('fabric') : [request('fabric')])->filter()->values();
+          $hasActiveFilters = request('fabric') || request('in_stock') || request('min_price')
+            || request('max_price') || request('product_type') || request('vendor')
+            || request('delivery_class') || request()->has('returnable');
         @endphp
 
         @if($hasActiveFilters)
           @if(request('fabric'))
             <span class="eq-active-chip">
-              <span>Fabric: {{ request('fabric') }}</span>
+              <span>Fabric: {{ $selectedFabrics->implode(', ') }}</span>
               <button type="button" aria-label="Remove filter" onclick="updateFilterParam('fabric', null)">&times;</button>
             </span>
           @endif
-          @if(request('max_price') && request('max_price') < 30000)
+          @if(request('product_type'))
+            <span class="eq-active-chip">
+              <span>Type: {{ config('catalog.product_types.'.request('product_type').'.label', request('product_type')) }}</span>
+              <button type="button" aria-label="Remove filter" onclick="updateFilterParam('product_type', null)">&times;</button>
+            </span>
+          @endif
+          @if(request('vendor'))
+            <span class="eq-active-chip">
+              <span>Brand: {{ $availableVendors->firstWhere('slug', request('vendor'))?->name ?? request('vendor') }}</span>
+              <button type="button" aria-label="Remove filter" onclick="updateFilterParam('vendor', null)">&times;</button>
+            </span>
+          @endif
+          @if(request('delivery_class'))
+            <span class="eq-active-chip">
+              <span>{{ config('catalog.delivery_classes.'.request('delivery_class'), request('delivery_class')) }}</span>
+              <button type="button" aria-label="Remove filter" onclick="updateFilterParam('delivery_class', null)">&times;</button>
+            </span>
+          @endif
+          @if(request()->has('returnable'))
+            <span class="eq-active-chip">
+              <span>{{ request('returnable') === '1' ? 'Return Eligible' : 'Final Sale' }}</span>
+              <button type="button" aria-label="Remove filter" onclick="updateFilterParam('returnable', null)">&times;</button>
+            </span>
+          @endif
+          @if(request('min_price'))
+            <span class="eq-active-chip">
+              <span>From ৳{{ number_format((float) request('min_price')) }}</span>
+              <button type="button" aria-label="Remove filter" onclick="updateFilterParam('min_price', null)">&times;</button>
+            </span>
+          @endif
+          @if(request('max_price'))
             <span class="eq-active-chip">
               <span>Under ৳{{ number_format(request('max_price')) }}</span>
               <button type="button" aria-label="Remove filter" onclick="updateFilterParam('max_price', null)">&times;</button>
@@ -171,19 +204,87 @@
             </button>
             <div class="eq-filter-group__body">
               <div class="eq-price-slider-wrap">
-                <input type="range" class="eq-price-range-slider" id="filter-price-slider" min="2000" max="30000" step="500" value="{{ request('max_price', 30000) }}" oninput="document.getElementById('filter-price-max').value = this.value;" onchange="updateFilterParam('max_price', this.value)" />
+                <input type="range" class="eq-price-range-slider" id="filter-price-slider" min="0" max="100000" step="500" value="{{ request('max_price', 100000) }}" oninput="document.getElementById('filter-price-max').value = this.value;" onchange="updateFilterParam('max_price', this.value)" />
                 <div class="eq-price-inputs">
                   <div class="eq-price-input-box">
                     <span>৳</span>
-                    <input type="number" id="filter-price-min" value="2000" readonly />
+                    <input type="number" id="filter-price-min" value="{{ request('min_price', 0) }}" min="0" step="500" onchange="updateFilterParam('min_price', this.value || null)" />
                   </div>
                   <span style="color: var(--eq-charcoal-muted);">-</span>
                   <div class="eq-price-input-box">
                     <span>৳</span>
-                    <input type="number" id="filter-price-max" value="{{ request('max_price', 30000) }}" min="2000" max="30000" step="500" onchange="document.getElementById('filter-price-slider').value = this.value; updateFilterParam('max_price', this.value);" />
+                    <input type="number" id="filter-price-max" value="{{ request('max_price', 100000) }}" min="0" max="100000" step="500" onchange="document.getElementById('filter-price-slider').value = this.value; updateFilterParam('max_price', this.value || null);" />
                   </div>
                 </div>
               </div>
+            </div>
+          </div>
+
+          @if($availableProductTypes->isNotEmpty())
+            <div class="eq-filter-group">
+              <button type="button" class="eq-filter-group__header" aria-expanded="true">
+                <span>Product Type</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+              </button>
+              <div class="eq-filter-group__body">
+                <select aria-label="Product type" onchange="updateFilterParam('product_type', this.value || null)" style="width: 100%; padding: 0.55rem; border: 1px solid var(--eq-line); border-radius: 5px; background: #fff;">
+                  <option value="">All Types</option>
+                  @foreach($availableProductTypes as $type)
+                    <option value="{{ $type }}" {{ request('product_type') === $type ? 'selected' : '' }}>{{ config("catalog.product_types.{$type}.label", ucfirst($type)) }}</option>
+                  @endforeach
+                </select>
+              </div>
+            </div>
+          @endif
+
+          @if($availableVendors->isNotEmpty())
+            <div class="eq-filter-group">
+              <button type="button" class="eq-filter-group__header" aria-expanded="true">
+                <span>Brand</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+              </button>
+              <div class="eq-filter-group__body">
+                <select aria-label="Brand" onchange="updateFilterParam('vendor', this.value || null)" style="width: 100%; padding: 0.55rem; border: 1px solid var(--eq-line); border-radius: 5px; background: #fff;">
+                  <option value="">All Brands</option>
+                  @foreach($availableVendors as $filterVendor)
+                    <option value="{{ $filterVendor->slug }}" {{ request('vendor') === $filterVendor->slug ? 'selected' : '' }}>{{ $filterVendor->name }}</option>
+                  @endforeach
+                </select>
+              </div>
+            </div>
+          @endif
+
+          @if($availableDeliveryClasses->isNotEmpty())
+            <div class="eq-filter-group">
+              <button type="button" class="eq-filter-group__header" aria-expanded="true">
+                <span>Delivery</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+              </button>
+              <div class="eq-filter-group__body">
+                @foreach($availableDeliveryClasses as $deliveryClass)
+                  <label class="eq-filter-option">
+                    <span class="eq-filter-option__left">
+                      <input type="radio" name="delivery-filter" value="{{ $deliveryClass }}" {{ request('delivery_class') === $deliveryClass ? 'checked' : '' }} onchange="updateFilterParam('delivery_class', this.value)" />
+                      <span>{{ config("catalog.delivery_classes.{$deliveryClass}", ucfirst($deliveryClass)) }}</span>
+                    </span>
+                  </label>
+                @endforeach
+              </div>
+            </div>
+          @endif
+
+          <div class="eq-filter-group">
+            <button type="button" class="eq-filter-group__header" aria-expanded="true">
+              <span>Returns</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div class="eq-filter-group__body">
+              <label class="eq-filter-option">
+                <span class="eq-filter-option__left">
+                  <input type="checkbox" {{ request('returnable') === '1' ? 'checked' : '' }} onchange="updateFilterParam('returnable', this.checked ? '1' : null)" />
+                  <span>Return Eligible Only</span>
+                </span>
+              </label>
             </div>
           </div>
 
@@ -199,7 +300,7 @@
               @foreach($availableFabrics as $fab)
                 <label class="eq-filter-option">
                   <span class="eq-filter-option__left">
-                    <input type="checkbox" data-filter="fabric" value="{{ $fab }}" {{ request('fabric') == $fab ? 'checked' : '' }} onchange="updateFilterParam('fabric', this.checked ? this.value : null)" />
+                    <input type="checkbox" data-filter="fabric" value="{{ $fab }}" {{ $selectedFabrics->contains($fab) ? 'checked' : '' }} onchange="updateFilterParam('fabric', this.checked ? this.value : null)" />
                     <span>{{ $fab }}</span>
                   </span>
                 </label>
@@ -288,12 +389,7 @@
             @endforelse
           </div>
 
-          <!-- Reusable Catalog Pagination -->
-          @if($products->hasPages())
-            <div class="eq-pagination-wrap" id="catalog-pagination">
-              {{ $products->links() }}
-            </div>
-          @endif
+          @include('partials.pagination-polished', ['paginator' => $products])
         </section>
 
       </div>

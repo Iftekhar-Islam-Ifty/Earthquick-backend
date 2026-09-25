@@ -44,7 +44,8 @@ class VendorController extends Controller
         $query = Product::where('vendor_id', $vendor->id)
             ->with(['category', 'subcategory'])
             ->where('in_stock', true)
-            ->where('is_active', true);
+            ->where('is_active', true)
+            ->applyCatalogFilters($request->query());
 
         // Filter by category if specified
         if ($request->filled('category')) {
@@ -52,14 +53,6 @@ class VendorController extends Controller
             $query->whereHas('category', function ($q) use ($categorySlug) {
                 $q->where('slug', $categorySlug);
             });
-        }
-
-        // Apply price filters
-        if ($request->filled('min_price')) {
-            $query->where('price', '>=', (float) $request->query('min_price'));
-        }
-        if ($request->filled('max_price')) {
-            $query->where('price', '<=', (float) $request->query('max_price'));
         }
 
         // Apply sorting criteria
@@ -80,6 +73,25 @@ class VendorController extends Controller
                 ->where('is_active', true);
         })->get();
 
-        return view('vendor.show', compact('vendor', 'products', 'categories'));
+        $availableProductTypes = Product::where('vendor_id', $vendor->id)
+            ->where('is_active', true)
+            ->where('in_stock', true)
+            ->whereNotNull('product_type')
+            ->distinct()
+            ->pluck('product_type');
+        $availableDeliveryClasses = Product::where('vendor_id', $vendor->id)
+            ->where('is_active', true)
+            ->where('in_stock', true)
+            ->whereNotNull('delivery_class')
+            ->distinct()
+            ->pluck('delivery_class');
+
+        return view('vendor.show', compact(
+            'vendor',
+            'products',
+            'categories',
+            'availableProductTypes',
+            'availableDeliveryClasses'
+        ));
     }
 }

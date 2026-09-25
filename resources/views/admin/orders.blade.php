@@ -276,11 +276,7 @@
       </div>
     </div>
 
-    @if($orders->hasPages())
-      <div style="margin-top: 1.25rem; padding-top: 0.85rem; border-top: 1px solid var(--eq-line); display: flex; justify-content: center;">
-        {{ $orders->links() }}
-      </div>
-    @endif
+    @include('partials.pagination-polished', ['paginator' => $orders])
 
   </section>
 

@@ -105,6 +105,49 @@
         </div>
       </div>
 
+      <form method="GET" action="{{ route('search') }}" aria-label="Catalog filters" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(145px, 1fr)); gap: 0.65rem; padding: 0.85rem; margin-top: 1rem; border: 1px solid var(--eq-line); border-radius: 8px; background: #fff;">
+        <input type="hidden" name="q" value="{{ $query }}" />
+        <input type="hidden" name="sort" value="{{ request('sort', 'featured') }}" />
+        <select name="category" aria-label="Category" style="padding: 0.55rem; border: 1px solid var(--eq-line); border-radius: 5px; background: #fff;">
+          <option value="">All Categories</option>
+          @foreach($categories as $filterCategory)
+            <option value="{{ $filterCategory->slug }}" {{ request('category') === $filterCategory->slug ? 'selected' : '' }}>{{ $filterCategory->name }}</option>
+          @endforeach
+        </select>
+        <select name="vendor" aria-label="Brand" style="padding: 0.55rem; border: 1px solid var(--eq-line); border-radius: 5px; background: #fff;">
+          <option value="">All Brands</option>
+          @foreach($vendors as $filterVendor)
+            <option value="{{ $filterVendor->slug }}" {{ request('vendor') === $filterVendor->slug ? 'selected' : '' }}>{{ $filterVendor->name }}</option>
+          @endforeach
+        </select>
+        <select name="product_type" aria-label="Product type" style="padding: 0.55rem; border: 1px solid var(--eq-line); border-radius: 5px; background: #fff;">
+          <option value="">All Product Types</option>
+          @foreach(config('catalog.product_types') as $type => $definition)
+            <option value="{{ $type }}" {{ request('product_type') === $type ? 'selected' : '' }}>{{ $definition['label'] }}</option>
+          @endforeach
+        </select>
+        <select name="delivery_class" aria-label="Delivery class" style="padding: 0.55rem; border: 1px solid var(--eq-line); border-radius: 5px; background: #fff;">
+          <option value="">All Delivery Classes</option>
+          @foreach(config('catalog.delivery_classes') as $class => $label)
+            <option value="{{ $class }}" {{ request('delivery_class') === $class ? 'selected' : '' }}>{{ $label }}</option>
+          @endforeach
+        </select>
+        <select name="returnable" aria-label="Return policy" style="padding: 0.55rem; border: 1px solid var(--eq-line); border-radius: 5px; background: #fff;">
+          <option value="">All Return Policies</option>
+          <option value="1" {{ request('returnable') === '1' ? 'selected' : '' }}>Return Eligible</option>
+          <option value="0" {{ request('returnable') === '0' ? 'selected' : '' }}>Final Sale</option>
+        </select>
+        <input type="number" name="min_price" value="{{ request('min_price') }}" min="0" step="100" placeholder="Minimum price" aria-label="Minimum price" style="padding: 0.55rem; border: 1px solid var(--eq-line); border-radius: 5px;" />
+        <input type="number" name="max_price" value="{{ request('max_price') }}" min="0" step="100" placeholder="Maximum price" aria-label="Maximum price" style="padding: 0.55rem; border: 1px solid var(--eq-line); border-radius: 5px;" />
+        <label style="display: flex; align-items: center; gap: 0.45rem; padding: 0.55rem; font-size: 0.84rem;">
+          <input type="checkbox" name="in_stock" value="1" {{ request('in_stock') ? 'checked' : '' }} /> In Stock
+        </label>
+        <div style="display: flex; gap: 0.45rem;">
+          <button type="submit" class="eq-btn eq-btn--primary" style="flex: 1; padding: 0.5rem;">Apply</button>
+          <a href="{{ route('search', ['q' => $query]) }}" class="eq-btn eq-btn--outline" style="padding: 0.5rem; text-decoration: none;">Reset</a>
+        </div>
+      </form>
+
       <!-- Main Results Area -->
       <section class="eq-catalog-main" aria-label="Search results listings" style="margin-top: 1.5rem;">
         
@@ -156,12 +199,7 @@
             @endforeach
           </div>
 
-          <!-- Pagination -->
-          @if($products->hasPages())
-            <div class="eq-pagination-wrap" id="catalog-pagination" style="margin-top: 3.5rem; text-align: center;">
-              {{ $products->links() }}
-            </div>
-          @endif
+          @include('partials.pagination-polished', ['paginator' => $products])
 
         @else
           <!-- Elegant No Results Empty State -->
@@ -256,4 +294,3 @@
   });
 </script>
 @endpush
-

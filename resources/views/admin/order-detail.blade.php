@@ -74,6 +74,9 @@
                           @if($item->variant_label)
                             <div style="font-size: 0.74rem; color: var(--eq-charcoal-soft);">Option: {{ $item->variant_label }}{{ $item->variant_sku ? ' · '.$item->variant_sku : '' }}</div>
                           @endif
+                          @if($item->delivery_class)
+                            <div style="font-size: 0.72rem; color: var(--eq-charcoal-soft);">{{ config('catalog.delivery_classes.'.$item->delivery_class, ucfirst($item->delivery_class)) }} · {{ $item->is_returnable ? ($item->return_window_days.'-day return') : 'Final sale' }}</div>
+                          @endif
                         </div>
                       </div>
                     </td>
@@ -104,6 +107,9 @@
                   @endif
                   @if($item->variant_label)
                     <div style="font-size: 0.72rem; color: var(--eq-charcoal-soft); margin-top: 1px;">Option: {{ $item->variant_label }}{{ $item->variant_sku ? ' · '.$item->variant_sku : '' }}</div>
+                  @endif
+                  @if($item->delivery_class)
+                    <div style="font-size: 0.7rem; color: var(--eq-charcoal-soft);">{{ config('catalog.delivery_classes.'.$item->delivery_class, ucfirst($item->delivery_class)) }} · {{ $item->is_returnable ? ($item->return_window_days.'-day return') : 'Final sale' }}</div>
                   @endif
                   <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.3rem; font-size: 0.8rem;">
                     <span style="color: var(--eq-charcoal-soft);">৳{{ number_format($item->unit_price) }} &times; {{ $item->quantity }}</span>
