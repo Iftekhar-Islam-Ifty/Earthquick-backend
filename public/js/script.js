@@ -1107,7 +1107,7 @@ function initCarousels() {
 
     // Update track position and toggle arrow disabled state
     function update() {
-      if (window.innerWidth <= 768) {
+      if (window.innerWidth <= 1023) {
         track.style.transform = "none";
         const maxScrollLeft = viewport.scrollWidth - viewport.clientWidth;
         prevBtns.forEach(btn => btn.disabled = viewport.scrollLeft <= 4);
@@ -1126,7 +1126,7 @@ function initCarousels() {
     // Arrow button controls
     prevBtns.forEach(btn => {
       btn.addEventListener("click", () => {
-        if (window.innerWidth <= 768) {
+        if (window.innerWidth <= 1023) {
           viewport.scrollBy({ left: -cardStep() * 2, behavior: "smooth" });
         } else {
           position -= cardStep();
@@ -1137,7 +1137,7 @@ function initCarousels() {
 
     nextBtns.forEach(btn => {
       btn.addEventListener("click", () => {
-        if (window.innerWidth <= 768) {
+        if (window.innerWidth <= 1023) {
           viewport.scrollBy({ left: cardStep() * 2, behavior: "smooth" });
         } else {
           position += cardStep();
@@ -1149,7 +1149,7 @@ function initCarousels() {
     // Touch Swipe Support for Mobile & Tablet
     // On mobile, listen to native smooth scroll events to update arrow buttons
     viewport.addEventListener("scroll", () => {
-      if (window.innerWidth <= 768) {
+      if (window.innerWidth <= 1023) {
         const maxScrollLeft = viewport.scrollWidth - viewport.clientWidth;
         prevBtns.forEach(btn => btn.disabled = viewport.scrollLeft <= 4);
         nextBtns.forEach(btn => btn.disabled = viewport.scrollLeft >= maxScrollLeft - 4);
@@ -1164,7 +1164,7 @@ function initCarousels() {
     viewport.addEventListener(
       "touchstart",
       (e) => {
-        if (window.innerWidth <= 768) return; // Let native hardware touch scrolling handle mobile
+        if (window.innerWidth <= 1023) return; // Let native hardware touch scrolling handle compact layouts
         if (!e.touches[0]) return;
         startX = e.touches[0].clientX;
         currentX = startX;
@@ -1176,7 +1176,7 @@ function initCarousels() {
     viewport.addEventListener(
       "touchmove",
       (e) => {
-        if (window.innerWidth <= 768) return;
+        if (window.innerWidth <= 1023) return;
         if (!isSwiping || !e.touches[0]) return;
         currentX = e.touches[0].clientX;
       },
@@ -1184,7 +1184,7 @@ function initCarousels() {
     );
 
     viewport.addEventListener("touchend", () => {
-      if (window.innerWidth <= 768) return;
+      if (window.innerWidth <= 1023) return;
       if (!isSwiping) return;
       isSwiping = false;
       const diffX = startX - currentX;
@@ -1204,7 +1204,7 @@ function initCarousels() {
     // Re-evaluate on window resize & image load completion
     window.addEventListener("resize", update);
     window.addEventListener("resize", () => {
-      if (window.innerWidth > 768) {
+      if (window.innerWidth > 1023) {
         viewport.scrollLeft = 0;
       }
       update();

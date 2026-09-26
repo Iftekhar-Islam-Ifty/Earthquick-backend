@@ -6,6 +6,8 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Str;
 
 /* =========================================================================
  * AUTHENTICATION CONTROLLER
@@ -14,6 +16,12 @@ use Illuminate\Support\Facades\Hash;
  * ========================================================================= */
 class AuthController extends Controller
 {
+    private const LOGIN_MAX_ATTEMPTS = 5;
+
+    private const REGISTRATION_MAX_ATTEMPTS = 3;
+
+    private const THROTTLE_DECAY_SECONDS = 60;
+
     /**
      * Display customer authentication sign-in view.
      *
@@ -50,6 +58,15 @@ class AuthController extends Controller
         $identifier = trim($request->input('identifier'));
         $password = $request->input('password');
         $remember = $request->boolean('remember');
+        $throttleKey = 'login:'.Str::lower($identifier).'|'.$request->ip();
+
+        if (RateLimiter::tooManyAttempts($throttleKey, self::LOGIN_MAX_ATTEMPTS)) {
+            return back()
+                ->withErrors([
+                    'identifier' => 'Too many login attempts. Please try again in '.RateLimiter::availableIn($throttleKey).' seconds.',
+                ])
+                ->withInput($request->only('identifier', 'remember'));
+        }
 
         // Resolve credential attribute type by format
         $fieldType = filter_var($identifier, FILTER_VALIDATE_EMAIL) ? 'email' : 'phone';
@@ -60,6 +77,7 @@ class AuthController extends Controller
         ];
 
         if (Auth::attempt($credentials, $remember)) {
+            RateLimiter::clear($throttleKey);
             $request->session()->regenerate();
 
             // Route administrator directly to executive admin panel
@@ -72,6 +90,8 @@ class AuthController extends Controller
             return redirect()->intended(route('account.dashboard'))
                 ->with('success', 'Welcome back, ' . Auth::user()->name . '! Signed in successfully.');
         }
+
+        RateLimiter::hit($throttleKey, self::THROTTLE_DECAY_SECONDS);
 
         return back()
             ->withErrors([
@@ -119,6 +139,15 @@ class AuthController extends Controller
             'password.min'      => 'Password must contain at least 6 characters.',
         ]);
 
+        $throttleKey = 'registration:'.$request->ip();
+        if (RateLimiter::tooManyAttempts($throttleKey, self::REGISTRATION_MAX_ATTEMPTS)) {
+            return back()
+                ->withErrors([
+                    'email' => 'Too many registration attempts. Please try again in '.RateLimiter::availableIn($throttleKey).' seconds.',
+                ])
+                ->withInput($request->except('password'));
+        }
+
         // Create user record
         $user = User::create([
             'name'     => trim($request->name),
@@ -129,6 +158,7 @@ class AuthController extends Controller
         ]);
 
         Auth::login($user);
+        RateLimiter::clear($throttleKey);
         $request->session()->regenerate();
 
         return redirect()->route('account.dashboard')

@@ -4,6 +4,8 @@ This comprehensive, step-by-step operational guide explains how to safely and se
 
 ---
 
+> Current application target: Laravel 12. This guide supersedes the historical Laravel 11 wording in its title and introduction.
+
 ## 1. Directory Structure & Security Architecture
 
 In shared cPanel hosting, placing the entire Laravel project directly into `public_html` exposes sensitive files like `.env`, database configuration, migrations, and source code. 
@@ -83,20 +85,19 @@ require __DIR__.'/../earthquick_core/vendor/autoload.php';
 
 ---
 
-## 3. MySQL Database Setup & Seeding
+## 3. MySQL Database Setup and Migration
 
 1. In cPanel, navigate to **MySQL Databases**:
    - Create a database: `username_earthquick`
    - Create a user: `username_eq_user` with a strong password.
    - Add the user to the database and grant **ALL PRIVILEGES**.
-2. If SSH is available, run migrations and the production seed script:
+2. Before running any command, take and verify a database backup. If SSH is available, run only the reviewed migrations:
    ```bash
-   cd /home/username/earthquick_core
-   php artisan migrate --force
-   php artisan db:seed --class=EarthquickSeeder --force
-   php artisan db:seed --class=DatabaseSeeder --force
-   ```
-3. If SSH is **not** available:
+    cd /home/username/earthquick_core
+    php artisan migrate --force
+    ```
+3. Do not run development seeders against an existing production catalog. Product/vendor ownership must be reviewed and migrated deliberately; a seeder is not a production backfill tool.
+4. If SSH is **not** available:
    - Export your local database `earthquick_db` to an `.sql` file using phpMyAdmin.
    - Open **phpMyAdmin** in cPanel, select `username_earthquick`, and click **Import**.
 
@@ -127,11 +128,14 @@ DB_PASSWORD="YourStrongPasswordHere"
 BROADCAST_CONNECTION=log
 FILESYSTEM_DISK=local
 QUEUE_CONNECTION=sync
-SESSION_DRIVER=file
+SESSION_DRIVER=database
 SESSION_LIFETIME=120
-SESSION_ENCRYPT=false
+SESSION_ENCRYPT=true
 SESSION_PATH=/
 SESSION_DOMAIN=null
+SESSION_SECURE_COOKIE=true
+SESSION_HTTP_ONLY=true
+SESSION_SAME_SITE=lax
 
 # Chattogram Shipping Rates Reference
 SHIPPING_INSIDE_CTG=80
@@ -150,17 +154,11 @@ Product images and user uploads stored in `storage/app/public` must be accessibl
 
 If SSH is available:
 ```bash
-# Remove existing symlink if broken
-rm /home/username/public_html/storage
-
-# Create absolute symbolic link
-ln -s /home/username/earthquick_core/storage/app/public /home/username/public_html/storage
+# Create the public storage link after verifying the paths.
+php artisan storage:link
 ```
 
-If SSH is **not** available, create a temporary route in `routes/web.php` or execute via a 1-time PHP script:
-```php
-symlink('/home/username/earthquick_core/storage/app/public', '/home/username/public_html/storage');
-```
+If SSH is unavailable, use the hosting provider's supported file/symlink tool. Do not create a temporary public route or upload a one-time PHP script for this task.
 
 ### Folder Permissions
 Laravel requires write access to `storage` and `bootstrap/cache`:
@@ -198,7 +196,7 @@ php artisan optimize
 
 ## 7. HTTPS & SSL Enforcement (`.htaccess`)
 
-Ensure your `/home/username/public_html/.htaccess` enforces canonical HTTPS and shields dotfiles:
+After the domain has a valid SSL certificate, ensure your production `/home/username/public_html/.htaccess` enforces canonical HTTPS and shields dotfiles. Do not add the HTTPS redirect to a local HTTP development environment.
 
 ```apache
 <IfModule mod_rewrite.c>
@@ -215,6 +213,10 @@ Ensure your `/home/username/public_html/.htaccess` enforces canonical HTTPS and 
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+    # Handle X-XSRF-Token Header
+    RewriteCond %{HTTP:x-xsrf-token} .
+    RewriteRule .* - [E=HTTP_X_XSRF_TOKEN:%{HTTP:X-XSRF-Token}]
 
     # Prevent Direct Access to Hidden / Dot Files
     RewriteRule (^|/)\.(?!well-known) - [F]
@@ -244,7 +246,17 @@ If you plan to utilize Laravel's task scheduler (e.g., pruning old abandoned car
 
 ---
 
-## 9. Troubleshooting & Common Scenarios
+## 9. Post-deployment Verification
+
+1. Confirm `https://yourdomain.com/up` responds successfully and does not expose debug information.
+2. Check public pages, login, cart, checkout, search and admin access over HTTPS.
+3. Verify uploads resolve through `/storage` and no `.env`, log, or source file is web-accessible.
+4. Complete real-browser QA on desktop and mobile before accepting orders.
+5. Confirm the backup/restore process with a non-production copy before relying on it.
+
+---
+
+## 10. Troubleshooting & Common Scenarios
 
 | Issue | Likely Root Cause | Resolution |
 | :--- | :--- | :--- |
@@ -253,4 +265,3 @@ If you plan to utilize Laravel's task scheduler (e.g., pruning old abandoned car
 | **Database Connection Refused** | Incorrect DB credentials or host | In shared cPanel, `DB_HOST` is almost always `127.0.0.1` or `localhost`. Double check database user prefix (`username_dbname`). |
 | **Changes to `.env` Not Reflected** | Configuration is cached | Execute `php artisan config:clear` or delete `bootstrap/cache/config.php`. |
 | **403 Forbidden on `/admin`** | User does not have `is_admin = 1` | Check the `users` table via phpMyAdmin and ensure `is_admin` column is set to `1` for your account. |
-

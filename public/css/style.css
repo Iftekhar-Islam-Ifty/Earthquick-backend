@@ -1329,6 +1329,10 @@ p {
   display: none;
 }
 
+.eq-two-piece-mobile-controls {
+  display: none;
+}
+
 /* Product card — reused visual unit, styled slightly differently per section via modifiers */
 .eq-product-card {
   flex: 0 0 calc(25% - var(--space-md) * 3 / 4);
@@ -1711,7 +1715,7 @@ p {
 }
 
 .eq-three-piece .eq-product-card__frame {
-  max-height: 300px;
+  max-height: none;
   background-color: var(--eq-sand);
 }
 
@@ -3446,13 +3450,13 @@ p {
    HOMEPAGE STORE DISCOVERY
    ===================================================================== */
 .eq-home-stores {
-  padding: clamp(2.5rem, 5vw, 4.5rem) 0;
+  padding: clamp(2rem, 3.5vw, 3rem) 0;
   background: var(--eq-white);
 }
 
 .eq-home-stores__intro {
   max-width: 600px;
-  margin: 0 auto clamp(1.5rem, 3vw, 2.25rem);
+  margin: 0 auto clamp(1rem, 2vw, 1.5rem);
   text-align: center;
 }
 
@@ -3468,8 +3472,8 @@ p {
 
 .eq-home-stores__grid {
   display: grid;
-  grid-template-columns: 3fr 2fr;
-  gap: clamp(0.9rem, 2vw, 1.5rem);
+  grid-template-columns: minmax(0, 2fr) minmax(240px, 1fr);
+  gap: clamp(0.75rem, 1.5vw, 1.25rem);
   align-items: stretch;
 }
 
@@ -3486,7 +3490,7 @@ p {
 
 .eq-home-store-card--flagship {
   display: grid;
-  grid-template-columns: minmax(190px, 0.9fr) 1.1fr;
+  grid-template-columns: minmax(160px, 0.8fr) minmax(0, 1.2fr);
   background: var(--eq-cream);
 }
 
@@ -3498,7 +3502,7 @@ p {
 }
 
 .eq-home-store-card__media {
-  min-height: 250px;
+  min-height: 210px;
   overflow: hidden;
 }
 
@@ -3511,7 +3515,7 @@ p {
 
 .eq-home-store-card__body {
   min-width: 0;
-  padding: clamp(1.25rem, 2.5vw, 2rem);
+  padding: clamp(1rem, 2vw, 1.5rem);
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -3553,7 +3557,7 @@ p {
 }
 
 .eq-home-store-card__description {
-  margin: 0.8rem 0 1.25rem;
+  margin: 0.55rem 0 0.85rem;
   color: var(--eq-charcoal-soft);
   font-size: 0.86rem;
   line-height: 1.55;

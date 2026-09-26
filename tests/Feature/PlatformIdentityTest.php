@@ -91,10 +91,12 @@ class PlatformIdentityTest extends TestCase
         $response = $this->get('/')->assertOk();
 
         $response->assertSee('id="explore-stores"', false);
+        $response->assertSeeInOrder(['id="new-arrivals"', 'id="explore-stores"', 'id="saree-section"'], false);
         $response->assertSee('OUR STORES', false);
         $response->assertSee('Explore Earthquick', false);
         $response->assertSee('Distinct brands, one curated marketplace', false);
         $response->assertSee('id="home-store-nous-telos"', false);
+        $response->assertSee(asset('images/saree/saree-3.jpg'), false);
         $response->assertSee(route('stores.show', 'nous-telos'), false);
         $response->assertSee('id="home-store-bright"', false);
         $response->assertSee('COMING SOON', false);

@@ -299,50 +299,6 @@
     </section>
 
 
-    <!-- ================================================================
-         EXPLORE OUR STORES
-         A concise marketplace introduction for the current active brands.
-         ================================================================ -->
-    <section class="eq-home-stores" id="explore-stores" aria-labelledby="explore-stores-title">
-      <div class="eq-container">
-        <div class="eq-home-stores__intro eq-reveal">
-          <span class="eq-eyebrow">OUR STORES</span>
-          <h2 class="eq-heading-lg" id="explore-stores-title">Explore Earthquick</h2>
-          <p>Distinct brands, one curated marketplace</p>
-        </div>
-
-        <div class="eq-home-stores__grid eq-reveal">
-          @if($nousTelos)
-            <article class="eq-home-store-card eq-home-store-card--flagship" id="home-store-nous-telos">
-              <div class="eq-home-store-card__media">
-                <img src="{{ asset('images/hero/story-heritage.jpg') }}" alt="Nous Telos handloom heritage" loading="lazy" decoding="async" />
-              </div>
-              <div class="eq-home-store-card__body">
-                <span class="eq-home-store-card__eyebrow">FLAGSHIP STORE</span>
-                <h3>Nous Telos</h3>
-                <p class="eq-home-store-card__specialty">Bengali Heritage &amp; Handloom</p>
-                <p class="eq-home-store-card__description">Heritage fashion, handloom collections, accessories, and thoughtful home pieces rooted in Bengali craft.</p>
-                <a href="{{ route('stores.show', 'nous-telos') }}" class="eq-btn eq-btn--outline eq-home-store-card__cta">Visit Store <span aria-hidden="true">&rarr;</span></a>
-              </div>
-            </article>
-          @endif
-
-          @if($bright)
-            <article class="eq-home-store-card eq-home-store-card--upcoming" id="home-store-bright">
-              <div class="eq-home-store-card__body">
-                <span class="eq-home-store-card__eyebrow">COMING SOON</span>
-                <h3>Bright</h3>
-                <p class="eq-home-store-card__specialty">Electronics &amp; Smart Living</p>
-                <p class="eq-home-store-card__description">A new electronics store is being prepared for launch on Earthquick.</p>
-                <a href="{{ route('stores.show', 'bright') }}" class="eq-btn eq-btn--light eq-home-store-card__cta">Preview Store <span aria-hidden="true">&rarr;</span></a>
-              </div>
-            </article>
-          @endif
-        </div>
-      </div>
-    </section>
-
-
     <!-- =================================================================
          SECTION 3: NEW ARRIVALS (INTERACTIVE CAROUSEL)
          Horizontal product carousel with arrow controls and swipe gestures.
@@ -482,6 +438,50 @@
           <button type="button" class="eq-arrow-btn eq-carousel__floating-arrow eq-carousel__floating-arrow--next" data-action="next" id="new-arrivals-floating-next" aria-label="Next new arrival products">
             <svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"></path></svg>
           </button>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ================================================================
+         EXPLORE OUR STORES
+         Product discovery comes first; brand discovery follows arrivals.
+         ================================================================ -->
+    <section class="eq-home-stores" id="explore-stores" aria-labelledby="explore-stores-title">
+      <div class="eq-container">
+        <div class="eq-home-stores__intro eq-reveal">
+          <span class="eq-eyebrow">OUR STORES</span>
+          <h2 class="eq-heading-lg" id="explore-stores-title">Explore Earthquick</h2>
+          <p>Distinct brands, one curated marketplace</p>
+        </div>
+
+        <div class="eq-home-stores__grid eq-reveal">
+          @if($nousTelos)
+            <article class="eq-home-store-card eq-home-store-card--flagship" id="home-store-nous-telos">
+              <div class="eq-home-store-card__media">
+                <img src="{{ asset('images/saree/saree-3.jpg') }}" alt="Nous Telos saree collection" loading="lazy" decoding="async" />
+              </div>
+              <div class="eq-home-store-card__body">
+                <span class="eq-home-store-card__eyebrow">FLAGSHIP STORE</span>
+                <h3>Nous Telos</h3>
+                <p class="eq-home-store-card__specialty">Bengali Heritage &amp; Handloom</p>
+                <p class="eq-home-store-card__description">Heritage fashion, handloom collections, accessories, and thoughtful home pieces rooted in Bengali craft.</p>
+                <a href="{{ route('stores.show', 'nous-telos') }}" class="eq-btn eq-btn--outline eq-home-store-card__cta">Visit Store <span aria-hidden="true">&rarr;</span></a>
+              </div>
+            </article>
+          @endif
+
+          @if($bright)
+            <article class="eq-home-store-card eq-home-store-card--upcoming" id="home-store-bright">
+              <div class="eq-home-store-card__body">
+                <span class="eq-home-store-card__eyebrow">COMING SOON</span>
+                <h3>Bright</h3>
+                <p class="eq-home-store-card__specialty">Electronics &amp; Smart Living</p>
+                <p class="eq-home-store-card__description">A new electronics store is being prepared for launch on Earthquick.</p>
+                <a href="{{ route('stores.show', 'bright') }}" class="eq-btn eq-btn--light eq-home-store-card__cta">Preview Store <span aria-hidden="true">&rarr;</span></a>
+              </div>
+            </article>
+          @endif
         </div>
       </div>
     </section>
@@ -801,14 +801,18 @@
               <span class="eq-eyebrow">CONTEMPORARY SETS BY NOUS TELOS</span>
               <h2 class="eq-heading-lg">Two Piece</h2>
             </div>
+            <div class="eq-carousel__controls eq-two-piece-mobile-controls" aria-label="Two piece carousel navigation">
+              <button type="button" class="eq-arrow-btn eq-two-piece-mobile-arrow eq-two-piece-mobile-arrow--prev" id="two-piece-mobile-prev" aria-label="Previous two piece products" disabled>
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg>
+              </button>
+              <button type="button" class="eq-arrow-btn eq-two-piece-mobile-arrow eq-two-piece-mobile-arrow--next" id="two-piece-mobile-next" aria-label="Next two piece products">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"></path></svg>
+              </button>
+            </div>
           </div>
 
         <!-- Featured Spotlight & Compact Grid Layout -->
         <div class="eq-two-piece-mobile-carousel">
-          <button type="button" class="eq-arrow-btn eq-two-piece-mobile-arrow eq-two-piece-mobile-arrow--prev" id="two-piece-mobile-prev" aria-label="Previous two piece products" disabled>
-            <svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg>
-          </button>
-
           <div class="eq-two-piece__layout eq-reveal" id="two-piece-container">
           <!-- Featured Set (Larger than the grid items) -->
           <a href="{{ url('/shop/women/two-piece') }}" class="eq-two-piece__feature" id="two-piece-feature-card" aria-label="Selene Tunic Two Piece - Featured Set">
@@ -882,9 +886,6 @@
           </div>
           </div>
 
-          <button type="button" class="eq-arrow-btn eq-two-piece-mobile-arrow eq-two-piece-mobile-arrow--next" id="two-piece-mobile-next" aria-label="Next two piece products">
-            <svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"></path></svg>
-          </button>
         </div>
 
         <div class="eq-reveal" style="margin-top: var(--space-lg); text-align:center;">
