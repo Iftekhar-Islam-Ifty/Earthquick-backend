@@ -22,6 +22,21 @@ Completed locally on 2026-09-26 with Playwright Chromium at 1440x1000, 1280x900,
 
 Playwright is now a development-only dependency and local Chromium is installed for repeatable QA. The production asset build also completes successfully with `npm.cmd run build`.
 
+## Additional local QA (2026-09-26)
+
+- Rechecked the homepage, Women catalog, store directory, search results, empty cart, empty checkout and login in Chromium at 1440px, 390px and 320px. Screenshots are kept only in the ignored `storage/qa/phase6-public/` directory.
+- Confirmed no document-level horizontal overflow or browser console errors on those pages. Guest access to `/admin` redirects to login.
+- Search and cart overlays open and close with Escape on the homepage, catalog, search results and checkout pages, without changing cart contents or placing an order.
+- In isolated browser sessions, adding one in-stock product to the cart exposed the populated cart and checkout at 390px and 320px without horizontal overflow or console errors. No checkout form was submitted.
+- Fixed a confirmed search-results mobile issue: the `view-3col` class overrode the two-column responsive rule, making cards unreadably narrow; the inline search input also forced its submit button beyond the 320px viewport. Chromium recheck confirms two columns and an in-bounds button at 320px and 390px, with the desktop grid unchanged.
+- `composer test` passes: 102 PHP tests / 582 assertions and 10 frontend tests.
+
+The browser checks above used guest sessions only. Authenticated admin screens, payment submission, production-only external services and real hosting configuration have **not** been browser-verified by this pass. No order was submitted.
+
+### Launch blocker found during checkout review
+
+The checkout UI currently labels the `bkash` option as "bKash / Nagad / Rocket" and reveals a hard-coded merchant number (`resources/views/checkout.blade.php`). The backend also accepts a `card` payment value (`CheckoutController`). These do not match the approved COD-and-bKash-only launch rules, and there is no verified bKash payment flow. Do not treat the payment step as production-ready or use the displayed number for live payments; the payment phase must resolve this before launch.
+
 ## Required production handoff checks
 
 These depend on the real hosting account and must be completed at deployment time:

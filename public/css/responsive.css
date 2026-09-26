@@ -1680,10 +1680,18 @@
     border-color: rgba(220, 53, 69, 0.4) !important;
   }
 
-  .eq-drawer-action-btn--login {
+  .eq-navbar__links a.eq-drawer-action-btn--login {
     background-color: var(--eq-navy) !important;
     color: #ffffff !important;
     border-color: var(--eq-navy) !important;
+  }
+
+  .eq-navbar__links a.eq-drawer-action-btn--login:hover,
+  .eq-navbar__links a.eq-drawer-action-btn--login:focus-visible,
+  .eq-navbar__links a.eq-drawer-action-btn--login:active {
+    background-color: #244b63 !important;
+    color: #ffffff !important;
+    border-color: #244b63 !important;
   }
 
   .eq-drawer-tagline {
@@ -3367,9 +3375,27 @@
   }
 
   /* 5. Product Grid for Mobile (< 576px): Exactly 2 Columns */
-  .eq-catalog-grid {
+  .eq-catalog-grid,
+  .eq-catalog-grid.view-2col,
+  .eq-catalog-grid.view-3col,
+  .eq-catalog-grid.view-4col {
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
     gap: 0.75rem 0.5rem !important;
+  }
+
+  #search-banner form {
+    width: 100%;
+    min-width: 0;
+  }
+
+  #search-banner form input[type="search"] {
+    min-width: 0;
+    width: 100%;
+  }
+
+  #search-banner form button[type="submit"] {
+    flex-shrink: 0;
+    padding-inline: 0.9rem !important;
   }
 
   .eq-catalog-grid .eq-product-card {
