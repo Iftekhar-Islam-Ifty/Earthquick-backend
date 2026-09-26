@@ -124,6 +124,19 @@ class PlatformIdentityTest extends TestCase
         }
     }
 
+    public function test_saree_editorial_keeps_four_mobile_cards_and_desktop_gallery_row(): void
+    {
+        $response = $this->get('/')->assertOk();
+        $html = $response->getContent();
+
+        $this->assertSame(4, substr_count($html, 'class="eq-product-card eq-saree-card"'));
+        $this->assertSame(4, substr_count($html, 'class="eq-product-card eq-saree-card eq-saree-card--desktop-repeat"'));
+        $response->assertSee('id="saree-gallery-prev"', false);
+        $response->assertSee('id="saree-gallery-next"', false);
+        $response->assertSee('id="link-view-all-sarees"', false);
+        $response->assertSee('id="saree-grid-item-04-b"', false);
+    }
+
     public function test_styled_by_you_uses_earthquick_community_copy_without_unverified_social_links(): void
     {
         $response = $this->get('/')->assertOk();

@@ -1439,9 +1439,7 @@ p {
 }
 
 /* =====================================================================
-   10. SAREE SECTION — Flagship Atelier Showcase (Minimal & Compact)
-   Featured Masterpiece card on left (original proportional size) + 
-   2 Rows of 4 Saree Cards on right, aligned in height.
+   10. SAREE SECTION — editorial signature portrait and four unique pieces
    ===================================================================== */
 #saree-section {
   padding: clamp(2rem, 3.5vw, 2.75rem) 0;
@@ -1457,25 +1455,9 @@ p {
 
 .eq-saree-showcase {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: var(--space-md);
+  grid-template-columns: 340px minmax(0, 1fr);
+  gap: 1.5rem;
   align-items: start;
-}
-
-@media (min-width: 992px) {
-  .eq-saree-showcase {
-    grid-template-columns: 330px 1fr;
-    gap: 1.25rem;
-    align-items: start;
-  }
-}
-
-@media (min-width: 1200px) {
-  .eq-saree-showcase {
-    grid-template-columns: 340px 1fr;
-    gap: 1.5rem;
-    align-items: start;
-  }
 }
 
 /* Featured Masterpiece Spotlight Card (Original Proportional Size) */
@@ -1522,7 +1504,20 @@ p {
 }
 
 .eq-saree-masterpiece__body {
-  padding-top: 0.45rem;
+  padding-top: 0.7rem;
+}
+
+.eq-saree-masterpiece__eyebrow,
+.eq-saree-gallery-head > span {
+  display: block;
+  color: var(--eq-gold-dark);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+}
+
+.eq-saree-masterpiece__eyebrow {
+  margin-bottom: 0.35rem;
 }
 
 .eq-saree-masterpiece__name {
@@ -1539,30 +1534,40 @@ p {
   margin-top: 0.15rem;
 }
 
-/* Curated Saree Gallery Grid (2 rows of 4 compact cards aligned with featured image) */
-.eq-saree-gallery {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 0.75rem 0.65rem;
+.eq-saree-masterpiece__cta {
+  display: inline-flex;
+  gap: 0.4rem;
+  align-items: center;
+  margin-top: 0.7rem;
+  color: var(--eq-teal-dark);
+  font-size: 0.82rem;
+  font-weight: 600;
 }
 
-@media (min-width: 900px) {
-  .eq-saree-gallery {
-    grid-template-columns: repeat(4, 1fr);
-    gap: 0.65rem;
-  }
+.eq-saree-gallery-wrap {
+  min-width: 0;
+}
+
+.eq-saree-gallery-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.65rem;
+}
+
+.eq-saree-gallery-controls {
+  display: none;
+}
+
+.eq-saree-gallery {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.65rem;
 }
 
 .eq-saree-card {
   flex: 0 0 auto !important;
   width: 100%;
-}
-
-@media (min-width: 900px) {
-  .eq-saree-card {
-    max-width: 152px;
-    margin: 0 auto;
-  }
 }
 
 .eq-saree-card .eq-product-card__frame {
@@ -1586,9 +1591,11 @@ p {
   font-size: 0.82rem;
   line-height: 1.25;
   color: var(--eq-charcoal);
-  white-space: nowrap;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
   overflow: hidden;
-  text-overflow: ellipsis;
+  min-height: 2.5em;
   margin: 0;
 }
 
@@ -1602,6 +1609,57 @@ p {
 .eq-saree-card .eq-product-card__quick-add {
   font-size: 0.7rem;
   padding: 0.32rem 0.55rem;
+}
+
+.eq-saree-view-all {
+  margin-top: 1.5rem;
+  text-align: center;
+}
+
+@media (min-width: 901px) {
+  #saree-section > .eq-container {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  #saree-section .eq-section-head {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  #saree-section .eq-saree-showcase {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+
+  #saree-section .eq-saree-view-all {
+    grid-column: 2;
+    grid-row: 1;
+    align-self: end;
+    margin: 0 0 1.15rem;
+  }
+
+  #saree-section .eq-saree-gallery-head,
+  #saree-section .eq-saree-masterpiece__eyebrow,
+  #saree-section .eq-saree-masterpiece__cta {
+    display: none;
+  }
+
+  #saree-section .eq-saree-masterpiece__body {
+    padding-top: 0.45rem;
+  }
+
+  #saree-section .eq-saree-card {
+    max-width: 152px;
+    margin-inline: auto;
+  }
+}
+
+@media (min-width: 901px) and (max-width: 1199px) {
+  #saree-section .eq-saree-showcase {
+    grid-template-columns: 330px minmax(0, 1fr);
+    gap: 1.25rem;
+  }
 }
 
 /* =====================================================================

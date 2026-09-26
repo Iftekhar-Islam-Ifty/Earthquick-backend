@@ -489,8 +489,7 @@
 
     <!-- =================================================================
          SECTION 4: SAREE (FLAGSHIP ATELIER SHOWCASE)
-         Unique flagship layout: Signature Masterpiece card + 2 rows of curated saree
-         cards, honoring Saree as Earthquick's primary product with balanced proportions.
+         A signature saree portrait with four distinct pieces from the collection.
          ================================================================= -->
     <section class="eq-section eq-section--deep eq-section--arched" id="saree-section">
       <div class="eq-arch-divider eq-arch-divider--top" aria-hidden="true">
@@ -507,13 +506,9 @@
             <h2 class="eq-heading-lg">The Saree Collection</h2>
             <p class="eq-body-lg" style="margin-top: 0.35rem; max-width: 54ch;">Handwoven traditions from Tangail, Narayanganj and Rajshahi, curated by Nous Telos for contemporary wardrobes.</p>
           </div>
-          <a href="{{ url('/shop/women/saree') }}" class="eq-text-link" id="link-view-all-sarees">
-            View All Sarees
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"></path><path d="M13 6l6 6-6 6"></path></svg>
-          </a>
         </div>
 
-        <!-- Saree Flagship Showcase: Featured Spotlight + 2 Rows of Curated Gallery -->
+        <!-- Saree Flagship Showcase: Featured Spotlight + Curated Gallery -->
         <div class="eq-saree-showcase eq-reveal" id="saree-showcase-container">
 
           <!-- Featured Masterpiece Spotlight (Clean image, aligned height) -->
@@ -523,15 +518,27 @@
                 <img src="{{ asset('images/saree/saree-1.jpg') }}" alt="Katan Silk Heritage Saree" loading="lazy" decoding="async" />
               </div>
               <div class="eq-saree-masterpiece__body">
+                <span class="eq-saree-masterpiece__eyebrow">THE SIGNATURE DRAPE</span>
                 <h3 class="eq-saree-masterpiece__name">Katan Silk Heritage</h3>
                 <p class="eq-saree-masterpiece__price">৳12,500</p>
+                <span class="eq-saree-masterpiece__cta">Discover the piece <span aria-hidden="true">&rarr;</span></span>
               </div>
             </a>
           </article>
 
-          <!-- Curated Saree Gallery (2 rows of 4 balanced cards) -->
-          <div class="eq-saree-gallery" id="saree-grid">
-            <!-- Row 1: Saree 1 -->
+          <div class="eq-saree-gallery-wrap">
+            <div class="eq-saree-gallery-head">
+              <span>MORE FROM THE EDIT</span>
+              <div class="eq-saree-gallery-controls" aria-label="Saree collection navigation">
+                <button type="button" class="eq-arrow-btn" id="saree-gallery-prev" aria-label="Previous sarees" disabled>
+                  <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg>
+                </button>
+                <button type="button" class="eq-arrow-btn" id="saree-gallery-next" aria-label="Next sarees">
+                  <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"></path></svg>
+                </button>
+              </div>
+            </div>
+            <div class="eq-saree-gallery" id="saree-grid">
             <article class="eq-product-card eq-saree-card" id="saree-grid-item-04">
               <a href="{{ url('/product/emerald-rajshahi-pure-silk') }}" class="eq-product-card__link">
                 <div class="eq-product-card__frame">
@@ -545,7 +552,6 @@
               </a>
             </article>
 
-            <!-- Row 1: Saree 2 -->
             <article class="eq-product-card eq-saree-card" id="saree-grid-item-03">
               <a href="{{ url('/product/royal-champagne-half-silk') }}" class="eq-product-card__link">
                 <div class="eq-product-card__frame">
@@ -559,7 +565,6 @@
               </a>
             </article>
 
-            <!-- Row 1: Saree 3 -->
             <article class="eq-product-card eq-saree-card" id="saree-grid-item-02">
               <a href="{{ url('/product/midnight-indigo-tantuj-drape') }}" class="eq-product-card__link">
                 <div class="eq-product-card__frame">
@@ -573,7 +578,6 @@
               </a>
             </article>
 
-            <!-- Row 1: Saree 4 -->
             <article class="eq-product-card eq-saree-card" id="saree-grid-item-06">
               <a href="{{ url('/shop/women/saree') }}" class="eq-product-card__link">
                 <div class="eq-product-card__frame">
@@ -587,8 +591,7 @@
               </a>
             </article>
 
-            <!-- Row 2: Saree 5 (Organza Pearl) -->
-            <article class="eq-product-card eq-saree-card" id="saree-grid-item-04-b">
+            <article class="eq-product-card eq-saree-card eq-saree-card--desktop-repeat" id="saree-grid-item-04-b">
               <a href="{{ url('/product/emerald-rajshahi-pure-silk') }}" class="eq-product-card__link">
                 <div class="eq-product-card__frame">
                   <img src="{{ asset('images/saree/saree-2.jpg') }}" alt="Organza Pearl Saree" loading="lazy" decoding="async" />
@@ -601,8 +604,7 @@
               </a>
             </article>
 
-            <!-- Row 2: Saree 6 (Handloom Tangail) -->
-            <article class="eq-product-card eq-saree-card" id="saree-grid-item-03-b">
+            <article class="eq-product-card eq-saree-card eq-saree-card--desktop-repeat" id="saree-grid-item-03-b">
               <a href="{{ url('/product/royal-champagne-half-silk') }}" class="eq-product-card__link">
                 <div class="eq-product-card__frame">
                   <img src="{{ asset('images/saree/saree-3.jpg') }}" alt="Handloom Tangail Saree" loading="lazy" decoding="async" />
@@ -615,8 +617,7 @@
               </a>
             </article>
 
-            <!-- Row 2: Saree 7 (Rajshahi Silk) -->
-            <article class="eq-product-card eq-saree-card" id="saree-grid-item-02-b">
+            <article class="eq-product-card eq-saree-card eq-saree-card--desktop-repeat" id="saree-grid-item-02-b">
               <a href="{{ url('/product/midnight-indigo-tantuj-drape') }}" class="eq-product-card__link">
                 <div class="eq-product-card__frame">
                   <img src="{{ asset('images/saree/saree-4.jpg') }}" alt="Rajshahi Silk Saree" loading="lazy" decoding="async" />
@@ -629,8 +630,7 @@
               </a>
             </article>
 
-            <!-- Row 2: Saree 8 (Cotton Nakshi) -->
-            <article class="eq-product-card eq-saree-card" id="saree-grid-item-06-b">
+            <article class="eq-product-card eq-saree-card eq-saree-card--desktop-repeat" id="saree-grid-item-06-b">
               <a href="{{ url('/shop/women/saree') }}" class="eq-product-card__link">
                 <div class="eq-product-card__frame">
                   <img src="{{ asset('images/saree/saree-5.jpg') }}" alt="Cotton Nakshi Saree" loading="lazy" decoding="async" />
@@ -642,8 +642,17 @@
                 </div>
               </a>
             </article>
+
+            </div>
           </div>
 
+        </div>
+
+        <div class="eq-saree-view-all eq-reveal">
+          <a href="{{ url('/shop/women/saree') }}" class="eq-text-link" id="link-view-all-sarees">
+            View All Sarees
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"></path><path d="M13 6l6 6-6 6"></path></svg>
+          </a>
         </div>
 
       </div>

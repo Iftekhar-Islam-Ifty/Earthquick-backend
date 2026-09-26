@@ -1242,6 +1242,32 @@ function initTwoPieceMobileCarousel() {
   update();
 }
 
+function initSareeGalleryCarousel() {
+  const gallery = document.querySelector("#saree-grid");
+  const prev = document.querySelector("#saree-gallery-prev");
+  const next = document.querySelector("#saree-gallery-next");
+  if (!gallery || !prev || !next) return;
+
+  const step = () => {
+    const card = gallery.querySelector(".eq-saree-card");
+    if (!card) return 160;
+    const styles = window.getComputedStyle(gallery);
+    return card.getBoundingClientRect().width + parseFloat(styles.columnGap || styles.gap || "0");
+  };
+
+  const update = () => {
+    const max = Math.max(0, gallery.scrollWidth - gallery.clientWidth);
+    prev.disabled = gallery.scrollLeft <= 4;
+    next.disabled = gallery.scrollLeft >= max - 4;
+  };
+
+  prev.addEventListener("click", () => gallery.scrollBy({ left: -step(), behavior: "smooth" }));
+  next.addEventListener("click", () => gallery.scrollBy({ left: step(), behavior: "smooth" }));
+  gallery.addEventListener("scroll", update, { passive: true });
+  window.addEventListener("resize", update);
+  update();
+}
+
 
 /* =====================================================================
    7. SCROLL REVEAL ANIMATIONS
@@ -1852,6 +1878,7 @@ function initEarthquickApp() {
   initAccount();
   initCarousels();
   initTwoPieceMobileCarousel();
+  initSareeGalleryCarousel();
   init3DCoverflow();
   initScrollReveal();
   initNewsletterForm();
