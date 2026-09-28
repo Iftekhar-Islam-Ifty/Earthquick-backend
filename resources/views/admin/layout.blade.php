@@ -846,12 +846,6 @@
 
       <li class="eq-admin-nav__heading">Commerce &amp; Inventory</li>
       <li>
-        <a href="{{ route('admin.support.index') }}" class="eq-admin-nav__link {{ request()->routeIs('admin.support.*') ? 'is-active' : '' }}">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v12H7l-3 3V4Z"></path><path d="M8 9h8M8 12h5"></path></svg>
-          <span>Support Inbox</span>
-        </a>
-      </li>
-      <li>
         <a href="{{ route('admin.orders') }}" class="eq-admin-nav__link {{ request()->routeIs('admin.orders*') ? 'is-active' : '' }}">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"></path>
@@ -871,6 +865,15 @@
         </a>
       </li>
       <li>
+        <a href="{{ route('admin.vendors.index') }}" class="eq-admin-nav__link {{ request()->routeIs('admin.vendors*') ? 'is-active' : '' }}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+          </svg>
+          <span>Vendors &amp; Stores</span>
+        </a>
+      </li>
+      <li>
         <a href="{{ route('admin.coupons') }}" class="eq-admin-nav__link {{ request()->routeIs('admin.coupons*') ? 'is-active' : '' }}">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
@@ -879,13 +882,12 @@
           <span>Coupons &amp; Offers</span>
         </a>
       </li>
+
+      <li class="eq-admin-nav__heading">Customer Care</li>
       <li>
-        <a href="{{ route('admin.vendors.index') }}" class="eq-admin-nav__link {{ request()->routeIs('admin.vendors*') ? 'is-active' : '' }}">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-            <polyline points="9 22 9 12 15 12 15 22"></polyline>
-          </svg>
-          <span>Vendors &amp; Stores</span>
+        <a href="{{ route('admin.support.index') }}" class="eq-admin-nav__link {{ request()->routeIs('admin.support.*') ? 'is-active' : '' }}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v12H7l-3 3V4Z"></path><path d="M8 9h8M8 12h5"></path></svg>
+          <span>Support Inbox</span>
         </a>
       </li>
 

@@ -49,6 +49,8 @@ class CommunicationsTest extends TestCase
         $admin = User::factory()->create(['is_admin' => true]);
         $this->actingAs($admin)->get(route('admin.support.index'))
             ->assertOk()->assertSee('QA Customer')->assertSee('Please help me')
+            ->assertSeeInOrder(['Customer Orders', 'Stock &amp; Catalog', 'Vendors &amp; Stores', 'Coupons &amp; Offers', 'Customer Care', 'Support Inbox'], false)
+            ->assertSee('class="eq-support-filter is-active"', false)
             ->assertSee('href="tel:01712345678"', false)
             ->assertSee('href="mailto:customer@example.test?', false);
         $this->post(route('admin.support.update', $inquiry), [
