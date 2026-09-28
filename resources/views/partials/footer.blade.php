@@ -44,6 +44,7 @@
           <li><a href="{{ route('about') }}#brand-ecosystem" id="footer-link-ecosystem">Our Brands &amp; Artisans</a></li>
           <li><a href="{{ route('about') }}#contact-support" id="footer-link-contact">Contact &amp; Support</a></li>
           <li><a href="{{ route('about') }}#help-faq" id="footer-link-faq">Help &amp; FAQ</a></li>
+          <li><a href="{{ route('policies.delivery-returns') }}" id="footer-link-delivery-returns">Delivery, Returns &amp; Refunds</a></li>
         </ul>
       </div>
 

@@ -26,4 +26,9 @@ class PageController extends Controller
     {
         return view('about');
     }
+
+    public function deliveryReturns(): View
+    {
+        return view('policies.delivery-returns');
+    }
 }

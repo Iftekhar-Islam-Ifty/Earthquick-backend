@@ -417,9 +417,8 @@
             </button>
             <div class="eq-faq-answer">
               <p>
-                Standard delivery inside <strong>Chattogram and Dhaka takes 2 to 3 business days</strong> (৳80). 
-                Delivery to all other district towns across Bangladesh takes <strong>3 to 5 business days</strong> (৳150). 
-                All packages are packaged in protective waterproof inner layers to ensure your handlooms arrive pristine.
+                Delivery is calculated for the whole order: <strong>৳80 inside Chattogram</strong> or <strong>৳150 outside Chattogram</strong>. Orders with a product subtotal of ৳3,000 or more qualify for free delivery. Timing depends on the destination and fulfilment; we do not guarantee a fixed delivery date.
+                <a href="{{ route('policies.delivery-returns') }}#delivery">Read the full delivery guide</a>.
               </p>
             </div>
           </div>
@@ -450,7 +449,7 @@
             </button>
             <div class="eq-faq-answer">
               <p>
-                Return eligibility and the time window appear on each product and order item. For eligible delivered orders, request a return from your order page and wait for Earthquick's authorization before sending anything. For a damaged or incorrect item, or if the online form is unavailable, use the <a href="#contact-support">support inquiry form</a> with your order number. Earthquick will confirm the return-courier payer after reviewing the reason; a courier pickup is not automatic.
+                Return eligibility and the time window appear on each product and order item. For eligible delivered orders, request a return from your order page and wait for Earthquick's authorization before sending anything. For a damaged or incorrect item, or if the online form is unavailable, use the <a href="#contact-support">support inquiry form</a> with your order number. Earthquick confirms the return-courier payer after reviewing the reason; a courier pickup is not automatic. <a href="{{ route('policies.delivery-returns') }}#returns">Read the full returns and refunds guide</a>.
               </p>
             </div>
           </div>

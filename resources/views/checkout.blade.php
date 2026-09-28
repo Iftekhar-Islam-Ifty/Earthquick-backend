@@ -112,7 +112,7 @@
                     <span>Inside Chattogram (Ctg)</span>
                     <span class="eq-method-card__price" id="shipping-rate-inside">৳{{ number_format($initialDeliveryFee) }}</span>
                   </div>
-                  <div class="eq-method-card__desc">Same / Next day delivery within Chattogram City (Within 48 hours)</div>
+                  <div class="eq-method-card__desc">Delivery timing depends on address and fulfilment.</div>
                 </div>
               </label>
 
@@ -124,11 +124,12 @@
                     <span>Outside Chattogram (Nationwide)</span>
                     <span class="eq-method-card__price" id="shipping-rate-outside">৳{{ number_format($subtotal >= $freeShippingThreshold ? 0 : $deliveryFeeOutside) }}</span>
                   </div>
-                  <div class="eq-method-card__desc">Dhaka &amp; All 64 Districts via Courier in 2–4 days</div>
+                  <div class="eq-method-card__desc">Dhaka and other districts via courier; timing may vary.</div>
                 </div>
               </label>
 
             </div>
+            <p style="margin:0.75rem 0 0;font-size:0.85rem;line-height:1.5;">See our <a href="{{ route('policies.delivery-returns') }}#delivery">delivery, returns and refunds guide</a> for charges and after-sales steps.</p>
           </div>
 
           <!-- Address Fields -->
@@ -313,7 +314,7 @@
           <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
           </svg>
-          <span>100% Authentic Handcrafted Heritage &bull; Express Delivery</span>
+          <span>Central order support &bull; Cash on Delivery available</span>
         </div>
 
       </aside>

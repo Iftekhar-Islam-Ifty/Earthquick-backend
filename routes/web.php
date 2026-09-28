@@ -59,6 +59,7 @@ Route::get('/product/{slug}', [ProductController::class, 'show'])->name('product
  * Brand philosophy, artisan collective story, and customer care info.
  * ========================================================================= */
 Route::get('/about', [PageController::class, 'about'])->name('about');
+Route::get('/delivery-returns', [PageController::class, 'deliveryReturns'])->name('policies.delivery-returns');
 Route::post('/contact', [SupportInquiryController::class, 'store'])->middleware('throttle:5,1')->name('contact.store');
 
 /* =========================================================================

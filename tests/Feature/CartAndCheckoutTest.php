@@ -161,6 +161,9 @@ class CartAndCheckoutTest extends TestCase
         $response->assertStatus(200);
         $response->assertSee('Customer Contact Details');
         $response->assertSee('Delivery Address &amp; Shipping', false);
+        $response->assertSee(route('policies.delivery-returns').'#delivery', false);
+        $response->assertDontSee('Within 48 hours');
+        $response->assertDontSee('Courier in 2–4 days');
     }
 
     /**
