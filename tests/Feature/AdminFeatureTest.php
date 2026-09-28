@@ -48,6 +48,9 @@ class AdminFeatureTest extends TestCase
      */
     public function test_admin_can_view_dashboard_and_metrics(): void
     {
+        // The production dashboard must render with no Vite manifest: cPanel has no Node.
+        $this->withVite();
+
         $admin = User::create([
             'name'     => 'Chief Administrator',
             'email'    => 'admin' . rand(1000, 9999) . '@earthquick.com',
@@ -61,6 +64,7 @@ class AdminFeatureTest extends TestCase
         $response->assertSee('Executive Store Dashboard');
         $response->assertSee('Total Orders');
         $response->assertSee('Net Sales Revenue');
+        $response->assertSee('js/chart.umd.js');
     }
 
     /**

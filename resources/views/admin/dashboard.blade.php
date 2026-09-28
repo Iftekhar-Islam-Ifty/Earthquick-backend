@@ -452,8 +452,8 @@
     </div>
   </section>
 
-  <!-- Bundle the dashboard chart library locally; no external CDN is required. -->
-  @vite('resources/js/admin-charts.js')
+  <!-- Tracked local bundle: cPanel deploys via Git without Node/Vite on the server. -->
+  <script src="{{ asset('js/chart.umd.js') }}"></script>
   <script>
     document.addEventListener('DOMContentLoaded', function () {
       
