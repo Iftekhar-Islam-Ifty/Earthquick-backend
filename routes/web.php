@@ -8,9 +8,13 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\OrderCancellationController;
+use App\Http\Controllers\OrderReturnController;
+use App\Http\Controllers\OrderRefundController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SearchController;
+use App\Http\Controllers\SupportInquiryController;
 use App\Http\Controllers\VendorController;
 use Illuminate\Support\Facades\Route;
 
@@ -55,6 +59,7 @@ Route::get('/product/{slug}', [ProductController::class, 'show'])->name('product
  * Brand philosophy, artisan collective story, and customer care info.
  * ========================================================================= */
 Route::get('/about', [PageController::class, 'about'])->name('about');
+Route::post('/contact', [SupportInquiryController::class, 'store'])->middleware('throttle:5,1')->name('contact.store');
 
 /* =========================================================================
  * 5. SHOPPING CART & DRAWER SYNCHRONIZATION
@@ -75,6 +80,8 @@ Route::post('/cart/coupon/remove', [CartController::class, 'removeCoupon'])->nam
 Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
 Route::post('/checkout/order', [CheckoutController::class, 'store'])->name('checkout.store');
 Route::get('/checkout/success/{order_number}', [CheckoutController::class, 'success'])->name('checkout.success');
+Route::post('/orders/{order_number}/cancellation-request', [OrderCancellationController::class, 'store'])->name('orders.cancellation-request');
+Route::post('/orders/{order_number}/items/{itemId}/return-request', [OrderReturnController::class, 'store'])->name('orders.return-request');
 
 /* =========================================================================
  * 7. CUSTOMER AUTHENTICATION
@@ -110,9 +117,20 @@ Route::get('/api/search/suggestions', [SearchController::class, 'suggestions'])-
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [AdminController::class, 'dashboard'])->name('dashboard');
     Route::get('/orders', [AdminController::class, 'orders'])->name('orders');
+    Route::get('/support-inquiries', [SupportInquiryController::class, 'index'])->name('support.index');
+    Route::post('/support-inquiries/{inquiry}', [SupportInquiryController::class, 'update'])->name('support.update');
     Route::get('/orders/export', [AdminController::class, 'exportOrders'])->name('orders.export');
     Route::get('/orders/{id}', [AdminController::class, 'showOrder'])->name('orders.show');
     Route::post('/orders/{id}/status', [AdminController::class, 'updateOrderStatus'])->name('orders.update-status');
+    Route::post('/orders/{id}/cod-paid', [AdminController::class, 'markCodPaid'])->name('orders.cod-paid');
+    Route::post('/orders/{id}/cancellation-requests/{requestId}/decision', [AdminController::class, 'decideCancellation'])->name('orders.cancellation-decision');
+    Route::post('/orders/{id}/return-requests/{requestId}/decision', [OrderReturnController::class, 'decide'])->name('orders.return-decision');
+    Route::post('/orders/{id}/return-requests/{requestId}/receive', [OrderReturnController::class, 'receive'])->name('orders.return-receive');
+    Route::post('/orders/{id}/return-requests/{requestId}/inspect', [OrderReturnController::class, 'inspect'])->name('orders.return-inspect');
+    Route::post('/orders/{id}/return-requests/{requestId}/restock', [OrderReturnController::class, 'restock'])->name('orders.return-restock');
+    Route::post('/orders/{id}/return-requests/{requestId}/refund', [OrderRefundController::class, 'approve'])->name('orders.refund-approve');
+    Route::post('/orders/{id}/refunds/{refundId}/verify-recipient', [OrderRefundController::class, 'verifyRecipient'])->name('orders.refund-verify-recipient');
+    Route::post('/orders/{id}/refunds/{refundId}/complete', [OrderRefundController::class, 'complete'])->name('orders.refund-complete');
     Route::get('/orders/{id}/invoice', [AdminController::class, 'orderInvoice'])->name('orders.invoice');
     Route::get('/products', [AdminController::class, 'products'])->name('products');
     Route::get('/products/create', [AdminController::class, 'createProduct'])->name('products.create');

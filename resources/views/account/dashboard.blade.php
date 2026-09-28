@@ -232,6 +232,7 @@
                 <div class="eq-order-receipt-footer">
                   <div class="eq-order-receipt-pay">
                     Payment: <strong>{{ strtoupper($ord->payment_method) }}</strong> &bull; Delivery: ৳{{ number_format($ord->delivery_fee) }}
+                    &bull; {{ match ($ord->payment_status) { 'paid' => 'Paid', 'due_on_delivery' => 'Due on delivery', 'not_due' => 'Not due — cancelled', default => 'Payment not verified' } }}
                   </div>
                   <div style="display: flex; align-items: center; gap: 1rem;">
                     <div class="eq-order-receipt-total">

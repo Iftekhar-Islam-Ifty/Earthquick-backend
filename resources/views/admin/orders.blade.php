@@ -155,6 +155,7 @@
                   <span style="font-size: 0.76rem; text-transform: uppercase; background: var(--eq-cream); padding: 0.2rem 0.5rem; border-radius: 4px; font-weight: 500;">
                     {{ $order->payment_method ?? 'COD' }}
                   </span>
+                  <div style="font-size: 0.72rem; color: var(--eq-charcoal-soft); margin-top: 0.25rem;">{{ match ($order->payment_status) { 'paid' => 'Paid', 'due_on_delivery' => 'COD due', 'not_due' => 'Not due — cancelled', default => 'Payment unverified' } }}</div>
                 </td>
                 <td>
                   <span class="eq-status-badge eq-status-badge--{{ $order->status }}">
@@ -237,6 +238,7 @@
                 <span style="font-size: 0.74rem; color: var(--eq-charcoal-soft); margin-top: 2px;">
                   {{ $order->items->sum('quantity') }} items &bull; {{ strtoupper($order->payment_method ?? 'COD') }}
                 </span>
+                <span style="font-size: 0.74rem; color: var(--eq-charcoal-soft);">{{ match ($order->payment_status) { 'paid' => 'Paid', 'due_on_delivery' => 'COD due', 'not_due' => 'Not due — cancelled', default => 'Payment unverified' } }}</span>
               </div>
             </div>
 

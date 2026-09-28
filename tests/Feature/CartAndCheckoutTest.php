@@ -533,6 +533,7 @@ class CartAndCheckoutTest extends TestCase
         $this->assertDatabaseHas('orders', [
             'order_number' => $orderNumber,
             'coupon_code' => $code,
+            'coupon_id' => $coupon->id,
             'discount_amount' => 400.00,
             'subtotal' => $subtotal,
             'delivery_fee' => $deliveryFee,

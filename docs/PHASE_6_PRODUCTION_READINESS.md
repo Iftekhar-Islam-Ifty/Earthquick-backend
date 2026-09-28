@@ -1,6 +1,6 @@
 # Phase 6 — Production Readiness and Quality Assurance
 
-Status: In progress
+Status: Local implementation and QA complete; production hosting handoff pending
 
 ## Completed in this phase
 
@@ -31,9 +31,22 @@ Playwright is now a development-only dependency and local Chromium is installed 
 - Fixed a confirmed search-results mobile issue: the `view-3col` class overrode the two-column responsive rule, making cards unreadably narrow; the inline search input also forced its submit button beyond the 320px viewport. Chromium recheck confirms two columns and an in-bounds button at 320px and 390px, with the desktop grid unchanged.
 - `composer test` passes: 102 PHP tests / 582 assertions and 10 frontend tests.
 
-The browser checks above used guest sessions only. Authenticated admin screens, payment submission, production-only external services and real hosting configuration have **not** been browser-verified by this pass. No order was submitted.
+The public-page browser checks above used guest sessions. Payment submission, production-only external services and real hosting configuration have **not** been browser-verified. No order was submitted.
+
+## Final local hardening and admin QA (2026-09-27)
+
+- Removed the fixed-password admin account creation/reset from routine seeding. A bootstrap admin can now be created only by explicitly supplying `EARTHQUICK_SEED_ADMIN_EMAIL` and `EARTHQUICK_SEED_ADMIN_PASSWORD` in a local/test environment; rerunning the seeder never overwrites an existing account. Existing admin passwords in any deployed database are not changed by this code and must be reviewed/rotated separately.
+- Used a disposable SQLite database under ignored `storage/qa/phase6-admin/` and a separate local server port for authenticated Chromium QA. The real application database and current `.env` were not altered.
+- Checked dashboard, orders, products, vendors and coupons at 1440px, 768px, 390px and 320px. All loaded without page-level horizontal overflow or duplicate IDs. The mobile admin menu opens and closes, including by Escape.
+- Found the dashboard charts failing when the external Chart.js CDN was unreachable. Chart.js is now part of the local Vite build. Both dashboard charts render at 1440px, 390px and 320px without JavaScript errors; `npm.cmd run build` passes.
+- PHPUnit feature tests skip Vite asset lookup in their isolated public root; the asset build and browser render are verified separately.
+- Final `composer test` passes: 103 PHP tests / 587 assertions and 10 frontend tests.
+
+Local completion does not imply production sign-off. Real-host HTTPS, secrets, backup/restore, migration, deployed asset, and final browser checks below still require access to the hosting environment. The checkout payment mismatch identified here was addressed in the later COD-only Phase 7 work; bKash remains disabled.
 
 ### Launch blocker found during checkout review
+
+Historical finding: the local COD-only Phase 7 work now removes the inactive payment claims from checkout, disables bKash as Coming Soon, and rejects unapproved methods server-side. The following paragraph records what Phase 6 found before that correction; it is not a current checkout description. Production migration and host QA still need separate sign-off.
 
 The checkout UI currently labels the `bkash` option as "bKash / Nagad / Rocket" and reveals a hard-coded merchant number (`resources/views/checkout.blade.php`). The backend also accepts a `card` payment value (`CheckoutController`). These do not match the approved COD-and-bKash-only launch rules, and there is no verified bKash payment flow. Do not treat the payment step as production-ready or use the displayed number for live payments; the payment phase must resolve this before launch.
 

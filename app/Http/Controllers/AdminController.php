@@ -8,6 +8,7 @@ use App\Models\Order;
 use App\Models\Product;
 use App\Models\Subcategory;
 use App\Models\Vendor;
+use App\Services\OrderCancellationService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -173,7 +174,7 @@ class AdminController extends Controller
     {
         $status = $request->query('status');
 
-        $query = Order::query()->latest();
+        $query = Order::query()->with('paymentRecorder')->latest();
         if ($status && in_array($status, ['pending', 'confirmed', 'processing', 'in_transit', 'delivered', 'cancelled'])) {
             $query->where('status', $status);
         }
@@ -207,6 +208,11 @@ class AdminController extends Controller
                 'Courier Partner',
                 'Tracking Number',
                 'Payment Method',
+                'Payment Status',
+                'Paid At',
+                'COD Collection Source',
+                'COD Collection Note',
+                'Payment Recorded By',
                 'Subtotal (BDT)',
                 'Delivery Fee (BDT)',
                 'Total (BDT)',
@@ -227,6 +233,11 @@ class AdminController extends Controller
                         $order->courier_name ?? 'Unassigned',
                         $order->tracking_number ?? 'N/A',
                         strtoupper($order->payment_method ?? 'COD'),
+                        $order->payment_status ?? 'unknown',
+                        $order->paid_at?->format('Y-m-d H:i:s') ?? '',
+                        $order->cod_collection_channel ?? '',
+                        $order->cod_collection_note ?? '',
+                        $order->paymentRecorder?->email ?? '',
                         number_format((float) $order->subtotal, 2, '.', ''),
                         number_format((float) $order->delivery_fee, 2, '.', ''),
                         number_format((float) $order->total, 2, '.', ''),
@@ -291,7 +302,7 @@ class AdminController extends Controller
      */
     public function showOrder(int $id): View
     {
-        $order = Order::with(['items', 'user'])->findOrFail($id);
+        $order = Order::with(['items', 'user', 'paymentRecorder', 'statusEvents.actor', 'cancellationRequests.decisionMaker', 'returnRequests.item', 'returnRequests.decisionMaker', 'returnRequests.receiver', 'returnRequests.inspector', 'returnRequests.restocker', 'returnRequests.refund.approver', 'returnRequests.refund.completer'])->findOrFail($id);
 
         return view('admin.order-detail', compact('order'));
     }
@@ -318,19 +329,130 @@ class AdminController extends Controller
             'admin_notes' => 'nullable|string|max:2000',
         ]);
 
-        $order = Order::findOrFail($id);
-        $oldStatus = $order->status;
-        $order->update([
-            'status' => $request->status,
-            'courier_name' => $request->courier_name,
-            'tracking_number' => $request->tracking_number,
-            'admin_notes' => $request->admin_notes,
-        ]);
+        if ($request->status === 'cancelled') {
+            $candidate = Order::findOrFail($id);
+            if (! in_array($candidate->status, ['pending', 'confirmed'], true)
+                || $candidate->payment_method !== 'cod'
+                || $candidate->payment_status !== 'due_on_delivery'
+                || $candidate->paid_at !== null) {
+                throw ValidationException::withMessages([
+                    'status' => 'Only an unpaid COD order before processing can be cancelled here. Review delivery or refund separately.',
+                ]);
+            }
+            $request->validate(['admin_notes' => 'required|string|min:5|max:2000']);
+            app(OrderCancellationService::class)->cancel($id, $request->user(), trim($request->admin_notes));
+
+            return redirect()->back()->with('success', 'Order cancelled; inventory and coupon redemption reconciled.');
+        }
+
+        [$order, $oldStatus] = DB::transaction(function () use ($request, $id) {
+            $order = Order::query()->lockForUpdate()->findOrFail($id);
+            $oldStatus = $order->status;
+            if ($oldStatus === 'cancelled') {
+                throw ValidationException::withMessages(['status' => 'A cancelled order cannot be reopened here.']);
+            }
+            $stages = ['pending' => 0, 'confirmed' => 1, 'processing' => 2, 'in_transit' => 3, 'delivered' => 4];
+            if ($stages[$request->status] < $stages[$oldStatus]) {
+                throw ValidationException::withMessages(['status' => 'A fulfilled order cannot be moved backwards through this form.']);
+            }
+            if ($order->payment_method === 'cod' && $order->payment_status === 'paid' && $request->status !== 'delivered') {
+                throw ValidationException::withMessages([
+                    'status' => 'A paid COD order must remain delivered. Contact support to correct this record.',
+                ]);
+            }
+
+            $order->update([
+                'status' => $request->status,
+                'courier_name' => $request->courier_name,
+                'tracking_number' => $request->tracking_number,
+                'admin_notes' => $request->admin_notes,
+            ]);
+
+            if ($oldStatus !== $order->status) {
+                $order->statusEvents()->create([
+                    'actor_user_id' => auth()->id(),
+                    'source' => 'admin',
+                    'from_status' => $oldStatus,
+                    'to_status' => $order->status,
+                    'note' => $request->admin_notes,
+                ]);
+            }
+
+            return [$order, $oldStatus];
+        });
+
+        if ($oldStatus !== $order->status) {
+            app(\App\Services\CustomerCommunications::class)->order($order, 'status', str_replace('_', ' ', $order->status));
+        }
 
         return redirect()->back()->with(
             'success',
             "Order #{$order->order_number} details and status updated from '{$oldStatus}' to '{$order->status}' successfully."
         );
+    }
+
+    public function decideCancellation(Request $request, int $id, int $requestId): RedirectResponse
+    {
+        $data = $request->validate([
+            'decision' => 'required|in:approve,reject',
+            'decision_note' => 'required|string|min:5|max:2000',
+        ]);
+
+        if ($data['decision'] === 'approve') {
+            app(OrderCancellationService::class)->cancel($id, $request->user(), trim($data['decision_note']), $requestId);
+        } else {
+            DB::transaction(function () use ($id, $requestId, $data, $request) {
+                $order = Order::query()->lockForUpdate()->findOrFail($id);
+                $cancellation = $order->cancellationRequests()->whereKey($requestId)->lockForUpdate()->firstOrFail();
+                if ($cancellation->status !== 'pending') {
+                    throw ValidationException::withMessages(['cancellation' => 'This request was already decided.']);
+                }
+                $cancellation->update([
+                    'status' => 'rejected',
+                    'decided_by_user_id' => $request->user()->id,
+                    'decision_note' => trim($data['decision_note']),
+                    'decided_at' => now(),
+                ]);
+            });
+            app(\App\Services\CustomerCommunications::class)->order(Order::findOrFail($id), 'cancellation_rejected');
+        }
+
+        return redirect()->route('admin.orders.show', $id)
+            ->with('success', $data['decision'] === 'approve' ? 'Order cancelled and request approved.' : 'Cancellation request declined.');
+    }
+
+    /** Record a reconciled COD collection separately from delivery. */
+    public function markCodPaid(Request $request, int $id): RedirectResponse
+    {
+        $data = $request->validate([
+            'cod_collection_channel' => 'required|in:in_house,courier_remittance',
+            'cod_collection_note' => 'nullable|string|max:255',
+            'confirm_collected' => 'accepted',
+        ]);
+
+        DB::transaction(function () use ($data, $id) {
+            $order = Order::query()->lockForUpdate()->findOrFail($id);
+            if ($order->payment_method !== 'cod' || $order->status !== 'delivered'
+                || ! in_array($order->payment_status, ['due_on_delivery', 'unknown'], true)
+                || $order->paid_at !== null) {
+                throw ValidationException::withMessages([
+                    'payment' => 'Only a delivered, unpaid COD order can be marked paid.',
+                ]);
+            }
+
+            $order->update([
+                'payment_status' => 'paid',
+                'paid_at' => now(),
+                'paid_recorded_by' => auth()->id(),
+                'cod_collection_channel' => $data['cod_collection_channel'],
+                'cod_collection_note' => $data['cod_collection_note'] ?? null,
+            ]);
+        });
+
+        app(\App\Services\CustomerCommunications::class)->order(Order::findOrFail($id), 'cod_paid');
+
+        return redirect()->route('admin.orders.show', $id)
+            ->with('success', 'COD collection recorded as paid.');
     }
 
     /* =========================================================================

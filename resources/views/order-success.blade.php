@@ -18,6 +18,8 @@
       আপনার অর্ডারটি সফলভাবে গ্রহণ করা হয়েছে (Order placed successfully). আমাদের প্রতিনিধি শীঘ্রই আপনার মোবাইল নম্বরে কল করে অর্ডার কনফার্ম করবেন।
     </p>
 
+    @include('partials.cancellation-request', ['order' => $order])
+
     <!-- Receipt Card -->
     <div class="eq-order-receipt-card">
       <div class="eq-receipt-header">
@@ -59,7 +61,7 @@
             @if($order->payment_method === 'cod')
               Cash on Delivery (COD)
             @elseif($order->payment_method === 'bkash')
-              bKash / Mobile Banking
+              bKash Online Payment
             @else
               {{ strtoupper($order->payment_method) }}
             @endif
@@ -118,12 +120,14 @@
             <td style="text-align: right; font-size: 0.85rem;" id="receipt-shipping">৳{{ number_format($order->delivery_fee) }}</td>
           </tr>
           <tr style="border-top: 1.5px solid var(--eq-line);">
-            <td colspan="2" style="padding-top: 0.75rem; font-weight: 600; font-size: 1.05rem; color: var(--eq-charcoal);">Total Payable:</td>
+            <td colspan="2" style="padding-top: 0.75rem; font-weight: 600; font-size: 1.05rem; color: var(--eq-charcoal);">{{ $order->status === 'cancelled' ? 'Original Order Total:' : 'Total Payable:' }}</td>
             <td style="text-align: right; padding-top: 0.75rem; font-weight: 600; font-size: 1.15rem; color: var(--eq-gold-dark);" id="receipt-total">৳{{ number_format($order->total) }}</td>
           </tr>
         </tfoot>
       </table>
     </div>
+
+    @include('partials.return-requests', ['order' => $order])
 
     <!-- Action Buttons -->
     <div class="eq-order-success__actions" style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">

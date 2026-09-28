@@ -19,16 +19,22 @@ class DatabaseSeeder extends Seeder
             NousTelosBagSeeder::class,
         ]);
 
-        // Seed or update master Earthquick Admin user
-        User::updateOrCreate(
-            ['email' => 'admin@earthquick.com'],
-            [
-                'name' => 'Earthquick Admin',
-                'phone' => '01700000000',
-                'password' => Hash::make('password123'),
-                'is_admin' => true,
-                'city' => 'Chattogram',
-            ]
-        );
+        // A bootstrap admin is opt-in for local/test environments only. Never
+        // reset an existing account's password or elevate an existing user.
+        if (app()->environment(['local', 'testing'])) {
+            $email = env('EARTHQUICK_SEED_ADMIN_EMAIL');
+            $password = env('EARTHQUICK_SEED_ADMIN_PASSWORD');
+
+            if (filled($email) && filled($password) && ! User::where('email', $email)->exists()) {
+                User::create([
+                    'name' => 'Earthquick Admin',
+                    'email' => $email,
+                    'phone' => '01700000000',
+                    'password' => Hash::make($password),
+                    'is_admin' => true,
+                    'city' => 'Chattogram',
+                ]);
+            }
+        }
     }
 }

@@ -53,8 +53,12 @@
         <ul class="eq-footer__links">
           <li>GEC Circle, Nasirabad</li>
           <li>Chattogram 4000, Bangladesh</li>
-          <li>iftekharislamifty@gmail.com</li>
-          <li>+880 017931***87</li>
+          @if(config('communications.support_email'))<li><a href="mailto:{{ config('communications.support_email') }}">{{ config('communications.support_email') }}</a></li>@endif
+          @if(config('communications.support_phone'))<li><a href="tel:{{ preg_replace('/[^+0-9]/', '', config('communications.support_phone')) }}">{{ config('communications.support_phone') }}</a></li>@endif
+          @if(config('communications.support_whatsapp'))<li><a href="https://wa.me/{{ preg_replace('/\D/', '', config('communications.support_whatsapp')) }}" target="_blank" rel="noopener noreferrer">WhatsApp chat</a></li>@endif
+          @if(!config('communications.support_email') && !config('communications.support_phone'))
+            <li><a href="{{ route('about') }}#contact-support">Use the support form</a></li>
+          @endif
         </ul>
       </div>
 

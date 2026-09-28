@@ -103,7 +103,7 @@ class CheckoutController extends Controller
             'area' => 'required|string|max:100',
             'address' => 'required|string|max:1000',
             'order_notes' => 'nullable|string|max:1000',
-            'payment_method' => 'nullable|string|in:cod,bkash,card',
+            'payment_method' => 'nullable|string|in:cod,bkash',
         ], [
             'customer_name.required' => 'Customer name is required.',
             'customer_phone.required' => 'Mobile phone number is required.',
@@ -122,6 +122,14 @@ class CheckoutController extends Controller
         }
 
         $paymentMethod = $request->input('payment_method', 'cod');
+
+        // A bKash selection must never create an order or reserve stock until
+        // the gateway initiation and verified callback flow is implemented.
+        if ($paymentMethod === 'bkash') {
+            throw ValidationException::withMessages([
+                'payment_method' => 'bKash online checkout is not available yet. Please choose Cash on Delivery.',
+            ]);
+        }
 
         // Human-readable invoice number: EQ-2026-XXXX-XXXX
         $orderNumber = 'EQ-'.date('Y').'-'.strtoupper(Str::random(4)).'-'.rand(1000, 9999);
@@ -178,6 +186,7 @@ class CheckoutController extends Controller
 
             // Re-validate and apply coupon discount safely inside transaction
             $couponCode = null;
+            $couponId = null;
             $discountAmount = 0.00;
 
             if (session()->has('coupon')) {
@@ -186,6 +195,7 @@ class CheckoutController extends Controller
                 if ($coupon && $coupon->isValid($subtotal)['valid']) {
                     $discountAmount = $coupon->calculateDiscount($subtotal);
                     $couponCode = $coupon->code;
+                    $couponId = $coupon->id;
                     $coupon->increment('used_count');
                 }
             }
@@ -204,12 +214,21 @@ class CheckoutController extends Controller
                 'address' => $request->address,
                 'order_notes' => $request->order_notes,
                 'payment_method' => $paymentMethod,
+                'payment_status' => 'due_on_delivery',
                 'coupon_code' => $couponCode,
+                'coupon_id' => $couponId,
                 'discount_amount' => $discountAmount,
                 'subtotal' => $subtotal,
                 'delivery_fee' => $deliveryFee,
                 'total' => $total,
                 'status' => 'pending',
+            ]);
+
+            $newOrder->statusEvents()->create([
+                'actor_user_id' => auth()->id(),
+                'source' => 'checkout',
+                'from_status' => null,
+                'to_status' => 'pending',
             ]);
 
             foreach ($items as $item) {
@@ -270,6 +289,8 @@ class CheckoutController extends Controller
             $order->order_number,
         ])));
 
+        app(\App\Services\CustomerCommunications::class)->order($order, 'placed');
+
         return redirect()->route('checkout.success', ['order_number' => $order->order_number]);
     }
 
@@ -283,7 +304,7 @@ class CheckoutController extends Controller
      */
     public function success(string $order_number): View
     {
-        $order = Order::with('items')->where('order_number', $order_number)->firstOrFail();
+        $order = Order::with(['items', 'cancellationRequests', 'returnRequests.refund', 'statusEvents'])->where('order_number', $order_number)->firstOrFail();
 
         $isOrderOwner = $order->user_id !== null
             ? auth()->id() === $order->user_id

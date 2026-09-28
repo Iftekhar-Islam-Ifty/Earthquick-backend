@@ -452,8 +452,8 @@
     </div>
   </section>
 
-  <!-- Chart.js Engine Integration -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <!-- Bundle the dashboard chart library locally; no external CDN is required. -->
+  @vite('resources/js/admin-charts.js')
   <script>
     document.addEventListener('DOMContentLoaded', function () {
       

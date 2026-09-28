@@ -48,6 +48,8 @@
       $statusBg = $isDelivered ? 'rgba(39, 174, 96, 0.12)' : ($status === 'cancelled' ? 'rgba(231, 76, 60, 0.12)' : 'rgba(201, 150, 47, 0.12)');
     @endphp
 
+    @include('partials.cancellation-request', ['order' => $order])
+
     <!-- Receipt Card -->
     <div class="eq-order-receipt-card">
       <div class="eq-receipt-header">
@@ -141,6 +143,7 @@
         <div>
           <div class="eq-receipt-group-label">Payment Mode</div>
           <div class="eq-receipt-group-val">{{ strtoupper($order->payment_method) }}</div>
+          <div style="font-size: 0.78rem; color: var(--eq-charcoal-soft);">{{ match ($order->payment_status) { 'paid' => 'Paid', 'due_on_delivery' => 'Due on delivery', 'not_due' => 'Not due — order cancelled', default => 'Payment not verified' } }}</div>
         </div>
       </div>
 
@@ -196,13 +199,14 @@
             <td style="text-align: right; font-size: 0.85rem;">৳{{ number_format($order->delivery_fee) }}</td>
           </tr>
           <tr style="border-top: 1.5px solid var(--eq-line);">
-            <td colspan="2" style="padding-top: 0.75rem; font-weight: 600; font-size: 1.05rem; color: var(--eq-charcoal);">Total Payable:</td>
+            <td colspan="2" style="padding-top: 0.75rem; font-weight: 600; font-size: 1.05rem; color: var(--eq-charcoal);">{{ $order->status === 'cancelled' ? 'Original Order Total:' : 'Total Payable:' }}</td>
             <td style="text-align: right; padding-top: 0.75rem; font-weight: 600; font-size: 1.15rem; color: var(--eq-gold-dark);">৳{{ number_format($order->total) }}</td>
           </tr>
         </tfoot>
       </table>
     </div>
 
+    @include('partials.return-requests', ['order' => $order])
   </div>
 </main>
 @endsection

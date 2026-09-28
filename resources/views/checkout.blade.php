@@ -181,9 +181,9 @@
           <div class="eq-payment-methods">
 
             <!-- COD (Cash on Delivery) -->
-            <div class="eq-payment-card {{ old('payment_method', 'cod') === 'cod' ? 'is-selected' : '' }}" id="payment-card-cod">
+            <div class="eq-payment-card is-selected" id="payment-card-cod">
               <label class="eq-payment-card__header" for="pay-cod">
-                <input type="radio" id="pay-cod" name="payment_method" value="cod" {{ old('payment_method', 'cod') === 'cod' ? 'checked' : '' }} onchange="selectPaymentMethod('cod')" />
+                <input type="radio" id="pay-cod" name="payment_method" value="cod" checked onchange="selectPaymentMethod('cod')" />
                 <span class="eq-payment-card__title">Cash on Delivery (COD)</span>
                 <span class="eq-payment-card__badge">Most Popular</span>
               </label>
@@ -192,17 +192,15 @@
               </div>
             </div>
 
-            <!-- bKash / Mobile Banking -->
-            <div class="eq-payment-card {{ old('payment_method') === 'bkash' ? 'is-selected' : '' }}" id="payment-card-bkash">
-              <label class="eq-payment-card__header" for="pay-bkash">
-                <input type="radio" id="pay-bkash" name="payment_method" value="bkash" {{ old('payment_method') === 'bkash' ? 'checked' : '' }} onchange="selectPaymentMethod('bkash')" />
-                <span class="eq-payment-card__title">bKash / Nagad / Rocket (Mobile Banking)</span>
-                <span class="eq-payment-card__badge" style="background-color: rgba(201, 150, 47, 0.15); color: var(--eq-gold-dark);">Direct</span>
-              </label>
-              <div class="eq-payment-card__body" id="bkash-details-box" style="{{ old('payment_method') === 'bkash' ? 'display: block;' : 'display: none;' }}">
-                <p style="margin-top: 0; margin-bottom: 0.5rem;">
-                  Please send the order amount to our Merchant bKash Number: <strong>01876-543210</strong>. Our support desk will confirm the payment over the phone.
-                </p>
+            <!-- bKash stays unavailable until the online gateway is verified. -->
+            <div class="eq-payment-card" id="payment-card-bkash" aria-disabled="true">
+              <div class="eq-payment-card__header">
+                <input type="radio" id="pay-bkash" name="payment_method" value="bkash" disabled aria-label="bKash online payment, coming soon" />
+                <span class="eq-payment-card__title">bKash Online Payment</span>
+                <span class="eq-payment-card__badge" style="background-color: rgba(201, 150, 47, 0.15); color: var(--eq-gold-dark);">Coming Soon</span>
+              </div>
+              <div class="eq-payment-card__body" style="display: block;">
+                Secure gateway checkout is being prepared. Please do not send a manual payment for this order.
               </div>
             </div>
 

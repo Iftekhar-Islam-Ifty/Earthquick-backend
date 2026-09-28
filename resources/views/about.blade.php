@@ -266,8 +266,12 @@
               <div>
                 <div class="eq-contact-info-title">Customer Care Hotline</div>
                 <p class="eq-contact-info-val">
-                  <a href="tel:+8801793100087">+880 017931***87</a><br />
-                  <span style="font-size: 0.82rem; color: #64748b;">Instant assistance on WhatsApp &amp; Calls</span>
+                  @if(config('communications.support_phone'))
+                    <a href="tel:{{ preg_replace('/[^+0-9]/', '', config('communications.support_phone')) }}">{{ config('communications.support_phone') }}</a><br />
+                  @else
+                    <span>Use the inquiry form below</span><br />
+                  @endif
+                  <span style="font-size: 0.82rem; color: #64748b;">{{ config('communications.support_phone') ? 'For urgent questions; opens your dialer. A team member answers manually.' : 'Phone support will be listed when available' }}</span>
                 </p>
               </div>
             </div>
@@ -280,11 +284,30 @@
               <div>
                 <div class="eq-contact-info-title">Email Inquiries</div>
                 <p class="eq-contact-info-val">
-                  <a href="mailto:iftekharislamifty@gmail.com">iftekharislamifty@gmail.com</a><br />
-                  <span style="font-size: 0.82rem; color: #64748b;">Average response time: within 24 hours</span>
+                  @if(config('communications.support_email'))
+                    <a href="mailto:{{ config('communications.support_email') }}">{{ config('communications.support_email') }}</a><br />
+                  @else
+                    <span>Use the inquiry form below</span><br />
+                  @endif
+                  <span style="font-size: 0.82rem; color: #64748b;">For detailed, non-urgent questions. Opens your email app; replies are manual.</span>
                 </p>
               </div>
             </div>
+
+            @if(config('communications.support_whatsapp'))
+            <div class="eq-contact-info-item">
+              <div class="eq-contact-info-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+              </div>
+              <div>
+                <div class="eq-contact-info-title">WhatsApp Chat</div>
+                <p class="eq-contact-info-val">
+                  <a href="https://wa.me/{{ preg_replace('/\D/', '', config('communications.support_whatsapp')) }}" target="_blank" rel="noopener noreferrer">Open WhatsApp chat</a><br />
+                  <span style="font-size: 0.82rem; color: #64748b;">For a quick conversation; opens WhatsApp. Replies are manual, not instant or automated.</span>
+                </p>
+              </div>
+            </div>
+            @endif
 
             <!-- Hours Item -->
             <div class="eq-contact-info-item">
@@ -310,37 +333,41 @@
               Fill out the form below and our team will get back to you promptly.
             </p>
 
-            <form id="contact-form" novalidate onsubmit="handleContactSubmit(event)">
+            @if(session('success'))<p role="status" style="color:#176a3a;">{{ session('success') }}</p>@endif
+            @if($errors->any())<p role="alert" style="color:#a32727;">{{ $errors->first() }}</p>@endif
+            <form id="contact-form" method="POST" action="{{ route('contact.store') }}">
+              @csrf
+              <div style="position:absolute;left:-9999px;" aria-hidden="true"><label for="contact-website">Leave this blank</label><input type="text" id="contact-website" name="website" tabindex="-1" autocomplete="off"></div>
               <div class="eq-form-row">
                 <div class="eq-form-group">
                   <label for="contact-name">Your Full Name <span style="color:#c93b2b;">*</span></label>
-                  <input type="text" class="eq-form-input" id="contact-name" name="name" required placeholder="e.g. Iftekhar Islam" />
+                  <input type="text" class="eq-form-input" id="contact-name" name="name" value="{{ old('name') }}" required minlength="2" maxlength="150" autocomplete="name" placeholder="Your name" />
                 </div>
                 <div class="eq-form-group">
                   <label for="contact-phone">Phone Number <span style="color:#c93b2b;">*</span></label>
-                  <input type="tel" class="eq-form-input" id="contact-phone" name="phone" required placeholder="017XXXXXXXX" />
+                  <input type="tel" class="eq-form-input" id="contact-phone" name="phone" value="{{ old('phone') }}" required maxlength="20" autocomplete="tel" placeholder="017XXXXXXXX" />
                 </div>
               </div>
 
               <div class="eq-form-group">
-                <label for="contact-email">Email Address <span style="color:#c93b2b;">*</span></label>
-                <input type="email" class="eq-form-input" id="contact-email" name="email" required placeholder="your.name@example.com" />
+                <label for="contact-email">Email Address (optional)</label>
+                <input type="email" class="eq-form-input" id="contact-email" name="email" value="{{ old('email') }}" maxlength="255" autocomplete="email" placeholder="your.name@example.com" />
               </div>
 
               <div class="eq-form-group">
                 <label for="contact-subject">Inquiry Type / Subject</label>
                 <select class="eq-form-select" id="contact-subject" name="subject">
-                  <option value="General Inquiry">General Product Inquiry</option>
-                  <option value="Order Status & Delivery">Order Status &amp; Nationwide Delivery</option>
-                  <option value="Vendor / Artisan Partnership">Vendor / Artisan Partnership (Sell on Earthquick)</option>
-                  <option value="Custom Tailoring & Sizing">Custom Tailoring, Saree Blouse or Bulk Order</option>
-                  <option value="Exchange or Return">Exchange or Return Assistance</option>
+                  <option value="General Inquiry" @selected(old('subject') === 'General Inquiry')>General Product Inquiry</option>
+                  <option value="Order Status & Delivery" @selected(old('subject') === 'Order Status & Delivery')>Order Status &amp; Nationwide Delivery</option>
+                  <option value="Vendor / Artisan Partnership" @selected(old('subject') === 'Vendor / Artisan Partnership')>Vendor / Artisan Partnership (Sell on Earthquick)</option>
+                  <option value="Custom Tailoring & Sizing" @selected(old('subject') === 'Custom Tailoring & Sizing')>Custom Tailoring, Saree Blouse or Bulk Order</option>
+                  <option value="Exchange or Return" @selected(old('subject') === 'Exchange or Return')>Exchange or Return Assistance</option>
                 </select>
               </div>
 
               <div class="eq-form-group">
                 <label for="contact-message">Your Message / Requirements <span style="color:#c93b2b;">*</span></label>
-                <textarea class="eq-form-textarea" id="contact-message" name="message" required placeholder="Tell us how we can help you, or share details about your craft/store..."></textarea>
+                <textarea class="eq-form-textarea" id="contact-message" name="message" required minlength="10" maxlength="5000" placeholder="Tell us how we can help you, or share details about your craft/store...">{{ old('message') }}</textarea>
               </div>
 
               <button type="submit" class="eq-btn eq-btn--primary" id="btn-submit-contact">
@@ -376,8 +403,8 @@
             <div class="eq-faq-answer" style="display: block;">
               <p>
                 Placing an order is effortless: browse our collections, select your desired piece, and click <strong>Add to Bag</strong> or <strong>Buy Now</strong>. 
-                During checkout, you can pay via <strong>Cash on Delivery (nationwide across Bangladesh)</strong>, 
-                instant mobile banking (<strong>bKash, Nagad, Rocket</strong>), or debit/credit cards (Visa, Mastercard, Amex).
+                At checkout, you can choose <strong>Cash on Delivery</strong>. Pay when your order is delivered.
+                bKash online payment is coming soon; we do not currently accept manual mobile banking or card payments.
               </p>
             </div>
           </div>
@@ -423,9 +450,7 @@
             </button>
             <div class="eq-faq-answer">
               <p>
-                We stand wholeheartedly behind our craftsmanship. You can request an exchange within <strong>7 days of delivery</strong> 
-                provided the item is unworn, unwashed, and retains all original brand tags and packaging. 
-                Contact our care hotline at <code>+880 017931***87</code> or email us with your Order ID to initiate the courier pickup.
+                Return eligibility and the time window appear on each product and order item. For eligible delivered orders, request a return from your order page and wait for Earthquick's authorization before sending anything. For a damaged or incorrect item, or if the online form is unavailable, use the <a href="#contact-support">support inquiry form</a> with your order number. Earthquick will confirm the return-courier payer after reviewing the reason; a courier pickup is not automatic.
               </p>
             </div>
           </div>
@@ -530,34 +555,5 @@
     }
   }
 
-  // Contact Form Submission Handler
-  function handleContactSubmit(event) {
-    event.preventDefault();
-    var form = event.target;
-    var name = document.getElementById('contact-name').value.trim();
-    var phone = document.getElementById('contact-phone').value.trim();
-    var email = document.getElementById('contact-email').value.trim();
-    var subject = document.getElementById('contact-subject').value;
-    var message = document.getElementById('contact-message').value.trim();
-
-    if (!name || !phone || !email || !message) {
-      if (window.showToast) {
-        window.showToast('Please fill in all required fields.', 'error');
-      } else {
-        alert('Please fill in all required fields.');
-      }
-      return;
-    }
-
-    // Display success feedback
-    if (window.showToast) {
-      window.showToast('Thank you, ' + name + '! Your message regarding "' + subject + '" has been received. Our team will contact you shortly.', 'success');
-    } else {
-      alert('Thank you! Your message has been received.');
-    }
-
-    // Reset form
-    form.reset();
-  }
 </script>
 @endpush

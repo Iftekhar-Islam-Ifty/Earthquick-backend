@@ -97,6 +97,7 @@ require __DIR__.'/../earthquick_core/vendor/autoload.php';
     php artisan migrate --force
     ```
 3. Do not run development seeders against an existing production catalog. Product/vendor ownership must be reviewed and migrated deliberately; a seeder is not a production backfill tool.
+   The local bootstrap admin is opt-in and never created in production by `DatabaseSeeder`. Provision the production admin through a reviewed, secure process. If an earlier development seed password was ever used for an admin account on this database, rotate that account's password before launch.
 4. If SSH is **not** available:
    - Export your local database `earthquick_db` to an `.sql` file using phpMyAdmin.
    - Open **phpMyAdmin** in cPanel, select `username_earthquick`, and click **Import**.
@@ -253,6 +254,8 @@ If you plan to utilize Laravel's task scheduler (e.g., pruning old abandoned car
 3. Verify uploads resolve through `/storage` and no `.env`, log, or source file is web-accessible.
 4. Complete real-browser QA on desktop and mobile before accepting orders.
 5. Confirm the backup/restore process with a non-production copy before relying on it.
+6. Confirm that the Vite build manifest and bundled admin chart asset are deployed; the dashboard must render both charts without an external CDN.
+7. Do not accept live bKash payments until the approved payment phase replaces the placeholder merchant number and verifies payment state.
 
 ---
 

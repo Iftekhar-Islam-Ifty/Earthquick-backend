@@ -383,7 +383,8 @@
         <div class="eq-invoice-badge">PACKING SLIP &amp; INVOICE</div>
         <div class="eq-meta-row">Order No: <strong>#{{ $order->order_number }}</strong></div>
         <div class="eq-meta-row">Date: <strong>{{ $order->created_at->format('d M Y, h:i A') }}</strong></div>
-        <div class="eq-meta-row">Payment: <strong>{{ strtoupper($order->payment_method ?? 'COD') }} (Cash on Delivery)</strong></div>
+        <div class="eq-meta-row">Payment: <strong>{{ $order->payment_method === 'cod' ? 'COD (Cash on Delivery)' : strtoupper($order->payment_method ?? 'UNKNOWN') }}</strong></div>
+        <div class="eq-meta-row">Payment status: <strong>{{ match ($order->payment_status) { 'paid' => 'PAID', 'due_on_delivery' => 'DUE ON DELIVERY', 'not_due' => 'NOT DUE — CANCELLED', default => 'UNVERIFIED' } }}</strong></div>
       </div>
     </header>
 
@@ -488,7 +489,7 @@
           <td>৳{{ number_format($order->delivery_fee) }}</td>
         </tr>
         <tr class="eq-totals-total-row">
-          <td>Total Payable (COD):</td>
+          <td>{{ $order->status === 'cancelled' ? 'Original Order Total:' : 'Total Payable (COD):' }}</td>
           <td style="color: var(--eq-gold-dark);">৳{{ number_format($order->total) }}</td>
         </tr>
       </table>

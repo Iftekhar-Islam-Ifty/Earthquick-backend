@@ -45,7 +45,7 @@ class AccountController extends Controller
         $user = Auth::user();
 
         // Contact details are not proof of ownership; require the account link.
-        $order = Order::with('items')
+        $order = Order::with(['items', 'cancellationRequests', 'returnRequests.refund', 'statusEvents'])
             ->where('order_number', $order_number)
             ->where('user_id', $user->id)
             ->firstOrFail();

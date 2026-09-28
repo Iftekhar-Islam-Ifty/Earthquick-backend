@@ -31,7 +31,14 @@ class Order extends Model
         'address',
         'order_notes',
         'payment_method',
+        'payment_status',
+        'payment_reference',
+        'paid_at',
+        'paid_recorded_by',
+        'cod_collection_channel',
+        'cod_collection_note',
         'coupon_code',
+        'coupon_id',
         'discount_amount',
         'subtotal',
         'delivery_fee',
@@ -54,6 +61,7 @@ class Order extends Model
             'discount_amount' => 'float',
             'delivery_fee'    => 'float',
             'total'           => 'float',
+            'paid_at'         => 'datetime',
         ];
     }
 
@@ -79,5 +87,30 @@ class Order extends Model
     public function items(): HasMany
     {
         return $this->hasMany(OrderItem::class);
+    }
+
+    public function paymentRecorder(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'paid_recorded_by');
+    }
+
+    public function statusEvents(): HasMany
+    {
+        return $this->hasMany(OrderStatusEvent::class)->orderBy('id');
+    }
+
+    public function cancellationRequests(): HasMany
+    {
+        return $this->hasMany(OrderCancellationRequest::class)->orderByDesc('id');
+    }
+
+    public function returnRequests(): HasMany
+    {
+        return $this->hasMany(OrderReturnRequest::class)->orderByDesc('id');
+    }
+
+    public function refunds(): HasMany
+    {
+        return $this->hasMany(OrderRefund::class)->orderByDesc('id');
     }
 }

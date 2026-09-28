@@ -8,6 +8,15 @@ use Tests\Support\CatalogFixture;
 
 abstract class TestCase extends BaseTestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        // HTTP feature tests use an isolated public root without Vite build
+        // artifacts; asset bundling is verified separately with npm build.
+        $this->withoutVite();
+    }
+
     public function createApplication()
     {
         if (! defined('EARTHQUICK_TEST_ROOT')) {
