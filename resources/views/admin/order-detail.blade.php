@@ -49,6 +49,7 @@
         <div class="eq-admin-card__header" style="margin-bottom: 0.75rem; padding-bottom: 0.55rem;">
           <h2 class="eq-admin-card__title" style="font-size: 1.05rem;">Purchased Creations ({{ $order->items->count() }} {{ Str::plural('item', $order->items->count()) }})</h2>
         </div>
+        <p style="margin:0 0 0.8rem;color:var(--eq-charcoal-soft);font-size:0.78rem;line-height:1.5;">Current available units are shown with each item. Confirming an order does not change stock; cancelling an eligible unpaid order restores it.</p>
 
         <!-- Desktop Items Table -->
         <div class="eq-desktop-only">
@@ -80,6 +81,13 @@
                           @endif
                           @if($item->delivery_class)
                             <div style="font-size: 0.72rem; color: var(--eq-charcoal-soft);">{{ config('catalog.delivery_classes.'.$item->delivery_class, ucfirst($item->delivery_class)) }} · {{ $item->is_returnable ? ($item->return_window_days.'-day return') : 'Final sale' }}</div>
+                          @endif
+                          @if($item->variant_id)
+                            <div style="font-size:0.74rem;color:var(--eq-teal);font-weight:600;">{{ $item->variant ? 'Available now for this option: '.$item->variant->stock_quantity.' units' : 'Original option no longer in the catalog' }}</div>
+                          @elseif($item->product)
+                            <div style="font-size:0.74rem;color:var(--eq-teal);font-weight:600;">Available now: {{ $item->product->stock_quantity }} units</div>
+                          @else
+                            <div style="font-size:0.74rem;color:var(--eq-charcoal-soft);">Original product no longer in the catalog</div>
                           @endif
                         </div>
                       </div>
@@ -114,6 +122,13 @@
                   @endif
                   @if($item->delivery_class)
                     <div style="font-size: 0.7rem; color: var(--eq-charcoal-soft);">{{ config('catalog.delivery_classes.'.$item->delivery_class, ucfirst($item->delivery_class)) }} · {{ $item->is_returnable ? ($item->return_window_days.'-day return') : 'Final sale' }}</div>
+                  @endif
+                  @if($item->variant_id)
+                    <div style="font-size:0.72rem;color:var(--eq-teal);font-weight:600;">{{ $item->variant ? 'Available now for this option: '.$item->variant->stock_quantity.' units' : 'Original option no longer in the catalog' }}</div>
+                  @elseif($item->product)
+                    <div style="font-size:0.72rem;color:var(--eq-teal);font-weight:600;">Available now: {{ $item->product->stock_quantity }} units</div>
+                  @else
+                    <div style="font-size:0.72rem;color:var(--eq-charcoal-soft);">Original product no longer in the catalog</div>
                   @endif
                   <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.3rem; font-size: 0.8rem;">
                     <span style="color: var(--eq-charcoal-soft);">৳{{ number_format($item->unit_price) }} &times; {{ $item->quantity }}</span>
@@ -518,5 +533,33 @@
     </div>
 
   </div>
+
+  <section class="eq-admin-card" style="margin-top:1.25rem;border-color:{{ $canDeleteTestOrder ? '#f2c5c5' : 'var(--eq-line)' }};">
+    <div class="eq-admin-card__header">
+      <h2 class="eq-admin-card__title" style="font-size:1rem;">Order retention</h2>
+    </div>
+    @if($canDeleteTestOrder)
+      <p style="font-size:0.84rem;line-height:1.55;color:var(--eq-charcoal-soft);">This cancelled, unpaid QA order can be permanently removed. Its items and order history will also be deleted. Stock was restored at cancellation; deleting the record will not change stock again. A minimal deletion audit remains.</p>
+      <form method="POST" action="{{ route('admin.orders.delete-test', $order->id) }}" style="display:grid;gap:0.85rem;max-width:560px;margin-top:1rem;" onsubmit="return confirm('Permanently delete this cancelled test order and its history? This cannot be undone.');">
+        @csrf
+        @method('DELETE')
+        <label style="display:grid;gap:0.3rem;font-size:0.82rem;font-weight:600;color:var(--eq-navy);" for="delete-order-number">
+          Type order number {{ $order->order_number }}
+          <input id="delete-order-number" name="confirm_order_number" type="text" required autocomplete="off" value="{{ old('confirm_order_number') }}" style="width:100%;box-sizing:border-box;padding:0.6rem;border:1px solid var(--eq-line);border-radius:6px;font:inherit;" />
+        </label>
+        <label style="display:grid;gap:0.3rem;font-size:0.82rem;font-weight:600;color:var(--eq-navy);" for="delete-order-reason">
+          Internal deletion reason (do not include customer details)
+          <textarea id="delete-order-reason" name="deletion_reason" required minlength="10" maxlength="500" rows="2" style="width:100%;box-sizing:border-box;padding:0.6rem;border:1px solid var(--eq-line);border-radius:6px;font:inherit;">{{ old('deletion_reason') }}</textarea>
+        </label>
+        <label style="display:flex;gap:0.5rem;align-items:flex-start;font-size:0.82rem;line-height:1.45;color:var(--eq-charcoal);">
+          <input type="checkbox" name="confirm_permanent" value="1" required style="margin-top:0.2rem;" />
+          <span>I understand this test order and its history cannot be recovered from the site.</span>
+        </label>
+        <button type="submit" class="eq-admin-btn eq-admin-btn--danger" style="justify-self:start;">Permanently delete test order</button>
+      </form>
+    @else
+      <p style="margin:0;font-size:0.84rem;line-height:1.55;color:var(--eq-charcoal-soft);">Real, paid or fulfilled orders are retained for customer support and financial records. Permanent deletion is available only for orders marked as QA tests in both customer and admin cancellation notes, then safely cancelled before payment or fulfilment.</p>
+    @endif
+  </section>
 
 @endsection

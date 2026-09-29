@@ -26,6 +26,15 @@
     </div>
   </div>
 
+  <p class="eq-admin-card" style="margin: 0 0 1rem; padding: 0.75rem 1rem; color: var(--eq-charcoal-soft); font-size: 0.84rem; line-height: 1.55;">
+    <strong style="color: var(--eq-navy);">Available units</strong> means pieces left to sell. Checkout reduces the count; Confirm does not change it; cancelling an eligible unpaid order restores it. For size or colour options, this is the total of active variants. Counts refresh automatically while this page is open.
+  </p>
+
+  <div style="display:flex;align-items:center;gap:0.65rem;flex-wrap:wrap;margin:-0.35rem 0 1rem;font-size:0.8rem;color:var(--eq-charcoal-soft);">
+    <button type="button" id="eq-stock-refresh" class="eq-admin-btn eq-admin-btn--outline" style="padding:0.35rem 0.65rem;font-size:0.78rem;">Refresh stock now</button>
+    <span id="eq-stock-sync-status" role="status" aria-live="polite">Checking current units…</span>
+  </div>
+
   <!-- Filters and Search Toolbar -->
   <section class="eq-admin-card" style="padding: 0.75rem 1rem; margin-bottom: 1rem;">
     <form method="GET" action="{{ route('admin.products') }}" style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
@@ -92,7 +101,7 @@
               <th>Category</th>
               <th>Fabric</th>
               <th>Unit Price</th>
-              <th style="text-align: center;">Units</th>
+              <th style="text-align: center;">Available Units</th>
               <th style="text-align: center;">Stock Status</th>
               <th style="text-align: right; min-width: 230px;">Actions</th>
             </tr>
@@ -141,7 +150,7 @@
                   @endif
                 </td>
                 <td style="text-align: center; font-size: 0.85rem; color: var(--eq-charcoal);">
-                  <strong>{{ $product->stock_quantity ?? 0 }}</strong>
+                  <strong data-stock-units="{{ $product->id }}" data-stock-value="{{ $product->stock_quantity ?? 0 }}" data-stock-state="{{ $product->in_stock ? '1' : '0' }}">{{ $product->stock_quantity ?? 0 }}</strong>
                 </td>
                 <td style="text-align: center;">
                   @if($product->in_stock)
@@ -256,8 +265,8 @@
                 </span>
               </div>
               <div class="eq-card-item__kv">
-                <span class="eq-card-item__k">Stock Units</span>
-                <span class="eq-card-item__v">{{ $product->stock_quantity ?? 0 }} units</span>
+                <span class="eq-card-item__k">Available Units</span>
+                <span class="eq-card-item__v"><strong data-stock-units="{{ $product->id }}" data-stock-value="{{ $product->stock_quantity ?? 0 }}" data-stock-state="{{ $product->in_stock ? '1' : '0' }}">{{ $product->stock_quantity ?? 0 }}</strong> units</span>
               </div>
             </div>
 
@@ -318,3 +327,71 @@
   </section>
 
 @endsection
+
+@push('scripts')
+<script>
+(() => {
+  const nodes = [...document.querySelectorAll('[data-stock-units]')];
+  const status = document.getElementById('eq-stock-sync-status');
+  const refresh = document.getElementById('eq-stock-refresh');
+  const ids = [...new Set(nodes.map(node => node.dataset.stockUnits))];
+  if (!ids.length) {
+    if (status) status.textContent = 'No products on this page.';
+    return;
+  }
+
+  const url = new URL(@json(route('admin.products.stock-levels')));
+  ids.forEach(id => url.searchParams.append('ids[]', id));
+  let inFlight = false;
+  let lastCheck = 0;
+
+  async function syncStock(force = false) {
+    if (inFlight || document.hidden || (!force && Date.now() - lastCheck < 1000)) return;
+    inFlight = true;
+    lastCheck = Date.now();
+    try {
+      const response = await fetch(url, {
+        credentials: 'same-origin',
+        headers: { 'Accept': 'application/json' },
+        cache: 'no-store',
+      });
+      if (!response.ok) throw new Error('Stock check failed');
+      const data = await response.json();
+      let changed = 0;
+      for (const node of nodes) {
+        const current = data.products?.[node.dataset.stockUnits];
+        if (!current) {
+          window.location.reload();
+          return;
+        }
+        if (node.dataset.stockState !== (current.in_stock ? '1' : '0')) {
+          window.location.reload();
+          return;
+        }
+        if (node.dataset.stockValue !== String(current.units)) {
+          node.dataset.stockValue = String(current.units);
+          node.textContent = String(current.units);
+          node.style.color = 'var(--eq-teal)';
+          window.setTimeout(() => { node.style.color = ''; }, 1800);
+          changed++;
+        }
+      }
+      if (status && changed) status.textContent = 'Available units updated just now.';
+      else if (status && status.textContent === 'Checking current units…') status.textContent = 'Stock is up to date.';
+    } catch (error) {
+      if (status) status.textContent = 'Could not check live stock. Use Refresh stock now or reload the page.';
+    } finally {
+      inFlight = false;
+    }
+  }
+
+  refresh?.addEventListener('click', () => syncStock(true));
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) syncStock(true);
+  });
+  window.addEventListener('focus', () => syncStock(true));
+  window.setInterval(() => syncStock(), 5000);
+  syncStock(true);
+})();
+</script>
+@endpush

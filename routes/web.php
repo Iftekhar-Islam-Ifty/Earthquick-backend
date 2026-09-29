@@ -122,6 +122,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::post('/support-inquiries/{inquiry}', [SupportInquiryController::class, 'update'])->name('support.update');
     Route::get('/orders/export', [AdminController::class, 'exportOrders'])->name('orders.export');
     Route::get('/orders/{id}', [AdminController::class, 'showOrder'])->name('orders.show');
+    Route::delete('/orders/{id}', [AdminController::class, 'deleteTestOrder'])->name('orders.delete-test');
     Route::post('/orders/{id}/status', [AdminController::class, 'updateOrderStatus'])->name('orders.update-status');
     Route::post('/orders/{id}/cod-paid', [AdminController::class, 'markCodPaid'])->name('orders.cod-paid');
     Route::post('/orders/{id}/cancellation-requests/{requestId}/decision', [AdminController::class, 'decideCancellation'])->name('orders.cancellation-decision');
@@ -134,6 +135,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::post('/orders/{id}/refunds/{refundId}/complete', [OrderRefundController::class, 'complete'])->name('orders.refund-complete');
     Route::get('/orders/{id}/invoice', [AdminController::class, 'orderInvoice'])->name('orders.invoice');
     Route::get('/products', [AdminController::class, 'products'])->name('products');
+    Route::get('/products/stock-levels', [AdminController::class, 'stockLevels'])->name('products.stock-levels');
     Route::get('/products/create', [AdminController::class, 'createProduct'])->name('products.create');
     Route::post('/products', [AdminController::class, 'storeProduct'])->name('products.store');
     Route::get('/products/{id}/edit', [AdminController::class, 'editProduct'])->name('products.edit');

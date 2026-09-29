@@ -9,6 +9,7 @@ use App\Models\Product;
 use App\Models\Subcategory;
 use App\Models\Vendor;
 use App\Services\OrderCancellationService;
+use App\Services\TestOrderDeletionService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -300,11 +301,26 @@ class AdminController extends Controller
     /**
      * Display full order invoice, customer shipping address, and item list.
      */
-    public function showOrder(int $id): View
+    public function showOrder(int $id, TestOrderDeletionService $deletion): View
     {
-        $order = Order::with(['items', 'user', 'paymentRecorder', 'statusEvents.actor', 'cancellationRequests.decisionMaker', 'returnRequests.item', 'returnRequests.decisionMaker', 'returnRequests.receiver', 'returnRequests.inspector', 'returnRequests.restocker', 'returnRequests.refund.approver', 'returnRequests.refund.completer'])->findOrFail($id);
+        $order = Order::with(['items.product', 'items.variant', 'user', 'paymentRecorder', 'statusEvents.actor', 'cancellationRequests.decisionMaker', 'returnRequests.item', 'returnRequests.decisionMaker', 'returnRequests.receiver', 'returnRequests.inspector', 'returnRequests.restocker', 'returnRequests.refund.approver', 'returnRequests.refund.completer'])->findOrFail($id);
+        $canDeleteTestOrder = $deletion->isEligible($order);
 
-        return view('admin.order-detail', compact('order'));
+        return view('admin.order-detail', compact('order', 'canDeleteTestOrder'));
+    }
+
+    public function deleteTestOrder(Request $request, int $id, TestOrderDeletionService $deletion): RedirectResponse
+    {
+        $data = $request->validate([
+            'confirm_order_number' => 'required|string|max:100',
+            'deletion_reason' => 'required|string|min:10|max:500',
+            'confirm_permanent' => 'accepted',
+        ]);
+
+        $number = $deletion->delete($id, $request->user(), $data['confirm_order_number'], $data['deletion_reason']);
+
+        return redirect()->route('admin.orders', ['status' => 'cancelled'])
+            ->with('success', "Test order #{$number} permanently deleted. Its stock was already restored when cancelled; no stock was changed by deletion.");
     }
 
     /**
@@ -497,6 +513,25 @@ class AdminController extends Controller
         $vendors = Vendor::orderBy('name')->get();
 
         return view('admin.products', compact('products', 'categories', 'vendors', 'categorySlug', 'vendorSlug', 'stockFilter'));
+    }
+
+    /** Return current quantities for only the products visible on an admin catalog page. */
+    public function stockLevels(Request $request): JsonResponse
+    {
+        $data = $request->validate([
+            'ids' => 'required|array|min:1|max:20',
+            'ids.*' => 'required|integer|distinct|min:1',
+        ]);
+
+        $products = Product::query()->whereIn('id', $data['ids'])
+            ->get(['id', 'stock_quantity', 'in_stock'])
+            ->mapWithKeys(fn (Product $product) => [$product->id => [
+                'units' => (int) $product->stock_quantity,
+                'in_stock' => (bool) $product->in_stock,
+            ]]);
+
+        return response()->json(['products' => $products])
+            ->header('Cache-Control', 'private, no-store');
     }
 
     /**

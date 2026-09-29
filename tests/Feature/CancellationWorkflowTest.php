@@ -49,6 +49,66 @@ class CancellationWorkflowTest extends TestCase
         return User::factory()->create(['is_admin' => true]);
     }
 
+    public function test_real_checkout_confirm_and_cancel_restore_the_original_available_units(): void
+    {
+        $product = Product::whereDoesntHave('variants')->where('is_active', true)->firstOrFail();
+        $product->update(['stock_quantity' => 5, 'in_stock' => true]);
+        $key = $product->id.'_standard';
+        session(['cart' => [$key => [
+            'key' => $key,
+            'id' => $product->id,
+            'product_id' => $product->id,
+            'name' => $product->name,
+            'slug' => $product->slug,
+            'price' => (float) $product->price,
+            'image' => $product->image,
+            'size' => 'Standard',
+            'quantity' => 1,
+        ]]]);
+
+        $this->post(route('checkout.store'), [
+            'customer_name' => 'Stock Lifecycle QA',
+            'customer_phone' => '01719998866',
+            'customer_email' => 'stock-qa@example.test',
+            'delivery_zone' => 'inside_ctg',
+            'district' => 'Chattogram',
+            'area' => 'QA Area',
+            'address' => 'Synthetic QA address',
+            'payment_method' => 'cod',
+        ])->assertRedirectContains('/checkout/success/EQ-');
+
+        $order = Order::where('customer_phone', '01719998866')->sole();
+        $this->assertSame(4, $product->fresh()->stock_quantity);
+
+        $stockUrl = route('admin.products.stock-levels', ['ids' => [$product->id]]);
+        $this->getJson($stockUrl)->assertUnauthorized();
+        $this->actingAs(User::factory()->create())->getJson($stockUrl)->assertForbidden();
+        $admin = $this->admin();
+        $this->actingAs($admin)->getJson($stockUrl)
+            ->assertOk()->assertJsonPath('products.'.$product->id.'.units', 4);
+        $this->getJson(route('admin.products.stock-levels', ['ids' => [0]]))->assertUnprocessable();
+        $this->get(route('admin.orders.show', $order))->assertOk()->assertSee('Available now: 4 units');
+
+        $this->post(route('admin.orders.update-status', $order), [
+            'status' => 'confirmed',
+        ])->assertRedirect();
+        $this->assertSame(4, $product->fresh()->stock_quantity);
+        $this->getJson($stockUrl)->assertOk()->assertJsonPath('products.'.$product->id.'.units', 4);
+
+        $this->post(route('admin.orders.update-status', $order), [
+            'status' => 'cancelled',
+            'admin_notes' => 'Controlled stock lifecycle test',
+        ])->assertRedirect();
+        $this->assertSame('cancelled', $order->fresh()->status);
+        $this->assertSame(5, $product->fresh()->stock_quantity);
+        $this->getJson($stockUrl)->assertOk()->assertJsonPath('products.'.$product->id.'.units', 5);
+        $this->get(route('admin.orders.show', $order))->assertOk()->assertSee('Available now: 5 units');
+
+        $this->get(route('admin.products'))->assertOk()
+            ->assertSee('Available units')
+            ->assertSee('Confirm does not change it');
+    }
+
     public function test_guest_request_requires_checkout_session_and_does_not_cancel_immediately(): void
     {
         [$order, $product] = $this->order();
