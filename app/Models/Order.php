@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /* =========================================================================
  * ORDER MODEL
@@ -14,6 +15,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Order extends Model
 {
+    use SoftDeletes;
+
     /**
      * Mass assignable attributes.
      *
@@ -47,6 +50,10 @@ class Order extends Model
         'courier_name',
         'tracking_number',
         'admin_notes',
+        'archived_at',
+        'archived_by_user_id',
+        'deleted_by_user_id',
+        'deletion_reason',
     ];
 
     /**
@@ -62,6 +69,7 @@ class Order extends Model
             'delivery_fee'    => 'float',
             'total'           => 'float',
             'paid_at'         => 'datetime',
+            'archived_at'     => 'datetime',
         ];
     }
 

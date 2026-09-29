@@ -59,12 +59,13 @@ class OrderDeletionTest extends TestCase
         ];
     }
 
-    public function test_only_admin_can_permanently_delete_a_cancelled_unpaid_marked_test_order(): void
+    public function test_cancelled_unpaid_order_can_be_trashed_and_restored_without_stock_changes(): void
     {
         [$order, $product, $admin] = $this->cancelledTestOrder();
-        $url = route('admin.orders.delete-test', $order);
+        $order->update(['order_notes' => 'Ordinary cancelled customer order', 'admin_notes' => 'Routine cancellation']);
+        $url = route('admin.orders.trash', $order);
         $this->get(route('admin.orders.show', $order))->assertOk()
-            ->assertSee('Permanently delete test order');
+            ->assertSee('Move to Trash');
 
         auth()->logout();
         $this->delete($url, $this->deletionData($order))->assertRedirect('/login');
@@ -75,37 +76,73 @@ class OrderDeletionTest extends TestCase
         $this->assertDatabaseHas('orders', ['id' => $order->id]);
 
         $this->delete($url, $this->deletionData($order))
-            ->assertRedirect(route('admin.orders', ['status' => 'cancelled']));
+            ->assertRedirect(route('admin.orders', ['folder' => 'trash']));
+        $this->assertSoftDeleted('orders', ['id' => $order->id]);
+        $this->assertDatabaseHas('order_items', ['order_id' => $order->id]);
+        $this->assertDatabaseHas('order_status_events', ['order_id' => $order->id]);
+        $this->get(route('admin.orders', ['folder' => 'trash']))->assertOk()->assertSee($order->order_number);
+        $this->get(route('admin.orders'))->assertOk()->assertDontSee($order->order_number);
+        $this->get(route('admin.orders.show', $order))->assertOk()->assertSee('Restore order')->assertDontSee('Permanently delete');
+        $this->delete(route('admin.orders.purge', $order), $this->deletionData($order))->assertSessionHasErrors('delete');
+        $this->assertSame(5, $product->fresh()->stock_quantity);
+        $this->post(route('admin.orders.restore', $order))->assertRedirect(route('admin.orders.show', $order));
+        $this->assertDatabaseHas('orders', ['id' => $order->id, 'deleted_at' => null]);
+        $this->assertSame(5, $product->fresh()->stock_quantity);
+    }
+
+    public function test_archive_and_restore_keep_order_in_database_and_separate_folder(): void
+    {
+        [$order] = $this->cancelledTestOrder();
+        $this->post(route('admin.orders.archive', $order))->assertRedirect(route('admin.orders', ['folder' => 'archived']));
+        $this->get(route('admin.orders'))->assertOk()->assertDontSee($order->order_number);
+        $this->get(route('admin.orders', ['folder' => 'archived']))->assertOk()->assertSee($order->order_number);
+        $this->get(route('admin.orders.show', $order))->assertOk()->assertSee('Restore to active orders');
+        $this->assertDatabaseHas('orders', ['id' => $order->id, 'deleted_at' => null]);
+        $this->post(route('admin.orders.unarchive', $order))->assertRedirect(route('admin.orders.show', $order));
+        $this->get(route('admin.orders'))->assertOk()->assertSee($order->order_number);
+    }
+
+    public function test_restoring_a_trashed_archived_order_returns_it_to_archive(): void
+    {
+        [$order] = $this->cancelledTestOrder();
+        $this->post(route('admin.orders.archive', $order))->assertRedirect();
+        $this->delete(route('admin.orders.trash', $order), $this->deletionData($order))->assertRedirect();
+        $this->post(route('admin.orders.restore', $order))->assertRedirect();
+        $this->assertNotNull($order->fresh()->archived_at);
+        $this->get(route('admin.orders', ['folder' => 'archived']))->assertSee($order->order_number);
+        $this->get(route('admin.orders'))->assertDontSee($order->order_number);
+    }
+
+    public function test_delivered_paid_order_may_be_archived_but_not_trashed(): void
+    {
+        [$order] = $this->cancelledTestOrder();
+        $order->update(['status' => 'delivered', 'payment_status' => 'paid', 'paid_at' => now()]);
+        $this->post(route('admin.orders.archive', $order))->assertRedirect(route('admin.orders', ['folder' => 'archived']));
+        $this->delete(route('admin.orders.trash', $order), $this->deletionData($order))->assertSessionHasErrors('delete');
+        $this->assertDatabaseHas('orders', ['id' => $order->id, 'deleted_at' => null]);
+    }
+
+    public function test_purge_requires_30_days_and_then_removes_children_but_leaves_audit(): void
+    {
+        [$order, $product, $admin] = $this->cancelledTestOrder();
+        $this->delete(route('admin.orders.trash', $order), $this->deletionData($order))->assertRedirect();
+        Order::withTrashed()->findOrFail($order->id)->forceFill(['deleted_at' => now()->subDays(31)])->save();
+        $this->get(route('admin.orders.show', $order))->assertOk()->assertSee('Permanently delete');
+        $this->delete(route('admin.orders.purge', $order), $this->deletionData($order))
+            ->assertRedirect(route('admin.orders', ['folder' => 'trash']));
         $this->assertDatabaseMissing('orders', ['id' => $order->id]);
         $this->assertDatabaseMissing('order_items', ['order_id' => $order->id]);
         $this->assertDatabaseMissing('order_status_events', ['order_id' => $order->id]);
-        $this->assertDatabaseMissing('order_cancellation_requests', ['order_id' => $order->id]);
-        $this->assertDatabaseHas('order_deletion_audits', [
-            'original_order_id' => $order->id,
-            'order_number' => $order->order_number,
-            'deleted_by_user_id' => $admin->id,
-        ]);
+        $this->assertDatabaseHas('order_deletion_audits', ['original_order_id' => $order->id, 'deleted_by_user_id' => $admin->id]);
         $this->assertSame(5, $product->fresh()->stock_quantity);
-        $this->delete($url, $this->deletionData($order))->assertNotFound();
-        $this->assertSame(1, DB::table('order_deletion_audits')->count());
     }
 
-    public function test_real_or_paid_order_cannot_use_the_test_deletion_path(): void
+    public function test_paid_order_cannot_be_trashed_or_purged(): void
     {
         [$order] = $this->cancelledTestOrder();
-        $url = route('admin.orders.delete-test', $order);
-
-        $order->update(['order_notes' => 'Real customer order']);
-        $this->get(route('admin.orders.show', $order))->assertOk()
-            ->assertDontSee('Permanently delete test order');
-        $this->delete($url, $this->deletionData($order))->assertSessionHasErrors('delete');
-
-        $order->update(['order_notes' => 'EARTHQUICK QA TEST', 'admin_notes' => 'Routine cancellation']);
-        $this->delete($url, $this->deletionData($order))->assertSessionHasErrors('delete');
-
-        $order->update(['admin_notes' => 'EARTHQUICK QA TEST - controlled cancellation']);
-        $order->update(['order_notes' => 'EARTHQUICK QA TEST', 'payment_status' => 'paid', 'paid_at' => now()]);
-        $this->delete($url, $this->deletionData($order))->assertSessionHasErrors('delete');
+        $order->update(['payment_status' => 'paid', 'paid_at' => now()]);
+        $this->get(route('admin.orders.show', $order))->assertOk()->assertDontSee('Move to Trash');
+        $this->delete(route('admin.orders.trash', $order), $this->deletionData($order))->assertSessionHasErrors('delete');
         $this->assertDatabaseHas('orders', ['id' => $order->id]);
         $this->assertSame(0, DB::table('order_deletion_audits')->count());
     }

@@ -9,7 +9,7 @@ use App\Models\Product;
 use App\Models\Subcategory;
 use App\Models\Vendor;
 use App\Services\OrderCancellationService;
-use App\Services\TestOrderDeletionService;
+use App\Services\OrderRetentionService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -143,6 +143,7 @@ class AdminController extends Controller
 
         // 5. Retrieve latest 10 customer transactions
         $recentOrders = Order::with('items')
+            ->whereNull('archived_at')
             ->latest()
             ->take(10)
             ->get();
@@ -174,8 +175,11 @@ class AdminController extends Controller
     public function exportOrders(Request $request): StreamedResponse
     {
         $status = $request->query('status');
+        $folder = $request->query('folder', 'active');
 
         $query = Order::query()->with('paymentRecorder')->latest();
+        $query->when($folder === 'archived', fn ($q) => $q->whereNotNull('archived_at'))
+            ->when($folder !== 'archived', fn ($q) => $q->whereNull('archived_at'));
         if ($status && in_array($status, ['pending', 'confirmed', 'processing', 'in_transit', 'delivered', 'cancelled'])) {
             $query->where('status', $status);
         }
@@ -266,7 +270,18 @@ class AdminController extends Controller
         $status = $request->input('status');
         $search = trim($request->input('search', ''));
 
+        $folder = $request->query('folder', 'active');
+        if (! in_array($folder, ['active', 'archived', 'trash'], true)) {
+            $folder = 'active';
+        }
         $query = Order::with(['items', 'user'])->latest();
+        if ($folder === 'trash') {
+            $query->onlyTrashed();
+        } elseif ($folder === 'archived') {
+            $query->whereNotNull('archived_at');
+        } else {
+            $query->whereNull('archived_at');
+        }
 
         // Apply search filter across order number, customer phone, or customer name
         if ($search !== '') {
@@ -285,42 +300,77 @@ class AdminController extends Controller
         $orders = $query->paginate(15)->withQueryString();
 
         // Aggregate counts for navigation filter tabs
-        $statusCounts = [
-            'all' => Order::count(),
-            'pending' => Order::where('status', 'pending')->count(),
-            'confirmed' => Order::where('status', 'confirmed')->count(),
-            'processing' => Order::where('status', 'processing')->count(),
-            'in_transit' => Order::where('status', 'in_transit')->count(),
-            'delivered' => Order::where('status', 'delivered')->count(),
-            'cancelled' => Order::where('status', 'cancelled')->count(),
+        $countsQuery = match ($folder) {
+            'trash' => Order::onlyTrashed(),
+            'archived' => Order::whereNotNull('archived_at'),
+            default => Order::whereNull('archived_at'),
+        };
+        $statusCounts = ['all' => (clone $countsQuery)->count()];
+        foreach (['pending', 'confirmed', 'processing', 'in_transit', 'delivered', 'cancelled'] as $countStatus) {
+            $statusCounts[$countStatus] = (clone $countsQuery)->where('status', $countStatus)->count();
+        }
+        $folderCounts = [
+            'active' => Order::whereNull('archived_at')->count(),
+            'archived' => Order::whereNotNull('archived_at')->count(),
+            'trash' => Order::onlyTrashed()->count(),
         ];
 
-        return view('admin.orders', compact('orders', 'status', 'statusCounts', 'search'));
+        return view('admin.orders', compact('orders', 'status', 'statusCounts', 'search', 'folder', 'folderCounts'));
     }
 
     /**
      * Display full order invoice, customer shipping address, and item list.
      */
-    public function showOrder(int $id, TestOrderDeletionService $deletion): View
+    public function showOrder(int $id, OrderRetentionService $retention): View
     {
-        $order = Order::with(['items.product', 'items.variant', 'user', 'paymentRecorder', 'statusEvents.actor', 'cancellationRequests.decisionMaker', 'returnRequests.item', 'returnRequests.decisionMaker', 'returnRequests.receiver', 'returnRequests.inspector', 'returnRequests.restocker', 'returnRequests.refund.approver', 'returnRequests.refund.completer'])->findOrFail($id);
-        $canDeleteTestOrder = $deletion->isEligible($order);
+        $order = Order::withTrashed()->with(['items.product', 'items.variant', 'user', 'paymentRecorder', 'statusEvents.actor', 'cancellationRequests.decisionMaker', 'returnRequests.item', 'returnRequests.decisionMaker', 'returnRequests.receiver', 'returnRequests.inspector', 'returnRequests.restocker', 'returnRequests.refund.approver', 'returnRequests.refund.completer'])->findOrFail($id);
+        $canTrashOrder = $retention->canTrash($order);
+        $canArchiveOrder = $retention->canArchive($order);
 
-        return view('admin.order-detail', compact('order', 'canDeleteTestOrder'));
+        if ($order->trashed()) {
+            return view('admin.order-trash-detail', compact('order'));
+        }
+
+        return view('admin.order-detail', compact('order', 'canTrashOrder', 'canArchiveOrder'));
     }
 
-    public function deleteTestOrder(Request $request, int $id, TestOrderDeletionService $deletion): RedirectResponse
+    public function archiveOrder(Request $request, int $id, OrderRetentionService $retention): RedirectResponse
+    {
+        $retention->archive($id, $request->user());
+        return redirect()->route('admin.orders', ['folder' => 'archived'])->with('success', 'Order archived. It can be restored at any time.');
+    }
+
+    public function unarchiveOrder(int $id, OrderRetentionService $retention): RedirectResponse
+    {
+        $retention->unarchive($id);
+        return redirect()->route('admin.orders.show', $id)->with('success', 'Order returned to the active list.');
+    }
+
+    public function trashOrder(Request $request, int $id, OrderRetentionService $retention): RedirectResponse
     {
         $data = $request->validate([
             'confirm_order_number' => 'required|string|max:100',
             'deletion_reason' => 'required|string|min:10|max:500',
             'confirm_permanent' => 'accepted',
         ]);
+        $retention->trash($id, $request->user(), $data['confirm_order_number'], $data['deletion_reason']);
+        return redirect()->route('admin.orders', ['folder' => 'trash'])->with('success', 'Order moved to Trash. It remains restorable for at least 30 days.');
+    }
 
-        $number = $deletion->delete($id, $request->user(), $data['confirm_order_number'], $data['deletion_reason']);
+    public function restoreTrashedOrder(int $id, OrderRetentionService $retention): RedirectResponse
+    {
+        $retention->restore($id);
+        return redirect()->route('admin.orders.show', $id)->with('success', 'Order restored from Trash.');
+    }
 
-        return redirect()->route('admin.orders', ['status' => 'cancelled'])
-            ->with('success', "Test order #{$number} permanently deleted. Its stock was already restored when cancelled; no stock was changed by deletion.");
+    public function purgeOrder(Request $request, int $id, OrderRetentionService $retention): RedirectResponse
+    {
+        $data = $request->validate([
+            'confirm_order_number' => 'required|string|max:100',
+            'confirm_permanent' => 'accepted',
+        ]);
+        $retention->purge($id, $request->user(), $data['confirm_order_number']);
+        return redirect()->route('admin.orders', ['folder' => 'trash'])->with('success', 'Order permanently deleted after its 30-day recovery period. Stock was not changed.');
     }
 
     /**

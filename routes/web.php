@@ -122,7 +122,11 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::post('/support-inquiries/{inquiry}', [SupportInquiryController::class, 'update'])->name('support.update');
     Route::get('/orders/export', [AdminController::class, 'exportOrders'])->name('orders.export');
     Route::get('/orders/{id}', [AdminController::class, 'showOrder'])->name('orders.show');
-    Route::delete('/orders/{id}', [AdminController::class, 'deleteTestOrder'])->name('orders.delete-test');
+    Route::post('/orders/{id}/archive', [AdminController::class, 'archiveOrder'])->name('orders.archive');
+    Route::post('/orders/{id}/unarchive', [AdminController::class, 'unarchiveOrder'])->name('orders.unarchive');
+    Route::delete('/orders/{id}', [AdminController::class, 'trashOrder'])->name('orders.trash');
+    Route::post('/orders/{id}/restore', [AdminController::class, 'restoreTrashedOrder'])->name('orders.restore');
+    Route::delete('/orders/{id}/purge', [AdminController::class, 'purgeOrder'])->name('orders.purge');
     Route::post('/orders/{id}/status', [AdminController::class, 'updateOrderStatus'])->name('orders.update-status');
     Route::post('/orders/{id}/cod-paid', [AdminController::class, 'markCodPaid'])->name('orders.cod-paid');
     Route::post('/orders/{id}/cancellation-requests/{requestId}/decision', [AdminController::class, 'decideCancellation'])->name('orders.cancellation-decision');

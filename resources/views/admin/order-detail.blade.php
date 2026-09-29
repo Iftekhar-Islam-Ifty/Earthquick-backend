@@ -534,13 +534,22 @@
 
   </div>
 
-  <section class="eq-admin-card" style="margin-top:1.25rem;border-color:{{ $canDeleteTestOrder ? '#f2c5c5' : 'var(--eq-line)' }};">
+  <section class="eq-admin-card" style="margin-top:1.25rem;">
     <div class="eq-admin-card__header">
       <h2 class="eq-admin-card__title" style="font-size:1rem;">Order retention</h2>
     </div>
-    @if($canDeleteTestOrder)
-      <p style="font-size:0.84rem;line-height:1.55;color:var(--eq-charcoal-soft);">This cancelled, unpaid QA order can be permanently removed. Its items and order history will also be deleted. Stock was restored at cancellation; deleting the record will not change stock again. A minimal deletion audit remains.</p>
-      <form method="POST" action="{{ route('admin.orders.delete-test', $order->id) }}" style="display:grid;gap:0.85rem;max-width:560px;margin-top:1rem;" onsubmit="return confirm('Permanently delete this cancelled test order and its history? This cannot be undone.');">
+    @if($order->archived_at)
+      <p style="font-size:0.84rem;line-height:1.5;">Archived {{ $order->archived_at->format('d M Y') }}. It remains available here without an expiry date.</p>
+      <form method="POST" action="{{ route('admin.orders.unarchive', $order->id) }}">@csrf<button type="submit" class="eq-admin-btn eq-admin-btn--outline">Restore to active orders</button></form>
+    @elseif($canArchiveOrder)
+      <p style="font-size:0.84rem;line-height:1.5;">Archive this completed/cancelled order to keep active orders tidy. It stays in the database and can be restored any time.</p>
+      <form method="POST" action="{{ route('admin.orders.archive', $order->id) }}">@csrf<button type="submit" class="eq-admin-btn eq-admin-btn--outline">Archive order</button></form>
+    @else
+      <p style="font-size:0.84rem;line-height:1.5;">Active orders cannot be archived until delivered or cancelled.</p>
+    @endif
+    @if($canTrashOrder)
+      <p style="font-size:0.84rem;line-height:1.55;color:var(--eq-charcoal-soft);margin-top:1rem;">This cancelled, unpaid COD order can go to Trash. It remains fully restorable for at least 30 days. Permanent deletion requires a separate admin action after that period. Stock is not changed again.</p>
+      <form method="POST" action="{{ route('admin.orders.trash', $order->id) }}" style="display:grid;gap:0.85rem;max-width:560px;margin-top:1rem;" onsubmit="return confirm('Move this order to Trash? It can be restored for at least 30 days.');">
         @csrf
         @method('DELETE')
         <label style="display:grid;gap:0.3rem;font-size:0.82rem;font-weight:600;color:var(--eq-navy);" for="delete-order-number">
@@ -553,12 +562,12 @@
         </label>
         <label style="display:flex;gap:0.5rem;align-items:flex-start;font-size:0.82rem;line-height:1.45;color:var(--eq-charcoal);">
           <input type="checkbox" name="confirm_permanent" value="1" required style="margin-top:0.2rem;" />
-          <span>I understand this test order and its history cannot be recovered from the site.</span>
+          <span>I understand this order will be hidden from active records and can be restored from Trash.</span>
         </label>
-        <button type="submit" class="eq-admin-btn eq-admin-btn--danger" style="justify-self:start;">Permanently delete test order</button>
+        <button type="submit" class="eq-admin-btn eq-admin-btn--danger" style="justify-self:start;">Move to Trash</button>
       </form>
     @else
-      <p style="margin:0;font-size:0.84rem;line-height:1.55;color:var(--eq-charcoal-soft);">Real, paid or fulfilled orders are retained for customer support and financial records. Permanent deletion is available only for orders marked as QA tests in both customer and admin cancellation notes, then safely cancelled before payment or fulfilment.</p>
+      <p style="margin:1rem 0 0;font-size:0.84rem;line-height:1.55;color:var(--eq-charcoal-soft);">Trash is only for cancelled COD orders with no payment, dispatch, return or refund history. Paid and fulfilled orders remain available in Archive for support and financial records.</p>
     @endif
   </section>
 

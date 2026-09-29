@@ -5,43 +5,52 @@
 
 @section('content')
 
+  <nav aria-label="Order folders" style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:1rem;">
+    <a class="eq-admin-btn {{ $folder === 'active' ? 'eq-admin-btn--primary' : 'eq-admin-btn--outline' }}" href="{{ route('admin.orders') }}">Active ({{ $folderCounts['active'] }})</a>
+    <a class="eq-admin-btn {{ $folder === 'archived' ? 'eq-admin-btn--primary' : 'eq-admin-btn--outline' }}" href="{{ route('admin.orders', ['folder' => 'archived']) }}">Archive ({{ $folderCounts['archived'] }})</a>
+    <a class="eq-admin-btn {{ $folder === 'trash' ? 'eq-admin-btn--primary' : 'eq-admin-btn--outline' }}" href="{{ route('admin.orders', ['folder' => 'trash']) }}">Trash ({{ $folderCounts['trash'] }})</a>
+  </nav>
+  @if($folder !== 'active')
+    <p style="font-size:0.83rem;color:var(--eq-charcoal-soft);margin:0 0 1rem;">{{ $folder === 'archived' ? 'Archived orders stay here until restored; there is no automatic expiry.' : 'Trashed orders can be restored any time. Permanent deletion is optional after at least 30 days and never automatic.' }}</p>
+  @endif
+
   <!-- Search and Quick Filter Controls Card -->
   <div style="background: var(--eq-white); border: 1px solid var(--eq-line); border-radius: 8px; padding: 0.85rem 1rem; margin-bottom: 1rem; box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03);">
     <div style="display: flex; justify-content: space-between; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
       
       <!-- Status Filter Navigation Pills -->
       <div style="display: flex; gap: 0.35rem; flex-wrap: wrap; align-items: center;">
-        <a href="{{ route('admin.orders', array_filter(['search' => $search])) }}" 
+        <a href="{{ route('admin.orders', array_filter(['folder' => $folder === 'active' ? null : $folder, 'search' => $search])) }}"
            class="eq-admin-btn {{ empty($status) ? 'eq-admin-btn--primary' : 'eq-admin-btn--outline' }}" 
            style="border-radius: 999px; padding: 0.3rem 0.75rem; font-size: 0.8rem;">
           All ({{ $statusCounts['all'] }})
         </a>
-        <a href="{{ route('admin.orders', array_filter(['status' => 'pending', 'search' => $search])) }}" 
+        <a href="{{ route('admin.orders', array_filter(['folder' => $folder === 'active' ? null : $folder, 'status' => 'pending', 'search' => $search])) }}"
            class="eq-admin-btn {{ $status === 'pending' ? 'eq-admin-btn--gold' : 'eq-admin-btn--outline' }}" 
            style="border-radius: 999px; padding: 0.3rem 0.75rem; font-size: 0.8rem;">
           Pending ({{ $statusCounts['pending'] }})
         </a>
-        <a href="{{ route('admin.orders', array_filter(['status' => 'confirmed', 'search' => $search])) }}" 
+        <a href="{{ route('admin.orders', array_filter(['folder' => $folder === 'active' ? null : $folder, 'status' => 'confirmed', 'search' => $search])) }}"
            class="eq-admin-btn {{ $status === 'confirmed' ? 'eq-admin-btn--primary' : 'eq-admin-btn--outline' }}" 
            style="border-radius: 999px; padding: 0.3rem 0.75rem; font-size: 0.8rem;">
           Confirmed ({{ $statusCounts['confirmed'] }})
         </a>
-        <a href="{{ route('admin.orders', array_filter(['status' => 'processing', 'search' => $search])) }}" 
+        <a href="{{ route('admin.orders', array_filter(['folder' => $folder === 'active' ? null : $folder, 'status' => 'processing', 'search' => $search])) }}"
            class="eq-admin-btn {{ $status === 'processing' ? 'eq-admin-btn--primary' : 'eq-admin-btn--outline' }}" 
            style="border-radius: 999px; padding: 0.3rem 0.75rem; font-size: 0.8rem;">
           Processing ({{ $statusCounts['processing'] }})
         </a>
-        <a href="{{ route('admin.orders', array_filter(['status' => 'in_transit', 'search' => $search])) }}" 
+        <a href="{{ route('admin.orders', array_filter(['folder' => $folder === 'active' ? null : $folder, 'status' => 'in_transit', 'search' => $search])) }}"
            class="eq-admin-btn {{ $status === 'in_transit' ? 'eq-admin-btn--primary' : 'eq-admin-btn--outline' }}" 
            style="border-radius: 999px; padding: 0.3rem 0.75rem; font-size: 0.8rem;">
           In Transit ({{ $statusCounts['in_transit'] }})
         </a>
-        <a href="{{ route('admin.orders', array_filter(['status' => 'delivered', 'search' => $search])) }}" 
+        <a href="{{ route('admin.orders', array_filter(['folder' => $folder === 'active' ? null : $folder, 'status' => 'delivered', 'search' => $search])) }}"
            class="eq-admin-btn {{ $status === 'delivered' ? 'eq-admin-btn--success' : 'eq-admin-btn--outline' }}" 
            style="border-radius: 999px; padding: 0.3rem 0.75rem; font-size: 0.8rem;">
           Delivered ({{ $statusCounts['delivered'] }})
         </a>
-        <a href="{{ route('admin.orders', array_filter(['status' => 'cancelled', 'search' => $search])) }}" 
+        <a href="{{ route('admin.orders', array_filter(['folder' => $folder === 'active' ? null : $folder, 'status' => 'cancelled', 'search' => $search])) }}"
            class="eq-admin-btn {{ $status === 'cancelled' ? 'eq-admin-btn--danger' : 'eq-admin-btn--outline' }}" 
            style="border-radius: 999px; padding: 0.3rem 0.75rem; font-size: 0.8rem;">
           Cancelled ({{ $statusCounts['cancelled'] }})
@@ -50,6 +59,7 @@
 
       <!-- Live Order Search Input Box -->
       <form method="GET" action="{{ route('admin.orders') }}" style="display: flex; gap: 0.45rem; align-items: center; flex: 1 1 260px; max-width: 400px; margin-left: auto;">
+        @if($folder !== 'active')<input type="hidden" name="folder" value="{{ $folder }}">@endif
         @if(!empty($status))
           <input type="hidden" name="status" value="{{ $status }}">
         @endif
@@ -71,7 +81,7 @@
         </button>
 
         @if(!empty($search))
-          <a href="{{ route('admin.orders', array_filter(['status' => $status])) }}" class="eq-admin-btn eq-admin-btn--outline" style="padding: 0.4rem 0.7rem; font-size: 0.82rem; color: #e74c3c; border-color: #fca5a5; flex-shrink: 0;">
+          <a href="{{ route('admin.orders', array_filter(['folder' => $folder === 'active' ? null : $folder, 'status' => $status])) }}" class="eq-admin-btn eq-admin-btn--outline" style="padding: 0.4rem 0.7rem; font-size: 0.82rem; color: #e74c3c; border-color: #fca5a5; flex-shrink: 0;">
             Clear
           </a>
         @endif
@@ -84,7 +94,7 @@
   <section class="eq-admin-card" style="padding: 1rem;">
     <div class="eq-admin-card__header" style="margin-bottom: 0.85rem; padding-bottom: 0.65rem;">
       <h2 class="eq-admin-card__title" style="font-size: 1.05rem;">
-        {{ $status ? ucfirst(str_replace('_', ' ', $status)) . ' Orders' : 'All Customer Orders' }}
+        {{ $status ? ucfirst(str_replace('_', ' ', $status)) . ' Orders' : ($folder === 'active' ? 'Active Customer Orders' : ucfirst($folder).' Orders') }}
         @if(!empty($search))
           <span style="font-size: 0.82rem; font-weight: normal; color: var(--eq-gold-dark);">
             matching &ldquo;{{ $search }}&rdquo;
@@ -95,14 +105,14 @@
         </span>
       </h2>
 
-      <a href="{{ route('admin.orders.export', array_filter(['status' => $status])) }}" class="eq-admin-btn eq-admin-btn--outline" style="padding: 0.35rem 0.75rem; font-size: 0.8rem; gap: 0.35rem;" title="Export orders ledger to CSV">
+      @if($folder !== 'trash')<a href="{{ route('admin.orders.export', array_filter(['folder' => $folder === 'active' ? null : $folder, 'status' => $status])) }}" class="eq-admin-btn eq-admin-btn--outline" style="padding: 0.35rem 0.75rem; font-size: 0.8rem; gap: 0.35rem;" title="Export orders ledger to CSV">
         <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
           <polyline points="7 10 12 15 17 10"></polyline>
           <line x1="12" y1="15" x2="12" y2="3"></line>
         </svg>
         Export CSV
-      </a>
+      </a>@endif
     </div>
 
     <!-- Desktop Table View -->
@@ -177,9 +187,9 @@
                 </td>
                 <td style="text-align: right; white-space: nowrap;">
                   <div style="display: inline-flex; gap: 0.35rem;">
-                    <a href="{{ route('admin.orders.invoice', $order->id) }}" target="_blank" class="eq-admin-btn eq-admin-btn--outline" style="padding: 0.35rem 0.6rem; font-size: 0.78rem;" title="Print Packing Slip">
+                    @if($folder !== 'trash')<a href="{{ route('admin.orders.invoice', $order->id) }}" target="_blank" class="eq-admin-btn eq-admin-btn--outline" style="padding: 0.35rem 0.6rem; font-size: 0.78rem;" title="Print Packing Slip">
                       Invoice
-                    </a>
+                    </a>@endif
                     <a href="{{ route('admin.orders.show', $order->id) }}" class="eq-admin-btn eq-admin-btn--primary" style="padding: 0.35rem 0.7rem; font-size: 0.78rem;">
                       Manage &rarr;
                     </a>
@@ -252,14 +262,14 @@
             </div>
 
             <div class="eq-card-item__actions" style="margin-top: 0.15rem;">
-              <a href="{{ route('admin.orders.invoice', $order->id) }}" target="_blank" class="eq-admin-btn eq-admin-btn--outline" style="flex: 1; justify-content: center; font-size: 0.78rem; padding: 0.45rem 0.5rem;">
+              @if($folder !== 'trash')<a href="{{ route('admin.orders.invoice', $order->id) }}" target="_blank" class="eq-admin-btn eq-admin-btn--outline" style="flex: 1; justify-content: center; font-size: 0.78rem; padding: 0.45rem 0.5rem;">
                 <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <polyline points="6 9 6 2 18 2 18 9"></polyline>
                   <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
                   <rect x="6" y="14" width="12" height="8"></rect>
                 </svg>
                 Print Slip
-              </a>
+              </a>@endif
               <a href="{{ route('admin.orders.show', $order->id) }}" class="eq-admin-btn eq-admin-btn--primary" style="flex: 1; justify-content: center; font-size: 0.78rem; padding: 0.45rem 0.5rem;">
                 Manage Order &rarr;
               </a>
