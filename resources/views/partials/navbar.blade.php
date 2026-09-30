@@ -129,6 +129,12 @@
         <!-- 3. About Us -->
         <li><a href="{{ route('about') }}" id="nav-link-about" class="{{ request()->routeIs('about') ? 'is-active' : '' }}">About Us</a></li>
 
+        @auth
+          @if(Auth::user()->is_admin)
+            <li class="eq-mobile-admin-link"><a href="{{ route('admin.dashboard') }}">Admin Panel</a></li>
+          @endif
+        @endauth
+
         <!-- Mobile Drawer Minimal Footer with Quick Actions -->
         <li class="eq-drawer-footer">
           <div class="eq-drawer-actions">

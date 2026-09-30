@@ -932,6 +932,8 @@
     padding: 0 0.85rem !important;
     gap: 0.5rem !important;
     justify-content: space-between !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
   }
 
   #eq-nav-menu {
@@ -964,6 +966,10 @@
     flex-shrink: 0 !important;
     display: flex !important;
     align-items: center !important;
+  }
+
+  .eq-navbar__links .eq-mobile-admin-link {
+    display: list-item !important;
   }
 
   .eq-navbar-auth-group {
@@ -999,6 +1005,12 @@
     text-decoration: none !important;
     white-space: nowrap !important;
     flex-shrink: 0 !important;
+  }
+
+  /* The admin shortcut lives in the drawer on narrow screens; keeping it in
+     the header pushes the menu/close toggle beyond the right viewport edge. */
+  .eq-navbar__icons #eq-btn-admin-panel {
+    display: none !important;
   }
 
   .eq-btn-admin-badge svg {
@@ -5093,5 +5105,26 @@
 
   #saree-section .eq-saree-view-all {
     margin-top: 0.55rem;
+  }
+}
+
+/* Keep the menu toggle and its open-state close icon inside narrow phones. */
+@media (max-width: 400px) {
+  .eq-navbar__inner {
+    padding-inline: 0.65rem !important;
+    gap: 0.3rem !important;
+  }
+
+  .eq-navbar__logo {
+    min-width: 0 !important;
+    max-width: 112px !important;
+  }
+
+  .eq-navbar__logo img {
+    max-width: 112px !important;
+  }
+
+  .eq-navbar__toggle {
+    margin-left: 0 !important;
   }
 }

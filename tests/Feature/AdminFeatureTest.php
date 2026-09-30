@@ -251,11 +251,14 @@ class AdminFeatureTest extends TestCase
         $adminResponse->assertStatus(200);
         $adminResponse->assertSee('Admin Panel');
         $adminResponse->assertSee(route('admin.dashboard'));
+        $adminResponse->assertSee('class="eq-mobile-admin-link"', false);
+        $adminResponse->assertSee('id="eq-btn-admin-panel"', false);
 
         // Customer visiting homepage does NOT see Admin Panel button
         $customerResponse = $this->actingAs($customer)->get('/');
         $customerResponse->assertStatus(200);
         $customerResponse->assertDontSee(route('admin.dashboard'));
+        $customerResponse->assertDontSee('eq-mobile-admin-link');
     }
 
     /**

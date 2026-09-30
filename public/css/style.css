@@ -1005,6 +1005,10 @@ p {
   color: #c0392b;
 }
 
+.eq-mobile-admin-link {
+  display: none;
+}
+
 .eq-navbar__toggle {
   display: none;
   background: none;
