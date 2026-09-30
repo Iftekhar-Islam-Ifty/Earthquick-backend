@@ -9,6 +9,15 @@ use Tests\TestCase;
 
 class PlatformIdentityTest extends TestCase
 {
+    public function test_home_and_shared_layout_version_their_stylesheets(): void
+    {
+        foreach (['/', '/about'] as $path) {
+            $response = $this->get($path)->assertOk();
+            $response->assertSee('css/style.css?v='.filemtime(base_path('public/css/style.css')), false);
+            $response->assertSee('css/responsive.css?v='.filemtime(base_path('public/css/responsive.css')), false);
+        }
+    }
+
     public function test_shared_pages_present_earthquick_as_the_platform(): void
     {
         $this->get('/checkout')

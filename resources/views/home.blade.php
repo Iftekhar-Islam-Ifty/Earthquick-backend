@@ -33,9 +33,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet" />
 
   <!-- Earthquick Custom Stylesheet -->
-  <link rel="stylesheet" href="{{ asset('css/style.css') }}" />
+  <link rel="stylesheet" href="{{ asset('css/style.css') }}?v={{ filemtime(base_path('public/css/style.css')) }}" />
   <!-- Earthquick Dedicated Responsive Stylesheet -->
-  <link rel="stylesheet" href="{{ asset('css/responsive.css') }}" />
+  <link rel="stylesheet" href="{{ asset('css/responsive.css') }}?v={{ filemtime(base_path('public/css/responsive.css')) }}" />
 
   <!-- Resilient Image Fallback for static hosting -->
   <script>
