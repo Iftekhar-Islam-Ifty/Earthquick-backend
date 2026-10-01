@@ -4,8 +4,10 @@ namespace Tests\Feature;
 
 use App\Mail\EarthquickNotice;
 use App\Models\OutboundMessage;
+use App\Models\SupportInquiry;
 use App\Models\User;
 use App\Services\OutboundMailService;
+use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Mail\MailManager;
@@ -101,5 +103,36 @@ class EmailOutboxTest extends TestCase
         $this->artisan('earthquick:mail-health')->assertExitCode(0);
         $this->artisan('earthquick:mail-retry')->assertExitCode(1);
         Mail::assertNothingSent();
+    }
+
+    public function test_admin_support_and_email_times_display_dhaka_time_without_changing_stored_utc(): void
+    {
+        $admin = User::factory()->create(['is_admin' => true]);
+        $this->travelTo(CarbonImmutable::parse('2026-10-01 12:34:00', 'UTC'));
+
+        $inquiry = SupportInquiry::create([
+            'name' => 'QA Customer', 'phone' => '01712345678', 'email' => 'customer@example.test',
+            'subject' => 'Time check', 'message' => 'Checking timestamps', 'status' => 'in_progress',
+            'handled_by_user_id' => $admin->id, 'handled_at' => now()->addMinutes(5),
+            'internal_note' => 'Followed up with the customer',
+        ]);
+        $message = OutboundMessage::create([
+            'recipient_hint' => 'c***@example.test', 'context' => ['event' => 'support_customer'],
+            'status' => 'pending', 'next_attempt_at' => now()->addHour(),
+        ]);
+        OutboundMessage::create([
+            'recipient_hint' => 'c***@example.test', 'context' => ['event' => 'support_admin'],
+            'status' => 'sent', 'sent_at' => now()->addMinutes(5),
+        ]);
+
+        $this->actingAs($admin)->get(route('admin.support.index'))->assertOk()
+            ->assertSee('Received 01 Oct 2026, 06:34 PM BDT')
+            ->assertSee('01 Oct 2026, 06:39 PM BDT');
+        $this->get(route('admin.email-deliveries'))->assertOk()
+            ->assertSee('01 Oct 2026, 06:34 PM BDT')
+            ->assertSee('Next retry: 01 Oct 2026, 07:34 PM BDT')
+            ->assertSee('SMTP handoff: 01 Oct 2026, 06:39 PM BDT');
+        $this->assertSame('2026-10-01 12:34:00', $inquiry->fresh()->created_at->format('Y-m-d H:i:s'));
+        $this->assertSame('2026-10-01 12:34:00', $message->fresh()->created_at->format('Y-m-d H:i:s'));
     }
 }

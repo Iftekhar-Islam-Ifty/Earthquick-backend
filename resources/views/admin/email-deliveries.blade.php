@@ -40,10 +40,10 @@
         <article class="eq-mail-entry">
           <div class="eq-mail-entry__details">
             <h3 class="eq-mail-entry__title">Message #{{ $message->id }} <span class="eq-mail-status eq-mail-status--{{ $message->status }}">{{ $message->status }}</span></h3>
-            <p>{{ $message->context['event'] ?? 'notice' }} · {{ $message->recipient_hint }} · {{ $message->created_at->format('d M Y, h:i A') }}</p>
+            <p>{{ $message->context['event'] ?? 'notice' }} · {{ $message->recipient_hint }} · {{ $message->created_at->copy()->timezone('Asia/Dhaka')->format('d M Y, h:i A') }} BDT</p>
             <p>Attempts: {{ $message->attempts }}/{{ \App\Services\OutboundMailService::MAX_ATTEMPTS }}
-              @if($message->next_attempt_at) · Next retry: {{ $message->next_attempt_at->format('d M Y, h:i A') }} @endif
-              @if($message->sent_at) · SMTP handoff: {{ $message->sent_at->format('d M Y, h:i A') }} @endif
+              @if($message->next_attempt_at) · Next retry: {{ $message->next_attempt_at->copy()->timezone('Asia/Dhaka')->format('d M Y, h:i A') }} BDT @endif
+              @if($message->sent_at) · SMTP handoff: {{ $message->sent_at->copy()->timezone('Asia/Dhaka')->format('d M Y, h:i A') }} BDT @endif
             </p>
             @if($message->last_error_class)<p>Last error type: {{ $message->last_error_class }}</p>@endif
           </div>

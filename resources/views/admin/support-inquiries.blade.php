@@ -86,7 +86,7 @@
               <h3 class="eq-support-entry__title"><span class="eq-support-entry__number">Inquiry #{{ $inquiry->id }}</span>{{ $inquiry->subject }}</h3>
               <span class="eq-support-status eq-support-status--{{ $inquiry->status }}">{{ str_replace('_', ' ', ucfirst($inquiry->status)) }}</span>
             </div>
-            <p class="eq-support-entry__date">Received {{ $inquiry->created_at->format('d M Y, h:i A') }}</p>
+            <p class="eq-support-entry__date">Received {{ $inquiry->created_at->copy()->timezone('Asia/Dhaka')->format('d M Y, h:i A') }} BDT</p>
             <div class="eq-support-contact">
               <strong>{{ $inquiry->name }}</strong>
               <span>{{ $inquiry->phone }}</span>
@@ -98,7 +98,7 @@
             </div>
             <p class="eq-support-entry__message">{{ $inquiry->message }}</p>
             @if($inquiry->handled_at)
-              <p class="eq-support-history">Last handled by {{ $inquiry->handler?->name ?? 'former admin' }} on {{ $inquiry->handled_at->format('d M Y, h:i A') }}. Note: {{ $inquiry->internal_note }}</p>
+              <p class="eq-support-history">Last handled by {{ $inquiry->handler?->name ?? 'former admin' }} on {{ $inquiry->handled_at->copy()->timezone('Asia/Dhaka')->format('d M Y, h:i A') }} BDT. Note: {{ $inquiry->internal_note }}</p>
             @endif
           </div>
           <form class="eq-support-followup" method="POST" action="{{ route('admin.support.update', $inquiry) }}">
