@@ -2,12 +2,9 @@
 
 namespace App\Services;
 
-use App\Mail\EarthquickNotice;
 use App\Models\Order;
 use App\Models\SupportInquiry;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Mail;
-use Throwable;
 
 class CustomerCommunications
 {
@@ -58,12 +55,6 @@ class CustomerCommunications
             return;
         }
 
-        try {
-            Mail::to($email)->send(new EarthquickNotice($subject, $body));
-        } catch (Throwable $exception) {
-            // Business actions and saved inquiries must survive mail outages.
-            // Do not log addresses, message bodies or transport error details.
-            Log::warning('Earthquick email delivery failed', $context + ['exception' => $exception::class]);
-        }
+        app(OutboundMailService::class)->queueAndSend($email, $subject, $body, $context);
     }
 }

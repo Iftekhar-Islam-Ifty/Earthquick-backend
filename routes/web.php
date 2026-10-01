@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AdminEmailDeliveryController;
 use App\Http\Controllers\AdminVendorController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CartController;
@@ -120,6 +121,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/orders', [AdminController::class, 'orders'])->name('orders');
     Route::get('/support-inquiries', [SupportInquiryController::class, 'index'])->name('support.index');
     Route::post('/support-inquiries/{inquiry}', [SupportInquiryController::class, 'update'])->name('support.update');
+    Route::get('/email-deliveries', [AdminEmailDeliveryController::class, 'index'])->name('email-deliveries');
+    Route::post('/email-deliveries/{id}/retry', [AdminEmailDeliveryController::class, 'retry'])->name('email-deliveries.retry');
     Route::get('/orders/export', [AdminController::class, 'exportOrders'])->name('orders.export');
     Route::get('/orders/{id}', [AdminController::class, 'showOrder'])->name('orders.show');
     Route::post('/orders/{id}/archive', [AdminController::class, 'archiveOrder'])->name('orders.archive');

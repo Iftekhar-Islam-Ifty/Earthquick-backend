@@ -890,6 +890,12 @@
           <span>Support Inbox</span>
         </a>
       </li>
+      <li>
+        <a href="{{ route('admin.email-deliveries') }}" class="eq-admin-nav__link {{ request()->routeIs('admin.email-deliveries*') ? 'is-active' : '' }}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="m3 6 9 7 9-7"></path></svg>
+          <span>Email Deliveries</span>
+        </a>
+      </li>
 
       <li class="eq-admin-nav__heading">Live Store</li>
       <li>
