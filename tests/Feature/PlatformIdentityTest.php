@@ -9,6 +9,22 @@ use Tests\TestCase;
 
 class PlatformIdentityTest extends TestCase
 {
+    public function test_scroll_reveal_is_opted_into_browsing_pages_but_not_transaction_pages(): void
+    {
+        foreach (['/', '/about', '/delivery-returns', '/stores', '/stores/nous-telos', '/shop/women', '/search?q=saree'] as $path) {
+            $this->get($path)
+                ->assertOk()
+                ->assertSee("classList.add('eq-scroll-motion')", false)
+                ->assertSee('eq-reveal', false);
+        }
+
+        foreach (['/cart', '/checkout', '/login', '/register'] as $path) {
+            $this->get($path)
+                ->assertOk()
+                ->assertDontSee("classList.add('eq-scroll-motion')", false);
+        }
+    }
+
     public function test_home_and_shared_layout_version_their_stylesheets(): void
     {
         foreach (['/', '/about'] as $path) {

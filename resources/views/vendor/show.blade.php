@@ -4,6 +4,50 @@
 @section('meta_description', $vendor->description ?? ('Discover exclusive creations by ' . $vendor->name . ' on Earthquick.'))
 @section('canonical_url', route('stores.show', $vendor->slug))
 @section('body_class', 'eq-storefront-page')
+@section('scroll_motion', '1')
+
+@push('styles')
+<style>
+  .eq-store-toolbar { display: grid; gap: .85rem; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid var(--eq-line); }
+  .eq-store-categories { display: flex; flex-wrap: wrap; gap: .5rem; }
+  .eq-store-category { display: inline-flex; align-items: center; min-height: 2.25rem; padding: .4rem .85rem; border: 1px solid var(--eq-line); border-radius: 999px; background: var(--eq-cream); color: var(--eq-charcoal); font-size: .8rem; font-weight: 500; text-decoration: none; }
+  .eq-store-category.is-active { border-color: var(--eq-navy); background: var(--eq-navy); color: #fff; }
+  .eq-store-category:focus-visible, .eq-store-filter-toggle:focus-visible, .eq-store-control:focus-visible { outline: 2px solid var(--eq-gold-dark); outline-offset: 2px; }
+  .eq-store-tools { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: .75rem; }
+  .eq-store-results { margin: 0; color: var(--eq-charcoal-soft); font-size: .82rem; }
+  .eq-store-sort { display: flex; align-items: center; gap: .45rem; margin: 0; font-size: .82rem; white-space: nowrap; }
+  .eq-store-control { min-width: 0; min-height: 2.3rem; padding: .4rem .6rem; border: 1px solid var(--eq-line); border-radius: 6px; background: #fff; color: var(--eq-charcoal); font: inherit; }
+  .eq-store-filters { border: 1px solid var(--eq-line); border-radius: 9px; background: #fff; }
+  .eq-store-filter-toggle { display: flex; align-items: center; gap: .5rem; padding: .7rem .85rem; color: var(--eq-navy); font-size: .86rem; font-weight: 600; cursor: pointer; list-style: none; }
+  .eq-store-filter-toggle::-webkit-details-marker { display: none; }
+  .eq-store-filter-toggle::after { content: '+'; margin-left: auto; font-size: 1.1rem; line-height: 1; }
+  .eq-store-filters[open] .eq-store-filter-toggle::after { content: '−'; }
+  .eq-store-filter-count { display: inline-grid; place-items: center; min-width: 1.25rem; height: 1.25rem; padding: 0 .2rem; border-radius: 999px; background: var(--eq-navy); color: #fff; font-size: .7rem; }
+  .eq-store-filter-panel { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .85rem; padding: 1rem; border-top: 1px solid var(--eq-line); }
+  .eq-store-filter-panel.is-compact { display: flex; flex-wrap: wrap; align-items: end; }
+  .eq-store-filter-panel.is-compact .eq-store-filter-field { width: min(100%, 270px); }
+  .eq-store-filter-field { display: grid; align-content: start; gap: .35rem; min-width: 0; color: var(--eq-charcoal); font-size: .78rem; font-weight: 600; }
+  .eq-store-price-fields { display: flex; gap: .4rem; }
+  .eq-store-price-fields .eq-store-control { width: 50%; }
+  .eq-store-filter-actions { display: flex; align-items: center; gap: .8rem; grid-column: 1 / -1; }
+  .eq-store-clear { color: var(--eq-navy); font-size: .8rem; text-underline-offset: 2px; }
+  .eq-store-active { display: flex; flex-wrap: wrap; align-items: center; gap: .4rem; }
+  .eq-store-active span { padding: .25rem .55rem; border-radius: 999px; background: var(--eq-cream); color: var(--eq-charcoal-soft); font-size: .72rem; }
+  @media (max-width: 760px) {
+    .eq-store-toolbar { gap: .7rem; }
+    .eq-store-categories { flex-wrap: nowrap; overflow-x: auto; padding-bottom: .3rem; scrollbar-width: thin; }
+    .eq-store-category { flex: 0 0 auto; }
+    .eq-store-filter-panel { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width: 480px) {
+    .eq-store-tools { align-items: flex-start; }
+    .eq-store-sort { width: 100%; justify-content: space-between; }
+    .eq-store-sort .eq-store-control { max-width: 68%; }
+    .eq-store-filter-panel { grid-template-columns: minmax(0, 1fr); padding: .8rem; }
+    .eq-store-filter-actions { flex-wrap: wrap; }
+  }
+</style>
+@endpush
 
 @section('content')
 <main id="main-content" tabindex="-1">
@@ -29,7 +73,7 @@
       </div>
     @endif
 
-    <div class="eq-container" style="position: relative; z-index: 2; padding: 3rem 1rem 2.5rem;">
+    <div class="eq-container eq-reveal" style="position: relative; z-index: 2; padding: 3rem 1rem 2.5rem;">
       <div style="display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap;">
         
         <!-- Brand Logo / Monogram -->
@@ -68,7 +112,7 @@
         <!-- Store Stats -->
         <div style="display: flex; gap: 1rem; align-items: center; margin-left: auto;">
           <div style="text-align: center; background: rgba(255,255,255,0.08); backdrop-filter: blur(4px); padding: 0.65rem 1.25rem; border-radius: 6px; border: 1px solid rgba(255,255,255,0.15);">
-            <div style="font-size: 1.35rem; font-weight: 700; color: #ffffff; font-family: var(--font-display);">{{ $products->total() }}</div>
+            <div style="font-size: 1.35rem; font-weight: 700; color: #ffffff; font-family: var(--font-display);">{{ $allProductsCount }}</div>
             <div style="font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(255,255,255,0.65);">Creations</div>
           </div>
         </div>
@@ -81,68 +125,111 @@
   <section style="padding: 2.5rem 0 5rem;">
     <div class="eq-container">
       
-      <!-- Toolbar: Categories Tabs & Sort -->
-      <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 1px solid var(--eq-line);">
-        
-        <!-- Category Filter Pills -->
-        <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
-          <a href="{{ route('stores.show', $vendor->slug) }}" 
-             style="padding: 0.4rem 0.85rem; border-radius: 999px; font-size: 0.8rem; font-weight: 500; text-decoration: none; transition: all 0.2s; {{ !request('category') ? 'background: var(--eq-navy); color: #ffffff;' : 'background: var(--eq-cream); color: var(--eq-charcoal); border: 1px solid var(--eq-line);' }}">
-            All Pieces ({{ $products->total() }})
-          </a>
+      @php
+        $selectedFilters = array_intersect_key($storeQuery, array_flip(['product_type', 'delivery_class', 'returnable', 'min_price', 'max_price']));
+        $clearFilterQuery = array_intersect_key($storeQuery, array_flip(['category', 'sort']));
+        $showProductTypeFilter = $availableProductTypes->count() > 1 || isset($storeQuery['product_type']);
+        $showDeliveryFilter = $availableDeliveryClasses->count() > 1 || isset($storeQuery['delivery_class']);
+        $showReturnFilter = $hasMixedReturnPolicies || isset($storeQuery['returnable']);
+      @endphp
 
+      <div class="eq-store-toolbar">
+        <nav class="eq-store-categories" aria-label="Browse {{ $vendor->name }} categories">
+          <a class="eq-store-category {{ !isset($storeQuery['category']) ? 'is-active' : '' }}" @if(!isset($storeQuery['category'])) aria-current="page" @endif
+             href="{{ route('stores.show', array_merge(['slug' => $vendor->slug], array_diff_key($storeQuery, ['category' => true]))) }}">All Pieces ({{ $allProductsCount }})</a>
           @foreach($categories as $cat)
-            <a href="{{ route('stores.show', ['slug' => $vendor->slug, 'category' => $cat->slug]) }}" 
-               style="padding: 0.4rem 0.85rem; border-radius: 999px; font-size: 0.8rem; font-weight: 500; text-decoration: none; transition: all 0.2s; {{ request('category') === $cat->slug ? 'background: var(--eq-navy); color: #ffffff;' : 'background: var(--eq-cream); color: var(--eq-charcoal); border: 1px solid var(--eq-line);' }}">
-              {{ $cat->name }}
-            </a>
+            <a class="eq-store-category {{ ($storeQuery['category'] ?? null) === $cat->slug ? 'is-active' : '' }}" @if(($storeQuery['category'] ?? null) === $cat->slug) aria-current="page" @endif
+               href="{{ route('stores.show', array_merge(['slug' => $vendor->slug], $storeQuery, ['category' => $cat->slug])) }}">{{ $cat->name }}</a>
           @endforeach
-        </div>
+        </nav>
 
-        <!-- Sort Select -->
-        @if($products->total() > 0)
-          <form method="GET" action="{{ route('stores.show', $vendor->slug) }}" style="margin: 0; display: flex; align-items: center; justify-content: flex-end; flex-wrap: wrap; gap: 0.45rem;">
-            @if(request('category'))
-              <input type="hidden" name="category" value="{{ request('category') }}" />
-            @endif
-            @if($availableProductTypes->isNotEmpty())
-              <select name="product_type" aria-label="Product type" onchange="this.form.submit()" style="padding: 0.35rem 0.65rem; border-radius: 4px; border: 1px solid var(--eq-line); font-size: 0.82rem; background: #ffffff;">
-                <option value="">All Types</option>
-                @foreach($availableProductTypes as $type)
-                  <option value="{{ $type }}" {{ request('product_type') === $type ? 'selected' : '' }}>{{ config("catalog.product_types.{$type}.label", ucfirst($type)) }}</option>
-                @endforeach
+        @if($allProductsCount > 0)
+          <div class="eq-store-tools">
+            <p class="eq-store-results">{{ $products->total() }} {{ $products->total() === 1 ? 'piece' : 'pieces' }} found</p>
+            <form class="eq-store-sort" method="GET" action="{{ route('stores.show', $vendor->slug) }}">
+              @foreach(array_diff_key($storeQuery, ['sort' => true]) as $key => $value)
+                <input type="hidden" name="{{ $key }}" value="{{ $value }}" />
+              @endforeach
+              <label for="store-sort">Sort by</label>
+              <select class="eq-store-control" name="sort" id="store-sort" onchange="this.form.submit()">
+                <option value="newest" @selected(!in_array($storeQuery['sort'] ?? null, ['price-asc', 'price-desc'], true))>Newest Arrivals</option>
+                <option value="price-asc" @selected(($storeQuery['sort'] ?? null) === 'price-asc')>Price: Low to High</option>
+                <option value="price-desc" @selected(($storeQuery['sort'] ?? null) === 'price-desc')>Price: High to Low</option>
               </select>
-            @endif
-            @if($availableDeliveryClasses->isNotEmpty())
-              <select name="delivery_class" aria-label="Delivery class" onchange="this.form.submit()" style="padding: 0.35rem 0.65rem; border-radius: 4px; border: 1px solid var(--eq-line); font-size: 0.82rem; background: #ffffff;">
-                <option value="">All Delivery</option>
-                @foreach($availableDeliveryClasses as $deliveryClass)
-                  <option value="{{ $deliveryClass }}" {{ request('delivery_class') === $deliveryClass ? 'selected' : '' }}>{{ config("catalog.delivery_classes.{$deliveryClass}", ucfirst($deliveryClass)) }}</option>
-                @endforeach
-              </select>
-            @endif
-            <select name="returnable" aria-label="Return eligibility" onchange="this.form.submit()" style="padding: 0.35rem 0.65rem; border-radius: 4px; border: 1px solid var(--eq-line); font-size: 0.82rem; background: #ffffff;">
-              <option value="">All Return Policies</option>
-              <option value="1" {{ request('returnable') === '1' ? 'selected' : '' }}>Return Eligible</option>
-              <option value="0" {{ request('returnable') === '0' ? 'selected' : '' }}>Final Sale</option>
-            </select>
-            <input type="number" name="min_price" value="{{ request('min_price') }}" min="0" step="100" placeholder="Min ৳" aria-label="Minimum price" style="width: 82px; padding: 0.35rem 0.5rem; border-radius: 4px; border: 1px solid var(--eq-line); font-size: 0.82rem;" />
-            <input type="number" name="max_price" value="{{ request('max_price') }}" min="0" step="100" placeholder="Max ৳" aria-label="Maximum price" style="width: 82px; padding: 0.35rem 0.5rem; border-radius: 4px; border: 1px solid var(--eq-line); font-size: 0.82rem;" />
-            <label for="sort-select" style="font-size: 0.8rem; color: var(--eq-charcoal-soft);">Sort by:</label>
-            <select name="sort" id="sort-select" onchange="this.form.submit()" style="padding: 0.35rem 0.65rem; border-radius: 4px; border: 1px solid var(--eq-line); font-size: 0.82rem; background: #ffffff; cursor: pointer;">
-              <option value="newest" {{ request('sort') == 'newest' ? 'selected' : '' }}>Newest Arrivals</option>
-              <option value="price-asc" {{ request('sort') == 'price-asc' ? 'selected' : '' }}>Price: Low to High</option>
-              <option value="price-desc" {{ request('sort') == 'price-desc' ? 'selected' : '' }}>Price: High to Low</option>
-              <option value="rating" {{ request('sort') == 'rating' ? 'selected' : '' }}>Highest Rated</option>
-            </select>
-            <button type="submit" class="eq-btn eq-btn--outline" style="padding: 0.35rem 0.65rem; font-size: 0.78rem;">Apply</button>
-          </form>
+              <noscript><button type="submit" class="eq-btn eq-btn--outline">Sort</button></noscript>
+            </form>
+          </div>
+
+          <details class="eq-store-filters">
+            <summary class="eq-store-filter-toggle">Filters @if(count($selectedFilters)) <span class="eq-store-filter-count">{{ count($selectedFilters) }}</span> @endif</summary>
+            <form class="eq-store-filter-panel {{ !$showProductTypeFilter && !$showDeliveryFilter && !$showReturnFilter ? 'is-compact' : '' }}" method="GET" action="{{ route('stores.show', $vendor->slug) }}">
+              @foreach(array_intersect_key($storeQuery, array_flip(['category', 'sort'])) as $key => $value)
+                <input type="hidden" name="{{ $key }}" value="{{ $value }}" />
+              @endforeach
+              @if($showProductTypeFilter)
+                <label class="eq-store-filter-field">Product type
+                  <select class="eq-store-control" name="product_type">
+                    <option value="">All types</option>
+                    @foreach($availableProductTypes as $type)
+                      <option value="{{ $type }}" @selected(($storeQuery['product_type'] ?? null) === $type)>{{ config("catalog.product_types.{$type}.label", ucfirst($type)) }}</option>
+                    @endforeach
+                  </select>
+                </label>
+              @endif
+              @if($showDeliveryFilter)
+                <label class="eq-store-filter-field">Delivery type
+                  <select class="eq-store-control" name="delivery_class">
+                    <option value="">All delivery types</option>
+                    @foreach($availableDeliveryClasses as $deliveryClass)
+                      <option value="{{ $deliveryClass }}" @selected(($storeQuery['delivery_class'] ?? null) === $deliveryClass)>{{ config("catalog.delivery_classes.{$deliveryClass}", ucfirst($deliveryClass)) }}</option>
+                    @endforeach
+                  </select>
+                </label>
+              @endif
+              @if($showReturnFilter)
+                <label class="eq-store-filter-field">Return eligibility
+                  <select class="eq-store-control" name="returnable">
+                    <option value="">All items</option>
+                    <option value="1" @selected(($storeQuery['returnable'] ?? null) === '1')>Return eligible</option>
+                    <option value="0" @selected(($storeQuery['returnable'] ?? null) === '0')>Final sale</option>
+                  </select>
+                </label>
+              @endif
+              <div class="eq-store-filter-field">
+                <span>Price range (৳)</span>
+                <div class="eq-store-price-fields">
+                  <input class="eq-store-control" type="number" name="min_price" value="{{ $storeQuery['min_price'] ?? '' }}" min="0" step="1" placeholder="Min" aria-label="Minimum price" />
+                  <input class="eq-store-control" type="number" name="max_price" value="{{ $storeQuery['max_price'] ?? '' }}" min="0" step="1" placeholder="Max" aria-label="Maximum price" />
+                </div>
+              </div>
+              <div class="eq-store-filter-actions">
+                <button type="submit" class="eq-btn eq-btn--outline" style="padding: .5rem .9rem; font-size: .8rem;">Apply filters</button>
+                @if(count($selectedFilters))
+                  <a class="eq-store-clear" href="{{ route('stores.show', array_merge(['slug' => $vendor->slug], $clearFilterQuery)) }}">Clear filters</a>
+                @endif
+              </div>
+            </form>
+          </details>
+
+          @if(count($selectedFilters))
+            <div class="eq-store-active" aria-label="Applied filters">
+              @foreach($selectedFilters as $key => $value)
+                <span>{{ match ($key) {
+                  'product_type' => config("catalog.product_types.{$value}.label", ucfirst($value)),
+                  'delivery_class' => config("catalog.delivery_classes.{$value}", ucfirst($value)),
+                  'returnable' => $value === '1' ? 'Return eligible' : 'Final sale',
+                  'min_price' => 'From ৳'.$value,
+                  'max_price' => 'Up to ৳'.$value,
+                } }}</span>
+              @endforeach
+              <a class="eq-store-clear" href="{{ route('stores.show', array_merge(['slug' => $vendor->slug], $clearFilterQuery)) }}">Clear filters</a>
+            </div>
+          @endif
         @endif
-
       </div>
 
       <!-- Catalog Grid -->
-      <div class="eq-catalog-grid" id="store-catalog-grid">
+      <div class="eq-catalog-grid eq-reveal" id="store-catalog-grid">
         @forelse($products as $product)
           <article class="eq-product-card" id="card-{{ $product->id }}" data-id="{{ $product->id }}">
             <div class="eq-product-card__frame">
@@ -161,13 +248,13 @@
                 <img src="{{ asset($product->alt_image) }}" alt="{{ $product->name }} alternate view" class="eq-product-card__img--alt" loading="lazy" />
               @endif
 
-              <button type="button" class="eq-product-card__quick-add" data-action="quick-view">
-                Quick Inspect &bull; Add
+              <button type="button" class="eq-product-card__quick-add" data-action="quick-view" aria-label="Quick view {{ $product->name }}">
+                Quick view
               </button>
             </div>
 
             <div class="eq-product-card__body">
-              <span class="eq-product-card__category">{{ $product->subcategory ? $product->subcategory->name : ($product->category ? $product->category->name : '') }}{{ $product->fabric ? ' &bull; ' . $product->fabric : '' }}</span>
+              <span class="eq-product-card__category">{{ $product->subcategory ? $product->subcategory->name : ($product->category ? $product->category->name : '') }}@if($product->fabric) &bull; {{ $product->fabric }}@endif</span>
               <h3 class="eq-product-card__name">
                 <a href="{{ route('product.show', $product->slug) }}" class="eq-product-card__link">{{ $product->name }}</a>
               </h3>
@@ -181,29 +268,28 @@
             </div>
           </article>
         @empty
-          <!-- Elegant empty state for brands currently onboarding or out of stock (e.g. Bright) -->
           <div class="eq-catalog-empty" style="grid-column: 1 / -1; padding: 4.5rem 1.5rem; text-align: center;">
             <svg class="eq-catalog-empty__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width: 44px; height: 44px; margin: 0 auto 1rem; color: var(--eq-gold-dark);">
               <circle cx="12" cy="12" r="10"></circle>
               <line x1="12" y1="8" x2="12" y2="12"></line>
               <line x1="12" y1="16" x2="12.01" y2="16"></line>
             </svg>
-            <h3 style="font-family: var(--font-display); font-size: 1.35rem; color: var(--eq-navy); margin-bottom: 0.5rem; font-weight: 600;">
-              Atelier Collection in Preparation
-            </h3>
-            <p style="max-width: 460px; margin: 0 auto 1.75rem; color: var(--eq-charcoal-soft); font-size: 0.88rem; line-height: 1.6;">
-              The {{ $vendor->name }} catalog is currently being prepared for the Earthquick collective. New curated arrivals will debut here shortly.
-            </p>
-            <a href="{{ route('stores.index') }}" class="eq-btn eq-btn--outline" style="padding: 0.55rem 1.25rem; font-size: 0.82rem; text-decoration: none;">
-              &larr; Discover All Partner Brands
-            </a>
+            @if($allProductsCount > 0)
+              <h3 style="font-family: var(--font-display); font-size: 1.35rem; color: var(--eq-navy); margin-bottom: 0.5rem; font-weight: 600;">No pieces match this selection</h3>
+              <p style="max-width: 460px; margin: 0 auto 1.75rem; color: var(--eq-charcoal-soft); font-size: 0.88rem; line-height: 1.6;">Try another category or clear the filters to see more from {{ $vendor->name }}.</p>
+              <a href="{{ route('stores.show', $vendor->slug) }}" class="eq-btn eq-btn--outline" style="padding: 0.55rem 1.25rem; font-size: 0.82rem; text-decoration: none;">View all pieces</a>
+            @else
+              <h3 style="font-family: var(--font-display); font-size: 1.35rem; color: var(--eq-navy); margin-bottom: 0.5rem; font-weight: 600;">Collection in Preparation</h3>
+              <p style="max-width: 460px; margin: 0 auto 1.75rem; color: var(--eq-charcoal-soft); font-size: 0.88rem; line-height: 1.6;">The {{ $vendor->name }} catalog is currently being prepared for the Earthquick collective. New curated arrivals will debut here shortly.</p>
+              <a href="{{ route('stores.index') }}" class="eq-btn eq-btn--outline" style="padding: 0.55rem 1.25rem; font-size: 0.82rem; text-decoration: none;">&larr; Discover All Partner Brands</a>
+            @endif
           </div>
         @endforelse
       </div>
 
       <!-- Pagination -->
       @if($products->hasPages())
-        @include('partials.pagination-polished', ['paginator' => $products])
+        @include('partials.pagination-polished', ['paginator' => $products, 'summaryMode' => 'pages'])
       @endif
 
     </div>

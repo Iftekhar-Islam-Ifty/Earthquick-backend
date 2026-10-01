@@ -3226,26 +3226,52 @@ p {
   100% { top: 100%; }
 }
 
-/* Reveal-on-scroll: visible by default so content and images are NEVER hidden */
+/* Opt-in page reveals are progressively enhanced; content stays visible without JS. */
 .eq-reveal {
   opacity: 1;
   transform: none;
-  transition: opacity 0.6s var(--ease-standard), transform 0.6s var(--ease-standard);
+  transition: opacity 0.68s var(--ease-standard), transform 0.68s var(--ease-standard);
 }
 
-.js-ready .eq-reveal:not(.is-visible) {
+.eq-scroll-motion .eq-reveal:not(.is-visible) {
   opacity: 0;
-  transform: translateY(20px);
+  transform: translateY(28px);
 }
 
-.eq-reveal.is-visible {
-  opacity: 1 !important;
-  transform: translateY(0) !important;
+.eq-scroll-motion .eq-reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* One restrained image detail; product cards and carousels keep their own motion. */
+.eq-scroll-motion .eq-story__media img {
+  transition: transform 0.75s var(--ease-standard);
+}
+
+.eq-scroll-motion .eq-story.eq-reveal:not(.is-visible) .eq-story__media img {
+  transform: scale(1.05);
 }
 
 @media (prefers-reduced-motion: reduce) {
   .eq-reveal,
-  .js-ready .eq-reveal {
+  .eq-scroll-motion .eq-reveal {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .eq-scroll-motion .eq-story__media img {
+    transform: none !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .eq-scroll-motion .eq-reveal:not(.is-visible) {
+    transform: translateY(20px);
+  }
+}
+
+@media print {
+  .eq-scroll-motion .eq-reveal {
     opacity: 1 !important;
     transform: none !important;
   }

@@ -65,7 +65,7 @@ class VendorStorefrontTest extends TestCase
         $response->assertStatus(200);
         $response->assertSee('Bright');
         $response->assertSee('BRT');
-        $response->assertSee('Atelier Collection in Preparation');
+        $response->assertSee('Collection in Preparation');
     }
 
     /**

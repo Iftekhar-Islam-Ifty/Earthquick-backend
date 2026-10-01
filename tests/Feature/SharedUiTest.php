@@ -31,6 +31,8 @@ class SharedUiTest extends TestCase
             foreach ($xpath->query('//button[contains(@class,"eq-product-card__quick-add")]') as $button) {
                 $this->assertFalse($button->hasAttribute('onclick'), $path);
                 $this->assertSame('quick-view', $button->getAttribute('data-action'), $path);
+                $this->assertSame('Quick view', trim($button->textContent), $path);
+                $this->assertStringStartsWith('Quick view ', $button->getAttribute('aria-label'), $path);
             }
             // Navigation-only home overlays must not advertise adding to the cart.
             if ($path === '/') {

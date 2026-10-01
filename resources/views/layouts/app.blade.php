@@ -31,6 +31,10 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet" />
 
+    @hasSection('scroll_motion')
+        @include('partials.scroll-motion-bootstrap')
+    @endif
+
     <!-- Earthquick Custom Stylesheet -->
     <link rel="stylesheet" href="{{ asset('css/style.css') }}?v={{ filemtime(base_path('public/css/style.css')) }}" />
     <!-- Earthquick Dedicated Responsive Stylesheet -->
@@ -57,7 +61,7 @@
     </div>
 
     <!-- Earthquick Core Scripts -->
-    <script src="{{ asset('js/script.js') }}"></script>
+    <script src="{{ asset('js/script.js') }}?v={{ filemtime(base_path('public/js/script.js')) }}"></script>
     @stack('scripts')
 </body>
 </html>

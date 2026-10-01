@@ -3060,12 +3060,12 @@
     font-size: 0.78rem;
   }
   .eq-coverflow-card {
-    width: clamp(200px, 60vw, 240px);
-    height: clamp(280px, 82vw, 340px);
+    width: clamp(170px, 52vw, 210px);
+    height: clamp(240px, 73vw, 290px);
     border-radius: 14px;
   }
   .eq-coverflow-stage {
-    height: clamp(300px, 86vw, 360px);
+    height: clamp(265px, 78vw, 315px);
     overflow: hidden;
     max-width: 100%;
     margin: 0.25rem 0 0.75rem;
@@ -3088,6 +3088,12 @@
   .eq-coverflow-card__quote {
     font-size: 0.74rem;
     -webkit-line-clamp: 2;
+  }
+}
+
+@media (max-width: 640px) and (hover: none) {
+  .eq-coverflow-card:hover .eq-coverflow-card__img {
+    transform: none;
   }
 }
 
@@ -5126,5 +5132,41 @@
 
   .eq-navbar__toggle {
     margin-left: 0 !important;
+  }
+}
+
+/* Catalog quick view must be tappable without a hover-capable pointer. */
+@media (max-width: 768px), (hover: none) {
+  .eq-catalog-grid .eq-product-card__quick-add[data-action="quick-view"] {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    min-height: 34px;
+    left: 6px;
+    right: 6px;
+    bottom: 6px;
+    padding: 0.3rem 0.4rem;
+    border: 1px solid rgba(27, 58, 75, 0.12);
+    border-radius: 999px;
+    background: rgba(255, 253, 249, 0.97);
+    color: var(--eq-navy);
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+    touch-action: manipulation;
+  }
+}
+
+@media (hover: none) {
+  .eq-catalog-grid .eq-product-card:hover .eq-product-card__frame img {
+    transform: none !important;
+  }
+
+  .eq-catalog-grid .eq-product-card:hover .eq-product-card__img--alt {
+    opacity: 0 !important;
+  }
+
+  .eq-catalog-grid .eq-card-wishlist-btn:hover {
+    transform: none;
   }
 }

@@ -1278,12 +1278,12 @@ function initScrollReveal() {
   const items = document.querySelectorAll(".eq-reveal");
   if (!items.length) return;
 
-  // Fail-safe: ensure all items become visible after 1.2s regardless of scroll state
-  setTimeout(() => {
-    items.forEach((el) => el.classList.add("is-visible"));
-  }, 1200);
-
-  if (!("IntersectionObserver" in window)) {
+  clearTimeout(window.eqMotionFallbackTimer);
+  // Content is visible by default if JavaScript or motion support is unavailable.
+  const prefersLessMotion = typeof window.matchMedia === "function" &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (!("IntersectionObserver" in window) || prefersLessMotion || window.eqMotionFallbackTriggered) {
+    document.documentElement.classList.remove("eq-scroll-motion");
     items.forEach((el) => el.classList.add("is-visible"));
     return;
   }
@@ -1297,9 +1297,10 @@ function initScrollReveal() {
         }
       });
     },
-    { threshold: 0.05, rootMargin: "0px 0px 120px 0px" }
+    { threshold: 0.05, rootMargin: "0px 0px -24px 0px" }
   );
 
+  document.documentElement.classList.add("eq-scroll-motion");
   items.forEach((el) => observer.observe(el));
 }
 
@@ -1553,11 +1554,11 @@ function init3DCoverflow() {
 
   function updateCoverflow() {
     const width = window.innerWidth;
+    const isMobile = width <= 640;
     let spacing = 250;
-    if (width < 480) {
-      spacing = Math.min(width * 0.3, 110);
-    } else if (width < 640) {
-      spacing = 150;
+    if (isMobile) {
+      // Keep the desktop coverflow overlap in proportion to the smaller mobile card.
+      spacing = cards[0].offsetWidth * (250 / 340);
     } else if (width < 991) {
       spacing = 200;
     } else if (width < 1200) {
@@ -1605,10 +1606,10 @@ function init3DCoverflow() {
         const spacing2 = spacing * 1.8;
         card.style.transform = `translateX(-${spacing2}px) scale(0.74) rotateY(14deg)`;
         card.style.zIndex = "3";
-        card.style.opacity = width < 480 ? "0" : "0.65";
+        card.style.opacity = isMobile ? "0" : "0.65";
         card.style.filter = "none";
         card.style.boxShadow = "none";
-        card.style.pointerEvents = width < 480 ? "none" : "auto";
+        card.style.pointerEvents = isMobile ? "none" : "auto";
         card.classList.remove("is-active");
         card.setAttribute("aria-hidden", "true");
       } else if (offset === 2) {
@@ -1616,10 +1617,10 @@ function init3DCoverflow() {
         const spacing2 = spacing * 1.8;
         card.style.transform = `translateX(${spacing2}px) scale(0.74) rotateY(-14deg)`;
         card.style.zIndex = "3";
-        card.style.opacity = width < 480 ? "0" : "0.65";
+        card.style.opacity = isMobile ? "0" : "0.65";
         card.style.filter = "none";
         card.style.boxShadow = "none";
-        card.style.pointerEvents = width < 480 ? "none" : "auto";
+        card.style.pointerEvents = isMobile ? "none" : "auto";
         card.classList.remove("is-active");
         card.setAttribute("aria-hidden", "true");
       } else {

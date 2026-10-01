@@ -116,8 +116,12 @@
 
   <nav class="eq-polished-pagination" aria-label="Pagination Navigation">
     <p class="eq-polished-pagination__summary">
-      Showing <strong>{{ $paginator->firstItem() }}</strong>–<strong>{{ $paginator->lastItem() }}</strong>
-      of <strong>{{ $paginator->total() }}</strong>
+      @if(($summaryMode ?? 'items') === 'pages')
+        Page <strong>{{ $paginator->currentPage() }}</strong> of <strong>{{ $paginator->lastPage() }}</strong>
+      @else
+        Showing <strong>{{ $paginator->firstItem() }}</strong>–<strong>{{ $paginator->lastItem() }}</strong>
+        of <strong>{{ $paginator->total() }}</strong>
+      @endif
     </p>
 
     <div class="eq-polished-pagination__controls">

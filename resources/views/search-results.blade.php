@@ -3,6 +3,7 @@
 @section('title', ($query ? 'Search: "' . e($query) . '"' : 'Search Collection') . ' — Earthquick / Nous Telos')
 @section('meta_description', 'Discover handcrafted sarees, bespoke three-piece ensembles, and accessories from Earthquick Studio.')
 @section('body_class', 'eq-catalog-page')
+@section('scroll_motion', '1')
 
 @section('content')
   <main id="main-content">
@@ -27,14 +28,14 @@
       <div class="eq-container">
         <div class="eq-cat-banner__inner">
           <span class="eq-cat-banner__eyebrow">NOUS TELOS STUDIO</span>
-          <h1 class="eq-cat-banner__title" id="search-title">
+          <h1 class="eq-cat-banner__title eq-reveal" id="search-title">
             @if($query)
               Search Results for &ldquo;{{ $query }}&rdquo;
             @else
               Explore the Full Collection
             @endif
           </h1>
-          <p class="eq-cat-banner__desc">
+          <p class="eq-cat-banner__desc eq-reveal">
             @if($query)
               Discovered <strong>{{ $products->total() }}</strong> curated handcrafted piece{{ $products->total() === 1 ? '' : 's' }} matching your search.
             @else
@@ -152,7 +153,7 @@
       <section class="eq-catalog-main" aria-label="Search results listings" style="margin-top: 1.5rem;">
         
         @if($products->count() > 0)
-          <div class="eq-catalog-grid view-3col" id="catalog-grid">
+          <div class="eq-catalog-grid view-3col eq-reveal" id="catalog-grid">
             @foreach($products as $product)
               <article class="eq-product-card" id="card-{{ $product->id }}" data-id="{{ $product->id }}" data-category="{{ $product->category ? $product->category->slug : '' }}">
                 <div class="eq-product-card__frame">
@@ -175,8 +176,8 @@
                   @endif
 
                   <!-- Quick Inspect / View Button -->
-                  <button type="button" class="eq-product-card__quick-add" data-action="quick-view">
-                    Quick Inspect &bull; Add
+                  <button type="button" class="eq-product-card__quick-add" data-action="quick-view" aria-label="Quick view {{ $product->name }}">
+                    Quick view
                   </button>
                 </div>
 

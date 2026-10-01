@@ -9,6 +9,7 @@
 @section('og_description', $product->short_desc ?? ($product->description ?? 'Discover curated collections at Earthquick.'))
 @section('og_image', asset($product->image))
 @section('body_class', 'eq-product-page')
+@section('scroll_motion', '1')
 
 @section('content')
   @php
@@ -225,7 +226,7 @@
       <!-- ===============================================================
            SECTION: ARTISANAL DETAILS ACCORDION
            =============================================================== -->
-      <section class="eq-product-accordion-section">
+      <section class="eq-product-accordion-section eq-reveal">
         <div style="max-width: 800px; margin: 0 auto;">
           <h2 class="eq-product-accordion-section__title">
             Product Information
@@ -315,7 +316,7 @@
            SECTION: RELATED PRODUCTS
            =============================================================== -->
       @if(isset($relatedProducts) && $relatedProducts->count() > 0)
-        <section style="margin-top: 4.5rem;">
+        <section class="eq-reveal" style="margin-top: 4.5rem;">
           <div style="display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 1.75rem; border-bottom: 1px solid var(--eq-line); padding-bottom: 0.75rem;">
             <div>
               <span style="font-size: 0.82rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--eq-teal-dark);">Curated Suggestions</span>
@@ -335,8 +336,8 @@
                   @if($rel->alt_image)
                     <img src="{{ asset($rel->alt_image) }}" alt="{{ $rel->name }} alternate" class="eq-product-card__img--alt" loading="lazy" />
                   @endif
-                  <button type="button" class="eq-product-card__quick-add" data-action="quick-view">
-                    Quick Inspect &bull; Add
+                  <button type="button" class="eq-product-card__quick-add" data-action="quick-view" aria-label="Quick view {{ $rel->name }}">
+                    Quick view
                   </button>
                 </div>
                 <div class="eq-product-card__body">

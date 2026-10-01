@@ -75,6 +75,40 @@ function harness(base = 'http://localhost/earthquick/public') {
   };
 }
 
+test('opt-in pages reveal only when an item enters view and keep reduced-motion content visible', () => {
+  const h = harness();
+  const classes = new Set();
+  const itemClasses = new Set();
+  const item = { classList: { add: name => itemClasses.add(name) } };
+  h.document.documentElement = { classList: {
+    add: name => classes.add(name),
+    remove: name => classes.delete(name),
+  } };
+  h.document.querySelectorAll = selector => selector === '.eq-reveal' ? [item] : [];
+  h.context.window.matchMedia = () => ({ matches: false });
+  let onIntersect;
+  h.context.window.IntersectionObserver = h.context.IntersectionObserver = class {
+    constructor(callback) { onIntersect = callback; }
+    observe() {}
+    unobserve() {}
+  };
+
+  h.run('initScrollReveal()');
+  assert.equal(classes.has('eq-scroll-motion'), true);
+  assert.equal(itemClasses.has('is-visible'), false);
+  h.flushTimers();
+  assert.equal(itemClasses.has('is-visible'), false);
+  onIntersect([{ isIntersecting: true, target: item }], { unobserve() {} });
+  assert.equal(itemClasses.has('is-visible'), true);
+
+  itemClasses.clear();
+  classes.clear();
+  h.context.window.matchMedia = () => ({ matches: true });
+  h.run('initScrollReveal()');
+  assert.equal(itemClasses.has('is-visible'), true);
+  assert.equal(classes.has('eq-scroll-motion'), false);
+});
+
 test('reinitialization sends one add request per explicit add click', async () => {
   const h = harness();
   h.cart.init(); h.cart.init();

@@ -3,6 +3,7 @@
 @section('title', 'Delivery, Returns & Refunds | Earthquick')
 @section('meta_description', 'Understand Earthquick delivery charges, cancellation requests, return eligibility, courier responsibility and COD refunds.')
 @section('body_class', 'eq-policy-page')
+@section('scroll_motion', '1')
 
 @push('styles')
 <style>
@@ -89,13 +90,13 @@
   </header>
 
   <div class="eq-policy-shell">
-    <div class="eq-policy-highlights" aria-label="Key policy points">
+    <div class="eq-policy-highlights eq-reveal" aria-label="Key policy points">
       <div class="eq-policy-highlight"><strong>One order, one delivery</strong><span>Delivery charge and tracking are handled for the whole order, including orders with items from different brands.</span></div>
       <div class="eq-policy-highlight"><strong>Check each product</strong><span>Return eligibility and the number of return days can differ by item. Your order keeps the rules shown at checkout.</span></div>
       <div class="eq-policy-highlight"><strong>Approval is not payment</strong><span>A return request, physical receipt or approved refund does not mean money has already been sent.</span></div>
     </div>
 
-    <section class="eq-policy-section" id="delivery" aria-labelledby="policy-delivery-title">
+    <section class="eq-policy-section eq-reveal" id="delivery" aria-labelledby="policy-delivery-title">
       <div class="eq-policy-section__head"><span>01 / Delivery</span><h2 id="policy-delivery-title">What delivery costs</h2><p>The charge is calculated once for the combined order. Your final amount is shown at checkout before you place it.</p></div>
       <div class="eq-policy-grid">
         <div class="eq-policy-card"><h3>Inside Chattogram</h3><p>৳80 delivery for an order with a product subtotal below ৳3,000.</p></div>
@@ -106,7 +107,7 @@
       <div class="eq-policy-callout"><strong>Timing:</strong> Delivery timing depends on the address and fulfilment. We do not promise a fixed number of days here; contact support with your order number for a current update.</div>
     </section>
 
-    <section class="eq-policy-section" id="cancellations" aria-labelledby="policy-cancel-title">
+    <section class="eq-policy-section eq-reveal" id="cancellations" aria-labelledby="policy-cancel-title">
       <div class="eq-policy-section__head"><span>02 / Before fulfilment</span><h2 id="policy-cancel-title">Cancelling an order</h2><p>You can request cancellation online while an unpaid COD order is still pending or confirmed.</p></div>
       <div class="eq-policy-grid">
         <div class="eq-policy-card"><h3>What you do</h3><p>Open your order page, send a cancellation request and explain why. Sending a request does <strong>not</strong> cancel the order immediately.</p></div>
@@ -114,7 +115,7 @@
       </div>
     </section>
 
-    <section class="eq-policy-section" id="returns" aria-labelledby="policy-returns-title">
+    <section class="eq-policy-section eq-reveal" id="returns" aria-labelledby="policy-returns-title">
       <div class="eq-policy-section__head"><span>03 / After delivery</span><h2 id="policy-returns-title">Returning an item</h2><p>Returns are item-based, so you may ask about a particular item and quantity without treating the entire order as returned.</p></div>
       <div class="eq-policy-steps">
         <div class="eq-policy-step"><h3>Check eligibility</h3><p>Look for the item's returnable status and return window on the product and saved order details. The window starts from recorded delivery, not order placement.</p></div>
@@ -129,7 +130,7 @@
       <div class="eq-policy-callout"><strong>Cannot request online?</strong> If the item is marked final sale, the delivery record or return window is unclear, or the online option is unavailable, contact support with your order number. These cases need manual review; a return is not automatically guaranteed. There is no separate automatic exchange flow—ask support about an exchange.</div>
     </section>
 
-    <section class="eq-policy-section" id="refunds" aria-labelledby="policy-refunds-title">
+    <section class="eq-policy-section eq-reveal" id="refunds" aria-labelledby="policy-refunds-title">
       <div class="eq-policy-section__head"><span>04 / Money back</span><h2 id="policy-refunds-title">How COD refunds work</h2><p>A refund can be considered after Earthquick receives and accepts an eligible return on a delivered, paid COD order.</p></div>
       <div class="eq-policy-grid">
         <div class="eq-policy-card"><h3>Refund amount</h3><p>The returned item's original paid price is used, less its proportional share of any order-wide coupon discount. A partial return does not refund the original delivery charge. If all items are returned, Earthquick may include that charge once after review.</p></div>
@@ -140,7 +141,7 @@
       <div class="eq-policy-example"><strong>Example:</strong> An order has ৳3,000 of products and a ৳300 order-wide discount. If an eligible ৳1,000 item is returned, its discount share is ৳100, so its product refund is ৳900. A partial return does not add the original delivery charge. Any eligible, receipt-backed return-courier reimbursement is considered separately.</div>
     </section>
 
-    <section class="eq-policy-cta" id="need-help" aria-labelledby="policy-help-title">
+    <section class="eq-policy-cta eq-reveal" id="need-help" aria-labelledby="policy-help-title">
       <div><h2 id="policy-help-title">Need help with a specific order?</h2><p>Tell us the order number and what happened. Our team can review delivery, cancellation, return eligibility or refund status.</p></div>
       <a href="{{ route('about') }}#contact-support">Contact Earthquick</a>
     </section>

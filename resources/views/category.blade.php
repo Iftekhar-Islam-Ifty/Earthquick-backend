@@ -7,6 +7,7 @@
 @section('og_description', $category->description ?? 'Explore artisanal handloom sarees, bespoke ensembles, and lifestyle essentials from Earthquick.')
 @section('og_image', asset($category->image ?? 'images/hero/hero-main-saree-2.jpg'))
 @section('body_class', 'eq-catalog-page')
+@section('scroll_motion', '1')
 
 @section('content')
   <!-- ===================================================================
@@ -32,7 +33,7 @@
     <!-- Category Banner & Subcategory Pills -->
     <section class="eq-cat-banner" id="cat-banner">
       <div class="eq-container">
-        <div class="eq-cat-banner__inner">
+        <div class="eq-cat-banner__inner eq-reveal">
           <span class="eq-cat-banner__eyebrow" id="cat-banner-eyebrow">NOUS TELOS STUDIO</span>
           <h1 class="eq-cat-banner__title" id="cat-banner-title">
             {{ isset($subcategory) ? $subcategory->name : $category->name }} Collection
@@ -331,7 +332,7 @@
              RIGHT COLUMN: PRODUCT CATALOG GRID
              ============================================================= -->
         <section class="eq-catalog-main" aria-label="Product listings">
-          <div class="eq-catalog-grid" id="catalog-grid">
+          <div class="eq-catalog-grid eq-reveal" id="catalog-grid">
             @forelse($products as $product)
               <article class="eq-product-card" id="card-{{ $product->id }}" data-id="{{ $product->id }}" data-category="{{ $category->slug }}">
                 <div class="eq-product-card__frame">
@@ -354,8 +355,8 @@
                   @endif
 
                   <!-- Quick View / Add Button -->
-                  <button type="button" class="eq-product-card__quick-add" data-action="quick-view">
-                    Quick Inspect &bull; Add
+                  <button type="button" class="eq-product-card__quick-add" data-action="quick-view" aria-label="Quick view {{ $product->name }}">
+                    Quick view
                   </button>
                 </div>
 

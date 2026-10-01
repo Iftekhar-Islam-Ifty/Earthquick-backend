@@ -41,57 +41,75 @@ class VendorController extends Controller
             ->where('is_active', true)
             ->firstOrFail();
 
-        $query = Product::where('vendor_id', $vendor->id)
-            ->with(['category', 'subcategory'])
-            ->where('in_stock', true)
-            ->where('is_active', true)
-            ->applyCatalogFilters($request->query());
-
-        // Filter by category if specified
-        if ($request->filled('category')) {
-            $categorySlug = $request->query('category');
-            $query->whereHas('category', function ($q) use ($categorySlug) {
-                $q->where('slug', $categorySlug);
-            });
+        $storeQuery = [];
+        foreach (['category', 'product_type', 'delivery_class', 'returnable', 'min_price', 'max_price', 'sort'] as $key) {
+            $value = $request->query($key);
+            if (is_string($value) && $value !== '') {
+                $storeQuery[$key] = $value;
+            }
+        }
+        if (isset($storeQuery['product_type']) && ! array_key_exists($storeQuery['product_type'], config('catalog.product_types'))) {
+            unset($storeQuery['product_type']);
+        }
+        if (isset($storeQuery['delivery_class']) && ! array_key_exists($storeQuery['delivery_class'], config('catalog.delivery_classes'))) {
+            unset($storeQuery['delivery_class']);
+        }
+        if (isset($storeQuery['returnable']) && ! in_array($storeQuery['returnable'], ['0', '1'], true)) {
+            unset($storeQuery['returnable']);
+        }
+        foreach (['min_price', 'max_price'] as $key) {
+            if (isset($storeQuery[$key]) && (! is_numeric($storeQuery[$key]) || ! is_finite((float) $storeQuery[$key]) || (float) $storeQuery[$key] < 0)) {
+                unset($storeQuery[$key]);
+            }
+        }
+        if (isset($storeQuery['sort'])) {
+            $storeQuery['sort'] = match ($storeQuery['sort']) {
+                'price-low' => 'price-asc',
+                'price-high' => 'price-desc',
+                'price-asc', 'price-desc', 'newest' => $storeQuery['sort'],
+                default => 'newest',
+            };
         }
 
+        $catalog = Product::where('vendor_id', $vendor->id)
+            ->where('in_stock', true)
+            ->where('is_active', true);
+        $allProductsCount = (clone $catalog)->count();
+
+        $query = (clone $catalog)
+            ->with(['category', 'subcategory'])
+            ->applyCatalogFilters($storeQuery);
+
         // Apply sorting criteria
-        match ($request->query('sort')) {
-            'price-asc', 'price-low' => $query->orderBy('price', 'asc'),
-            'price-desc', 'price-high' => $query->orderBy('price', 'desc'),
-            'rating' => $query->orderBy('rating', 'desc'),
-            'newest' => $query->latest(),
-            default => $query->latest()
+        match ($storeQuery['sort'] ?? null) {
+            'price-asc', 'price-low' => $query->orderBy('price')->orderByDesc('id'),
+            'price-desc', 'price-high' => $query->orderByDesc('price')->orderByDesc('id'),
+            default => $query->latest()->orderByDesc('id'),
         };
 
         $products = $query->paginate(12)->withQueryString();
 
         // Retrieve distinct categories currently represented by this vendor's in-stock inventory
-        $categories = Category::whereHas('products', function ($q) use ($vendor) {
-            $q->where('vendor_id', $vendor->id)
-                ->where('in_stock', true)
-                ->where('is_active', true);
-        })->get();
+        $categories = Category::whereHas('products', fn ($q) => $q->where('vendor_id', $vendor->id)
+            ->where('in_stock', true)->where('is_active', true))->get();
 
-        $availableProductTypes = Product::where('vendor_id', $vendor->id)
-            ->where('is_active', true)
-            ->where('in_stock', true)
-            ->whereNotNull('product_type')
+        $availableProductTypes = (clone $catalog)->whereNotNull('product_type')
             ->distinct()
             ->pluck('product_type');
-        $availableDeliveryClasses = Product::where('vendor_id', $vendor->id)
-            ->where('is_active', true)
-            ->where('in_stock', true)
-            ->whereNotNull('delivery_class')
+        $availableDeliveryClasses = (clone $catalog)->whereNotNull('delivery_class')
             ->distinct()
             ->pluck('delivery_class');
+        $hasMixedReturnPolicies = (clone $catalog)->distinct()->count('is_returnable') > 1;
 
         return view('vendor.show', compact(
             'vendor',
             'products',
+            'allProductsCount',
             'categories',
             'availableProductTypes',
-            'availableDeliveryClasses'
+            'availableDeliveryClasses',
+            'hasMixedReturnPolicies',
+            'storeQuery'
         ));
     }
 }

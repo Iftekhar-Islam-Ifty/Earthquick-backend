@@ -4,6 +4,7 @@
 @section('meta_description', 'Discover curated partner ateliers, heritage textile houses, and innovative lifestyle brands across the Earthquick collective.')
 @section('canonical_url', route('stores.index'))
 @section('body_class', 'eq-stores-page')
+@section('scroll_motion', '1')
 
 @section('content')
 <main id="main-content" tabindex="-1">
@@ -21,7 +22,7 @@
 
   <!-- Hero Banner / Page Intro -->
   <section style="padding: 3rem 0 2rem; background: linear-gradient(180deg, var(--eq-cream-soft, #faf8f5) 0%, #ffffff 100%); border-bottom: 1px solid var(--eq-line);">
-    <div class="eq-container" style="text-align: center; max-width: 760px; margin: 0 auto;">
+    <div class="eq-container eq-reveal" style="text-align: center; max-width: 760px; margin: 0 auto;">
       <span style="font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600; color: var(--eq-gold-dark); display: inline-block; margin-bottom: 0.5rem;">
         Earthquick Collective
       </span>
@@ -37,7 +38,7 @@
   <!-- Brands Grid -->
   <section style="padding: 3.5rem 0 5rem;">
     <div class="eq-container">
-      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 2rem;">
+      <div class="eq-reveal" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 2rem;">
         @forelse($vendors as $vendor)
           <article style="background: #ffffff; border: 1px solid var(--eq-line); border-radius: 8px; overflow: hidden; display: flex; flex-direction: column; transition: transform 0.25s ease, box-shadow 0.25s ease; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
             
@@ -107,4 +108,3 @@
 
 </main>
 @endsection
-
