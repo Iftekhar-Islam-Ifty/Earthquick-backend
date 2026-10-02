@@ -900,10 +900,26 @@
     grid-template-columns: 1fr;
   }
 
+}
+
+@media (min-width: 769px) and (max-width: 1100px) {
   .eq-footer__top {
-    grid-template-columns: 1.3fr repeat(3, 1fr);
-    gap: var(--space-lg) var(--space-md);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.4rem 1.75rem;
   }
+
+  #footer-col-brand {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: 180px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 1.25rem;
+    padding-bottom: 1.4rem;
+    border-bottom: 1px solid rgba(247, 242, 233, 0.12);
+  }
+
+  #footer-col-brand img { margin-bottom: 0; }
+  #footer-col-brand .eq-footer__social { margin-top: 0; }
 }
 
 /* --- Responsive Block #11: @media (max-width: 768px) --- */
@@ -2426,70 +2442,76 @@
     gap: var(--space-sm);
   }
 
-  /* Footer on Mobile: Side-by-side layout like web */
+  /* Footer navigation remains readable on tablets and narrow screens. */
   .eq-footer {
-    padding: 2rem 0 1.25rem !important;
+    padding: 2.15rem 0 1.25rem !important;
   }
 
   .eq-footer__top {
     display: grid !important;
-    grid-template-columns: 1fr 1fr 1.15fr !important;
-    gap: 0.85rem 0.6rem !important;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr) !important;
+    gap: 1.2rem 1rem !important;
+    padding-bottom: 1.5rem;
   }
 
   #footer-col-brand {
     grid-column: 1 / -1 !important;
-    margin-bottom: 0.6rem !important;
-    padding-bottom: 0.65rem !important;
+    margin-bottom: 0 !important;
+    padding-bottom: 1.1rem !important;
     border-bottom: 1px solid rgba(247, 242, 233, 0.12) !important;
   }
 
   #footer-col-brand img {
-    height: 30px !important;
+    height: 42px !important;
     width: auto !important;
-    margin-bottom: 0.35rem !important;
+    margin-bottom: 0.55rem !important;
   }
 
   #footer-col-brand p {
-    font-size: 0.76rem !important;
-    line-height: 1.35 !important;
-    max-width: 44ch !important;
+    font-size: 0.875rem !important;
+    line-height: 1.5 !important;
+    max-width: 38ch !important;
     color: rgba(247, 242, 233, 0.82) !important;
-    margin-bottom: 0.4rem !important;
   }
 
   #footer-col-brand .eq-footer__social {
-    margin-top: 0.7rem !important;
-    gap: 10px !important;
+    margin-top: 0.75rem !important;
+    gap: 6px !important;
   }
 
   #footer-col-brand .eq-footer__social a {
     width: 44px !important;
     height: 44px !important;
-    border-radius: 13px;
+  }
+
+  #footer-col-brand .eq-footer__social a::before {
+    inset: 3px;
+    border-radius: 11px;
   }
 
   #footer-col-brand .eq-footer__social svg {
-    width: 22px !important;
-    height: 22px !important;
+    width: 19px !important;
+    height: 19px !important;
   }
 
   #footer-col-shop {
-    grid-column: 1 !important;
+    display: none !important;
   }
 
   #footer-col-company {
     grid-column: 2 !important;
+    grid-row: 2;
   }
 
   #footer-col-contact {
-    grid-column: 3 !important;
+    grid-column: 1 !important;
+    grid-row: 2;
   }
 
   .eq-footer__heading {
-    font-size: 0.72rem !important;
+    font-size: 0.78rem !important;
     letter-spacing: 0.08em !important;
-    margin-bottom: 0.4rem !important;
+    margin-bottom: 0.55rem !important;
     color: var(--eq-gold) !important;
   }
 
@@ -2501,24 +2523,25 @@
 
   .eq-footer__links a,
   .eq-footer__links li {
-    font-size: 0.73rem !important;
-    line-height: 1.35 !important;
+    font-size: 0.84rem !important;
+    line-height: 1.42 !important;
     color: rgba(247, 242, 233, 0.8) !important;
   }
 
   #footer-col-contact .eq-footer__links li {
-    font-size: 0.71rem !important;
-    word-break: break-word !important;
+    font-size: 0.82rem !important;
+    overflow-wrap: anywhere;
   }
 
   .eq-footer__bottom {
-    flex-direction: row !important;
-    justify-content: space-between !important;
-    align-items: center !important;
-    font-size: 0.71rem !important;
-    padding-top: 0.75rem !important;
-    border-top: 1px solid rgba(247, 242, 233, 0.1) !important;
+    font-size: 0.75rem !important;
+    padding-top: 1rem !important;
   }
+}
+
+@media (max-width: 380px) {
+  .eq-footer__email-full { display: none; }
+  .eq-footer__email-short { display: inline; }
 }
 
 /* --- Responsive Block #12: @media (max-width: 480px) --- */
