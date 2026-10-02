@@ -128,17 +128,17 @@ class CommunicationsTest extends TestCase
     public function test_public_contact_links_are_real_actions_and_chat_requires_confirmed_number(): void
     {
         config()->set('communications.support_email', 'support@example.test');
-        config()->set('communications.support_phone', '01793127287');
+        config()->set('communications.support_phone', '01805-423000');
         config()->set('communications.support_whatsapp', null);
 
         $this->get(route('about'))->assertOk()
             ->assertSee('href="mailto:support@example.test"', false)
-            ->assertSee('href="tel:01793127287"', false)
+            ->assertSee('href="tel:01805423000"', false)
             ->assertDontSee('wa.me/');
 
-        config()->set('communications.support_whatsapp', '8801793127287');
+        config()->set('communications.support_whatsapp', '8801805423000');
         $this->get(route('about'))->assertOk()
-            ->assertSee('href="https://wa.me/8801793127287"', false);
+            ->assertSee('href="https://wa.me/8801805423000"', false);
     }
 
     public function test_mail_smoke_command_rejects_log_mailer_and_uses_controlled_inbox(): void
