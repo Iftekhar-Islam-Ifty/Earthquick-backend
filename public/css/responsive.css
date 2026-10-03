@@ -997,60 +997,49 @@
   /* Standard 34x34 icon buttons for search, cart, etc. */
   .eq-navbar__icons button,
   .eq-navbar__icons a {
-    padding: 5px !important;
-    width: 34px !important;
-    height: 34px !important;
-  }
-
-  /* Admin Badge button on Mobile Navbar: fixed from squishing */
-  .eq-navbar__icons #eq-btn-admin-panel,
-  .eq-btn-admin-badge {
-    width: auto !important;
-    height: 32px !important;
-    min-width: unset !important;
-    padding: 0 0.55rem !important;
+    box-sizing: border-box !important;
     display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
-    gap: 0.28rem !important;
-    border-radius: 999px !important;
-    background: var(--eq-navy) !important;
-    color: #ffffff !important;
-    border: 1px solid rgba(201, 150, 47, 0.45) !important;
-    box-shadow: 0 2px 5px rgba(27, 58, 75, 0.22) !important;
-    text-decoration: none !important;
-    white-space: nowrap !important;
+    padding: 5px !important;
+    width: 34px !important;
+    height: 34px !important;
+    min-width: 34px !important;
+    min-height: 34px !important;
+    line-height: 0 !important;
+    vertical-align: middle !important;
+  }
+
+  /* Admin shortcut is icon-only on mobile so it matches the utility icons. */
+  .eq-navbar__icons #eq-btn-admin-panel {
+    width: 34px !important;
+    height: 34px !important;
+    min-width: 34px !important;
+    min-height: 34px !important;
+    padding: 5px !important;
+    gap: 0 !important;
+    border: 0 !important;
+    border-radius: 8px !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    color: var(--eq-charcoal) !important;
     flex-shrink: 0 !important;
   }
 
-  /* The admin shortcut lives in the drawer on narrow screens; keeping it in
-     the header pushes the menu/close toggle beyond the right viewport edge. */
-  .eq-navbar__icons #eq-btn-admin-panel {
-    display: none !important;
-  }
-
   .eq-btn-admin-badge svg {
-    width: 13px !important;
-    height: 13px !important;
-    stroke: var(--eq-gold) !important;
+    width: 18px !important;
+    height: 18px !important;
+    stroke: var(--eq-charcoal) !important;
     flex-shrink: 0 !important;
     display: block !important;
   }
 
-  .eq-btn-admin-badge .eq-btn-admin-text {
-    font-size: 0.72rem !important;
-    font-weight: 600 !important;
-    color: #ffffff !important;
-    line-height: 1 !important;
-    letter-spacing: 0.02em !important;
+  .eq-navbar__icons #eq-btn-admin-panel:hover svg {
+    stroke: var(--eq-gold-dark) !important;
   }
 
-  .eq-btn-admin-badge .eq-btn-admin-text--full {
+  .eq-navbar__icons #eq-btn-admin-panel .eq-btn-admin-text {
     display: none !important;
-  }
-
-  .eq-btn-admin-badge .eq-btn-admin-text--short {
-    display: inline !important;
   }
 
   /* User name text hidden on mobile navbar so account icon stays a 34x34 square */
@@ -1066,6 +1055,18 @@
   .eq-navbar__icons svg {
     width: 18px !important;
     height: 18px !important;
+    display: block !important;
+    flex: 0 0 18px !important;
+  }
+
+  .eq-navbar__icons button,
+  .eq-navbar__icons a {
+    margin: 0 !important;
+    line-height: 0 !important;
+  }
+
+  .eq-navbar-auth-group {
+    display: contents !important;
   }
 
   .eq-navbar {
@@ -1074,16 +1075,16 @@
     z-index: 10000 !important;
   }
 
-  /* Compact, Refined Mobile Hamburger Menu Toggle with Smooth Back/Close Morphing */
+  /* Compact mobile menu toggle, matched to the 34px utility icon buttons. */
   .eq-navbar__toggle {
     display: inline-flex !important;
     align-items: center;
     justify-content: center;
     flex-shrink: 0 !important;
-    width: 36px !important;
-    height: 36px !important;
-    min-width: 36px !important;
-    min-height: 36px !important;
+    width: 34px !important;
+    height: 34px !important;
+    min-width: 34px !important;
+    min-height: 34px !important;
     padding: 0 !important;
     background: transparent !important;
     border: none !important;
@@ -1115,8 +1116,8 @@
 
   .eq-navbar__toggle span {
     display: block;
-    width: 20px !important;
-    height: 2px !important;
+    width: 16px !important;
+    height: 1.7px !important;
     background-color: var(--eq-charcoal) !important;
     border-radius: 2px;
     pointer-events: none !important;
