@@ -1,6 +1,6 @@
 @extends('admin.layout')
 
-@section('title', 'Create Campaign Coupon — Earthquick Admin')
+@section('title', 'Create Campaign Coupon — Rthquick Admin')
 @section('header_title', 'Create Campaign Coupon')
 
 @section('content')

@@ -1,6 +1,6 @@
 @extends('admin.layout')
 
-@section('title', 'Executive Dashboard & Analytics — Earthquick Admin')
+@section('title', 'Executive Dashboard & Analytics — Rthquick Admin')
 @section('page_title', 'Executive Store Dashboard')
 
 @section('content')

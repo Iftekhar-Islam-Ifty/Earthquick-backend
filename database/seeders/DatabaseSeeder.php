@@ -27,7 +27,7 @@ class DatabaseSeeder extends Seeder
 
             if (filled($email) && filled($password) && ! User::where('email', $email)->exists()) {
                 User::create([
-                    'name' => 'Earthquick Admin',
+                    'name' => 'Rthquick Admin',
                     'email' => $email,
                     'phone' => '01700000000',
                     'password' => Hash::make($password),

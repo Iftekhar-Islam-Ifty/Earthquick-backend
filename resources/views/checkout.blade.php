@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Secure Checkout — Earthquick')
+@section('title', 'Secure Checkout — Rthquick')
 @section('body_class', 'eq-checkout-page')
 
 @section('content')
@@ -24,7 +24,7 @@
 <section class="eq-checkout-hero">
   <div class="eq-container">
     <h1 class="eq-checkout-hero__title" id="checkout-main-title">Secure Checkout</h1>
-    <p class="eq-checkout-hero__desc">Please provide your delivery information to finalize your Earthquick order.</p>
+    <p class="eq-checkout-hero__desc">Please provide your delivery information to finalize your Rthquick order.</p>
   </div>
 </section>
 
@@ -86,7 +86,7 @@
 
             <div class="eq-form-group">
               <label for="cust-email" class="eq-form-label">Email Address <span style="color: var(--eq-charcoal-soft); font-weight: normal;">(Optional)</span></label>
-              <input type="email" id="cust-email" name="customer_email" class="eq-form-input" value="{{ old('customer_email') }}" placeholder="e.g. hello@earthquick.com" autocomplete="email" />
+              <input type="email" id="cust-email" name="customer_email" class="eq-form-input" value="{{ old('customer_email') }}" placeholder="e.g. hello@example.com" autocomplete="email" />
               <small style="font-size: 0.76rem; color: var(--eq-charcoal-soft); margin-top: 2px;">Order invoice &amp; tracking link will be sent here.</small>
             </div>
           </div>
@@ -211,7 +211,7 @@
           <div style="margin-top: 1.5rem; display: flex; align-items: flex-start; gap: 0.65rem; font-size: 0.84rem; color: var(--eq-charcoal-soft);">
             <input type="checkbox" id="accept-terms" checked required style="accent-color: var(--eq-gold); margin-top: 0.2rem;" />
             <label for="accept-terms">
-              I agree to the <a href="{{ route('about') }}" style="color: var(--eq-charcoal); text-decoration: underline;">Terms &amp; Conditions</a> and <a href="{{ route('about') }}" style="color: var(--eq-charcoal); text-decoration: underline;">Privacy Policy</a> of Earthquick.
+              I agree to the <a href="{{ route('about') }}" style="color: var(--eq-charcoal); text-decoration: underline;">Terms &amp; Conditions</a> and <a href="{{ route('about') }}" style="color: var(--eq-charcoal); text-decoration: underline;">Privacy Policy</a> of Rthquick.
             </label>
           </div>
 

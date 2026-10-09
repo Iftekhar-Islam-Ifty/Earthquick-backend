@@ -11,7 +11,7 @@ use Illuminate\View\View;
 /* =========================================================================
  * VENDOR STOREFRONT CONTROLLER
  * Handles public brand directories (/stores) and dedicated multi-vendor
- * brand boutiques (/stores/{slug}) across the Earthquick collective.
+ * brand boutiques (/stores/{slug}) across the Rthquick collective.
  * ========================================================================= */
 class VendorController extends Controller
 {

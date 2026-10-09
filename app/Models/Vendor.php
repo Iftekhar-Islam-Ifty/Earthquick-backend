@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /* =========================================================================
  * VENDOR MODEL
- * Represents an independent brand or creator store selling on Earthquick.
+ * Represents an independent brand or creator store selling on Rthquick.
  * Manages brand profile, active status, vendor code for SKU generation,
  * and associations to supplied products and order line items.
  * ========================================================================= */

@@ -9,7 +9,7 @@ class RetryEarthquickMail extends Command
 {
     protected $signature = 'earthquick:mail-retry {--limit=25 : Maximum due messages to process (1-100)}';
 
-    protected $description = 'Retry due Earthquick transactional emails from the durable outbox';
+    protected $description = 'Retry due Rthquick transactional emails from the durable outbox';
 
     public function handle(OutboundMailService $outbox): int
     {

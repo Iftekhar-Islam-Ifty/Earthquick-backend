@@ -21,7 +21,7 @@ class HomeController extends Controller
      * ========================================================================= */
 
     /**
-     * Render the Earthquick / Nous Telos flagship homepage.
+     * Render the Rthquick / Nous Telos flagship homepage.
      */
     public function index(): View
     {

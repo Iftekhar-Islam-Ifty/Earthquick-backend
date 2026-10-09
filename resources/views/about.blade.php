@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
-@section('title', 'About Earthquick — Independent Bangladeshi Brands')
-@section('meta_description', 'Meet Earthquick, a marketplace for independent Bangladeshi brands. Explore Nous Telos, learn how orders work and contact our central support team.')
+@section('title', 'About Rthquick — Independent Bangladeshi Brands')
+@section('meta_description', 'Meet Rthquick, a marketplace for independent Bangladeshi brands. Explore Nous Telos, learn how orders work and contact our central support team.')
 @section('body_class', 'eq-about-page')
 @section('scroll_motion', '1')
 
@@ -97,11 +97,11 @@
 
   <header class="eq-about-hero">
     <div class="eq-container eq-about-hero__inner">
-      <span class="eq-about-kicker">EARTHQUICK MARKETPLACE</span>
+      <span class="eq-about-kicker">RTHQUICK MARKETPLACE</span>
       <h1>Independent brands. One place to shop.</h1>
-      <p class="eq-about-hero__lead">Discover independent Bangladeshi brands in one marketplace. Each store keeps its own identity; Earthquick brings shopping, order updates and customer support together.</p>
+      <p class="eq-about-hero__lead">Discover independent Bangladeshi brands in one marketplace. Each store keeps its own identity; Rthquick brings shopping, order updates and customer support together.</p>
       <nav class="eq-about-quick" aria-label="On this page">
-        <a href="#our-story">Why Earthquick</a>
+        <a href="#our-story">Why Rthquick</a>
         <a href="#brand-ecosystem">Our Brands</a>
         <a href="#contact-support">Contact Us</a>
         <a href="#help-faq">Help &amp; FAQ</a>
@@ -113,7 +113,7 @@
   <section class="eq-about-section" id="our-story" aria-labelledby="about-story-title">
     <div class="eq-container">
       <div class="eq-about-head eq-reveal"><div><span>How it works</span><h2 id="about-story-title">Different brands. One clear experience.</h2></div></div>
-      <p class="eq-about-intro">Earthquick is a shared storefront for distinctive brands, starting with Nous Telos. Our central team manages checkout, order updates and after-sales requests across the marketplace.</p>
+      <p class="eq-about-intro">Rthquick is a shared storefront for distinctive brands, starting with Nous Telos. Our central team manages checkout, order updates and after-sales requests across the marketplace.</p>
       <div class="eq-about-values eq-reveal">
         <article class="eq-about-value"><h3>Distinct stores</h3><p>Explore each brand's own products and story without losing the convenience of one marketplace.</p></article>
         <article class="eq-about-value"><h3>One checkout</h3><p>Choose from different stores in one order, with the delivery charge shown before you place it.</p></article>
@@ -144,7 +144,7 @@
 
   <section class="eq-about-section" id="contact-support" aria-labelledby="about-contact-title">
     <div class="eq-container">
-      <div class="eq-about-head eq-reveal"><div><span>Get in touch</span><h2 id="about-contact-title">Contact Earthquick</h2></div></div>
+      <div class="eq-about-head eq-reveal"><div><span>Get in touch</span><h2 id="about-contact-title">Contact Rthquick</h2></div></div>
       <div class="eq-about-contact">
         <div class="eq-about-contact-card" id="contact-info-card">
           <h3>Choose how to reach us</h3>
@@ -199,8 +199,8 @@
       <div class="eq-about-faq-list eq-reveal">
         <details class="eq-about-faq"><summary>How can I pay for an order?</summary><p>Cash on Delivery is available at checkout. bKash online payment is coming soon; manual mobile-banking and card payments are not currently available.</p></details>
         <details class="eq-about-faq"><summary>What does delivery cost?</summary><p>Delivery is charged once for the whole order: ৳80 inside Chattogram or ৳150 outside Chattogram when the product subtotal is below ৳3,000. Standard delivery is free from ৳3,000 before coupon discounts. Timing varies by destination. <a href="{{ route('policies.delivery-returns') }}#delivery">Delivery details</a>.</p></details>
-        <details class="eq-about-faq"><summary>How do returns and refunds work?</summary><p>Check each item's return eligibility and window. For an eligible delivered order, request a return from the order page and wait for Earthquick's decision before sending the item. Wrong or damaged items, courier responsibility and COD refunds are reviewed by our central team. <a href="{{ route('policies.delivery-returns') }}#returns">Returns and refunds guide</a>.</p></details>
-        <details class="eq-about-faq"><summary>Can my brand join Earthquick?</summary><p>Tell us about your brand and products using the <a href="#contact-support" onclick="prefillVendorInquiry()">partnership inquiry form</a>. Our team will review your message; there is no separate vendor dashboard or automatic approval.</p></details>
+        <details class="eq-about-faq"><summary>How do returns and refunds work?</summary><p>Check each item's return eligibility and window. For an eligible delivered order, request a return from the order page and wait for Rthquick's decision before sending the item. Wrong or damaged items, courier responsibility and COD refunds are reviewed by our central team. <a href="{{ route('policies.delivery-returns') }}#returns">Returns and refunds guide</a>.</p></details>
+        <details class="eq-about-faq"><summary>Can my brand join Rthquick?</summary><p>Tell us about your brand and products using the <a href="#contact-support" onclick="prefillVendorInquiry()">partnership inquiry form</a>. Our team will review your message; there is no separate vendor dashboard or automatic approval.</p></details>
       </div>
     </div>
   </section>

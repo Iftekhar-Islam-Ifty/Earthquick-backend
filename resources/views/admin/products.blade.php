@@ -1,6 +1,6 @@
 @extends('admin.layout')
 
-@section('title', 'Catalog & Inventory Management — Earthquick Admin')
+@section('title', 'Catalog & Inventory Management — Rthquick Admin')
 @section('page_title', 'Stock & Inventory Control')
 
 @section('content')

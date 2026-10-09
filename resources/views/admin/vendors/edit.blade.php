@@ -1,6 +1,6 @@
 @extends('admin.layout')
 
-@section('title', 'Edit Vendor: ' . $vendor->name . ' — Earthquick Admin')
+@section('title', 'Edit Vendor: ' . $vendor->name . ' — Rthquick Admin')
 @section('page_title', 'Edit Brand Partner: ' . $vendor->name)
 
 @section('content')

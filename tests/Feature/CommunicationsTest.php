@@ -82,9 +82,9 @@ class CommunicationsTest extends TestCase
         $this->post(route('contact.store'), $this->inquiryData())->assertRedirect();
         Mail::assertSent(EarthquickNotice::class, 2);
         Mail::assertSent(EarthquickNotice::class, fn ($mail) => $mail->hasTo('customer@example.test')
-            && $mail->noticeSubject === 'Earthquick: Inquiry received');
+            && $mail->noticeSubject === 'Rthquick: Inquiry received');
         Mail::assertSent(EarthquickNotice::class, fn ($mail) => $mail->hasTo('support@example.test')
-            && $mail->noticeSubject === 'Earthquick: New support inquiry');
+            && $mail->noticeSubject === 'Rthquick: New support inquiry');
     }
 
     public function test_log_mailer_does_not_pretend_to_send_customer_email(): void
@@ -120,7 +120,7 @@ class CommunicationsTest extends TestCase
         $this->actingAs($admin)->post($url, ['status' => 'confirmed'])->assertRedirect();
         Mail::assertSent(EarthquickNotice::class, 1);
         Mail::assertSent(EarthquickNotice::class, fn ($mail) => $mail->hasTo('customer@example.test')
-            && $mail->noticeSubject === 'Earthquick: Order status updated');
+            && $mail->noticeSubject === 'Rthquick: Order status updated');
         $this->post($url, ['status' => 'confirmed', 'courier_name' => 'QA Courier'])->assertRedirect();
         Mail::assertSent(EarthquickNotice::class, 1);
     }
@@ -152,6 +152,6 @@ class CommunicationsTest extends TestCase
         config()->set('mail.from.address', 'support@example.test');
         $this->artisan('earthquick:mail-test', ['to' => 'qa@example.test'])->assertExitCode(0);
         Mail::assertSent(EarthquickNotice::class, fn ($mail) => $mail->hasTo('qa@example.test')
-            && $mail->noticeSubject === 'Earthquick: Email delivery test');
+            && $mail->noticeSubject === 'Rthquick: Email delivery test');
     }
 }

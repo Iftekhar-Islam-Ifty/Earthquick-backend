@@ -184,7 +184,7 @@ class AdminController extends Controller
             $query->where('status', $status);
         }
 
-        $filename = 'earthquick_sales_orders_'.date('Y-m-d_His').'.csv';
+        $filename = 'rthquick_sales_orders_'.date('Y-m-d_His').'.csv';
 
         $headers = [
             'Content-Type' => 'text/csv; charset=UTF-8',

@@ -1,12 +1,12 @@
 @extends('layouts.app')
 
-@section('title', $product->name . ' — ' . ($product->vendor ? $product->vendor->name . ' | Earthquick' : 'Earthquick'))
-@section('meta_description', $product->short_desc ?? ('Discover authentic craftsmanship with ' . $product->name . ' from ' . ($product->vendor->name ?? 'Earthquick') . '.'))
-@section('meta_keywords', $product->name . ', ' . ($product->fabric ? $product->fabric . ' fabric, ' : '') . ($product->category ? $product->category->name . ', ' : '') . ($product->vendor ? strtolower($product->vendor->name) . ', ' : '') . 'earthquick')
+@section('title', $product->name . ' — ' . ($product->vendor ? $product->vendor->name . ' | Rthquick' : 'Rthquick'))
+@section('meta_description', $product->short_desc ?? ('Discover authentic craftsmanship with ' . $product->name . ' from ' . ($product->vendor->name ?? 'Rthquick') . '.'))
+@section('meta_keywords', $product->name . ', ' . ($product->fabric ? $product->fabric . ' fabric, ' : '') . ($product->category ? $product->category->name . ', ' : '') . ($product->vendor ? strtolower($product->vendor->name) . ', ' : '') . 'rthquick')
 @section('canonical_url', route('product.show', $product->slug))
 @section('og_type', 'product')
-@section('og_title', $product->name . ' — ' . ($product->vendor->name ?? 'Earthquick') . ' | Earthquick')
-@section('og_description', $product->short_desc ?? ($product->description ?? 'Discover curated collections at Earthquick.'))
+@section('og_title', $product->name . ' — ' . ($product->vendor->name ?? 'Rthquick') . ' | Rthquick')
+@section('og_description', $product->short_desc ?? ($product->description ?? 'Discover curated collections at Rthquick.'))
 @section('og_image', asset($product->image))
 @section('body_class', 'eq-product-page')
 @section('scroll_motion', '1')
@@ -81,7 +81,7 @@
           <!-- RIGHT: PRIMARY INFO (SITS BESIDE THE PICTURE) -->
           <div class="eq-product-header">
             <div class="eq-product-info__category" id="product-category-label">
-              {{ strtoupper($product->vendor->name ?? 'EARTHQUICK') }} &bull; {{ strtoupper($product->category->name) }}{{ $product->subcategory ? ' &bull; ' . strtoupper($product->subcategory->name) : '' }}
+              {{ strtoupper($product->vendor->name ?? 'RTHQUICK') }} &bull; {{ strtoupper($product->category->name) }}{{ $product->subcategory ? ' &bull; ' . strtoupper($product->subcategory->name) : '' }}
             </div>
             <h1 id="product-name">{{ $product->name }}</h1>
 
@@ -202,7 +202,7 @@
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
               </svg>
-              <span><strong>Verified Brand:</strong> Sold through {{ $product->vendor->name ?? 'Earthquick' }} with product details recorded by Earthquick.</span>
+              <span><strong>Verified Brand:</strong> Sold through {{ $product->vendor->name ?? 'Rthquick' }} with product details recorded by Rthquick.</span>
             </div>
             <div class="eq-product-meta-list__item">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -246,7 +246,7 @@
                   <p>{{ $product->description }}</p>
                 @endif
                 @if(!$product->fabric && !$product->description)
-                  <p>Product details are being prepared by the Earthquick team.</p>
+                  <p>Product details are being prepared by the Rthquick team.</p>
                 @endif
                 @if(is_array($product->specifications) && count($product->specifications) > 0)
                   <dl class="eq-product-spec-list">
@@ -276,10 +276,10 @@
                 @elseif($product->product_type === 'electronics')
                   &bull; Read the supplied usage and safety instructions before operation.<br />
                   &bull; Use only compatible power sources and accessories.<br />
-                  &bull; Contact Earthquick support for warranty or technical assistance.
+                  &bull; Contact Rthquick support for warranty or technical assistance.
                 @else
                   &bull; Follow the brand's supplied use, cleaning and storage instructions.<br />
-                  &bull; Contact Earthquick support if product-specific guidance is required.
+                  &bull; Contact Rthquick support if product-specific guidance is required.
                 @endif
 
                 @if($sizeChartMedia)
@@ -301,7 +301,7 @@
                   This item is return eligible within {{ $product->return_window_days ?? 7 }} days.
                   {{ $product->return_policy_note }}
                 @else
-                  This item is marked as final sale. Damaged or incorrect deliveries remain subject to Earthquick support review.
+                  This item is marked as final sale. Damaged or incorrect deliveries remain subject to Rthquick support review.
                 @endif
                 @if($product->warranty_info)
                   <br /><strong>Warranty / Support:</strong> {{ $product->warranty_info }}
@@ -440,7 +440,7 @@
   'sku' => $product->sku ?? ('NT-' . $product->id),
   'brand' => [
     '@type' => 'Brand',
-    'name' => $product->vendor->name ?? 'Earthquick',
+    'name' => $product->vendor->name ?? 'Rthquick',
   ],
   'offers' => [
     '@type' => 'Offer',
@@ -451,7 +451,7 @@
     'availability' => $product->in_stock ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
     'seller' => [
       '@type' => 'Organization',
-      'name' => 'Earthquick',
+      'name' => 'Rthquick',
     ],
   ],
 ], JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) !!}

@@ -1,6 +1,6 @@
 @extends('admin.layout')
 
-@section('title', 'Trashed Order #'.$order->order_number.' — Earthquick Admin')
+@section('title', 'Trashed Order #'.$order->order_number.' — Rthquick Admin')
 @section('page_title', 'Trashed Order #'.$order->order_number)
 
 @section('content')

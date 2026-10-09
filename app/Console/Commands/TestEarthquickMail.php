@@ -11,7 +11,7 @@ class TestEarthquickMail extends Command
 {
     protected $signature = 'earthquick:mail-test {to : Inbox for one controlled test email}';
 
-    protected $description = 'Send one controlled Earthquick email without creating an order or inquiry';
+    protected $description = 'Send one controlled Rthquick email without creating an order or inquiry';
 
     public function handle(): int
     {
@@ -33,7 +33,7 @@ class TestEarthquickMail extends Command
 
         try {
             Mail::to($to)->send(new EarthquickNotice(
-                'Earthquick: Email delivery test',
+                'Rthquick: Email delivery test',
                 'This is a controlled delivery test. No customer order or support inquiry was created.'
             ));
         } catch (Throwable $exception) {

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
-@section('title', 'Brand Partners & Stores — Earthquick Collective')
-@section('meta_description', 'Discover curated partner ateliers, heritage textile houses, and innovative lifestyle brands across the Earthquick collective.')
+@section('title', 'Brand Partners & Stores — Rthquick Collective')
+@section('meta_description', 'Discover curated partner ateliers, heritage textile houses, and innovative lifestyle brands across the Rthquick collective.')
 @section('canonical_url', route('stores.index'))
 @section('body_class', 'eq-stores-page')
 @section('scroll_motion', '1')
@@ -24,13 +24,13 @@
   <section style="padding: 3rem 0 2rem; background: linear-gradient(180deg, var(--eq-cream-soft, #faf8f5) 0%, #ffffff 100%); border-bottom: 1px solid var(--eq-line);">
     <div class="eq-container eq-reveal" style="text-align: center; max-width: 760px; margin: 0 auto;">
       <span style="font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600; color: var(--eq-gold-dark); display: inline-block; margin-bottom: 0.5rem;">
-        Earthquick Collective
+        Rthquick Collective
       </span>
       <h1 style="font-family: var(--font-display); font-size: 2.2rem; color: var(--eq-navy); margin-bottom: 0.75rem; font-weight: 600; line-height: 1.2;">
         Partner Ateliers &amp; Brands
       </h1>
       <p style="font-size: 0.95rem; line-height: 1.6; color: var(--eq-charcoal-soft); margin: 0;">
-        Earthquick unites artisanal design houses, master handloom weavers, and visionary lifestyle innovators into one seamless luxury shopping destination.
+        Rthquick unites artisanal design houses, master handloom weavers, and visionary lifestyle innovators into one seamless luxury shopping destination.
       </p>
     </div>
   </section>

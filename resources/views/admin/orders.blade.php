@@ -1,6 +1,6 @@
 @extends('admin.layout')
 
-@section('title', 'Customer Orders Portfolio — Earthquick Admin')
+@section('title', 'Customer Orders Portfolio — Rthquick Admin')
 @section('page_title', 'Customer Orders Management')
 
 @section('content')

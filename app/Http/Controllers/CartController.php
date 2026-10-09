@@ -143,7 +143,7 @@ class CartController extends Controller
                 'id' => $product->id,
                 'product_id' => $product->id,
                 'vendor_id' => $product->vendor_id,
-                'vendor_name' => $product->vendor ? $product->vendor->name : 'Earthquick',
+                'vendor_name' => $product->vendor ? $product->vendor->name : 'Rthquick',
                 'name' => $product->name,
                 'slug' => $product->slug,
                 'price' => $unitPrice,

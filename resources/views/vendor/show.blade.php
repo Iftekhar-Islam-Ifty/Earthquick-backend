@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
-@section('title', $vendor->name . ' — Storefront | Earthquick')
-@section('meta_description', $vendor->description ?? ('Discover exclusive creations by ' . $vendor->name . ' on Earthquick.'))
+@section('title', $vendor->name . ' — Storefront | Rthquick')
+@section('meta_description', $vendor->description ?? ('Discover exclusive creations by ' . $vendor->name . ' on Rthquick.'))
 @section('canonical_url', route('stores.show', $vendor->slug))
 @section('body_class', 'eq-storefront-page')
 @section('scroll_motion', '1')
@@ -280,7 +280,7 @@
               <a href="{{ route('stores.show', $vendor->slug) }}" class="eq-btn eq-btn--outline" style="padding: 0.55rem 1.25rem; font-size: 0.82rem; text-decoration: none;">View all pieces</a>
             @else
               <h3 style="font-family: var(--font-display); font-size: 1.35rem; color: var(--eq-navy); margin-bottom: 0.5rem; font-weight: 600;">Collection in Preparation</h3>
-              <p style="max-width: 460px; margin: 0 auto 1.75rem; color: var(--eq-charcoal-soft); font-size: 0.88rem; line-height: 1.6;">The {{ $vendor->name }} catalog is currently being prepared for the Earthquick collective. New curated arrivals will debut here shortly.</p>
+              <p style="max-width: 460px; margin: 0 auto 1.75rem; color: var(--eq-charcoal-soft); font-size: 0.88rem; line-height: 1.6;">The {{ $vendor->name }} catalog is currently being prepared for the Rthquick collective. New curated arrivals will debut here shortly.</p>
               <a href="{{ route('stores.index') }}" class="eq-btn eq-btn--outline" style="padding: 0.55rem 1.25rem; font-size: 0.82rem; text-decoration: none;">&larr; Discover All Partner Brands</a>
             @endif
           </div>

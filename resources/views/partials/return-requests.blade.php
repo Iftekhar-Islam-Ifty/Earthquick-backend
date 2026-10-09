@@ -5,8 +5,8 @@
 @if($order->status === 'delivered' || $order->returnRequests->isNotEmpty())
   <section style="border: 1px solid var(--eq-line); border-radius: 8px; padding: 1rem; margin: 1.25rem 0; background: var(--eq-white);">
     <h2 style="font-size: 1rem; margin: 0 0 0.5rem;">Item returns</h2>
-    <p style="font-size: 0.82rem; color: var(--eq-charcoal-soft);">A request is not a refund. Wait for authorization before sending an item; Earthquick will separately confirm receipt and any refund.</p>
-    <p style="font-size: 0.82rem; color: var(--eq-charcoal-soft);">For a verified wrong, damaged or defective item, Earthquick covers verified return courier postage; keep the courier receipt. For a change of mind, fit or other reason, the customer pays return postage. Earthquick confirms the reason and payer before you send the item.</p>
+    <p style="font-size: 0.82rem; color: var(--eq-charcoal-soft);">A request is not a refund. Wait for authorization before sending an item; Rthquick will separately confirm receipt and any refund.</p>
+    <p style="font-size: 0.82rem; color: var(--eq-charcoal-soft);">For a verified wrong, damaged or defective item, Rthquick covers verified return courier postage; keep the courier receipt. For a change of mind, fit or other reason, the customer pays return postage. Rthquick confirms the reason and payer before you send the item.</p>
     @if(session('success'))
       <p role="status" style="font-size: 0.84rem; color: #176a3a;">{{ session('success') }}</p>
     @endif
@@ -30,7 +30,7 @@
         @foreach($itemRequests as $itemRequest)
           <div style="font-size: 0.8rem; margin-top: 0.4rem;">{{ $itemRequest->quantity }} unit(s): <strong>{{ ucfirst($itemRequest->status) }}</strong> · requested {{ $itemRequest->created_at->format('d M Y') }}
             @if($itemRequest->status === 'authorized' || $itemRequest->status === 'received')
-              @if($itemRequest->return_shipping_payer === 'earthquick') · Return courier: Earthquick (keep courier receipt)
+              @if($itemRequest->return_shipping_payer === 'earthquick') · Return courier: Rthquick (keep courier receipt)
               @elseif($itemRequest->return_shipping_payer === 'customer') · Return courier: customer
               @else · Return courier payer: contact support for review @endif
             @endif
@@ -60,7 +60,7 @@
             <button type="submit" class="eq-btn eq-btn--outline" style="margin-top: 0.55rem;">Request Return</button>
           </form>
         @elseif($remaining > 0 && $order->status === 'delivered')
-          <p style="font-size: 0.78rem; color: var(--eq-charcoal-soft); margin-top: 0.4rem;">Online return unavailable for this item or window. Contact Earthquick support for review.</p>
+          <p style="font-size: 0.78rem; color: var(--eq-charcoal-soft); margin-top: 0.4rem;">Online return unavailable for this item or window. Contact Rthquick support for review.</p>
         @endif
       </div>
     @endforeach

@@ -702,7 +702,7 @@ class AdminFeatureTest extends TestCase
 
         $response->assertStatus(200);
         $this->assertStringContainsString('text/csv', (string) $response->headers->get('content-type'));
-        $this->assertStringContainsString('attachment; filename="earthquick_sales_orders_', (string) $response->headers->get('content-disposition'));
+        $this->assertStringContainsString('attachment; filename="rthquick_sales_orders_', (string) $response->headers->get('content-disposition'));
 
         // Capture streamed content
         $streamedContent = $response->streamedContent();

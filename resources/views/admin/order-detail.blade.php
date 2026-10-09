@@ -1,6 +1,6 @@
 @extends('admin.layout')
 
-@section('title', 'Order #' . $order->order_number . ' — Earthquick Admin')
+@section('title', 'Order #' . $order->order_number . ' — Rthquick Admin')
 @section('page_title', 'Order Details #' . $order->order_number)
 
 @section('content')
@@ -192,7 +192,7 @@
             <input id="cod-collection-note" name="cod_collection_note" type="text" maxlength="255" value="{{ old('cod_collection_note') }}" style="width: 100%; padding: 0.6rem; margin-bottom: 0.7rem; border: 1px solid var(--eq-line); border-radius: 6px;" />
             <label style="display: flex; gap: 0.5rem; align-items: flex-start; font-size: 0.82rem; margin-bottom: 0.8rem;">
               <input type="checkbox" name="confirm_collected" value="1" required />
-              <span>I confirm Earthquick has actually received the full COD amount of ৳{{ number_format($order->total) }}. Delivery status alone does not confirm payment.</span>
+              <span>I confirm Rthquick has actually received the full COD amount of ৳{{ number_format($order->total) }}. Delivery status alone does not confirm payment.</span>
             </label>
             <button type="submit" class="eq-admin-btn eq-admin-btn--gold" style="width: 100%; justify-content: center;">Mark COD Paid</button>
           </form>
@@ -290,7 +290,7 @@
                   @csrf
                   <label for="return-verified-issue-{{ $return->id }}" style="display:block;margin-bottom:0.3rem;">Admin-verified reason (required to authorize)</label>
                   <select id="return-verified-issue-{{ $return->id }}" name="verified_issue_type" style="display:block;width:100%;padding:0.55rem;margin-bottom:0.5rem;border:1px solid var(--eq-line);border-radius:6px;">
-                    <option value="">Choose verified reason</option><option value="wrong_item">Wrong item - Earthquick pays return courier</option><option value="damaged_defective">Damaged/defective - Earthquick pays return courier</option><option value="other">Fit/change of mind/other - customer pays return courier</option>
+                    <option value="">Choose verified reason</option><option value="wrong_item">Wrong item - Rthquick pays return courier</option><option value="damaged_defective">Damaged/defective - Rthquick pays return courier</option><option value="other">Fit/change of mind/other - customer pays return courier</option>
                   </select>
                   <label for="return-decision-{{ $return->id }}" style="display: block; margin-bottom: 0.3rem;">Decision note (internal)</label>
                   <textarea id="return-decision-{{ $return->id }}" name="decision_note" required minlength="5" maxlength="2000" rows="2" style="width: 100%; box-sizing: border-box; padding: 0.6rem; border: 1px solid var(--eq-line); border-radius: 6px;"></textarea>
@@ -301,7 +301,7 @@
                 </form>
               @elseif($return->status === 'authorized')
                 <p style="font-size: 0.78rem; color: var(--eq-charcoal-soft);">Authorized by {{ $return->decisionMaker?->name ?? 'former admin' }}. This does not mean refunded or restocked.</p>
-                <p>Verified reason: {{ str_replace('_', ' ', $return->verified_issue_type ?? 'historical/unverified') }}. Return courier payer: {{ ucfirst($return->return_shipping_payer ?? 'manual review required') }}.</p>
+                <p>Verified reason: {{ str_replace('_', ' ', $return->verified_issue_type ?? 'historical/unverified') }}. Return courier payer: {{ $return->return_shipping_payer === 'earthquick' ? 'Rthquick' : ucfirst($return->return_shipping_payer ?? 'manual review required') }}.</p>
                 <form method="POST" action="{{ route('admin.orders.return-receive', [$order->id, $return->id]) }}">
                   @csrf
                   <label for="return-receipt-{{ $return->id }}" style="display: block; margin-bottom: 0.3rem;">Receipt and inspection note</label>
@@ -312,7 +312,7 @@
               @else
                 <p style="font-size: 0.78rem; color: var(--eq-charcoal-soft);">@if($return->status === 'received') Received {{ $return->received_at?->format('d M Y, h:i A') }} by {{ $return->receiver?->name ?? 'former admin' }}. Refund and stock review remain separate. @else Decided by {{ $return->decisionMaker?->name ?? 'former admin' }}. @endif</p>
                 @if($return->status === 'received')
-                  <p>Verified reason: {{ str_replace('_', ' ', $return->verified_issue_type ?? 'historical/unverified') }}. Return courier payer: {{ ucfirst($return->return_shipping_payer ?? 'manual review required') }}.</p>
+                  <p>Verified reason: {{ str_replace('_', ' ', $return->verified_issue_type ?? 'historical/unverified') }}. Return courier payer: {{ $return->return_shipping_payer === 'earthquick' ? 'Rthquick' : ucfirst($return->return_shipping_payer ?? 'manual review required') }}.</p>
                   @if(!$return->inspection_outcome)
                     <form method="POST" action="{{ route('admin.orders.return-inspect', [$order->id, $return->id]) }}">
                       @csrf
@@ -346,7 +346,7 @@
                           <textarea id="refund-note-{{ $return->id }}" name="approval_note" required minlength="5" maxlength="2000" rows="2" style="display:block;width:100%;box-sizing:border-box;padding:0.6rem;margin:0.35rem 0;border:1px solid var(--eq-line);border-radius:6px;"></textarea>
                           <label style="display:flex;gap:0.5rem;align-items:flex-start;margin:0.5rem 0;"><input type="checkbox" name="include_delivery" value="1"> <span>Include delivery fee (full order return only, after admin review)</span></label>
                           @if($return->return_shipping_payer === 'earthquick')
-                            <label for="return-postage-{{ $return->id }}">Verified return courier postage to reimburse (0 if Earthquick booked/paid courier directly)</label>
+                            <label for="return-postage-{{ $return->id }}">Verified return courier postage to reimburse (0 if Rthquick booked/paid courier directly)</label>
                             <input id="return-postage-{{ $return->id }}" type="number" name="return_shipping_amount" min="0" step="0.01" value="0" style="display:block;width:100%;box-sizing:border-box;padding:0.55rem;margin:0.35rem 0;border:1px solid var(--eq-line);border-radius:6px;">
                             <label for="return-postage-receipt-{{ $return->id }}">Courier receipt/tracking reference (required for reimbursement; use once)</label>
                             <input id="return-postage-receipt-{{ $return->id }}" type="text" name="return_shipping_receipt_reference" maxlength="100" style="display:block;width:100%;box-sizing:border-box;padding:0.55rem;margin:0.35rem 0;border:1px solid var(--eq-line);border-radius:6px;">
@@ -385,7 +385,7 @@
                             <p>Recipient verified for {{ str_replace('_', ' ', $return->refund->method) }}: {{ $return->refund->recipient_name }}{{ $return->refund->recipient_account_last4 ? ' · destination ending '.$return->refund->recipient_account_last4 : '' }}. No payment recorded yet.</p>
                             <form method="POST" action="{{ route('admin.orders.refund-complete', [$order->id, $return->refund->id]) }}">
                               @csrf
-                              <p>Send the approved amount outside Earthquick to the verified recipient first. Record completion only after checking the transfer.</p>
+                              <p>Send the approved amount outside Rthquick to the verified recipient first. Record completion only after checking the transfer.</p>
                               <label for="refund-reference-{{ $return->id }}">External payment reference</label>
                               <input id="refund-reference-{{ $return->id }}" type="text" name="reference" required minlength="4" maxlength="100" style="display:block;width:100%;box-sizing:border-box;padding:0.55rem;margin:0.35rem 0;border:1px solid var(--eq-line);border-radius:6px;">
                               <label style="display:flex;gap:0.5rem;align-items:flex-start;margin:0.5rem 0;"><input type="checkbox" name="confirm_sent" value="1" required> <span>I confirm the full approved amount was sent to the customer.</span></label>

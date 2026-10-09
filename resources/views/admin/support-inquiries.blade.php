@@ -1,6 +1,6 @@
 @extends('admin.layout')
 
-@section('title', 'Support Inbox - Earthquick Admin')
+@section('title', 'Support Inbox - Rthquick Admin')
 @section('page_title', 'Support Inbox')
 
 @push('styles')
@@ -94,7 +94,7 @@
             </div>
             <div class="eq-support-actions">
               <a class="eq-support-action" href="tel:{{ preg_replace('/[^+0-9]/', '', $inquiry->phone) }}">Call customer</a>
-              @if($inquiry->email)<a class="eq-support-action" href="mailto:{{ $inquiry->email }}?subject={{ rawurlencode('Earthquick inquiry #'.$inquiry->id) }}">Email customer</a>@endif
+              @if($inquiry->email)<a class="eq-support-action" href="mailto:{{ $inquiry->email }}?subject={{ rawurlencode('Rthquick inquiry #'.$inquiry->id) }}">Email customer</a>@endif
             </div>
             <p class="eq-support-entry__message">{{ $inquiry->message }}</p>
             @if($inquiry->handled_at)

@@ -1,6 +1,6 @@
 @extends('admin.layout')
 
-@section('title', 'Onboard New Vendor — Earthquick Admin')
+@section('title', 'Onboard New Vendor — Rthquick Admin')
 @section('page_title', 'Onboard Brand Partner')
 
 @section('content')

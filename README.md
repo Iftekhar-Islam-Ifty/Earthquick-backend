@@ -1,6 +1,6 @@
-# Earthquick
+# Rthquick
 
-Earthquick is a multivendor marketplace built with Laravel and Blade. **Nous Telos**
+Rthquick is a multivendor marketplace built with Laravel and Blade. **Nous Telos**
 is the primary initial vendor, specializing in Bengali heritage and handloom.
 **Bright** is an initial example electronics vendor to develop further later.
 The project will support additional vendors through incremental improvements.

@@ -1,5 +1,5 @@
 /* =====================================================================
-   EARTHQUICK — MAIN STYLESHEET
+   RTHQUICK — MAIN STYLESHEET
    A premium fashion/lifestyle e-commerce frontend demo.
 
    TABLE OF CONTENTS
@@ -30,7 +30,7 @@
    Change these variables to re-theme the entire website.
    ===================================================================== */
 :root {
-  /* --- Brand palette, derived from the Earthquick logo --- */
+  /* --- Brand palette, derived from the Rthquick logo --- */
   --eq-gold: #c9962f;          /* primary accent — from the logo's "quick" wordmark   */
   --eq-gold-dark: #a97a20;     /* hover / pressed state for gold                       */
   --eq-teal: #2c7a78;          /* secondary accent — from the logo's "rth" wordmark    */
@@ -5378,7 +5378,7 @@ p {
 
 /* =====================================================================
    21. CHECKOUT PAGE STYLES
-   Sophisticated, mobile & tablet responsive checkout layout for Earthquick / Nous Telos
+   Sophisticated, mobile & tablet responsive checkout layout for Rthquick / Nous Telos
    Mapped to Laravel: resources/views/pages/checkout.blade.php
    ===================================================================== */
 .eq-checkout-page {

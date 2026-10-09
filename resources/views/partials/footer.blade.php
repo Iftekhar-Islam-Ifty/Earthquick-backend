@@ -1,5 +1,5 @@
 <!-- =====================================================================
-     EARTHQUICK / NOUS TELOS — REUSABLE FOOTER COMPONENT
+     RTHQUICK / NOUS TELOS — REUSABLE FOOTER COMPONENT
      Blade Partial: resources/views/partials/footer.blade.php
      ===================================================================== -->
 <footer class="eq-footer" id="eq-main-footer">
@@ -9,7 +9,7 @@
       <!-- Brand column -->
       <div class="eq-footer__brand" id="footer-col-brand">
         <a href="{{ route('home') }}" style="display: block; text-decoration: none;">
-          <img src="{{ asset('images/logo/earthquick-logo.png') }}" alt="Earthquick" />
+          <img src="{{ asset('images/logo/earthquick-logo.png') }}" alt="Rthquick" />
         </a>
         <p>Bangladesh's curated multi-vendor marketplace, starting with Nous Telos.</p>
         <nav class="eq-footer__social" aria-label="Social links">
@@ -20,7 +20,7 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
           </a>
           @if(config('communications.support_whatsapp'))
-            <a href="https://wa.me/{{ preg_replace('/\D/', '', config('communications.support_whatsapp')) }}" class="eq-footer__social-link eq-footer__social-link--whatsapp" target="_blank" rel="noopener noreferrer" aria-label="Chat with Earthquick on WhatsApp (opens in a new tab)" title="Chat with Earthquick on WhatsApp" id="social-whatsapp">
+            <a href="https://wa.me/{{ preg_replace('/\D/', '', config('communications.support_whatsapp')) }}" class="eq-footer__social-link eq-footer__social-link--whatsapp" target="_blank" rel="noopener noreferrer" aria-label="Chat with Rthquick on WhatsApp (opens in a new tab)" title="Chat with Rthquick on WhatsApp" id="social-whatsapp">
               <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2a9.93 9.93 0 0 0-8.6 14.9L2 22l5.25-1.37A9.96 9.96 0 1 0 12.04 2Zm0 18.18a8.2 8.2 0 0 1-4.18-1.14l-.3-.18-3.12.82.83-3.04-.2-.32A8.21 8.21 0 1 1 12.04 20.18Zm4.5-6.16c-.25-.12-1.47-.73-1.7-.81-.23-.09-.39-.13-.56.12-.17.25-.64.81-.78.97-.14.17-.28.19-.53.06-.25-.12-1.05-.39-2-1.24-.74-.66-1.25-1.48-1.4-1.73-.14-.25-.01-.38.11-.5.11-.11.25-.29.37-.44.12-.14.16-.25.24-.41.08-.17.04-.31-.02-.44-.06-.13-.56-1.34-.77-1.83-.2-.48-.4-.41-.56-.42h-.48c-.17 0-.44.06-.67.31-.23.25-.88.86-.88 2.09 0 1.23.9 2.42 1.02 2.58.12.16 1.77 2.7 4.3 3.78.6.26 1.07.41 1.44.52.6.19 1.15.16 1.58.1.48-.07 1.47-.6 1.67-1.18.21-.58.21-1.08.15-1.18-.07-.1-.23-.16-.48-.29Z"/></svg>
             </a>
           @endif
@@ -62,7 +62,7 @@
             <span>Chittagong, Bangladesh, 4100</span>
           </li>
           @if(config('communications.support_email'))
-            <li><a href="mailto:{{ config('communications.support_email') }}" aria-label="Email Earthquick at {{ config('communications.support_email') }}"><span class="eq-footer__email-full">{{ config('communications.support_email') }}</span><span class="eq-footer__email-short" aria-hidden="true">Email us &rarr;</span></a></li>
+            <li><a href="mailto:{{ config('communications.support_email') }}" aria-label="Email Rthquick at {{ config('communications.support_email') }}"><span class="eq-footer__email-full">{{ config('communications.support_email') }}</span><span class="eq-footer__email-short" aria-hidden="true">Email us &rarr;</span></a></li>
           @endif
           @unless(config('communications.support_email'))
             <li><a href="{{ route('about') }}#contact-support">Use the support form</a></li>
@@ -74,7 +74,7 @@
 
     <!-- Footer bottom copyright bar -->
     <div class="eq-footer__bottom" id="footer-bottom-bar">
-      <span>&copy; {{ date('Y') }} Earthquick. All rights reserved.</span>
+      <span>&copy; {{ date('Y') }} Rthquick. All rights reserved.</span>
     </div>
   </div>
 </footer>

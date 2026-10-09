@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Order #' . $order->order_number . ' Details — Earthquick by Nous Telos')
+@section('title', 'Order #' . $order->order_number . ' Details — Rthquick by Nous Telos')
 @section('body_class', 'eq-checkout-page')
 
 @section('content')

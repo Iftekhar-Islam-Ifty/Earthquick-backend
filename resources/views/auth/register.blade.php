@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Create Account — Earthquick by Nous Telos')
+@section('title', 'Create Account — Rthquick by Nous Telos')
 @section('body_class', 'eq-auth-page')
 
 @section('content')
@@ -73,7 +73,7 @@
             id="reg-email" 
             name="email" 
             class="eq-form-input" 
-            placeholder="e.g. iftekhar@earthquick.com" 
+            placeholder="e.g. iftekhar@example.com"
             value="{{ old('email') }}"
             required 
             autocomplete="email"

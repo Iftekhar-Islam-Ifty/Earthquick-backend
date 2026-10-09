@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
-@section('title', ($query ? 'Search: "' . e($query) . '"' : 'Search Collection') . ' — Earthquick / Nous Telos')
-@section('meta_description', 'Discover handcrafted sarees, bespoke three-piece ensembles, and accessories from Earthquick Studio.')
+@section('title', ($query ? 'Search: "' . e($query) . '"' : 'Search Collection') . ' — Rthquick / Nous Telos')
+@section('meta_description', 'Discover handcrafted sarees, bespoke three-piece ensembles, and accessories from Rthquick Studio.')
 @section('body_class', 'eq-catalog-page')
 @section('scroll_motion', '1')
 

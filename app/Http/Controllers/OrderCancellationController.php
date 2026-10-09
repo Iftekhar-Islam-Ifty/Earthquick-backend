@@ -25,7 +25,7 @@ class OrderCancellationController extends Controller
                 || $order->payment_method !== 'cod'
                 || $order->payment_status !== 'due_on_delivery') {
                 throw ValidationException::withMessages([
-                    'cancellation' => 'This order cannot be cancelled online. Please contact Earthquick support.',
+                    'cancellation' => 'This order cannot be cancelled online. Please contact Rthquick support.',
                 ]);
             }
             if ($order->cancellationRequests()->where('status', 'pending')->exists()) {
@@ -43,6 +43,6 @@ class OrderCancellationController extends Controller
 
         app(\App\Services\CustomerCommunications::class)->order($order, 'cancellation_requested');
 
-        return redirect()->back()->with('success', 'Cancellation request sent. Your order is not cancelled until Earthquick approves it.');
+        return redirect()->back()->with('success', 'Cancellation request sent. Your order is not cancelled until Rthquick approves it.');
     }
 }

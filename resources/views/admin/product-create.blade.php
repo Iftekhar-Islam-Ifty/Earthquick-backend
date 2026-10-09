@@ -1,6 +1,6 @@
 @extends('admin.layout')
 
-@section('title', 'Add New Product — Earthquick Admin')
+@section('title', 'Add New Product — Rthquick Admin')
 @section('page_title', 'Add New Product')
 
 @section('content')

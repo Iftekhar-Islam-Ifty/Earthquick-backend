@@ -1,5 +1,5 @@
 /* =====================================================================
-   EARTHQUICK — CORE JAVASCRIPT
+   RTHQUICK — CORE JAVASCRIPT
    Structured modular script powering site interactions, navigation,
    carousels, accessibility, and interactive feedback.
 
@@ -18,7 +18,7 @@
 
 /* =====================================================================
    1. TOAST NOTIFICATION SYSTEM
-   Provides non-intrusive, styled alerts matching Earthquick brand tokens.
+   Provides non-intrusive, styled alerts matching Rthquick brand tokens.
    Replaces window.alert() which is blocked in sandboxed iframes.
    ===================================================================== */
 // Resolve paths against Laravel's root, including subfolder installations.
@@ -1307,7 +1307,7 @@ function initScrollReveal() {
 
 /* =====================================================================
    8. NEWSLETTER SUBSCRIPTION
-   Validates and simulates email signup for the Earthquick house drops.
+   Validates and simulates email signup for the Rthquick house drops.
    ===================================================================== */
 function initNewsletterForm() {
   const form = document.querySelector("#eq-newsletter-form") || document.querySelector("[data-newsletter-form]");
@@ -1319,7 +1319,7 @@ function initNewsletterForm() {
     const email = input ? input.value.trim() : "";
 
     if (email && email.includes("@")) {
-      Toast.show("Welcome to the House of Earthquick. Thank you for subscribing!");
+      Toast.show("Welcome to the House of Rthquick. Thank you for subscribing!");
       form.reset();
     } else {
       Toast.show("Please enter a valid email address.");
@@ -1459,7 +1459,7 @@ function initQuickViewModal() {
   window.openQuickView = function(card) {
     if (!card) return;
 
-    const name = card.querySelector(".eq-product-card__name, .eq-saree-masterpiece__name")?.textContent.trim() || "Earthquick Piece";
+    const name = card.querySelector(".eq-product-card__name, .eq-saree-masterpiece__name")?.textContent.trim() || "Rthquick Piece";
     const category = card.querySelector(".eq-product-card__category")?.textContent.trim() || "Artisanal Collection";
     const priceEl = card.querySelector(".eq-product-card__price, .eq-saree-masterpiece__price");
     const priceHtml = priceEl ? priceEl.innerHTML.trim() : "৳4,200";

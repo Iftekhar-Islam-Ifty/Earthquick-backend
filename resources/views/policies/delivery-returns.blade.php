@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
-@section('title', 'Delivery, Returns & Refunds | Earthquick')
-@section('meta_description', 'Understand Earthquick delivery charges, cancellation requests, return eligibility, courier responsibility and COD refunds.')
+@section('title', 'Delivery, Returns & Refunds | Rthquick')
+@section('meta_description', 'Understand Rthquick delivery charges, cancellation requests, return eligibility, courier responsibility and COD refunds.')
 @section('body_class', 'eq-policy-page')
 @section('scroll_motion', '1')
 
@@ -76,9 +76,9 @@
 
   <header class="eq-policy-hero">
     <div class="eq-container eq-policy-hero__inner">
-      <span class="eq-policy-kicker">Earthquick customer care</span>
+      <span class="eq-policy-kicker">Rthquick customer care</span>
       <h1>Clear steps, from delivery to resolution.</h1>
-      <p>Know what you pay, when you can request a change, and what happens before a return or refund is complete. Earthquick's central team coordinates these decisions for every brand on the marketplace.</p>
+      <p>Know what you pay, when you can request a change, and what happens before a return or refund is complete. Rthquick's central team coordinates these decisions for every brand on the marketplace.</p>
       <nav class="eq-policy-quick" aria-label="On this page">
         <a href="#delivery">Delivery</a>
         <a href="#cancellations">Cancellations</a>
@@ -102,7 +102,7 @@
         <div class="eq-policy-card"><h3>Inside Chattogram</h3><p>৳80 delivery for an order with a product subtotal below ৳3,000.</p></div>
         <div class="eq-policy-card"><h3>Outside Chattogram</h3><p>৳150 delivery for an order with a product subtotal below ৳3,000, including Dhaka and other districts.</p></div>
         <div class="eq-policy-card eq-policy-card--tint"><h3>Free-delivery threshold</h3><p>When the product subtotal reaches ৳3,000 or more, the standard delivery charge is ৳0. This threshold is checked before any coupon discount.</p></div>
-        <div class="eq-policy-card"><h3>Updates and payment</h3><p>Earthquick tracks delivery at order level. Cash on Delivery (COD) is available; bKash online payment is not active yet. Delivery being marked complete does not by itself confirm that COD cash has been received.</p></div>
+        <div class="eq-policy-card"><h3>Updates and payment</h3><p>Rthquick tracks delivery at order level. Cash on Delivery (COD) is available; bKash online payment is not active yet. Delivery being marked complete does not by itself confirm that COD cash has been received.</p></div>
       </div>
       <div class="eq-policy-callout"><strong>Timing:</strong> Delivery timing depends on the address and fulfilment. We do not promise a fixed number of days here; contact support with your order number for a current update.</div>
     </section>
@@ -111,7 +111,7 @@
       <div class="eq-policy-section__head"><span>02 / Before fulfilment</span><h2 id="policy-cancel-title">Cancelling an order</h2><p>You can request cancellation online while an unpaid COD order is still pending or confirmed.</p></div>
       <div class="eq-policy-grid">
         <div class="eq-policy-card"><h3>What you do</h3><p>Open your order page, send a cancellation request and explain why. Sending a request does <strong>not</strong> cancel the order immediately.</p></div>
-        <div class="eq-policy-card eq-policy-card--warm"><h3>What Earthquick does</h3><p>The central admin reviews and approves or declines it. If approved, the order is cancelled; if declined, the order remains active. For paid, dispatched or delivered orders, contact support instead of relying on this online cancellation path.</p></div>
+        <div class="eq-policy-card eq-policy-card--warm"><h3>What Rthquick does</h3><p>The central admin reviews and approves or declines it. If approved, the order is cancelled; if declined, the order remains active. For paid, dispatched or delivered orders, contact support instead of relying on this online cancellation path.</p></div>
       </div>
     </section>
 
@@ -120,30 +120,30 @@
       <div class="eq-policy-steps">
         <div class="eq-policy-step"><h3>Check eligibility</h3><p>Look for the item's returnable status and return window on the product and saved order details. The window starts from recorded delivery, not order placement.</p></div>
         <div class="eq-policy-step"><h3>Send a request</h3><p>For an eligible delivered order, request a return from its order page with the item quantity and reason. Do not send the item yet.</p></div>
-        <div class="eq-policy-step"><h3>Wait for a decision</h3><p>Earthquick reviews the reason, authorizes or rejects the return, and confirms who pays the return courier. Authorization is not a refund.</p></div>
-        <div class="eq-policy-step"><h3>Receipt and inspection</h3><p>After an authorized item arrives, Earthquick records receipt and inspects it. An accepted inspection is needed before a paid COD refund can be approved.</p></div>
+        <div class="eq-policy-step"><h3>Wait for a decision</h3><p>Rthquick reviews the reason, authorizes or rejects the return, and confirms who pays the return courier. Authorization is not a refund.</p></div>
+        <div class="eq-policy-step"><h3>Receipt and inspection</h3><p>After an authorized item arrives, Rthquick records receipt and inspects it. An accepted inspection is needed before a paid COD refund can be approved.</p></div>
       </div>
       <div class="eq-policy-grid" style="margin-top:1rem">
-        <div class="eq-policy-card eq-policy-card--tint"><h3>Wrong or damaged item</h3><p>When Earthquick verifies that the wrong item was sent or the item is damaged/defective, Earthquick is responsible for return courier postage. If you paid the courier, keep the receipt: a verified amount can be added to the refund. A pickup is not automatic.</p></div>
-        <div class="eq-policy-card"><h3>Fit, change of mind or other reasons</h3><p>The customer pays the return courier when Earthquick verifies one of these reasons. Your reported reason is reviewed; the confirmed reason and payer are shown after authorization.</p></div>
+        <div class="eq-policy-card eq-policy-card--tint"><h3>Wrong or damaged item</h3><p>When Rthquick verifies that the wrong item was sent or the item is damaged/defective, Rthquick is responsible for return courier postage. If you paid the courier, keep the receipt: a verified amount can be added to the refund. A pickup is not automatic.</p></div>
+        <div class="eq-policy-card"><h3>Fit, change of mind or other reasons</h3><p>The customer pays the return courier when Rthquick verifies one of these reasons. Your reported reason is reviewed; the confirmed reason and payer are shown after authorization.</p></div>
       </div>
       <div class="eq-policy-callout"><strong>Cannot request online?</strong> If the item is marked final sale, the delivery record or return window is unclear, or the online option is unavailable, contact support with your order number. These cases need manual review; a return is not automatically guaranteed. There is no separate automatic exchange flow—ask support about an exchange.</div>
     </section>
 
     <section class="eq-policy-section eq-reveal" id="refunds" aria-labelledby="policy-refunds-title">
-      <div class="eq-policy-section__head"><span>04 / Money back</span><h2 id="policy-refunds-title">How COD refunds work</h2><p>A refund can be considered after Earthquick receives and accepts an eligible return on a delivered, paid COD order.</p></div>
+      <div class="eq-policy-section__head"><span>04 / Money back</span><h2 id="policy-refunds-title">How COD refunds work</h2><p>A refund can be considered after Rthquick receives and accepts an eligible return on a delivered, paid COD order.</p></div>
       <div class="eq-policy-grid">
-        <div class="eq-policy-card"><h3>Refund amount</h3><p>The returned item's original paid price is used, less its proportional share of any order-wide coupon discount. A partial return does not refund the original delivery charge. If all items are returned, Earthquick may include that charge once after review.</p></div>
-        <div class="eq-policy-card"><h3>Return courier is separate</h3><p>Original delivery and return courier postage are different charges. When Earthquick is responsible for the return courier and you paid it, a verified receipt may support reimbursement. We do not reimburse the same receipt twice.</p></div>
-        <div class="eq-policy-card eq-policy-card--warm"><h3>Recipient checked first</h3><p>Before recording an external refund payment, Earthquick verifies the intended recipient through the original order contact or in person. If an alternate recipient is involved, the reason is recorded.</p></div>
-        <div class="eq-policy-card eq-policy-card--tint"><h3>Paid only after transfer</h3><p>Refund approval records the amount but does not send money. Earthquick sends the COD refund outside the website, then records the actual payment method and reference. Your order page distinguishes approved/pending payment from completed.</p></div>
+        <div class="eq-policy-card"><h3>Refund amount</h3><p>The returned item's original paid price is used, less its proportional share of any order-wide coupon discount. A partial return does not refund the original delivery charge. If all items are returned, Rthquick may include that charge once after review.</p></div>
+        <div class="eq-policy-card"><h3>Return courier is separate</h3><p>Original delivery and return courier postage are different charges. When Rthquick is responsible for the return courier and you paid it, a verified receipt may support reimbursement. We do not reimburse the same receipt twice.</p></div>
+        <div class="eq-policy-card eq-policy-card--warm"><h3>Recipient checked first</h3><p>Before recording an external refund payment, Rthquick verifies the intended recipient through the original order contact or in person. If an alternate recipient is involved, the reason is recorded.</p></div>
+        <div class="eq-policy-card eq-policy-card--tint"><h3>Paid only after transfer</h3><p>Refund approval records the amount but does not send money. Rthquick sends the COD refund outside the website, then records the actual payment method and reference. Your order page distinguishes approved/pending payment from completed.</p></div>
       </div>
       <div class="eq-policy-example"><strong>Example:</strong> An order has ৳3,000 of products and a ৳300 order-wide discount. If an eligible ৳1,000 item is returned, its discount share is ৳100, so its product refund is ৳900. A partial return does not add the original delivery charge. Any eligible, receipt-backed return-courier reimbursement is considered separately.</div>
     </section>
 
     <section class="eq-policy-cta eq-reveal" id="need-help" aria-labelledby="policy-help-title">
       <div><h2 id="policy-help-title">Need help with a specific order?</h2><p>Tell us the order number and what happened. Our team can review delivery, cancellation, return eligibility or refund status.</p></div>
-      <a href="{{ route('about') }}#contact-support">Contact Earthquick</a>
+      <a href="{{ route('about') }}#contact-support">Contact Rthquick</a>
     </section>
   </div>
 </main>

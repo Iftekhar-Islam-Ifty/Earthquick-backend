@@ -7,23 +7,23 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <!-- Dynamic SEO Titles & Meta -->
-    <title>@yield('title', 'Earthquick — Discover independent Bangladeshi brands')</title>
-    <meta name="description" content="@yield('meta_description', 'Discover independent Bangladeshi brands, starting with Nous Telos heritage handloom and Bright electronics, at Earthquick.')" />
-    <meta name="keywords" content="@yield('meta_keywords', 'earthquick, bangladesh marketplace, independent brands, nous telos, bright electronics')" />
+    <title>@yield('title', 'Rthquick — Discover independent Bangladeshi brands')</title>
+    <meta name="description" content="@yield('meta_description', 'Discover independent Bangladeshi brands, starting with Nous Telos heritage handloom and Bright electronics, at Rthquick.')" />
+    <meta name="keywords" content="@yield('meta_keywords', 'rthquick, bangladesh marketplace, independent brands, nous telos, bright electronics')" />
     <link rel="canonical" href="@yield('canonical_url', url()->current())" />
 
     <!-- Open Graph Social Protocol -->
-    <meta property="og:site_name" content="Earthquick" />
+    <meta property="og:site_name" content="Rthquick" />
     <meta property="og:type" content="@yield('og_type', 'website')" />
-    <meta property="og:title" content="@yield('og_title', 'Earthquick — Discover independent Bangladeshi brands')" />
-    <meta property="og:description" content="@yield('og_description', 'Discover independent Bangladeshi brands at Earthquick.')" />
+    <meta property="og:title" content="@yield('og_title', 'Rthquick — Discover independent Bangladeshi brands')" />
+    <meta property="og:description" content="@yield('og_description', 'Discover independent Bangladeshi brands at Rthquick.')" />
     <meta property="og:url" content="@yield('og_url', url()->current())" />
     <meta property="og:image" content="@yield('og_image', asset('images/hero/hero-main-saree-2.jpg'))" />
 
     <!-- Twitter Card Protocol -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="@yield('og_title', 'Earthquick — Discover independent Bangladeshi brands')" />
-    <meta name="twitter:description" content="@yield('og_description', 'Discover independent Bangladeshi brands at Earthquick.')" />
+    <meta name="twitter:title" content="@yield('og_title', 'Rthquick — Discover independent Bangladeshi brands')" />
+    <meta name="twitter:description" content="@yield('og_description', 'Discover independent Bangladeshi brands at Rthquick.')" />
     <meta name="twitter:image" content="@yield('og_image', asset('images/hero/hero-main-saree-2.jpg'))" />
 
     <!-- Google Fonts: Fraunces (display/serif) + Jost (body/sans) -->
@@ -35,9 +35,9 @@
         @include('partials.scroll-motion-bootstrap')
     @endif
 
-    <!-- Earthquick Custom Stylesheet -->
+    <!-- Rthquick Custom Stylesheet -->
     <link rel="stylesheet" href="{{ asset('css/style.css') }}?v={{ filemtime(base_path('public/css/style.css')) }}" />
-    <!-- Earthquick Dedicated Responsive Stylesheet -->
+    <!-- Rthquick Dedicated Responsive Stylesheet -->
     <link rel="stylesheet" href="{{ asset('css/responsive.css') }}?v={{ filemtime(base_path('public/css/responsive.css')) }}" />
     @stack('styles')
 </head>
@@ -60,7 +60,7 @@
         </div>
     </div>
 
-    <!-- Earthquick Core Scripts -->
+    <!-- Rthquick Core Scripts -->
     <script src="{{ asset('js/script.js') }}?v={{ filemtime(base_path('public/js/script.js')) }}"></script>
     @stack('scripts')
 </body>

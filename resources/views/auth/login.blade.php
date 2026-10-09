@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Customer Login — Earthquick by Nous Telos')
+@section('title', 'Customer Login — Rthquick by Nous Telos')
 @section('body_class', 'eq-auth-page')
 
 @section('content')
@@ -22,7 +22,7 @@
       
       <div class="eq-auth-card__header">
         <h1 class="eq-auth-card__title">Welcome Back</h1>
-        <p class="eq-auth-card__desc">Sign in to your Nous Telos / Earthquick account</p>
+        <p class="eq-auth-card__desc">Sign in to your Nous Telos / Rthquick account</p>
       </div>
 
       @if(session('success'))
@@ -51,7 +51,7 @@
             id="login-identifier" 
             name="identifier" 
             class="eq-form-input" 
-            placeholder="e.g. 017XXXXXXXX or hello@earthquick.com" 
+            placeholder="e.g. 017XXXXXXXX or hello@example.com"
             value="{{ old('identifier') }}"
             required 
             autocomplete="username"

@@ -162,7 +162,7 @@ class AuthController extends Controller
         $request->session()->regenerate();
 
         return redirect()->route('account.dashboard')
-            ->with('success', 'Welcome to Earthquick! Your account has been created successfully.');
+            ->with('success', 'Welcome to Rthquick! Your account has been created successfully.');
     }
 
     /**

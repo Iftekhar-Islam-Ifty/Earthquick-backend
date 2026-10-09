@@ -8,23 +8,23 @@
   <meta name="app-url" content="{{ url('/') }}" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="csrf-token" content="{{ csrf_token() }}" />
-  <title>Earthquick — Independent Bangladeshi brands</title>
-  <meta name="description" content="Discover independent Bangladeshi brands at Earthquick, led by Nous Telos heritage handloom with Bright electronics joining the marketplace." />
-  <meta name="keywords" content="earthquick, bangladesh marketplace, nous telos, bright electronics, handloom saree" />
+  <title>Rthquick — Independent Bangladeshi brands</title>
+  <meta name="description" content="Discover independent Bangladeshi brands at Rthquick, led by Nous Telos heritage handloom with Bright electronics joining the marketplace." />
+  <meta name="keywords" content="rthquick, bangladesh marketplace, nous telos, bright electronics, handloom saree" />
   <link rel="canonical" href="{{ url('/') }}" />
 
   <!-- Open Graph Protocol -->
-  <meta property="og:site_name" content="Earthquick" />
+  <meta property="og:site_name" content="Rthquick" />
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="Earthquick — Independent Bangladeshi brands" />
-  <meta property="og:description" content="Discover independent Bangladeshi brands at Earthquick, led by Nous Telos heritage handloom." />
+  <meta property="og:title" content="Rthquick — Independent Bangladeshi brands" />
+  <meta property="og:description" content="Discover independent Bangladeshi brands at Rthquick, led by Nous Telos heritage handloom." />
   <meta property="og:url" content="{{ url('/') }}" />
   <meta property="og:image" content="{{ asset('images/hero/hero-main-saree-2.jpg') }}" />
 
   <!-- Twitter Card Protocol -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Earthquick — Independent Bangladeshi brands" />
-  <meta name="twitter:description" content="Discover independent Bangladeshi brands at Earthquick, led by Nous Telos heritage handloom." />
+  <meta name="twitter:title" content="Rthquick — Independent Bangladeshi brands" />
+  <meta name="twitter:description" content="Discover independent Bangladeshi brands at Rthquick, led by Nous Telos heritage handloom." />
   <meta name="twitter:image" content="{{ asset('images/hero/hero-main-saree-2.jpg') }}" />
 
   <!-- Google Fonts: Fraunces (display/serif) + Jost (body/sans) -->
@@ -34,9 +34,9 @@
 
   @include('partials.scroll-motion-bootstrap')
 
-  <!-- Earthquick Custom Stylesheet -->
+  <!-- Rthquick Custom Stylesheet -->
   <link rel="stylesheet" href="{{ asset('css/style.css') }}?v={{ filemtime(base_path('public/css/style.css')) }}" />
-  <!-- Earthquick Dedicated Responsive Stylesheet -->
+  <!-- Rthquick Dedicated Responsive Stylesheet -->
   <link rel="stylesheet" href="{{ asset('css/responsive.css') }}?v={{ filemtime(base_path('public/css/responsive.css')) }}" />
 
   <!-- Resilient Image Fallback for static hosting -->
@@ -83,7 +83,7 @@
         <!-- Slide 1: Saree Masterpiece & Handloom Heritage -->
         <div class="eq-hero__slide is-active" data-slide-index="0">
           <div class="eq-hero__media">
-            <img src="{{ asset('images/hero/hero-main-saree-2.jpg') }}" alt="Earthquick handloom saree collection campaign" fetchpriority="high" decoding="async" />
+            <img src="{{ asset('images/hero/hero-main-saree-2.jpg') }}" alt="Rthquick handloom saree collection campaign" fetchpriority="high" decoding="async" />
           </div>
           <div class="eq-hero__content">
             <span class="eq-eyebrow">NOUS TELOS — FLAGSHIP STORE</span>
@@ -253,7 +253,7 @@
          TRUST & SERVICE PROPOSITION STRIP
          Marketplace curation, nationwide delivery, and convenient exchange support.
          ================================================================= -->
-    <section class="eq-trust-strip" id="trust-strip" aria-label="Earthquick promises and services">
+    <section class="eq-trust-strip" id="trust-strip" aria-label="Rthquick promises and services">
       <div class="eq-container">
         <div class="eq-trust-grid eq-reveal">
 
@@ -453,7 +453,7 @@
       <div class="eq-container">
         <div class="eq-home-stores__intro eq-reveal">
           <span class="eq-eyebrow">OUR STORES</span>
-          <h2 class="eq-heading-lg" id="explore-stores-title">Explore Earthquick</h2>
+          <h2 class="eq-heading-lg" id="explore-stores-title">Explore Rthquick</h2>
           <p>Distinct brands, one curated marketplace</p>
         </div>
 
@@ -479,7 +479,7 @@
                 <span class="eq-home-store-card__eyebrow">COMING SOON</span>
                 <h3>Bright</h3>
                 <p class="eq-home-store-card__specialty">Electronics &amp; Smart Living</p>
-                <p class="eq-home-store-card__description">A new electronics store is being prepared for launch on Earthquick.</p>
+                <p class="eq-home-store-card__description">A new electronics store is being prepared for launch on Rthquick.</p>
                 <a href="{{ route('stores.show', 'bright') }}" class="eq-btn eq-btn--light eq-home-store-card__cta">Preview Store <span aria-hidden="true">&rarr;</span></a>
               </div>
             </article>
@@ -999,17 +999,17 @@
     <!-- =================================================================
          SECTION 8: STYLED BY YOU — 3D COVERFLOW CAROUSEL & VISUAL DIARY
          Curated editorial gallery showcasing authentic styling, archival
-         draping, and real moments with Earthquick pieces.
+         draping, and real moments with Rthquick pieces.
          ================================================================= -->
     <section class="eq-section eq-coverflow-section" id="styled-by-you" aria-label="Styled by our community">
       <div class="eq-container">
         
         <!-- Section Header -->
         <div class="eq-coverflow-header eq-reveal">
-          <span class="eq-eyebrow">EARTHQUICK COMMUNITY</span>
+          <span class="eq-eyebrow">RTHQUICK COMMUNITY</span>
           <h2 class="eq-heading-lg">Styled by You</h2>
           <p class="eq-body-lg">
-            Real looks and everyday moments shared by the Nous Telos community on Earthquick.
+            Real looks and everyday moments shared by the Nous Telos community on Rthquick.
           </p>
         </div>
 
@@ -1086,7 +1086,7 @@
     <section class="eq-final-cta eq-reveal" id="newsletter-section">
       <div class="eq-container">
         <div class="eq-newsletter-card">
-          <span class="eq-eyebrow eq-newsletter-eyebrow">JOIN THE HOUSE OF EARTHQUICK</span>
+          <span class="eq-eyebrow eq-newsletter-eyebrow">JOIN THE HOUSE OF RTHQUICK</span>
           <h2 class="eq-heading-lg eq-newsletter-title">Be first to see what's next.</h2>
           <p class="eq-body-lg eq-newsletter-desc">Sign up for early access to new drops, restocks, and the stories behind the makers we work with.</p>
 
@@ -1127,7 +1127,7 @@
   </div>
 
 
-  <!-- Earthquick Core Script -->
+  <!-- Rthquick Core Script -->
   <script src="{{ asset('js/script.js') }}?v={{ filemtime(base_path('public/js/script.js')) }}"></script>
 </body>
 </html>

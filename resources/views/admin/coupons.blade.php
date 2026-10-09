@@ -1,6 +1,6 @@
 @extends('admin.layout')
 
-@section('title', 'Coupons & Campaign Discounts — Earthquick Admin')
+@section('title', 'Coupons & Campaign Discounts — Rthquick Admin')
 @section('header_title', 'Coupons & Offers Management')
 
 @push('styles')

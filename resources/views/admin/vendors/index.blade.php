@@ -1,6 +1,6 @@
 @extends('admin.layout')
 
-@section('title', 'Brand Partners & Stores — Earthquick Admin')
+@section('title', 'Brand Partners & Stores — Rthquick Admin')
 @section('page_title', 'Vendors & Brand Partners')
 
 @section('content')

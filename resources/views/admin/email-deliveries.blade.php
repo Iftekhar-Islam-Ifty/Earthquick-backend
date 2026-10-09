@@ -1,6 +1,6 @@
 @extends('admin.layout')
 
-@section('title', 'Email Deliveries — Earthquick Admin')
+@section('title', 'Email Deliveries — Rthquick Admin')
 @section('page_title', 'Email Deliveries')
 
 @push('styles')

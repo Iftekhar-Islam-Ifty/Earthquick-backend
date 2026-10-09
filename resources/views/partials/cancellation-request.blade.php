@@ -14,9 +14,9 @@
     <p role="alert" style="color: #a32727; font-size: 0.85rem;">{{ $errors->first() }}</p>
   @endif
   @if($order->status === 'cancelled')
-    <p style="font-size: 0.85rem;">This order was cancelled by Earthquick.</p>
+    <p style="font-size: 0.85rem;">This order was cancelled by Rthquick.</p>
   @elseif($pendingCancellation)
-    <p style="font-size: 0.85rem;">Your request is under review. The order remains active until Earthquick approves it.</p>
+    <p style="font-size: 0.85rem;">Your request is under review. The order remains active until Rthquick approves it.</p>
   @elseif($canRequestCancellation)
     <p style="font-size: 0.82rem; color: var(--eq-charcoal-soft);">You may request cancellation before processing begins. Submitting this form does not cancel the order immediately.</p>
     <form method="POST" action="{{ route('orders.cancellation-request', $order->order_number) }}">
@@ -26,7 +26,7 @@
       <button type="submit" class="eq-btn eq-btn--outline" style="margin-top: 0.7rem;">Request Cancellation</button>
     </form>
   @else
-    <p style="font-size: 0.85rem;">Online cancellation is unavailable at this stage. Please contact Earthquick support.</p>
+    <p style="font-size: 0.85rem;">Online cancellation is unavailable at this stage. Please contact Rthquick support.</p>
   @endif
   @if($order->cancellationRequests->first()?->status === 'rejected')
     <p style="font-size: 0.8rem; color: var(--eq-charcoal-soft); margin-top: 0.6rem;">A previous request was declined. The order remains active.</p>

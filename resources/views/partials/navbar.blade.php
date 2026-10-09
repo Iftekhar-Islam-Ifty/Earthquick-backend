@@ -1,13 +1,13 @@
 <!-- =====================================================================
-     EARTHQUICK / NOUS TELOS — REUSABLE HEADER & NAVIGATION COMPONENT
+     RTHQUICK / NOUS TELOS — REUSABLE HEADER & NAVIGATION COMPONENT
      Blade Partial: resources/views/partials/navbar.blade.php
      ===================================================================== -->
 <a href="#main-content" class="eq-skip-link">Skip to main content</a>
 <header class="eq-navbar" id="eq-main-navbar">
   <div class="eq-navbar__inner">
     <!-- Brand Logo -->
-    <a href="{{ route('home') }}" class="eq-navbar__logo" id="eq-brand-logo" aria-label="Earthquick Home">
-      <img src="{{ asset('images/logo/earthquick-logo.png') }}" alt="Earthquick — Crafted for the Modern You" width="150" height="32" decoding="async" />
+    <a href="{{ route('home') }}" class="eq-navbar__logo" id="eq-brand-logo" aria-label="Rthquick Home">
+      <img src="{{ asset('images/logo/earthquick-logo.png') }}" alt="Rthquick — Crafted for the Modern You" width="150" height="32" decoding="async" />
     </a>
 
     <!-- Desktop Navigation Menu -->
@@ -15,8 +15,8 @@
       <ul class="eq-navbar__links" id="eq-nav-links">
         <!-- Mobile Drawer Pinned Header with Brand Logo -->
         <li class="eq-drawer-header">
-          <a href="{{ route('home') }}" class="eq-drawer-logo" aria-label="Earthquick Home">
-            <img src="{{ asset('images/logo/earthquick-logo.png') }}" alt="Earthquick — Crafted for the Modern You" width="130" height="28" decoding="async" />
+          <a href="{{ route('home') }}" class="eq-drawer-logo" aria-label="Rthquick Home">
+            <img src="{{ asset('images/logo/earthquick-logo.png') }}" alt="Rthquick — Crafted for the Modern You" width="130" height="28" decoding="async" />
           </a>
           <button type="button" class="eq-drawer-close-btn" id="eq-drawer-close" aria-label="Close navigation menu">
             <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -82,7 +82,7 @@
                     <img src="{{ asset('images/hero/hero-main-saree-2.jpg') }}" alt="Curated Marketplace Catalog" />
                   </div>
                   <div class="eq-megamenu__feature-content">
-                    <span class="eq-megamenu__tag">EARTHQUICK CURATED</span>
+                    <span class="eq-megamenu__tag">RTHQUICK CURATED</span>
                     <strong class="eq-megamenu__feature-title">Heritage to Modern</strong>
                     <span class="eq-megamenu__feature-link">Explore Catalog &rarr;</span>
                   </div>
@@ -144,7 +144,7 @@
                   <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                   <circle cx="12" cy="7" r="4"></circle>
                 </svg>
-                <span>{{ explode(' ', Auth::user()->name ?? 'Earthquick')[0] }}</span>
+                <span>{{ explode(' ', Auth::user()->name ?? 'Rthquick')[0] }}</span>
               </a>
 
               <form method="POST" action="{{ route('logout') }}" class="eq-drawer-form">
@@ -201,7 +201,7 @@
               <circle cx="12" cy="7" r="4"></circle>
             </svg>
             <span class="eq-navbar-user-name">
-              {{ explode(' ', Auth::user()->name ?? 'Earthquick')[0] }}
+              {{ explode(' ', Auth::user()->name ?? 'Rthquick')[0] }}
             </span>
           </a>
           <form method="POST" action="{{ route('logout') }}" class="eq-navbar-logout-form">

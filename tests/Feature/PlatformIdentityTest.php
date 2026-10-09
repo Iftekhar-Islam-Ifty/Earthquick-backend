@@ -38,15 +38,15 @@ class PlatformIdentityTest extends TestCase
     {
         $this->get('/checkout')
             ->assertOk()
-            ->assertSee('Secure Checkout — Earthquick', false)
-            ->assertDontSee('Earthquick by Nous Telos', false);
+            ->assertSee('Secure Checkout — Rthquick', false)
+            ->assertDontSee('Rthquick by Nous Telos', false);
 
         $this->get('/about')
             ->assertOk()
-            ->assertSee('EARTHQUICK MARKETPLACE', false)
+            ->assertSee('RTHQUICK MARKETPLACE', false)
             ->assertSee('Bright')
             ->assertDontSee('Nous Telos Living', false)
-            ->assertDontSee('Earthquick Studio', false);
+            ->assertDontSee('Rthquick Studio', false);
     }
 
     public function test_navbar_renders_shop_and_stores_navigation(): void
@@ -77,7 +77,7 @@ class PlatformIdentityTest extends TestCase
         $response->assertSee('NOUS TELOS READY TO WEAR', false);
         $response->assertSee('CONTEMPORARY SETS BY NOUS TELOS', false);
         $response->assertSee('curated by Nous Telos for contemporary wardrobes.', false);
-        $response->assertDontSee('Earthquick’s signature craft', false);
+        $response->assertDontSee('Rthquick’s signature craft', false);
         $response->assertDontSee('worldwide', false);
         $response->assertDontSee('Easy 7-Day Exchange', false);
     }
@@ -118,7 +118,7 @@ class PlatformIdentityTest extends TestCase
         $response->assertSee('id="explore-stores"', false);
         $response->assertSeeInOrder(['id="new-arrivals"', 'id="explore-stores"', 'id="saree-section"'], false);
         $response->assertSee('OUR STORES', false);
-        $response->assertSee('Explore Earthquick', false);
+        $response->assertSee('Explore Rthquick', false);
         $response->assertSee('Distinct brands, one curated marketplace', false);
         $response->assertSee('id="home-store-nous-telos"', false);
         $response->assertSee(asset('images/saree/saree-3.jpg'), false);
@@ -166,8 +166,8 @@ class PlatformIdentityTest extends TestCase
     {
         $response = $this->get('/')->assertOk();
 
-        $response->assertSee('EARTHQUICK COMMUNITY', false);
-        $response->assertSee('Real looks and everyday moments shared by the Nous Telos community on Earthquick.', false);
+        $response->assertSee('RTHQUICK COMMUNITY', false);
+        $response->assertSee('Real looks and everyday moments shared by the Nous Telos community on Rthquick.', false);
         $response->assertSee('id="styled-by-you"', false);
         $response->assertSee('id="coverflow-btn-prev"', false);
         $response->assertSee('id="coverflow-btn-next"', false);
@@ -185,7 +185,7 @@ class PlatformIdentityTest extends TestCase
     {
         $response = $this->get('/')->assertOk();
 
-        $response->assertSee('JOIN THE HOUSE OF EARTHQUICK', false);
+        $response->assertSee('JOIN THE HOUSE OF RTHQUICK', false);
         $response->assertSee("Be first to see what's next.", false);
         $response->assertSee('Sign up for early access to new drops, restocks, and the stories behind the makers we work with.', false);
         $response->assertSee('id="eq-newsletter-form"', false);

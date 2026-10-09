@@ -29,7 +29,7 @@ class OutboundMailService
             $this->deliver($message->id);
         } catch (Throwable $exception) {
             // An email subsystem failure must not undo a committed order/inquiry.
-            Log::warning('Earthquick email could not be recorded', $context + ['exception' => $exception::class]);
+            Log::warning('Rthquick email could not be recorded', $context + ['exception' => $exception::class]);
         }
     }
 
@@ -85,7 +85,7 @@ class OutboundMailService
                 'last_error_class' => $exception::class,
                 'updated_at' => now(),
             ]);
-            Log::warning('Earthquick email delivery failed; outbox retained for retry', ($message->context ?? []) + [
+            Log::warning('Rthquick email delivery failed; outbox retained for retry', ($message->context ?? []) + [
                 'message_id' => $id,
                 'attempts' => $attempts,
                 'exception' => $exception::class,

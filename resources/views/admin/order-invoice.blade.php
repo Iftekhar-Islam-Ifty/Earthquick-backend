@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Invoice #{{ $order->order_number }} — Earthquick Store</title>
+  <title>Invoice #{{ $order->order_number }} — Rthquick Store</title>
   
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -369,13 +369,13 @@
     <!-- Atelier Header -->
     <header class="eq-invoice-header">
       <div>
-        <div class="eq-brand-title">EARTHQUICK</div>
+        <div class="eq-brand-title">RTHQUICK</div>
         <div class="eq-brand-sub">NOUS TELOS &bull; DESIGN STUDIO</div>
         <div class="eq-brand-sub">ATELIER &amp; MULTI-BRAND COLLECTIVE</div>
         <div class="eq-brand-address">
-          Chattogram Metropolitan, Bangladesh<br>
-          Direct line: +880 1812-345678 &bull; concierge@earthquick.com<br>
-          Web: www.earthquick.com
+          Shop #215, RF Police Plaza (2nd floor), JC Guha Road, Nandankanan, Chittagong 4100, Bangladesh<br>
+          @if(config('communications.support_phone'))Phone: {{ config('communications.support_phone') }}<br>@endif @if(config('communications.support_email'))Email: {{ config('communications.support_email') }}<br>@endif
+          Web: rthquick.com
         </div>
       </div>
 

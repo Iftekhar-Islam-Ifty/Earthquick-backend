@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Shopping Bag — Earthquick')
+@section('title', 'Shopping Bag — Rthquick')
 @section('body_class', 'eq-cart-page')
 
 @section('content')

@@ -72,7 +72,7 @@ class OrderRefundService
             if ($returnShipping > 0 && ($return->return_shipping_payer !== 'earthquick'
                 || ! $shippingReceiptReference)) {
                 throw ValidationException::withMessages([
-                    'return_shipping_amount' => 'Return postage reimbursement requires a verified Earthquick-paid reason and a courier receipt reference.',
+                    'return_shipping_amount' => 'Return postage reimbursement requires a verified Rthquick-paid reason and a courier receipt reference.',
                 ]);
             }
             if ($returnShipping === 0 && $shippingReceiptReference) {

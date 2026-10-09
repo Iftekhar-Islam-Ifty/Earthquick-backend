@@ -33,7 +33,7 @@ class OrderReturnController extends Controller
                 || ! $item->return_window_days || ! $delivered
                 || now()->greaterThan($delivered->created_at->copy()->addDays($item->return_window_days))) {
                 throw ValidationException::withMessages([
-                    'return' => 'This item is not eligible for an online return. Please contact Earthquick support.',
+                    'return' => 'This item is not eligible for an online return. Please contact Rthquick support.',
                 ]);
             }
 
@@ -60,7 +60,7 @@ class OrderReturnController extends Controller
 
         app(\App\Services\CustomerCommunications::class)->order($order, 'return_requested');
 
-        return redirect()->back()->with('success', 'Return request sent. Please wait for Earthquick authorization before sending the item.');
+        return redirect()->back()->with('success', 'Return request sent. Please wait for Rthquick authorization before sending the item.');
     }
 
     public function decide(Request $request, int $id, int $requestId): RedirectResponse
