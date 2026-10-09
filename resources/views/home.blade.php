@@ -339,7 +339,6 @@
                   <div class="eq-product-card__frame">
                     <span class="eq-badge">New</span>
                     <img src="{{ asset('images/saree/saree-01.jpg') }}" alt="Muslin Jamdani Saree" loading="lazy" decoding="async" />
-                    <img class="eq-product-card__img--alt" src="{{ asset('images/saree/saree-01-alt.jpg') }}" alt="" loading="lazy" decoding="async" />
                     <span class="eq-product-card__quick-add">View product</span>
                   </div>
                   <div class="eq-product-card__body">
@@ -390,7 +389,6 @@
                   <div class="eq-product-card__frame">
                     <span class="eq-badge">New</span>
                     <img src="{{ asset('images/saree/saree-03.jpg') }}" alt="Handloom Tangail Saree" loading="lazy" decoding="async" />
-                    <img class="eq-product-card__img--alt" src="{{ asset('images/saree/saree-03-alt.jpg') }}" alt="" loading="lazy" decoding="async" />
                     <span class="eq-product-card__quick-add">View product</span>
                   </div>
                   <div class="eq-product-card__body">
@@ -705,7 +703,6 @@
                   <div class="eq-product-card__frame">
                     <span class="eq-badge">New</span>
                     <img src="{{ asset('images/two-piece/2pc-1.webp') }}" alt="Aarna Embroidered Set" loading="lazy" decoding="async" />
-                    <img class="eq-product-card__img--alt" src="{{ asset('images/two-piece/two-piece-01-alt.jpg') }}" alt="" loading="lazy" decoding="async" />
                     <span class="eq-product-card__quick-add">View product</span>
                   </div>
                   <div class="eq-product-card__body">
@@ -722,7 +719,6 @@
                   <div class="eq-product-card__frame">
                     <span class="eq-badge">Sale</span>
                     <img src="{{ asset('images/two-piece/2pc-2.webp') }}" alt="Noor Block Print Set" loading="lazy" decoding="async" />
-                    <img class="eq-product-card__img--alt" src="{{ asset('images/two-piece/two-piece-02-alt.jpg') }}" alt="" loading="lazy" decoding="async" />
                     <span class="eq-product-card__quick-add">View product</span>
                   </div>
                   <div class="eq-product-card__body">
@@ -738,7 +734,6 @@
                 <a href="{{ url('/shop/women/three-piece') }}" class="eq-product-card__link">
                   <div class="eq-product-card__frame">
                     <img src="{{ asset('images/two-piece/2pc-3.webp') }}" alt="Zara Chikankari Set" loading="lazy" decoding="async" />
-                    <img class="eq-product-card__img--alt" src="{{ asset('images/two-piece/two-piece-03-alt.jpg') }}" alt="" loading="lazy" decoding="async" />
                     <span class="eq-product-card__quick-add">View product</span>
                   </div>
                   <div class="eq-product-card__body">
@@ -754,7 +749,6 @@
                 <a href="{{ url('/shop/women/three-piece') }}" class="eq-product-card__link">
                   <div class="eq-product-card__frame">
                     <img src="{{ asset('images/two-piece/2pc-4.webp') }}" alt="Elan Georgette Set" loading="lazy" decoding="async" />
-                    <img class="eq-product-card__img--alt" src="{{ asset('images/two-piece/two-piece-04-alt.jpg') }}" alt="" loading="lazy" decoding="async" />
                     <span class="eq-product-card__quick-add">View product</span>
                   </div>
                   <div class="eq-product-card__body">
@@ -770,7 +764,6 @@
                 <a href="{{ url('/shop/women/three-piece') }}" class="eq-product-card__link">
                   <div class="eq-product-card__frame">
                     <img src="{{ asset('images/two-piece/two-piece-01.jpg') }}" alt="Iris Linen Set" loading="lazy" decoding="async" />
-                    <img class="eq-product-card__img--alt" src="{{ asset('images/two-piece/two-piece-01-detail.jpg') }}" alt="" loading="lazy" decoding="async" />
                     <span class="eq-product-card__quick-add">View product</span>
                   </div>
                   <div class="eq-product-card__body">
