@@ -220,7 +220,7 @@
               type="file" 
               name="logo" 
               id="input-logo" 
-              accept="image/png,image/jpeg,image/webp,image/svg+xml"
+              accept="image/png,image/jpeg,image/webp"
               style="width: 100%; font-size: 0.84rem;"
             />
             <small style="color: var(--eq-charcoal-muted); font-size: 0.72rem; margin-top: 0.25rem; display: block;">

@@ -8,6 +8,7 @@ use App\Models\Order;
 use App\Models\Product;
 use App\Models\Subcategory;
 use App\Models\Vendor;
+use App\Services\AdminImageUpload;
 use App\Services\OrderCancellationService;
 use App\Services\OrderRetentionService;
 use Illuminate\Http\JsonResponse;
@@ -654,9 +655,9 @@ class AdminController extends Controller
             'return_window_days' => 'nullable|integer|min:1|max:365',
             'return_policy_note' => 'nullable|string|max:255',
             'delivery_class' => 'nullable|in:standard,fragile,oversized',
-            'image' => 'required|image|mimes:jpeg,png,jpg,webp,svg|max:5120',
+            'image' => 'required|image|mimes:jpeg,png,jpg,webp|max:5120',
             'gallery_images' => 'nullable|array|max:8',
-            'gallery_images.*' => 'image|mimes:jpeg,png,jpg,webp,svg|max:5120',
+            'gallery_images.*' => 'image|mimes:jpeg,png,jpg,webp|max:5120',
             'gallery_role' => 'nullable|in:gallery,lifestyle,detail,packaging,size_chart',
             'gallery_alt_text' => 'nullable|string|max:255',
         ]);
@@ -679,58 +680,67 @@ class AdminController extends Controller
             $slug = $baseSlug.'-'.$counter++;
         }
 
-        // Ensure public storage destination directory exists
-        $destinationPath = public_path('images/products');
-        if (! file_exists($destinationPath)) {
-            mkdir($destinationPath, 0755, true);
+        $uploads = app(AdminImageUpload::class);
+        $imagePath = $uploads->store($request->file('image'), 'images/products', 'image');
+        try {
+            $galleryPaths = $uploads->storeMany($request->file('gallery_images', []), 'images/products', 'gallery_images');
+        } catch (\Throwable $exception) {
+            $uploads->remove($imagePath, 'images/products');
+            throw $exception;
         }
-
-        $imageFile = $request->file('image');
-        $filename = time().'_'.Str::slug(pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME)).'.'.$imageFile->getClientOriginalExtension();
-        $imageFile->move($destinationPath, $filename);
-        $imagePath = 'images/products/'.$filename;
 
         // Generate human-readable dynamic SKU based on vendor code
         $vendorCode = $vendor ? $vendor->vendor_code : 'EQ';
         $sku = $vendorCode.'-'.strtoupper(Str::random(3)).'-'.rand(100, 999);
 
-        $product = Product::create([
-            'name' => $request->name,
-            'vendor_id' => $vendor ? $vendor->id : null,
-            'slug' => $slug,
-            'sku' => $sku,
-            'category_id' => $request->category_id,
-            'subcategory_id' => $request->subcategory_id ?: null,
-            'product_type' => $request->input('product_type', 'general'),
-            'price' => (float) $request->price,
-            'old_price' => $request->filled('old_price') ? (float) $request->old_price : null,
-            'fabric' => $request->filled('fabric') ? $request->fabric : null,
-            'stock_quantity' => (int) $request->input('stock_quantity', 10),
-            'in_stock' => $request->boolean('in_stock', true),
-            'is_active' => $request->boolean('is_active', true),
-            'is_featured' => $request->boolean('is_featured', false),
-            'is_new_arrival' => $request->boolean('is_new_arrival', true),
-            'badge' => $request->badge,
-            'badge_type' => $request->badge_type ?: 'ready',
-            'short_desc' => $request->short_desc,
-            'description' => $request->description,
-            'specifications' => $this->decodeSpecifications($request),
-            'warranty_info' => $request->warranty_info,
-            'is_returnable' => $request->has('is_returnable') ? $request->boolean('is_returnable') : true,
-            'return_window_days' => ($request->has('is_returnable') ? $request->boolean('is_returnable') : true)
-                ? (int) $request->input('return_window_days', 7)
-                : null,
-            'return_policy_note' => $request->return_policy_note,
-            'delivery_class' => $request->input('delivery_class', 'standard'),
-            'image' => $imagePath,
-            'rating' => 5.0,
-            'reviews_count' => 0,
-        ]);
+        try {
+            $product = DB::transaction(function () use ($request, $vendor, $slug, $sku, $variants, $imagePath, $galleryPaths) {
+                $product = Product::create([
+                    'name' => $request->name,
+                    'vendor_id' => $vendor ? $vendor->id : null,
+                    'slug' => $slug,
+                    'sku' => $sku,
+                    'category_id' => $request->category_id,
+                    'subcategory_id' => $request->subcategory_id ?: null,
+                    'product_type' => $request->input('product_type', 'general'),
+                    'price' => (float) $request->price,
+                    'old_price' => $request->filled('old_price') ? (float) $request->old_price : null,
+                    'fabric' => $request->filled('fabric') ? $request->fabric : null,
+                    'stock_quantity' => (int) $request->input('stock_quantity', 10),
+                    'in_stock' => $request->boolean('in_stock', true),
+                    'is_active' => $request->boolean('is_active', true),
+                    'is_featured' => $request->boolean('is_featured', false),
+                    'is_new_arrival' => $request->boolean('is_new_arrival', true),
+                    'badge' => $request->badge,
+                    'badge_type' => $request->badge_type ?: 'ready',
+                    'short_desc' => $request->short_desc,
+                    'description' => $request->description,
+                    'specifications' => $this->decodeSpecifications($request),
+                    'warranty_info' => $request->warranty_info,
+                    'is_returnable' => $request->has('is_returnable') ? $request->boolean('is_returnable') : true,
+                    'return_window_days' => ($request->has('is_returnable') ? $request->boolean('is_returnable') : true)
+                        ? (int) $request->input('return_window_days', 7)
+                        : null,
+                    'return_policy_note' => $request->return_policy_note,
+                    'delivery_class' => $request->input('delivery_class', 'standard'),
+                    'image' => $imagePath,
+                    'rating' => 5.0,
+                    'reviews_count' => 0,
+                ]);
 
-        if ($variants !== null) {
-            $this->syncVariants($product, $variants);
+                if ($variants !== null) {
+                    $this->syncVariants($product, $variants);
+                }
+                $this->storeGalleryImages($request, $product, $galleryPaths);
+
+                return $product;
+            });
+        } catch (\Throwable $exception) {
+            foreach ([$imagePath, ...$galleryPaths] as $path) {
+                $uploads->remove($path, 'images/products');
+            }
+            throw $exception;
         }
-        $this->storeGalleryImages($request, $product);
 
         return redirect()->route('admin.products')->with(
             'success',
@@ -788,9 +798,9 @@ class AdminController extends Controller
             'return_window_days' => 'nullable|integer|min:1|max:365',
             'return_policy_note' => 'nullable|string|max:255',
             'delivery_class' => 'nullable|in:standard,fragile,oversized',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,webp,svg|max:5120',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
             'gallery_images' => 'nullable|array|max:8',
-            'gallery_images.*' => 'image|mimes:jpeg,png,jpg,webp,svg|max:5120',
+            'gallery_images.*' => 'image|mimes:jpeg,png,jpg,webp|max:5120',
             'gallery_role' => 'nullable|in:gallery,lifestyle,detail,packaging,size_chart',
             'gallery_alt_text' => 'nullable|string|max:255',
             'existing_media' => 'nullable|array',
@@ -848,32 +858,42 @@ class AdminController extends Controller
             $updateData['slug'] = $slug;
         }
 
-        // Handle optional replacement image upload
+        $uploads = app(AdminImageUpload::class);
+        $newImagePath = null;
+        $oldImagePath = $product->image;
+
+        // Convert before changing the product or removing its old image.
         if ($request->hasFile('image')) {
-            $destinationPath = public_path('images/products');
-            if (! file_exists($destinationPath)) {
-                mkdir($destinationPath, 0755, true);
-            }
-
-            $imageFile = $request->file('image');
-            $filename = time().'_'.Str::slug(pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME)).'.'.$imageFile->getClientOriginalExtension();
-            $imageFile->move($destinationPath, $filename);
-
-            // Clean up previous image if it was a custom upload
-            if ($product->image && str_starts_with($product->image, 'images/products/') && file_exists(public_path($product->image))) {
-                @unlink(public_path($product->image));
-            }
-
-            $updateData['image'] = 'images/products/'.$filename;
+            $newImagePath = $uploads->store($request->file('image'), 'images/products', 'image');
+            $updateData['image'] = $newImagePath;
         }
 
-        $product->update($updateData);
-
-        if ($variants !== null) {
-            $this->syncVariants($product, $variants);
+        try {
+            $galleryPaths = $uploads->storeMany($request->file('gallery_images', []), 'images/products', 'gallery_images');
+        } catch (\Throwable $exception) {
+            $uploads->remove($newImagePath, 'images/products');
+            throw $exception;
         }
-        $this->syncExistingMedia($request, $product);
-        $this->storeGalleryImages($request, $product);
+
+        try {
+            DB::transaction(function () use ($request, $product, $updateData, $variants, $galleryPaths) {
+                $product->update($updateData);
+                if ($variants !== null) {
+                    $this->syncVariants($product, $variants);
+                }
+                $this->syncExistingMedia($request, $product);
+                $this->storeGalleryImages($request, $product, $galleryPaths);
+            });
+        } catch (\Throwable $exception) {
+            foreach (array_filter([$newImagePath, ...$galleryPaths]) as $path) {
+                $uploads->remove($path, 'images/products');
+            }
+            throw $exception;
+        }
+
+        if ($newImagePath) {
+            $uploads->remove($oldImagePath, 'images/products');
+        }
 
         return redirect()->route('admin.products')->with(
             'success',
@@ -1086,24 +1106,16 @@ class AdminController extends Controller
     /**
      * Store optional secondary product media uploaded by the central admin.
      */
-    private function storeGalleryImages(Request $request, Product $product): void
+    private function storeGalleryImages(Request $request, Product $product, array $paths): void
     {
-        if (! $request->hasFile('gallery_images')) {
+        if ($paths === []) {
             return;
         }
 
-        $destinationPath = public_path('images/products');
-        if (! file_exists($destinationPath)) {
-            mkdir($destinationPath, 0755, true);
-        }
-
         $nextSortOrder = ((int) $product->images()->max('sort_order')) + 1;
-        foreach ($request->file('gallery_images', []) as $imageFile) {
-            $filename = now()->format('YmdHis').'_gallery_'.$product->id.'_'.Str::lower(Str::random(8)).'.'.$imageFile->getClientOriginalExtension();
-            $imageFile->move($destinationPath, $filename);
-
+        foreach ($paths as $path) {
             $product->images()->create([
-                'image_path' => 'images/products/'.$filename,
+                'image_path' => $path,
                 'role' => $request->input('gallery_role', 'gallery'),
                 'alt_text' => $request->filled('gallery_alt_text') ? trim($request->gallery_alt_text) : null,
                 'sort_order' => $nextSortOrder++,

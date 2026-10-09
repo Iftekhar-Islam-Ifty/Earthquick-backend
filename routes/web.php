@@ -31,6 +31,7 @@ use Illuminate\Support\Facades\Route;
  * Curated editorial showcase, flagship handloom atelier, and hero banners.
  * ========================================================================= */
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/sitemap.xml', [PageController::class, 'sitemap'])->name('sitemap');
 
 /* =========================================================================
  * 2. CATEGORY & SUBCATEGORY CATALOGS

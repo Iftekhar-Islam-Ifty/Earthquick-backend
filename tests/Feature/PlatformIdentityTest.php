@@ -9,6 +9,52 @@ use Tests\TestCase;
 
 class PlatformIdentityTest extends TestCase
 {
+    public function test_product_images_use_existing_webp_and_fall_back_to_originals(): void
+    {
+        $product = new Product([
+            'image' => 'images/bags/bag-3.jpg',
+            'alt_image' => 'images/products/not-converted.jpg',
+        ]);
+
+        // The suite deliberately points public_path() at an isolated empty directory.
+        $this->assertSame('images/bags/bag-3.jpg', $product->optimized_image);
+        $this->assertFileExists(base_path('public/images/bags/bag-3.webp'));
+        $this->assertSame('images/products/not-converted.jpg', $product->optimized_alt_image);
+        $this->get('/')->assertOk()->assertSee('images/hero/hero-main-saree-2.webp', false);
+    }
+    public function test_public_sitemap_lists_only_browseable_pages(): void
+    {
+        $response = $this->get('/sitemap.xml')->assertOk();
+        $response->assertHeader('Content-Type', 'application/xml; charset=UTF-8');
+        $response->assertSee('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">', false);
+        $response->assertSee(route('home'), false);
+        $response->assertSee(route('stores.show', 'nous-telos'), false);
+        $response->assertDontSee('/checkout', false);
+        $response->assertDontSee('/admin', false);
+    }
+
+    public function test_private_search_and_faceted_pages_are_not_indexed(): void
+    {
+        $this->get('/about')->assertOk()->assertSee('name="robots" content="index,follow"', false);
+        $this->get('/search?q=saree')->assertOk()->assertSee('name="robots" content="noindex,follow"', false);
+        $this->get('/cart')->assertOk()->assertSee('name="robots" content="noindex,follow"', false);
+        $this->get('/shop/women?sort=price-asc')->assertOk()->assertSee('name="robots" content="noindex,follow"', false);
+    }
+
+    public function test_search_title_escapes_user_input_once(): void
+    {
+        $this->get('/search?q=%22%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E')
+            ->assertOk()
+            ->assertSee('<title>Search: &quot;&quot;&gt;&lt;script&gt;alert(1)&lt;/script&gt;&quot; | Rthquick</title>', false)
+            ->assertDontSee('&amp;quot;', false)
+            ->assertDontSee('<script>alert(1)</script>', false);
+    }
+    public function test_paginated_store_has_its_own_canonical_url(): void
+    {
+        $this->get('/stores/nous-telos?page=2')
+            ->assertOk()
+            ->assertSee('rel="canonical" href="'.route('stores.show', 'nous-telos').'?page=2"', false);
+    }
     public function test_scroll_reveal_is_opted_into_browsing_pages_but_not_transaction_pages(): void
     {
         foreach (['/', '/about', '/delivery-returns', '/stores', '/stores/nous-telos', '/shop/women', '/search?q=saree'] as $path) {
@@ -121,7 +167,7 @@ class PlatformIdentityTest extends TestCase
         $response->assertSee('Explore Rthquick', false);
         $response->assertSee('Distinct brands, one curated marketplace', false);
         $response->assertSee('id="home-store-nous-telos"', false);
-        $response->assertSee(asset('images/saree/saree-3.jpg'), false);
+        $response->assertSee(asset('images/saree/saree-3.webp'), false);
         $response->assertSee(route('stores.show', 'nous-telos'), false);
         $response->assertSee('id="home-store-bright"', false);
         $response->assertSee('COMING SOON', false);

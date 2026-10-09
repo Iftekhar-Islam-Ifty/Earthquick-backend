@@ -142,6 +142,9 @@ class GeneralCatalogCompletionTest extends TestCase
         $this->assertSame('detail', $media->role);
         $this->assertSame('Detailed connection ports', $media->alt_text);
         $this->assertFileExists(public_path($media->image_path));
+        $this->assertStringEndsWith('.webp', $product->image);
+        $this->assertStringEndsWith('.webp', $media->image_path);
+        $this->assertSame('image/webp', getimagesize(public_path($media->image_path))['mime']);
 
         foreach ([$product->image, $media->image_path] as $path) {
             if ($path && file_exists(public_path($path))) {

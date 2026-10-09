@@ -25,3 +25,5 @@ Homestead.yaml
 Thumbs.db
 public/images/vendors/*
 !public/images/vendors/.gitkeep
+public/images/products/*
+!public/images/products/.gitkeep

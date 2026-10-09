@@ -83,7 +83,7 @@
         <!-- Slide 1: Saree Masterpiece & Handloom Heritage -->
         <div class="eq-hero__slide is-active" data-slide-index="0">
           <div class="eq-hero__media">
-            <img src="{{ asset('images/hero/hero-main-saree-2.jpg') }}" alt="Rthquick handloom saree collection campaign" fetchpriority="high" decoding="async" />
+            <img src="{{ asset('images/hero/hero-main-saree-2.webp') }}" alt="Rthquick handloom saree collection campaign" fetchpriority="high" decoding="async" />
           </div>
           <div class="eq-hero__content">
             <span class="eq-eyebrow">NOUS TELOS — FLAGSHIP STORE</span>
@@ -199,7 +199,7 @@
           <!-- 3. KIDS -->
           <a href="{{ route('category.show', 'kids') }}" class="eq-category-card" id="cat-card-kids">
             <div class="eq-category-card__media">
-              <img src="{{ asset('images/saree/saree-5.jpg') }}" alt="Kids collection — Festive wear and celebrations" loading="lazy" decoding="async" />
+              <img src="{{ asset('images/saree/saree-5.webp') }}" alt="Kids collection — Festive wear and celebrations" loading="lazy" decoding="async" />
               <div class="eq-category-card__overlay"></div>
             </div>
             <div class="eq-category-card__info">
@@ -355,8 +355,8 @@
                 <a href="{{ url('/product/minimalist-sand-linen-co-ord') }}" class="eq-product-card__link">
                   <div class="eq-product-card__frame">
                     <span class="eq-badge">New</span>
-                    <img src="{{ asset('images/two-piece/2pc-1.jpg') }}" alt="Aria Linen Two Piece" loading="lazy" decoding="async" />
-                    <img class="eq-product-card__img--alt" src="{{ asset('images/two-piece/2pc-2.jpg') }}" alt="" loading="lazy" decoding="async" />
+                    <img src="{{ asset('images/two-piece/2pc-1.webp') }}" alt="Aria Linen Two Piece" loading="lazy" decoding="async" />
+                    <img class="eq-product-card__img--alt" src="{{ asset('images/two-piece/2pc-2.webp') }}" alt="" loading="lazy" decoding="async" />
                     <span class="eq-product-card__quick-add">View product</span>
                   </div>
                   <div class="eq-product-card__body">
@@ -372,8 +372,8 @@
                 <a href="{{ url('/product/artisanal-terracotta-leather-tote-bag') }}" class="eq-product-card__link">
                   <div class="eq-product-card__frame">
                     <span class="eq-badge">New</span>
-                    <img src="{{ asset('images/bags/bag-1.jpg') }}" alt="Heritage Handcrafted Bag" loading="lazy" decoding="async" />
-                    <img class="eq-product-card__img--alt" src="{{ asset('images/bags/bag-2.jpg') }}" alt="" loading="lazy" decoding="async" />
+                    <img src="{{ asset('images/bags/bag-1.webp') }}" alt="Heritage Handcrafted Bag" loading="lazy" decoding="async" />
+                    <img class="eq-product-card__img--alt" src="{{ asset('images/bags/bag-2.webp') }}" alt="" loading="lazy" decoding="async" />
                     <span class="eq-product-card__quick-add">View product</span>
                   </div>
                   <div class="eq-product-card__body">
@@ -405,8 +405,8 @@
               <article class="eq-product-card" id="product-card-two-piece-02">
                 <a href="{{ url('/product/ochre-terracotta-kurti-culotte') }}" class="eq-product-card__link">
                   <div class="eq-product-card__frame">
-                    <img src="{{ asset('images/two-piece/2pc-3.jpg') }}" alt="Amara Everyday Two Piece" loading="lazy" decoding="async" />
-                    <img class="eq-product-card__img--alt" src="{{ asset('images/two-piece/2pc-4.jpg') }}" alt="" loading="lazy" decoding="async" />
+                    <img src="{{ asset('images/two-piece/2pc-3.webp') }}" alt="Amara Everyday Two Piece" loading="lazy" decoding="async" />
+                    <img class="eq-product-card__img--alt" src="{{ asset('images/two-piece/2pc-4.webp') }}" alt="" loading="lazy" decoding="async" />
                     <span class="eq-product-card__quick-add">View product</span>
                   </div>
                   <div class="eq-product-card__body">
@@ -421,8 +421,8 @@
               <article class="eq-product-card" id="product-card-bag-02">
                 <a href="{{ url('/product/saddle-brown-crossbody-sling') }}" class="eq-product-card__link">
                   <div class="eq-product-card__frame">
-                    <img src="{{ asset('images/bags/bag-3.jpg') }}" alt="Nomad Structured Bag" loading="lazy" decoding="async" />
-                    <img class="eq-product-card__img--alt" src="{{ asset('images/bags/bag-4.jpg') }}" alt="" loading="lazy" decoding="async" />
+                    <img src="{{ asset('images/bags/bag-3.webp') }}" alt="Nomad Structured Bag" loading="lazy" decoding="async" />
+                    <img class="eq-product-card__img--alt" src="{{ asset('images/bags/bag-4.webp') }}" alt="" loading="lazy" decoding="async" />
                     <span class="eq-product-card__quick-add">View product</span>
                   </div>
                   <div class="eq-product-card__body">
@@ -461,7 +461,7 @@
           @if($nousTelos)
             <article class="eq-home-store-card eq-home-store-card--flagship" id="home-store-nous-telos">
               <div class="eq-home-store-card__media">
-                <img src="{{ asset('images/saree/saree-3.jpg') }}" alt="Nous Telos saree collection" loading="lazy" decoding="async" />
+                <img src="{{ asset('images/saree/saree-3.webp') }}" alt="Nous Telos saree collection" loading="lazy" decoding="async" />
               </div>
               <div class="eq-home-store-card__body">
                 <span class="eq-home-store-card__eyebrow">FLAGSHIP STORE</span>
@@ -517,7 +517,7 @@
           <article class="eq-saree-masterpiece" id="saree-feature-spotlight">
             <a href="{{ url('/product/crimson-heirloom-jamdani') }}" class="eq-saree-masterpiece__link" aria-label="Katan Silk Heritage Saree">
               <div class="eq-saree-masterpiece__frame">
-                <img src="{{ asset('images/saree/saree-1.jpg') }}" alt="Katan Silk Heritage Saree" loading="lazy" decoding="async" />
+                <img src="{{ asset('images/saree/saree-1.webp') }}" alt="Katan Silk Heritage Saree" loading="lazy" decoding="async" />
               </div>
               <div class="eq-saree-masterpiece__body">
                 <span class="eq-saree-masterpiece__eyebrow">THE SIGNATURE DRAPE</span>
@@ -544,7 +544,7 @@
             <article class="eq-product-card eq-saree-card" id="saree-grid-item-04">
               <a href="{{ url('/product/emerald-rajshahi-pure-silk') }}" class="eq-product-card__link">
                 <div class="eq-product-card__frame">
-                  <img src="{{ asset('images/saree/saree-2.jpg') }}" alt="Organza Pearl Saree" loading="lazy" decoding="async" />
+                  <img src="{{ asset('images/saree/saree-2.webp') }}" alt="Organza Pearl Saree" loading="lazy" decoding="async" />
                   <span class="eq-product-card__quick-add">View product</span>
                 </div>
                 <div class="eq-product-card__body">
@@ -557,7 +557,7 @@
             <article class="eq-product-card eq-saree-card" id="saree-grid-item-03">
               <a href="{{ url('/product/royal-champagne-half-silk') }}" class="eq-product-card__link">
                 <div class="eq-product-card__frame">
-                  <img src="{{ asset('images/saree/saree-3.jpg') }}" alt="Handloom Tangail Saree" loading="lazy" decoding="async" />
+                  <img src="{{ asset('images/saree/saree-3.webp') }}" alt="Handloom Tangail Saree" loading="lazy" decoding="async" />
                   <span class="eq-product-card__quick-add">View product</span>
                 </div>
                 <div class="eq-product-card__body">
@@ -570,7 +570,7 @@
             <article class="eq-product-card eq-saree-card" id="saree-grid-item-02">
               <a href="{{ url('/product/midnight-indigo-tantuj-drape') }}" class="eq-product-card__link">
                 <div class="eq-product-card__frame">
-                  <img src="{{ asset('images/saree/saree-4.jpg') }}" alt="Rajshahi Silk Saree" loading="lazy" decoding="async" />
+                  <img src="{{ asset('images/saree/saree-4.webp') }}" alt="Rajshahi Silk Saree" loading="lazy" decoding="async" />
                   <span class="eq-product-card__quick-add">View product</span>
                 </div>
                 <div class="eq-product-card__body">
@@ -583,7 +583,7 @@
             <article class="eq-product-card eq-saree-card" id="saree-grid-item-06">
               <a href="{{ url('/shop/women/saree') }}" class="eq-product-card__link">
                 <div class="eq-product-card__frame">
-                  <img src="{{ asset('images/saree/saree-5.jpg') }}" alt="Cotton Nakshi Saree" loading="lazy" decoding="async" />
+                  <img src="{{ asset('images/saree/saree-5.webp') }}" alt="Cotton Nakshi Saree" loading="lazy" decoding="async" />
                   <span class="eq-product-card__quick-add">View product</span>
                 </div>
                 <div class="eq-product-card__body">
@@ -596,7 +596,7 @@
             <article class="eq-product-card eq-saree-card eq-saree-card--desktop-repeat" id="saree-grid-item-04-b">
               <a href="{{ url('/product/emerald-rajshahi-pure-silk') }}" class="eq-product-card__link">
                 <div class="eq-product-card__frame">
-                  <img src="{{ asset('images/saree/saree-2.jpg') }}" alt="Organza Pearl Saree" loading="lazy" decoding="async" />
+                  <img src="{{ asset('images/saree/saree-2.webp') }}" alt="Organza Pearl Saree" loading="lazy" decoding="async" />
                   <span class="eq-product-card__quick-add">View product</span>
                 </div>
                 <div class="eq-product-card__body">
@@ -609,7 +609,7 @@
             <article class="eq-product-card eq-saree-card eq-saree-card--desktop-repeat" id="saree-grid-item-03-b">
               <a href="{{ url('/product/royal-champagne-half-silk') }}" class="eq-product-card__link">
                 <div class="eq-product-card__frame">
-                  <img src="{{ asset('images/saree/saree-3.jpg') }}" alt="Handloom Tangail Saree" loading="lazy" decoding="async" />
+                  <img src="{{ asset('images/saree/saree-3.webp') }}" alt="Handloom Tangail Saree" loading="lazy" decoding="async" />
                   <span class="eq-product-card__quick-add">View product</span>
                 </div>
                 <div class="eq-product-card__body">
@@ -622,7 +622,7 @@
             <article class="eq-product-card eq-saree-card eq-saree-card--desktop-repeat" id="saree-grid-item-02-b">
               <a href="{{ url('/product/midnight-indigo-tantuj-drape') }}" class="eq-product-card__link">
                 <div class="eq-product-card__frame">
-                  <img src="{{ asset('images/saree/saree-4.jpg') }}" alt="Rajshahi Silk Saree" loading="lazy" decoding="async" />
+                  <img src="{{ asset('images/saree/saree-4.webp') }}" alt="Rajshahi Silk Saree" loading="lazy" decoding="async" />
                   <span class="eq-product-card__quick-add">View product</span>
                 </div>
                 <div class="eq-product-card__body">
@@ -635,7 +635,7 @@
             <article class="eq-product-card eq-saree-card eq-saree-card--desktop-repeat" id="saree-grid-item-06-b">
               <a href="{{ url('/shop/women/saree') }}" class="eq-product-card__link">
                 <div class="eq-product-card__frame">
-                  <img src="{{ asset('images/saree/saree-5.jpg') }}" alt="Cotton Nakshi Saree" loading="lazy" decoding="async" />
+                  <img src="{{ asset('images/saree/saree-5.webp') }}" alt="Cotton Nakshi Saree" loading="lazy" decoding="async" />
                   <span class="eq-product-card__quick-add">View product</span>
                 </div>
                 <div class="eq-product-card__body">
@@ -704,7 +704,7 @@
                 <a href="{{ url('/product/ivory-organza-embroidered-set') }}" class="eq-product-card__link">
                   <div class="eq-product-card__frame">
                     <span class="eq-badge">New</span>
-                    <img src="{{ asset('images/two-piece/2pc-1.jpg') }}" alt="Aarna Embroidered Set" loading="lazy" decoding="async" />
+                    <img src="{{ asset('images/two-piece/2pc-1.webp') }}" alt="Aarna Embroidered Set" loading="lazy" decoding="async" />
                     <img class="eq-product-card__img--alt" src="{{ asset('images/two-piece/two-piece-01-alt.jpg') }}" alt="" loading="lazy" decoding="async" />
                     <span class="eq-product-card__quick-add">View product</span>
                   </div>
@@ -721,7 +721,7 @@
                 <a href="{{ url('/product/blush-pink-hand-embroidered-kameez') }}" class="eq-product-card__link">
                   <div class="eq-product-card__frame">
                     <span class="eq-badge">Sale</span>
-                    <img src="{{ asset('images/two-piece/2pc-2.jpg') }}" alt="Noor Block Print Set" loading="lazy" decoding="async" />
+                    <img src="{{ asset('images/two-piece/2pc-2.webp') }}" alt="Noor Block Print Set" loading="lazy" decoding="async" />
                     <img class="eq-product-card__img--alt" src="{{ asset('images/two-piece/two-piece-02-alt.jpg') }}" alt="" loading="lazy" decoding="async" />
                     <span class="eq-product-card__quick-add">View product</span>
                   </div>
@@ -737,7 +737,7 @@
               <article class="eq-product-card" id="card-three-piece-03">
                 <a href="{{ url('/shop/women/three-piece') }}" class="eq-product-card__link">
                   <div class="eq-product-card__frame">
-                    <img src="{{ asset('images/two-piece/2pc-3.jpg') }}" alt="Zara Chikankari Set" loading="lazy" decoding="async" />
+                    <img src="{{ asset('images/two-piece/2pc-3.webp') }}" alt="Zara Chikankari Set" loading="lazy" decoding="async" />
                     <img class="eq-product-card__img--alt" src="{{ asset('images/two-piece/two-piece-03-alt.jpg') }}" alt="" loading="lazy" decoding="async" />
                     <span class="eq-product-card__quick-add">View product</span>
                   </div>
@@ -753,7 +753,7 @@
               <article class="eq-product-card" id="card-three-piece-05">
                 <a href="{{ url('/shop/women/three-piece') }}" class="eq-product-card__link">
                   <div class="eq-product-card__frame">
-                    <img src="{{ asset('images/two-piece/2pc-4.jpg') }}" alt="Elan Georgette Set" loading="lazy" decoding="async" />
+                    <img src="{{ asset('images/two-piece/2pc-4.webp') }}" alt="Elan Georgette Set" loading="lazy" decoding="async" />
                     <img class="eq-product-card__img--alt" src="{{ asset('images/two-piece/two-piece-04-alt.jpg') }}" alt="" loading="lazy" decoding="async" />
                     <span class="eq-product-card__quick-add">View product</span>
                   </div>
@@ -827,7 +827,7 @@
           <div class="eq-two-piece__layout eq-reveal" id="two-piece-container">
           <!-- Featured Set (Larger than the grid items) -->
           <a href="{{ url('/shop/women/two-piece') }}" class="eq-two-piece__feature" id="two-piece-feature-card" aria-label="Selene Tunic Two Piece - Featured Set">
-            <img src="{{ asset('images/two-piece/2pc-1.jpg') }}" alt="Selene Tunic Two Piece" loading="lazy" decoding="async" />
+            <img src="{{ asset('images/two-piece/2pc-1.webp') }}" alt="Selene Tunic Two Piece" loading="lazy" decoding="async" />
             <div class="eq-two-piece__feature-info">
               <span class="eq-two-piece__feature-badge">Featured Set</span>
               <h3 class="eq-two-piece__feature-title">Selene Tunic Two Piece</h3>
@@ -842,7 +842,7 @@
               <a href="{{ url('/product/minimalist-sand-linen-co-ord') }}" class="eq-product-card__link">
                 <div class="eq-product-card__frame">
                   <span class="eq-badge">New</span>
-                  <img src="{{ asset('images/two-piece/2pc-2.jpg') }}" alt="Aria Linen Two Piece" loading="lazy" decoding="async" />
+                  <img src="{{ asset('images/two-piece/2pc-2.webp') }}" alt="Aria Linen Two Piece" loading="lazy" decoding="async" />
                   <span class="eq-product-card__quick-add">View product</span>
                 </div>
                 <div class="eq-product-card__body">
@@ -857,7 +857,7 @@
               <a href="{{ url('/shop/women/two-piece') }}" class="eq-product-card__link">
                 <div class="eq-product-card__frame">
                   <span class="eq-badge">Sale</span>
-                  <img src="{{ asset('images/two-piece/2pc-3.jpg') }}" alt="Amara Printed Two Piece" loading="lazy" decoding="async" />
+                  <img src="{{ asset('images/two-piece/2pc-3.webp') }}" alt="Amara Printed Two Piece" loading="lazy" decoding="async" />
                   <span class="eq-product-card__quick-add">View product</span>
                 </div>
                 <div class="eq-product-card__body">
@@ -871,7 +871,7 @@
             <article class="eq-product-card" id="two-piece-card-02">
               <a href="{{ url('/product/ochre-terracotta-kurti-culotte') }}" class="eq-product-card__link">
                 <div class="eq-product-card__frame">
-                  <img src="{{ asset('images/two-piece/2pc-4.jpg') }}" alt="Rumi Everyday Co-ord" loading="lazy" decoding="async" />
+                  <img src="{{ asset('images/two-piece/2pc-4.webp') }}" alt="Rumi Everyday Co-ord" loading="lazy" decoding="async" />
                   <span class="eq-product-card__quick-add">View product</span>
                 </div>
                 <div class="eq-product-card__body">
@@ -970,9 +970,9 @@
                   @if($bag->badge)
                     <span class="eq-badge">{{ $bag->badge }}</span>
                   @endif
-                  <img src="{{ asset($bag->image) }}" alt="{{ $bag->name }}" loading="eager" decoding="async" />
+                  <img src="{{ asset($bag->optimized_image) }}" alt="{{ $bag->name }}" loading="lazy" decoding="async" />
                   @if($bag->alt_image)
-                    <img class="eq-product-card__img--alt" src="{{ asset($bag->alt_image) }}" alt="" loading="lazy" decoding="async" />
+                    <img class="eq-product-card__img--alt" src="{{ asset($bag->optimized_alt_image) }}" alt="" loading="lazy" decoding="async" />
                   @endif
                   <span class="eq-product-card__quick-add">View product</span>
                 </div>
@@ -1034,12 +1034,12 @@
 
             <!-- Slide 2: Aria Linen Two Piece -->
             <div class="eq-coverflow-card" data-category="full-look everyday" id="coverflow-card-2" role="group" aria-roledescription="slide" aria-label="2 of 7">
-              <img src="{{ asset('images/two-piece/2pc-1.jpg') }}" alt="Aria Linen Two Piece styled by Samira" class="eq-coverflow-card__img" loading="lazy" />
+              <img src="{{ asset('images/two-piece/2pc-1.webp') }}" alt="Aria Linen Two Piece styled by Samira" class="eq-coverflow-card__img" loading="lazy" />
             </div>
 
             <!-- Slide 3: Heritage Canvas Bag -->
             <div class="eq-coverflow-card" data-category="details everyday" id="coverflow-card-3" role="group" aria-roledescription="slide" aria-label="3 of 7">
-              <img src="{{ asset('images/bags/bag-1.jpg') }}" alt="Heritage Canvas Tote with Zarin in Gulshan" class="eq-coverflow-card__img" loading="lazy" />
+              <img src="{{ asset('images/bags/bag-1.webp') }}" alt="Heritage Canvas Tote with Zarin in Gulshan" class="eq-coverflow-card__img" loading="lazy" />
             </div>
 
             <!-- Slide 4: Tangail Handloom Saree -->
@@ -1054,7 +1054,7 @@
 
             <!-- Slide 6: Terra Leather Bag -->
             <div class="eq-coverflow-card" data-category="details celebration" id="coverflow-card-6" role="group" aria-roledescription="slide" aria-label="6 of 7">
-              <img src="{{ asset('images/bags/bag-3.jpg') }}" alt="Terra Handbag styled by Maheen in Chattogram" class="eq-coverflow-card__img" loading="lazy" />
+              <img src="{{ asset('images/bags/bag-3.webp') }}" alt="Terra Handbag styled by Maheen in Chattogram" class="eq-coverflow-card__img" loading="lazy" />
             </div>
 
             <!-- Slide 7: Emerald Rajshahi Pure Silk -->

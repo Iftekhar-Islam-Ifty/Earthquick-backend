@@ -1,10 +1,10 @@
 @extends('layouts.app')
 
-@section('title', (isset($subcategory) ? $subcategory->name : $category->name) . ' — Rthquick / Nous Telos')
-@section('meta_description', $category->description ?? 'Explore artisanal handloom sarees, bespoke ensembles, and lifestyle essentials from Rthquick.')
-@section('canonical_url', url()->current())
-@section('og_title', (isset($subcategory) ? $subcategory->name : $category->name) . ' — Nous Telos | Rthquick')
-@section('og_description', $category->description ?? 'Explore artisanal handloom sarees, bespoke ensembles, and lifestyle essentials from Rthquick.')
+@section('title', (isset($subcategory) ? $subcategory->name : $category->name) . ' | Rthquick')
+@section('meta_description', $category->description ?: ('Shop ' . (isset($subcategory) ? $subcategory->name : $category->name) . ' products from independent brands at Rthquick.'))
+@section('canonical_url', request()->integer('page') > 1 ? url()->current().'?page='.request()->integer('page') : url()->current())
+@section('og_title', (isset($subcategory) ? $subcategory->name : $category->name) . ' | Rthquick')
+@section('og_description', $category->description ?: ('Shop ' . (isset($subcategory) ? $subcategory->name : $category->name) . ' products from independent brands at Rthquick.'))
 @section('og_image', asset($category->image ?? 'images/hero/hero-main-saree-2.jpg'))
 @section('body_class', 'eq-catalog-page')
 @section('scroll_motion', '1')
@@ -349,9 +349,9 @@
                   </button>
 
                   <!-- Primary & Alternate Images with Smooth Hover Zoom -->
-                  <img src="{{ asset($product->image) }}" alt="{{ $product->name }}" loading="lazy" />
+                  <img src="{{ asset($product->optimized_image) }}" alt="{{ $product->name }}" loading="lazy" />
                   @if($product->alt_image)
-                    <img src="{{ asset($product->alt_image) }}" alt="{{ $product->name }} alternate view" class="eq-product-card__img--alt" loading="lazy" />
+                    <img src="{{ asset($product->optimized_alt_image) }}" alt="{{ $product->name }} alternate view" class="eq-product-card__img--alt" loading="lazy" />
                   @endif
 
                   <!-- Quick View / Add Button -->

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Vendor;
+use App\Services\AdminImageUpload;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -70,7 +71,7 @@ class AdminVendorController extends Controller
             'address' => 'nullable|string|max:500',
             'sort_order' => 'nullable|integer|min:0',
             'is_active' => 'nullable|boolean',
-            'logo' => 'nullable|image|mimes:jpeg,png,jpg,webp,svg|max:2048',
+            'logo' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
             'banner' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
         ]);
 
@@ -81,41 +82,42 @@ class AdminVendorController extends Controller
             $slug = $baseSlug.'-'.$counter++;
         }
 
-        $destinationPath = public_path('images/vendors');
-        if (! file_exists($destinationPath)) {
-            mkdir($destinationPath, 0755, true);
-        }
-
+        $uploads = app(AdminImageUpload::class);
         $logoPath = null;
         if ($request->hasFile('logo')) {
-            $logoFile = $request->file('logo');
-            $logoName = 'logo_'.time().'_'.Str::slug($request->name).'.'.$logoFile->getClientOriginalExtension();
-            $logoFile->move($destinationPath, $logoName);
-            $logoPath = 'images/vendors/'.$logoName;
+            $logoPath = $uploads->store($request->file('logo'), 'images/vendors', 'logo');
         }
 
         $bannerPath = null;
-        if ($request->hasFile('banner')) {
-            $bannerFile = $request->file('banner');
-            $bannerName = 'banner_'.time().'_'.Str::slug($request->name).'.'.$bannerFile->getClientOriginalExtension();
-            $bannerFile->move($destinationPath, $bannerName);
-            $bannerPath = 'images/vendors/'.$bannerName;
+        try {
+            if ($request->hasFile('banner')) {
+                $bannerPath = $uploads->store($request->file('banner'), 'images/vendors', 'banner');
+            }
+        } catch (\Throwable $exception) {
+            $uploads->remove($logoPath, 'images/vendors');
+            throw $exception;
         }
 
-        $vendor = Vendor::create([
-            'name' => $request->name,
-            'slug' => $slug,
-            'vendor_code' => strtoupper(trim($request->vendor_code)),
-            'tagline' => $request->tagline,
-            'description' => $request->description,
-            'email' => $request->email,
-            'phone' => $request->phone,
-            'address' => $request->address,
-            'sort_order' => (int) $request->input('sort_order', 0),
-            'is_active' => $request->boolean('is_active', true),
-            'logo' => $logoPath,
-            'banner' => $bannerPath,
-        ]);
+        try {
+            $vendor = Vendor::create([
+                'name' => $request->name,
+                'slug' => $slug,
+                'vendor_code' => strtoupper(trim($request->vendor_code)),
+                'tagline' => $request->tagline,
+                'description' => $request->description,
+                'email' => $request->email,
+                'phone' => $request->phone,
+                'address' => $request->address,
+                'sort_order' => (int) $request->input('sort_order', 0),
+                'is_active' => $request->boolean('is_active', true),
+                'logo' => $logoPath,
+                'banner' => $bannerPath,
+            ]);
+        } catch (\Throwable $exception) {
+            $uploads->remove($logoPath, 'images/vendors');
+            $uploads->remove($bannerPath, 'images/vendors');
+            throw $exception;
+        }
 
         return redirect()->route('admin.vendors.index')->with(
             'success',
@@ -151,14 +153,9 @@ class AdminVendorController extends Controller
             'address' => 'nullable|string|max:500',
             'sort_order' => 'nullable|integer|min:0',
             'is_active' => 'nullable|boolean',
-            'logo' => 'nullable|image|mimes:jpeg,png,jpg,webp,svg|max:2048',
+            'logo' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
             'banner' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
         ]);
-
-        $destinationPath = public_path('images/vendors');
-        if (! file_exists($destinationPath)) {
-            mkdir($destinationPath, 0755, true);
-        }
 
         $updateData = [
             'name' => $request->name,
@@ -173,29 +170,34 @@ class AdminVendorController extends Controller
             'is_active' => $request->boolean('is_active', false),
         ];
 
+        $uploads = app(AdminImageUpload::class);
+        $oldLogo = $vendor->logo;
+        $oldBanner = $vendor->banner;
+        $newLogo = null;
+        $newBanner = null;
         if ($request->hasFile('logo')) {
-            $logoFile = $request->file('logo');
-            $logoName = 'logo_'.time().'_'.Str::slug($request->name).'.'.$logoFile->getClientOriginalExtension();
-            $logoFile->move($destinationPath, $logoName);
-
-            if ($vendor->logo && file_exists(public_path($vendor->logo))) {
-                @unlink(public_path($vendor->logo));
-            }
-            $updateData['logo'] = 'images/vendors/'.$logoName;
+            $newLogo = $uploads->store($request->file('logo'), 'images/vendors', 'logo');
+            $updateData['logo'] = $newLogo;
         }
 
-        if ($request->hasFile('banner')) {
-            $bannerFile = $request->file('banner');
-            $bannerName = 'banner_'.time().'_'.Str::slug($request->name).'.'.$bannerFile->getClientOriginalExtension();
-            $bannerFile->move($destinationPath, $bannerName);
-
-            if ($vendor->banner && file_exists(public_path($vendor->banner))) {
-                @unlink(public_path($vendor->banner));
+        try {
+            if ($request->hasFile('banner')) {
+                $newBanner = $uploads->store($request->file('banner'), 'images/vendors', 'banner');
+                $updateData['banner'] = $newBanner;
             }
-            $updateData['banner'] = 'images/vendors/'.$bannerName;
+            $vendor->update($updateData);
+        } catch (\Throwable $exception) {
+            $uploads->remove($newLogo, 'images/vendors');
+            $uploads->remove($newBanner, 'images/vendors');
+            throw $exception;
         }
 
-        $vendor->update($updateData);
+        if ($newLogo) {
+            $uploads->remove($oldLogo, 'images/vendors');
+        }
+        if ($newBanner) {
+            $uploads->remove($oldBanner, 'images/vendors');
+        }
 
         return redirect()->route('admin.vendors.index')->with(
             'success',

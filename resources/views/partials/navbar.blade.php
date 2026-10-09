@@ -79,7 +79,7 @@
               <div class="eq-megamenu__feature">
                 <a href="{{ route('category.show', 'women') }}" class="eq-megamenu__feature-card">
                   <div class="eq-megamenu__feature-media">
-                    <img src="{{ asset('images/hero/hero-main-saree-2.jpg') }}" alt="Curated Marketplace Catalog" />
+                    <img src="{{ asset('images/hero/hero-main-saree-2.webp') }}" alt="Curated Marketplace Catalog" />
                   </div>
                   <div class="eq-megamenu__feature-content">
                     <span class="eq-megamenu__tag">RTHQUICK CURATED</span>

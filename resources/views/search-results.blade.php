@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
-@section('title', ($query ? 'Search: "' . e($query) . '"' : 'Search Collection') . ' — Rthquick / Nous Telos')
-@section('meta_description', 'Discover handcrafted sarees, bespoke three-piece ensembles, and accessories from Rthquick Studio.')
+@section('title', ($query ? 'Search: "' . $query . '"' : 'Search Collection') . ' | Rthquick')
+@section('meta_description', 'Search products and collections from independent Bangladeshi brands at Rthquick.')
 @section('body_class', 'eq-catalog-page')
 @section('scroll_motion', '1')
 
@@ -170,9 +170,9 @@
                   </button>
 
                   <!-- Primary & Alternate Images -->
-                  <img src="{{ asset($product->image) }}" alt="{{ $product->name }}" loading="lazy" />
+                  <img src="{{ asset($product->optimized_image) }}" alt="{{ $product->name }}" loading="lazy" />
                   @if($product->alt_image)
-                    <img src="{{ asset($product->alt_image) }}" alt="{{ $product->name }} alternate view" class="eq-product-card__img--alt" loading="lazy" />
+                    <img src="{{ asset($product->optimized_alt_image) }}" alt="{{ $product->name }} alternate view" class="eq-product-card__img--alt" loading="lazy" />
                   @endif
 
                   <!-- Quick Inspect / View Button -->

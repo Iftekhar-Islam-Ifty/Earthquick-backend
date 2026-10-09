@@ -52,7 +52,7 @@
           <!-- LEFT: GALLERY -->
           <div class="eq-product-gallery">
             <div class="eq-product-gallery__main" id="gallery-main-wrap">
-              <img id="main-product-img" src="{{ asset($product->image) }}" alt="{{ $product->name }}" />
+              <img id="main-product-img" src="{{ asset($product->optimized_image) }}" alt="{{ $product->name }}" fetchpriority="high" decoding="async" />
               @if($product->badge)
                 <span class="eq-product-card__badge" id="product-badge">{{ $product->badge }}</span>
               @endif
@@ -60,12 +60,12 @@
 
             <!-- Thumbnails Strip -->
             <div class="eq-product-gallery__thumbs" id="gallery-thumbs">
-              <button type="button" class="is-active" data-src="{{ asset($product->image) }}" aria-label="View product image 1" onclick="switchMainImage(this, '{{ asset($product->image) }}')">
-                <img id="thumb-1" src="{{ asset($product->image) }}" alt="{{ $product->name }} thumbnail 1" />
+              <button type="button" class="is-active" data-src="{{ asset($product->optimized_image) }}" aria-label="View product image 1" onclick="switchMainImage(this, this.dataset.src)">
+                <img id="thumb-1" src="{{ asset($product->optimized_image) }}" alt="{{ $product->name }} thumbnail 1" />
               </button>
               @if($product->alt_image)
-                <button type="button" data-src="{{ asset($product->alt_image) }}" aria-label="View product image 2" onclick="switchMainImage(this, '{{ asset($product->alt_image) }}')">
-                  <img id="thumb-2" src="{{ asset($product->alt_image) }}" alt="{{ $product->name }} thumbnail 2" />
+                <button type="button" data-src="{{ asset($product->optimized_alt_image) }}" aria-label="View product image 2" onclick="switchMainImage(this, this.dataset.src)">
+                  <img id="thumb-2" src="{{ asset($product->optimized_alt_image) }}" alt="{{ $product->name }} thumbnail 2" />
                 </button>
               @endif
               @if($galleryMedia->isNotEmpty())
@@ -109,10 +109,10 @@
                 <polyline points="20 6 9 17 4 12"></polyline>
               </svg>
               <span id="stock-text">
-                @if($displayStock > 0)
+                @if($product->in_stock && $displayStock > 0)
                   In Stock &mdash; Ready to ship ({{ $displayStock }} left in stock)
                 @else
-                  Available to Order &mdash; Ready to ship
+                  Out of Stock
                 @endif
               </span>
             </div>
@@ -166,17 +166,17 @@
               </div>
 
               <!-- Add to Cart -->
-              <button type="submit" class="eq-btn eq-btn--primary" id="btn-add-to-cart">
+              <button type="submit" class="eq-btn eq-btn--primary" id="btn-add-to-cart" @disabled(! $product->in_stock || $displayStock < 1)>
                 <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"></path>
                   <line x1="3" y1="6" x2="21" y2="6"></line>
                   <path d="M16 10a4 4 0 0 1-8 0"></path>
                 </svg>
-                <span>Add to Bag</span>
+                <span>{{ $product->in_stock && $displayStock > 0 ? 'Add to Bag' : 'Sold Out' }}</span>
               </button>
 
               <!-- Buy Now -->
-              <button type="button" class="eq-btn eq-btn--secondary" id="btn-buy-now" onclick="buyNowDirect()">
+              <button type="button" class="eq-btn eq-btn--secondary" id="btn-buy-now" onclick="buyNowDirect()" @disabled(! $product->in_stock || $displayStock < 1)>
                 Buy Now
               </button>
             </div>
@@ -332,9 +332,9 @@
                   @if($rel->badge)
                     <span class="eq-product-badge eq-product-badge--{{ $rel->badge_type ?? 'ready' }}">{{ $rel->badge }}</span>
                   @endif
-                  <img src="{{ asset($rel->image) }}" alt="{{ $rel->name }}" loading="lazy" />
+                  <img src="{{ asset($rel->optimized_image) }}" alt="{{ $rel->name }}" loading="lazy" />
                   @if($rel->alt_image)
-                    <img src="{{ asset($rel->alt_image) }}" alt="{{ $rel->name }} alternate" class="eq-product-card__img--alt" loading="lazy" />
+                    <img src="{{ asset($rel->optimized_alt_image) }}" alt="{{ $rel->name }} alternate" class="eq-product-card__img--alt" loading="lazy" />
                   @endif
                   <button type="button" class="eq-product-card__quick-add" data-action="quick-view" aria-label="Quick view {{ $rel->name }}">
                     Quick view
@@ -392,12 +392,20 @@
     const stock = document.getElementById('stock-text');
     const amount = Number(button.dataset.price || 0);
     const available = Number(button.dataset.stock || 0);
+    const canPurchase = @json((bool) $product->in_stock) && available > 0;
+    const addButton = document.getElementById('btn-add-to-cart');
+    const buyButton = document.getElementById('btn-buy-now');
+    if (addButton) {
+      addButton.disabled = !canPurchase;
+      addButton.querySelector('span').textContent = canPurchase ? 'Add to Bag' : 'Sold Out';
+    }
+    if (buyButton) buyButton.disabled = !canPurchase;
 
     if (variantInput) variantInput.value = button.dataset.variantId || '';
     if (sizeInput) sizeInput.value = button.dataset.label || 'Standard';
     if (price) price.textContent = '৳' + amount.toLocaleString('en-IN');
     if (stock) {
-      stock.textContent = available > 0
+      stock.textContent = canPurchase
         ? `In Stock — Ready to ship (${available} left in stock)`
         : 'This option is currently sold out';
     }
@@ -437,7 +445,7 @@
     asset($product->image)
   ],
   'description' => strip_tags($product->short_desc ?? ($product->description ?? '')),
-  'sku' => $product->sku ?? ('NT-' . $product->id),
+  'sku' => $initialVariant?->sku ?? $product->sku ?? ('PRODUCT-' . $product->id),
   'brand' => [
     '@type' => 'Brand',
     'name' => $product->vendor->name ?? 'Rthquick',
@@ -446,14 +454,14 @@
     '@type' => 'Offer',
     'url' => route('product.show', $product->slug),
     'priceCurrency' => 'BDT',
-    'price' => (string) $product->price,
+    'price' => (string) $displayPrice,
     'itemCondition' => 'https://schema.org/NewCondition',
-    'availability' => $product->in_stock ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
+    'availability' => ($product->in_stock && $displayStock > 0) ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
     'seller' => [
       '@type' => 'Organization',
       'name' => 'Rthquick',
     ],
   ],
-], JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) !!}
+], JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) !!}
 </script>
 @endpush

@@ -3281,12 +3281,12 @@ p {
 .eq-reveal {
   opacity: 1;
   transform: none;
-  transition: opacity 0.68s var(--ease-standard), transform 0.68s var(--ease-standard);
+  transition: opacity 0.86s var(--ease-standard), transform 0.86s var(--ease-standard);
 }
 
 .eq-scroll-motion .eq-reveal:not(.is-visible) {
   opacity: 0;
-  transform: translateY(28px);
+  transform: translateY(34px);
 }
 
 .eq-scroll-motion .eq-reveal.is-visible {
@@ -3294,6 +3294,20 @@ p {
   transform: translateY(0);
 }
 
+/* Editorial imagery settles into view; product-card hover and carousel transforms stay independent. */
+.eq-scroll-motion .eq-home-stores__grid.eq-reveal .eq-home-store-card__media img {
+  transition: transform 0.95s var(--ease-standard);
+}
+.eq-scroll-motion .eq-category-strip__grid.eq-reveal:not(.is-visible) .eq-category-card__media img,
+.eq-scroll-motion .eq-home-stores__grid.eq-reveal:not(.is-visible) .eq-home-store-card__media img {
+  transform: scale(1.07);
+}
+@media (prefers-reduced-motion: reduce) {
+  .eq-scroll-motion .eq-category-strip__grid.eq-reveal .eq-category-card__media img,
+  .eq-scroll-motion .eq-home-stores__grid.eq-reveal .eq-home-store-card__media img {
+    transform: none !important;
+  }
+}
 /* One restrained image detail; product cards and carousels keep their own motion. */
 .eq-scroll-motion .eq-story__media img {
   transition: transform 0.75s var(--ease-standard);
@@ -3317,7 +3331,7 @@ p {
 
 @media (max-width: 640px) {
   .eq-scroll-motion .eq-reveal:not(.is-visible) {
-    transform: translateY(20px);
+    transform: translateY(24px);
   }
 }
 

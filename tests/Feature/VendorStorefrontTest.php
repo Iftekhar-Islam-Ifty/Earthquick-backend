@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Category;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
@@ -32,6 +33,28 @@ class VendorStorefrontTest extends TestCase
     /**
      * Test public /stores directory lists all active partner brands.
      */
+    public function test_zero_stock_product_is_not_presented_as_orderable(): void
+    {
+        $product = Product::create([
+            'vendor_id' => Vendor::where('slug', 'nous-telos')->firstOrFail()->id,
+            'category_id' => Category::where('slug', 'bags')->firstOrFail()->id,
+            'sku' => 'NT-QA-SOLD-OUT',
+            'name' => 'Sold Out QA Bag',
+            'slug' => 'sold-out-qa-bag',
+            'price' => 1500,
+            'image' => 'images/bags/bag-3.jpg',
+            'in_stock' => false,
+            'stock_quantity' => 0,
+            'is_active' => true,
+        ]);
+
+        $this->get(route('product.show', $product->slug))
+            ->assertOk()
+            ->assertSee('Out of Stock')
+            ->assertSee('id="btn-add-to-cart" disabled', false)
+            ->assertSee('id="btn-buy-now" onclick="buyNowDirect()" disabled', false)
+            ->assertSee('https://schema.org/OutOfStock', false);
+    }
     public function test_public_stores_directory_renders_successfully(): void
     {
         $response = $this->get('/stores');

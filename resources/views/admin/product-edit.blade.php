@@ -343,7 +343,7 @@
               type="file" 
               name="image" 
               id="input-product-image" 
-              accept="image/jpeg,image/png,image/webp,image/svg+xml"
+              accept="image/jpeg,image/png,image/webp"
               onchange="previewSelectedImage(this)"
               style="width: 100%; font-size: 0.82rem;"
             />
@@ -378,7 +378,7 @@
 
           <div style="margin-top: 1.25rem; padding-top: 1.25rem; border-top: 1px solid var(--eq-line);">
             <label for="input-gallery-images" style="display: block; font-size: 0.82rem; font-weight: 600; color: var(--eq-charcoal); margin-bottom: 0.4rem;">Add More Media <span style="font-weight: 400; color: var(--eq-charcoal-muted);">(Up to 8 files)</span></label>
-            <input type="file" name="gallery_images[]" id="input-gallery-images" accept="image/jpeg,image/png,image/webp,image/svg+xml" multiple style="width: 100%; font-size: 0.82rem;" />
+            <input type="file" name="gallery_images[]" id="input-gallery-images" accept="image/jpeg,image/png,image/webp" multiple style="width: 100%; font-size: 0.82rem;" />
             <div style="display: grid; grid-template-columns: 1fr; gap: 0.65rem; margin-top: 0.8rem;">
               <select name="gallery_role" aria-label="New media role" style="width: 100%; padding: 0.55rem 0.7rem; border-radius: 6px; border: 1px solid var(--eq-line); background: #ffffff; font-size: 0.82rem;">
                 @foreach($catalogSchema['media_roles'] as $role => $label)

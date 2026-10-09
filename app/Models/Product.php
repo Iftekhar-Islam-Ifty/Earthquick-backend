@@ -129,6 +129,27 @@ class Product extends Model
      * Limit a public catalog query to legacy unassigned products and products
      * whose assigned vendor is currently published.
      */
+    public function getOptimizedImageAttribute(): ?string
+    {
+        return self::optimizedImagePath($this->image);
+    }
+
+    public function getOptimizedAltImageAttribute(): ?string
+    {
+        return self::optimizedImagePath($this->alt_image);
+    }
+
+    private static function optimizedImagePath(?string $path): ?string
+    {
+        if (! $path || ! str_starts_with($path, 'images/')) {
+            return $path;
+        }
+
+        $webp = preg_replace('/\.jpe?g$/i', '.webp', $path);
+
+        return $webp !== $path && is_file(public_path($webp)) ? $webp : $path;
+    }
+
     public function scopePubliclyAvailable(Builder $query): Builder
     {
         return $query->where('is_active', true)

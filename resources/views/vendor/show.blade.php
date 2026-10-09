@@ -2,7 +2,7 @@
 
 @section('title', $vendor->name . ' — Storefront | Rthquick')
 @section('meta_description', $vendor->description ?? ('Discover exclusive creations by ' . $vendor->name . ' on Rthquick.'))
-@section('canonical_url', route('stores.show', $vendor->slug))
+@section('canonical_url', request()->integer('page') > 1 ? route('stores.show', $vendor->slug).'?page='.request()->integer('page') : route('stores.show', $vendor->slug))
 @section('body_class', 'eq-storefront-page')
 @section('scroll_motion', '1')
 
@@ -34,6 +34,15 @@
   .eq-store-active { display: flex; flex-wrap: wrap; align-items: center; gap: .4rem; }
   .eq-store-active span { padding: .25rem .55rem; border-radius: 999px; background: var(--eq-cream); color: var(--eq-charcoal-soft); font-size: .72rem; }
   @media (max-width: 760px) {
+    .eq-store-hero__inner { padding: 1.5rem 1rem 1.4rem !important; }
+    .eq-store-hero__row { flex-direction: column; gap: .65rem !important; text-align: center; }
+    .eq-store-hero__logo { width: 68px !important; height: 68px !important; }
+    .eq-store-hero__identity { flex: none !important; min-width: 0 !important; width: 100%; }
+    .eq-store-hero__heading { justify-content: center; flex-wrap: wrap; gap: .4rem .55rem !important; margin-bottom: .35rem !important; }
+    .eq-store-hero__heading h1 { font-size: clamp(1.55rem, 6vw, 1.85rem) !important; }
+    .eq-store-hero__identity p { margin-left: auto !important; margin-right: auto !important; }
+    .eq-store-hero__stats { margin: .2rem 0 0 !important; }
+    .eq-store-hero__stats > div { display: flex; align-items: baseline; gap: .35rem; padding: .4rem .8rem !important; }
     .eq-store-toolbar { gap: .7rem; }
     .eq-store-categories { flex-wrap: nowrap; overflow-x: auto; padding-bottom: .3rem; scrollbar-width: thin; }
     .eq-store-category { flex: 0 0 auto; }
@@ -66,18 +75,18 @@
   </nav>
 
   <!-- Store Header Banner -->
-  <section style="background: linear-gradient(135deg, var(--eq-navy) 0%, #1a364a 100%); color: #ffffff; position: relative; overflow: hidden; border-bottom: 1px solid var(--eq-line);">
+  <section class="eq-store-hero" style="background: linear-gradient(135deg, var(--eq-navy) 0%, #1a364a 100%); color: #ffffff; position: relative; overflow: hidden; border-bottom: 1px solid var(--eq-line);">
     @if($vendor->banner)
       <div style="position: absolute; inset: 0; opacity: 0.25; z-index: 1;">
         <img src="{{ asset($vendor->banner) }}" alt="{{ $vendor->name }} Cover" style="width: 100%; height: 100%; object-fit: cover;" />
       </div>
     @endif
 
-    <div class="eq-container eq-reveal" style="position: relative; z-index: 2; padding: 3rem 1rem 2.5rem;">
-      <div style="display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap;">
+    <div class="eq-container eq-reveal eq-store-hero__inner" style="position: relative; z-index: 2; padding: 3rem 1rem 2.5rem;">
+      <div class="eq-store-hero__row" style="display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap;">
         
         <!-- Brand Logo / Monogram -->
-        <div style="width: 80px; height: 80px; border-radius: 50%; background: #ffffff; border: 3px solid rgba(255,255,255,0.3); box-shadow: 0 4px 15px rgba(0,0,0,0.25); display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-weight: 700; color: var(--eq-navy); font-size: 1.6rem; overflow: hidden; flex-shrink: 0;">
+        <div class="eq-store-hero__logo" style="width: 80px; height: 80px; border-radius: 50%; background: #ffffff; border: 3px solid rgba(255,255,255,0.3); box-shadow: 0 4px 15px rgba(0,0,0,0.25); display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-weight: 700; color: var(--eq-navy); font-size: 1.6rem; overflow: hidden; flex-shrink: 0;">
           @if($vendor->logo)
             <img src="{{ asset($vendor->logo) }}" alt="{{ $vendor->name }}" style="width: 100%; height: 100%; object-fit: cover;" />
           @else
@@ -86,8 +95,8 @@
         </div>
 
         <!-- Brand Identity Info -->
-        <div style="flex: 1; min-width: 260px;">
-          <div style="display: flex; align-items: center; gap: 0.65rem; margin-bottom: 0.25rem;">
+        <div class="eq-store-hero__identity" style="flex: 1; min-width: 260px;">
+          <div class="eq-store-hero__heading" style="display: flex; align-items: center; gap: 0.65rem; margin-bottom: 0.25rem;">
             <h1 style="font-family: var(--font-display); font-size: 2rem; margin: 0; font-weight: 600; color: #ffffff; line-height: 1.2;">
               {{ $vendor->name }}
             </h1>
@@ -110,7 +119,7 @@
         </div>
 
         <!-- Store Stats -->
-        <div style="display: flex; gap: 1rem; align-items: center; margin-left: auto;">
+        <div class="eq-store-hero__stats" style="display: flex; gap: 1rem; align-items: center; margin-left: auto;">
           <div style="text-align: center; background: rgba(255,255,255,0.08); backdrop-filter: blur(4px); padding: 0.65rem 1.25rem; border-radius: 6px; border: 1px solid rgba(255,255,255,0.15);">
             <div style="font-size: 1.35rem; font-weight: 700; color: #ffffff; font-family: var(--font-display);">{{ $allProductsCount }}</div>
             <div style="font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(255,255,255,0.65);">Creations</div>
@@ -243,9 +252,9 @@
                 </svg>
               </button>
 
-              <img src="{{ asset($product->image) }}" alt="{{ $product->name }}" loading="lazy" />
+              <img src="{{ asset($product->optimized_image) }}" alt="{{ $product->name }}" loading="lazy" />
               @if($product->alt_image)
-                <img src="{{ asset($product->alt_image) }}" alt="{{ $product->name }} alternate view" class="eq-product-card__img--alt" loading="lazy" />
+                <img src="{{ asset($product->optimized_alt_image) }}" alt="{{ $product->name }} alternate view" class="eq-product-card__img--alt" loading="lazy" />
               @endif
 
               <button type="button" class="eq-product-card__quick-add" data-action="quick-view" aria-label="Quick view {{ $product->name }}">
