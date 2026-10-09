@@ -354,8 +354,14 @@
             />
           </div>
 
+          <div style="margin-top: 1rem;">
+            <label for="input-hover-image" style="display: block; font-size: 0.82rem; font-weight: 600; color: var(--eq-charcoal); margin-bottom: 0.4rem;">Hover Image <span style="font-weight: 400; color: var(--eq-charcoal-muted);">(Optional)</span></label>
+            <input type="file" name="hover_image" id="input-hover-image" accept="image/jpeg,image/png,image/webp" style="width: 100%; font-size: 0.82rem;" />
+            <p style="font-size: 0.75rem; color: var(--eq-charcoal-muted); margin: 0.45rem 0 0;">Shown when someone hovers over a product card. Leave empty to keep the master shot visible. Saved as WebP.</p>
+          </div>
+
           <div style="margin-top: 1.25rem; padding-top: 1.25rem; border-top: 1px solid var(--eq-line);">
-            <label for="input-gallery-images" style="display: block; font-size: 0.82rem; font-weight: 600; color: var(--eq-charcoal); margin-bottom: 0.4rem;">Additional Media <span style="font-weight: 400; color: var(--eq-charcoal-muted);">(Up to 8 files)</span></label>
+            <label for="input-gallery-images" style="display: block; font-size: 0.82rem; font-weight: 600; color: var(--eq-charcoal); margin-bottom: 0.4rem;">Additional Media <span style="font-weight: 400; color: var(--eq-charcoal-muted);">(Gallery only, up to 8 files)</span></label>
             <input type="file" name="gallery_images[]" id="input-gallery-images" accept="image/jpeg,image/png,image/webp" multiple style="width: 100%; font-size: 0.82rem;" />
             <div style="display: grid; grid-template-columns: 1fr; gap: 0.65rem; margin-top: 0.8rem;">
               <select name="gallery_role" aria-label="Additional media role" style="width: 100%; padding: 0.55rem 0.7rem; border-radius: 6px; border: 1px solid var(--eq-line); background: #ffffff; font-size: 0.82rem;">

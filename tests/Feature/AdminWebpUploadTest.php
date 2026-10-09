@@ -114,6 +114,60 @@ class AdminWebpUploadTest extends TestCase
         }
     }
 
+    public function test_admin_controls_hover_image_and_removing_it_restores_main_image_fallback(): void
+    {
+        $admin = User::create([
+            'name' => 'Hover Image Admin',
+            'email' => 'hover-image-'.Str::random(10).'@example.com',
+            'password' => bcrypt('password123'),
+            'is_admin' => true,
+        ]);
+        $category = Category::where('is_active', true)->firstOrFail();
+        $name = 'Hover QA '.Str::random(10);
+
+        $this->actingAs($admin)->post('/admin/products', [
+            'name' => $name,
+            'category_id' => $category->id,
+            'price' => 1200,
+            'stock_quantity' => 2,
+            'in_stock' => 1,
+            'image' => UploadedFile::fake()->image('front.png'),
+            'hover_image' => UploadedFile::fake()->image('back.jpg'),
+        ])->assertRedirect(route('admin.products'));
+
+        $product = Product::where('name', $name)->firstOrFail();
+        $mainPath = $product->image;
+        $hoverPath = $product->alt_image;
+        try {
+            $this->assertStringEndsWith('.webp', $hoverPath);
+            $this->assertSame('image/webp', getimagesize(public_path($hoverPath))['mime']);
+            $this->get(route('category.show', $category->slug))
+                ->assertOk()
+                ->assertSee($name.' alternate view');
+
+            $this->actingAs($admin)->put('/admin/products/'.$product->id, [
+                'name' => $name,
+                'category_id' => $category->id,
+                'price' => 1200,
+                'stock_quantity' => 2,
+                'in_stock' => 1,
+                'is_active' => 1,
+                'remove_hover_image' => 1,
+            ])->assertRedirect(route('admin.products'));
+
+            $this->assertNull($product->fresh()->alt_image);
+            $this->assertFileDoesNotExist(public_path($hoverPath));
+            $this->assertFileExists(public_path($mainPath));
+            $this->get(route('category.show', $category->slug))
+                ->assertOk()
+                ->assertDontSee($name.' alternate view');
+        } finally {
+            $images = app(AdminImageUpload::class);
+            $images->remove($mainPath, 'images/products');
+            $images->remove($hoverPath, 'images/products');
+        }
+    }
+
     public function test_svg_is_rejected_for_new_vendor_upload(): void
     {
         $admin = User::create([

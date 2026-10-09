@@ -349,6 +349,23 @@
             />
           </div>
 
+          <div style="margin-top: 1rem;">
+            <label for="input-hover-image" style="display: block; font-size: 0.82rem; font-weight: 600; color: var(--eq-charcoal); margin-bottom: 0.4rem;">Hover Image <span style="font-weight: 400; color: var(--eq-charcoal-muted);">(Optional)</span></label>
+            @if($product->alt_image)
+              <div style="display: flex; align-items: center; gap: 0.65rem; margin-bottom: 0.55rem;">
+                <img src="{{ asset($product->optimized_alt_image) }}" alt="Current hover view of {{ $product->name }}" style="width: 56px; height: 66px; object-fit: cover; border-radius: 6px; border: 1px solid var(--eq-line);" />
+                <span style="font-size: 0.75rem; color: var(--eq-charcoal-muted);">Current hover image</span>
+              </div>
+            @endif
+            <input type="file" name="hover_image" id="input-hover-image" accept="image/jpeg,image/png,image/webp" style="width: 100%; font-size: 0.82rem;" />
+            @if($product->alt_image)
+              <label style="display: flex; align-items: center; gap: 0.45rem; margin-top: 0.6rem; font-size: 0.77rem; color: var(--eq-charcoal);">
+                <input type="checkbox" name="remove_hover_image" value="1" {{ old('remove_hover_image') ? 'checked' : '' }} /> Remove hover image
+              </label>
+            @endif
+            <p style="font-size: 0.75rem; color: var(--eq-charcoal-muted); margin: 0.45rem 0 0;">Leave empty to keep the current hover image. Remove it to show the master shot on hover. A new upload replaces it and is saved as WebP.</p>
+          </div>
+
           @if($product->images->isNotEmpty())
             <div style="margin-top: 1.25rem; padding-top: 1.25rem; border-top: 1px solid var(--eq-line);">
               <div style="font-size: 0.82rem; font-weight: 600; color: var(--eq-charcoal); margin-bottom: 0.65rem;">Existing Additional Media</div>
@@ -377,7 +394,7 @@
           @endif
 
           <div style="margin-top: 1.25rem; padding-top: 1.25rem; border-top: 1px solid var(--eq-line);">
-            <label for="input-gallery-images" style="display: block; font-size: 0.82rem; font-weight: 600; color: var(--eq-charcoal); margin-bottom: 0.4rem;">Add More Media <span style="font-weight: 400; color: var(--eq-charcoal-muted);">(Up to 8 files)</span></label>
+            <label for="input-gallery-images" style="display: block; font-size: 0.82rem; font-weight: 600; color: var(--eq-charcoal); margin-bottom: 0.4rem;">Add More Media <span style="font-weight: 400; color: var(--eq-charcoal-muted);">(Gallery only, up to 8 files)</span></label>
             <input type="file" name="gallery_images[]" id="input-gallery-images" accept="image/jpeg,image/png,image/webp" multiple style="width: 100%; font-size: 0.82rem;" />
             <div style="display: grid; grid-template-columns: 1fr; gap: 0.65rem; margin-top: 0.8rem;">
               <select name="gallery_role" aria-label="New media role" style="width: 100%; padding: 0.55rem 0.7rem; border-radius: 6px; border: 1px solid var(--eq-line); background: #ffffff; font-size: 0.82rem;">

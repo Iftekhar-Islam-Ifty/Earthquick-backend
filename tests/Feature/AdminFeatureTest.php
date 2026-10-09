@@ -336,6 +336,7 @@ class AdminFeatureTest extends TestCase
         $product = Product::where('name', 'Heritage Jamdani Gold Zari')->first();
         $this->assertNotNull($product);
         $this->assertStringStartsWith('images/products/', $product->image);
+        $this->assertNull($product->alt_image);
         $this->assertStringEndsWith('.webp', $product->image);
         $this->assertSame('image/webp', getimagesize(public_path($product->image))['mime']);
         $this->assertFileDoesNotExist(public_path(substr($product->image, 0, -5).'.jpg'));

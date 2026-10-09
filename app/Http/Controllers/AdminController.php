@@ -656,6 +656,7 @@ class AdminController extends Controller
             'return_policy_note' => 'nullable|string|max:255',
             'delivery_class' => 'nullable|in:standard,fragile,oversized',
             'image' => 'required|image|mimes:jpeg,png,jpg,webp|max:5120',
+            'hover_image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
             'gallery_images' => 'nullable|array|max:8',
             'gallery_images.*' => 'image|mimes:jpeg,png,jpg,webp|max:5120',
             'gallery_role' => 'nullable|in:gallery,lifestyle,detail,packaging,size_chart',
@@ -682,10 +683,15 @@ class AdminController extends Controller
 
         $uploads = app(AdminImageUpload::class);
         $imagePath = $uploads->store($request->file('image'), 'images/products', 'image');
+        $hoverPath = null;
         try {
+            if ($request->hasFile('hover_image')) {
+                $hoverPath = $uploads->store($request->file('hover_image'), 'images/products', 'hover_image');
+            }
             $galleryPaths = $uploads->storeMany($request->file('gallery_images', []), 'images/products', 'gallery_images');
         } catch (\Throwable $exception) {
             $uploads->remove($imagePath, 'images/products');
+            $uploads->remove($hoverPath, 'images/products');
             throw $exception;
         }
 
@@ -694,7 +700,7 @@ class AdminController extends Controller
         $sku = $vendorCode.'-'.strtoupper(Str::random(3)).'-'.rand(100, 999);
 
         try {
-            $product = DB::transaction(function () use ($request, $vendor, $slug, $sku, $variants, $imagePath, $galleryPaths) {
+            $product = DB::transaction(function () use ($request, $vendor, $slug, $sku, $variants, $imagePath, $hoverPath, $galleryPaths) {
                 $product = Product::create([
                     'name' => $request->name,
                     'vendor_id' => $vendor ? $vendor->id : null,
@@ -724,6 +730,7 @@ class AdminController extends Controller
                     'return_policy_note' => $request->return_policy_note,
                     'delivery_class' => $request->input('delivery_class', 'standard'),
                     'image' => $imagePath,
+                    'alt_image' => $hoverPath,
                     'rating' => 5.0,
                     'reviews_count' => 0,
                 ]);
@@ -736,7 +743,7 @@ class AdminController extends Controller
                 return $product;
             });
         } catch (\Throwable $exception) {
-            foreach ([$imagePath, ...$galleryPaths] as $path) {
+            foreach (array_filter([$imagePath, $hoverPath, ...$galleryPaths]) as $path) {
                 $uploads->remove($path, 'images/products');
             }
             throw $exception;
@@ -799,6 +806,8 @@ class AdminController extends Controller
             'return_policy_note' => 'nullable|string|max:255',
             'delivery_class' => 'nullable|in:standard,fragile,oversized',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
+            'hover_image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
+            'remove_hover_image' => 'nullable|boolean',
             'gallery_images' => 'nullable|array|max:8',
             'gallery_images.*' => 'image|mimes:jpeg,png,jpg,webp|max:5120',
             'gallery_role' => 'nullable|in:gallery,lifestyle,detail,packaging,size_chart',
@@ -860,7 +869,10 @@ class AdminController extends Controller
 
         $uploads = app(AdminImageUpload::class);
         $newImagePath = null;
+        $newHoverPath = null;
         $oldImagePath = $product->image;
+        $oldHoverPath = $product->alt_image;
+        $removeHover = $request->boolean('remove_hover_image') && ! $request->hasFile('hover_image');
 
         // Convert before changing the product or removing its old image.
         if ($request->hasFile('image')) {
@@ -869,9 +881,16 @@ class AdminController extends Controller
         }
 
         try {
+            if ($request->hasFile('hover_image')) {
+                $newHoverPath = $uploads->store($request->file('hover_image'), 'images/products', 'hover_image');
+                $updateData['alt_image'] = $newHoverPath;
+            } elseif ($removeHover) {
+                $updateData['alt_image'] = null;
+            }
             $galleryPaths = $uploads->storeMany($request->file('gallery_images', []), 'images/products', 'gallery_images');
         } catch (\Throwable $exception) {
             $uploads->remove($newImagePath, 'images/products');
+            $uploads->remove($newHoverPath, 'images/products');
             throw $exception;
         }
 
@@ -885,7 +904,7 @@ class AdminController extends Controller
                 $this->storeGalleryImages($request, $product, $galleryPaths);
             });
         } catch (\Throwable $exception) {
-            foreach (array_filter([$newImagePath, ...$galleryPaths]) as $path) {
+            foreach (array_filter([$newImagePath, $newHoverPath, ...$galleryPaths]) as $path) {
                 $uploads->remove($path, 'images/products');
             }
             throw $exception;
@@ -893,6 +912,9 @@ class AdminController extends Controller
 
         if ($newImagePath) {
             $uploads->remove($oldImagePath, 'images/products');
+        }
+        if ($newHoverPath || $removeHover) {
+            $uploads->remove($oldHoverPath, 'images/products');
         }
 
         return redirect()->route('admin.products')->with(
@@ -1179,6 +1201,7 @@ class AdminController extends Controller
         if ($product->image && str_starts_with($product->image, 'images/products/') && file_exists(public_path($product->image))) {
             @unlink(public_path($product->image));
         }
+        app(AdminImageUpload::class)->remove($product->alt_image, 'images/products');
 
         $product->delete();
 
