@@ -20,7 +20,8 @@ class PlatformIdentityTest extends TestCase
         $this->assertSame('images/bags/bag-3.jpg', $product->optimized_image);
         $this->assertFileExists(base_path('public/images/bags/bag-3.webp'));
         $this->assertSame('images/products/not-converted.jpg', $product->optimized_alt_image);
-        $this->get('/')->assertOk()->assertSee('images/hero/hero-main-saree-2.webp', false);
+        $this->get('/')->assertOk()
+            ->assertSee('rel="preload" as="image" href="'.asset('images/hero/hero-main-saree-2.webp').'" fetchpriority="high"', false);
     }
     public function test_public_sitemap_lists_only_browseable_pages(): void
     {
@@ -148,13 +149,14 @@ class PlatformIdentityTest extends TestCase
         ]);
 
         $response = $this->get('/')->assertOk();
-        $featuredIds = $response->viewData('featuredProducts')->pluck('id');
         $newArrivalIds = $response->viewData('newArrivals')->pluck('id');
-        $productIds = $response->viewData('products')->pluck('id');
+        $fashionIds = $response->viewData('sarees')
+            ->concat($response->viewData('threePieces'))
+            ->concat($response->viewData('twoPieces'))
+            ->pluck('id');
 
-        $this->assertFalse($featuredIds->contains($brightProduct->id));
         $this->assertFalse($newArrivalIds->contains($brightProduct->id));
-        $this->assertFalse($productIds->contains($brightProduct->id));
+        $this->assertFalse($fashionIds->contains($brightProduct->id));
     }
 
     public function test_homepage_explores_active_brands_without_fake_bright_inventory(): void

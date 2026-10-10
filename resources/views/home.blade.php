@@ -12,6 +12,7 @@
   <meta name="description" content="Discover independent Bangladeshi brands at Rthquick, led by Nous Telos heritage handloom with Bright electronics joining the marketplace." />
   <meta name="keywords" content="rthquick, bangladesh marketplace, nous telos, bright electronics, handloom saree" />
   <link rel="canonical" href="{{ url('/') }}" />
+  <link rel="preload" as="image" href="{{ asset('images/hero/hero-main-saree-2.webp') }}" fetchpriority="high" />
 
   <!-- Open Graph Protocol -->
   <meta property="og:site_name" content="Rthquick" />
