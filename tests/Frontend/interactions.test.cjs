@@ -214,3 +214,19 @@ test('checkout and relative image URLs use the same application root', () => {
   assert.equal(h.run('appUrl("/checkout")'), 'http://localhost/earthquick/public/checkout');
   assert.equal(h.run('appUrl("images/products/test.jpg")'), 'http://localhost/earthquick/public/images/products/test.jpg');
 });
+
+test('quick-view gives the current and old prices separate styling', () => {
+  const h = harness();
+  h.card.querySelector = selector => {
+    if (selector.includes('__name')) return { textContent: 'Jamdani Saree' };
+    if (selector.includes('__price')) return {
+      textContent: '৳22,000 ৳18,000',
+      querySelector: () => ({ textContent: '৳22,000' }),
+    };
+    return null;
+  };
+  h.run('initQuickViewModal()');
+  h.context.window.openQuickView(h.card);
+  assert.match(h.body.innerHTML, /class="eq-quickview-price">৳18,000<\/span>/);
+  assert.match(h.body.innerHTML, /class="eq-quickview-old-price">৳22,000<\/span>/);
+});

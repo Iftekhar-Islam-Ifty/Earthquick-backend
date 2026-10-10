@@ -95,11 +95,11 @@
             <div class="eq-product-info__price" id="product-price-row">
               <span id="product-price">৳{{ number_format($displayPrice) }}</span>
               @if($product->old_price)
-                <span id="product-old-price">৳{{ number_format($product->old_price) }}</span>
+                <span id="product-old-price" @if($product->old_price <= $displayPrice) hidden @endif>৳{{ number_format($product->old_price) }}</span>
                 @php
-                  $savings = round((($product->old_price - $displayPrice) / $product->old_price) * 100);
+                  $savings = max(0, round((($product->old_price - $displayPrice) / $product->old_price) * 100));
                 @endphp
-                <span id="product-discount-tag">SAVE {{ $savings }}%</span>
+                <span id="product-discount-tag" @if($product->old_price <= $displayPrice) hidden @endif>SAVE {{ $savings }}%</span>
               @endif
             </div>
 
@@ -346,7 +346,7 @@
                     <a href="{{ route('product.show', $rel->slug) }}" class="eq-product-card__link">{{ $rel->name }}</a>
                   </h3>
                   <div class="eq-product-card__price">
-                    @if($rel->old_price)
+                    @if($rel->old_price && $rel->old_price > $rel->price)
                       <span class="eq-price--old">৳{{ number_format($rel->old_price) }}</span>
                     @endif
                     <span>৳{{ number_format($rel->price) }}</span>
@@ -389,6 +389,8 @@
     const variantInput = document.getElementById('product-variant-input');
     const sizeInput = document.getElementById('product-size-input');
     const price = document.getElementById('product-price');
+    const oldPrice = document.getElementById('product-old-price');
+    const discountTag = document.getElementById('product-discount-tag');
     const stock = document.getElementById('stock-text');
     const amount = Number(button.dataset.price || 0);
     const available = Number(button.dataset.stock || 0);
@@ -404,6 +406,14 @@
     if (variantInput) variantInput.value = button.dataset.variantId || '';
     if (sizeInput) sizeInput.value = button.dataset.label || 'Standard';
     if (price) price.textContent = '৳' + amount.toLocaleString('en-IN');
+    if (oldPrice) {
+      const previousAmount = Number(@json($product->old_price));
+      oldPrice.hidden = previousAmount <= amount;
+      if (discountTag) {
+        discountTag.hidden = oldPrice.hidden;
+        discountTag.textContent = 'SAVE ' + Math.round((previousAmount - amount) / previousAmount * 100) + '%';
+      }
+    }
     if (stock) {
       stock.textContent = canPurchase
         ? `In Stock — Ready to ship (${available} left in stock)`

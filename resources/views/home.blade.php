@@ -176,7 +176,7 @@
           <!-- 1. WOMEN -->
           <a href="{{ route('category.show', 'women') }}" class="eq-category-card" id="cat-card-women">
             <div class="eq-category-card__media">
-              <img src="{{ asset('images/categories/women.jpg') }}" alt="Women fashion collection — Sarees, Three Piece and Co-ords" loading="lazy" decoding="async" />
+              <img src="{{ asset('images/categories/women-icon.svg') }}" alt="" loading="lazy" decoding="async" />
               <div class="eq-category-card__overlay"></div>
             </div>
             <div class="eq-category-card__info">
@@ -188,7 +188,7 @@
           <!-- 2. MEN -->
           <a href="{{ route('category.show', 'men') }}" class="eq-category-card" id="cat-card-men">
             <div class="eq-category-card__media">
-              <img src="{{ asset('images/hero/hero-main.jpg') }}" alt="Men's collection — Panjabi and festive wear" loading="lazy" decoding="async" />
+              <img src="{{ asset('images/categories/men-icon.svg') }}" alt="" loading="lazy" decoding="async" />
               <div class="eq-category-card__overlay"></div>
             </div>
             <div class="eq-category-card__info">
@@ -200,7 +200,7 @@
           <!-- 3. KIDS -->
           <a href="{{ route('category.show', 'kids') }}" class="eq-category-card" id="cat-card-kids">
             <div class="eq-category-card__media">
-              <img src="{{ asset('images/saree/saree-5.webp') }}" alt="Kids collection — Festive wear and celebrations" loading="lazy" decoding="async" />
+              <img src="{{ asset('images/categories/kids-icon.svg') }}" alt="" loading="lazy" decoding="async" />
               <div class="eq-category-card__overlay"></div>
             </div>
             <div class="eq-category-card__info">
@@ -212,7 +212,7 @@
           <!-- 4. ORNAMENTS -->
           <a href="{{ route('category.show', 'ornaments') }}" class="eq-category-card" id="cat-card-ornaments">
             <div class="eq-category-card__media">
-              <img src="{{ asset('images/saree/saree-03-detail.jpg') }}" alt="Artisan ornaments and handcrafted jewellery" loading="lazy" decoding="async" />
+              <img src="{{ asset('images/categories/ornaments-icon.svg') }}" alt="" loading="lazy" decoding="async" />
               <div class="eq-category-card__overlay"></div>
             </div>
             <div class="eq-category-card__info">
@@ -224,7 +224,7 @@
           <!-- 5. BAGS -->
           <a href="{{ route('category.show', 'bags') }}" class="eq-category-card" id="cat-card-bags">
             <div class="eq-category-card__media">
-              <img src="{{ asset('images/categories/bags.jpg') }}" alt="Artisanal handcrafted leather and everyday bags" loading="lazy" decoding="async" />
+              <img src="{{ asset('images/categories/bags-icon.svg') }}" alt="" loading="lazy" decoding="async" />
               <div class="eq-category-card__overlay"></div>
             </div>
             <div class="eq-category-card__info">
@@ -236,7 +236,7 @@
           <!-- 6. HOME DECOR -->
           <a href="{{ route('category.show', 'home-decor') }}" class="eq-category-card" id="cat-card-home-decor">
             <div class="eq-category-card__media">
-              <img src="{{ asset('images/hero/story-craft.jpg') }}" alt="Home Decor — Handloom Living and Artisanal Accents" loading="lazy" decoding="async" />
+              <img src="{{ asset('images/categories/home-decor-icon.svg') }}" alt="" loading="lazy" decoding="async" />
               <div class="eq-category-card__overlay"></div>
             </div>
             <div class="eq-category-card__info">
@@ -548,18 +548,18 @@
               <span class="eq-eyebrow">CONTEMPORARY SETS BY NOUS TELOS</span>
               <h2 class="eq-heading-lg">Two Piece</h2>
             </div>
-            <div class="eq-carousel__controls eq-two-piece-mobile-controls" aria-label="Two piece carousel navigation">
-              <button type="button" class="eq-arrow-btn eq-two-piece-mobile-arrow eq-two-piece-mobile-arrow--prev" id="two-piece-mobile-prev" aria-label="Previous two piece products" disabled>
-                <svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg>
-              </button>
-              <button type="button" class="eq-arrow-btn eq-two-piece-mobile-arrow eq-two-piece-mobile-arrow--next" id="two-piece-mobile-next" aria-label="Next two piece products">
-                <svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"></path></svg>
-              </button>
-            </div>
           </div>
 
         <!-- Featured Spotlight & Compact Grid Layout -->
         <div class="eq-two-piece-mobile-carousel">
+          <div class="eq-carousel__controls eq-two-piece-mobile-controls" aria-label="Two piece carousel navigation">
+            <button type="button" class="eq-arrow-btn eq-two-piece-mobile-arrow eq-two-piece-mobile-arrow--prev" id="two-piece-mobile-prev" aria-label="Previous two piece products" disabled>
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg>
+            </button>
+            <button type="button" class="eq-arrow-btn eq-two-piece-mobile-arrow eq-two-piece-mobile-arrow--next" id="two-piece-mobile-next" aria-label="Next two piece products">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"></path></svg>
+            </button>
+          </div>
           <div class="eq-two-piece__layout eq-reveal" id="two-piece-container">
           <!-- Featured product and supporting cards share the public catalog. -->
           @if($twoPieces->isNotEmpty())
@@ -667,7 +667,7 @@
                 <div class="eq-product-card__body">
                   <h3 class="eq-product-card__name">{{ $bag->name }}</h3>
                   <p class="eq-product-card__price">
-                    @if($bag->old_price)
+                    @if($bag->old_price && $bag->old_price > $bag->price)
                       <span class="eq-price--old">৳{{ number_format($bag->old_price) }}</span>
                     @endif
                     ৳{{ number_format($bag->price) }}

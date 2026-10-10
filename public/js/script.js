@@ -1462,7 +1462,8 @@ function initQuickViewModal() {
     const name = card.querySelector(".eq-product-card__name, .eq-saree-masterpiece__name")?.textContent.trim() || "Rthquick Piece";
     const category = card.querySelector(".eq-product-card__category")?.textContent.trim() || "Artisanal Collection";
     const priceEl = card.querySelector(".eq-product-card__price, .eq-saree-masterpiece__price");
-    const priceHtml = priceEl ? priceEl.innerHTML.trim() : "৳4,200";
+    const oldPrice = priceEl?.querySelector(".eq-price--old")?.textContent.trim() || "";
+    const currentPrice = priceEl?.textContent.replace(oldPrice, "").trim() || "৳4,200";
     const imgEl = card.querySelector(".eq-product-card__frame img, .eq-saree-masterpiece__frame img");
     const imgSrc = imgEl ? imgEl.getAttribute("src") : appUrl("images/saree/saree-01.jpg");
     const linkEl = card.querySelector(".eq-product-card__link, .eq-saree-masterpiece__link");
@@ -1481,7 +1482,8 @@ function initQuickViewModal() {
           <span class="eq-quickview-category">${escapeMarkup(category)}</span>
           <h2 class="eq-quickview-title">${escapeMarkup(name)}</h2>
           <div class="eq-quickview-price-row">
-            <span class="eq-quickview-price">${priceHtml}</span>
+            <span class="eq-quickview-price">${escapeMarkup(currentPrice)}</span>
+            ${oldPrice ? `<span class="eq-quickview-old-price">${escapeMarkup(oldPrice)}</span>` : ""}
           </div>
           <p class="eq-quickview-desc">
             Handcrafted with meticulous detail using heritage looms and artisanal dyes. Designed for longevity, effortless draping, and timeless occasion wear.

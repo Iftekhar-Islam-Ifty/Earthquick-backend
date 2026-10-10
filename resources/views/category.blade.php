@@ -366,7 +366,7 @@
                     <a href="{{ route('product.show', $product->slug) }}" class="eq-product-card__link">{{ $product->name }}</a>
                   </h3>
                   <div class="eq-product-card__price">
-                    @if($product->old_price)
+                    @if($product->old_price && $product->old_price > $product->price)
                       <span class="eq-price--old">৳{{ number_format($product->old_price) }}</span>
                     @endif
                     <span>৳{{ number_format($product->price) }}</span>

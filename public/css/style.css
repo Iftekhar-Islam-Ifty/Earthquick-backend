@@ -1249,7 +1249,7 @@ p {
 .eq-category-card__media img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   display: block;
   transition: transform 0.5s cubic-bezier(0.2, 0, 0, 1);
 }
@@ -3648,7 +3648,6 @@ p {
 }
 
 .eq-home-store-card--upcoming {
-  justify-content: center;
   background: linear-gradient(145deg, var(--eq-navy), #244b63);
   border-color: var(--eq-navy);
   color: #fff;
@@ -3672,6 +3671,7 @@ p {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  flex: 1;
 }
 
 .eq-home-store-card__eyebrow {
