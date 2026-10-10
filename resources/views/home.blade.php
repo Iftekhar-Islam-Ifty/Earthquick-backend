@@ -333,103 +333,11 @@
           <div class="eq-carousel__viewport">
             <div class="eq-carousel__track">
 
-              <!-- Item 1: Muslin Jamdani Saree -->
-              <article class="eq-product-card" id="product-card-saree-01">
-                <a href="{{ url('/product/crimson-heirloom-jamdani') }}" class="eq-product-card__link">
-                  <div class="eq-product-card__frame">
-                    <span class="eq-badge">New</span>
-                    <img src="{{ asset('images/saree/saree-01.jpg') }}" alt="Muslin Jamdani Saree" loading="lazy" decoding="async" />
-                    <span class="eq-product-card__quick-add">View product</span>
-                  </div>
-                  <div class="eq-product-card__body">
-                    <span class="eq-product-card__category">Saree</span>
-                    <h3 class="eq-product-card__name">Muslin Jamdani Saree</h3>
-                    <p class="eq-product-card__price">৳8,500</p>
-                  </div>
-                </a>
-              </article>
-
-              <!-- Item 2: Aria Linen Two Piece -->
-              <article class="eq-product-card" id="product-card-two-piece-01">
-                <a href="{{ url('/product/minimalist-sand-linen-co-ord') }}" class="eq-product-card__link">
-                  <div class="eq-product-card__frame">
-                    <span class="eq-badge">New</span>
-                    <img src="{{ asset('images/two-piece/2pc-1.webp') }}" alt="Aria Linen Two Piece" loading="lazy" decoding="async" />
-                    <img class="eq-product-card__img--alt" src="{{ asset('images/two-piece/2pc-2.webp') }}" alt="" loading="lazy" decoding="async" />
-                    <span class="eq-product-card__quick-add">View product</span>
-                  </div>
-                  <div class="eq-product-card__body">
-                    <span class="eq-product-card__category">Two Piece</span>
-                    <h3 class="eq-product-card__name">Aria Linen Two Piece</h3>
-                    <p class="eq-product-card__price">৳2,600</p>
-                  </div>
-                </a>
-              </article>
-
-              <!-- Item 3: Heritage Handcrafted Bag -->
-              <article class="eq-product-card" id="product-card-bag-01">
-                <a href="{{ url('/product/artisanal-terracotta-leather-tote-bag') }}" class="eq-product-card__link">
-                  <div class="eq-product-card__frame">
-                    <span class="eq-badge">New</span>
-                    <img src="{{ asset('images/bags/bag-1.webp') }}" alt="Heritage Handcrafted Bag" loading="lazy" decoding="async" />
-                    <img class="eq-product-card__img--alt" src="{{ asset('images/bags/bag-2.webp') }}" alt="" loading="lazy" decoding="async" />
-                    <span class="eq-product-card__quick-add">View product</span>
-                  </div>
-                  <div class="eq-product-card__body">
-                    <span class="eq-product-card__category">Bags</span>
-                    <h3 class="eq-product-card__name">Heritage Handcrafted Bag</h3>
-                    <p class="eq-product-card__price">৳4,500</p>
-                  </div>
-                </a>
-              </article>
-
-              <!-- Item 4: Handloom Tangail Saree -->
-              <article class="eq-product-card" id="product-card-saree-03">
-                <a href="{{ url('/product/royal-champagne-half-silk') }}" class="eq-product-card__link">
-                  <div class="eq-product-card__frame">
-                    <span class="eq-badge">New</span>
-                    <img src="{{ asset('images/saree/saree-03.jpg') }}" alt="Handloom Tangail Saree" loading="lazy" decoding="async" />
-                    <span class="eq-product-card__quick-add">View product</span>
-                  </div>
-                  <div class="eq-product-card__body">
-                    <span class="eq-product-card__category">Saree</span>
-                    <h3 class="eq-product-card__name">Handloom Tangail Saree</h3>
-                    <p class="eq-product-card__price">৳4,200</p>
-                  </div>
-                </a>
-              </article>
-
-              <!-- Item 5: Amara Everyday Two Piece -->
-              <article class="eq-product-card" id="product-card-two-piece-02">
-                <a href="{{ url('/product/ochre-terracotta-kurti-culotte') }}" class="eq-product-card__link">
-                  <div class="eq-product-card__frame">
-                    <img src="{{ asset('images/two-piece/2pc-3.webp') }}" alt="Amara Everyday Two Piece" loading="lazy" decoding="async" />
-                    <img class="eq-product-card__img--alt" src="{{ asset('images/two-piece/2pc-4.webp') }}" alt="" loading="lazy" decoding="async" />
-                    <span class="eq-product-card__quick-add">View product</span>
-                  </div>
-                  <div class="eq-product-card__body">
-                    <span class="eq-product-card__category">Two Piece</span>
-                    <h3 class="eq-product-card__name">Amara Everyday Co-ord</h3>
-                    <p class="eq-product-card__price">৳2,750</p>
-                  </div>
-                </a>
-              </article>
-
-              <!-- Item 6: Nomad Structured Bag -->
-              <article class="eq-product-card" id="product-card-bag-02">
-                <a href="{{ url('/product/saddle-brown-crossbody-sling') }}" class="eq-product-card__link">
-                  <div class="eq-product-card__frame">
-                    <img src="{{ asset('images/bags/bag-3.webp') }}" alt="Nomad Structured Bag" loading="lazy" decoding="async" />
-                    <img class="eq-product-card__img--alt" src="{{ asset('images/bags/bag-4.webp') }}" alt="" loading="lazy" decoding="async" />
-                    <span class="eq-product-card__quick-add">View product</span>
-                  </div>
-                  <div class="eq-product-card__body">
-                    <span class="eq-product-card__category">Bags</span>
-                    <h3 class="eq-product-card__name">Nomad Structured Bag</h3>
-                    <p class="eq-product-card__price">৳3,800</p>
-                  </div>
-                </a>
-              </article>
+              @forelse($newArrivals as $product)
+                @include('partials.home-product-card', ['product' => $product, 'cardId' => 'new-arrival-'.$product->id, 'showCategory' => true])
+              @empty
+                <p class="eq-bags__empty">New arrivals will appear here when they are available.</p>
+              @endforelse
 
             </div>
           </div>
@@ -511,20 +419,22 @@
         <!-- Saree Flagship Showcase: Featured Spotlight + Curated Gallery -->
         <div class="eq-saree-showcase eq-reveal" id="saree-showcase-container">
 
-          <!-- Featured Masterpiece Spotlight (Clean image, aligned height) -->
-          <article class="eq-saree-masterpiece" id="saree-feature-spotlight">
-            <a href="{{ url('/product/crimson-heirloom-jamdani') }}" class="eq-saree-masterpiece__link" aria-label="Katan Silk Heritage Saree">
-              <div class="eq-saree-masterpiece__frame">
-                <img src="{{ asset('images/saree/saree-1.webp') }}" alt="Katan Silk Heritage Saree" loading="lazy" decoding="async" />
-              </div>
-              <div class="eq-saree-masterpiece__body">
-                <span class="eq-saree-masterpiece__eyebrow">THE SIGNATURE DRAPE</span>
-                <h3 class="eq-saree-masterpiece__name">Katan Silk Heritage</h3>
-                <p class="eq-saree-masterpiece__price">৳12,500</p>
-                <span class="eq-saree-masterpiece__cta">Discover the piece <span aria-hidden="true">&rarr;</span></span>
-              </div>
-            </a>
-          </article>
+          <!-- Featured masterpiece uses the same catalog record as its product page. -->
+          @if($sareeSpotlight)
+            <article class="eq-saree-masterpiece" id="saree-feature-spotlight">
+              <a href="{{ route('product.show', $sareeSpotlight->slug) }}" class="eq-saree-masterpiece__link" aria-label="{{ $sareeSpotlight->name }}">
+                <div class="eq-saree-masterpiece__frame">
+                  <img src="{{ asset($sareeSpotlight->optimized_image) }}" alt="{{ $sareeSpotlight->name }}" loading="lazy" decoding="async" />
+                </div>
+                <div class="eq-saree-masterpiece__body">
+                  <span class="eq-saree-masterpiece__eyebrow">THE SIGNATURE DRAPE</span>
+                  <h3 class="eq-saree-masterpiece__name">{{ $sareeSpotlight->name }}</h3>
+                  <p class="eq-saree-masterpiece__price">৳{{ number_format($sareeSpotlight->price) }}</p>
+                  <span class="eq-saree-masterpiece__cta">Discover the piece <span aria-hidden="true">&rarr;</span></span>
+                </div>
+              </a>
+            </article>
+          @endif
 
           <div class="eq-saree-gallery-wrap">
             <div class="eq-saree-gallery-head">
@@ -539,109 +449,12 @@
               </div>
             </div>
             <div class="eq-saree-gallery" id="saree-grid">
-            <article class="eq-product-card eq-saree-card" id="saree-grid-item-04">
-              <a href="{{ url('/product/emerald-rajshahi-pure-silk') }}" class="eq-product-card__link">
-                <div class="eq-product-card__frame">
-                  <img src="{{ asset('images/saree/saree-2.webp') }}" alt="Organza Pearl Saree" loading="lazy" decoding="async" />
-                  <span class="eq-product-card__quick-add">View product</span>
-                </div>
-                <div class="eq-product-card__body">
-                  <h3 class="eq-product-card__name">Organza Pearl</h3>
-                  <p class="eq-product-card__price">৳6,800</p>
-                </div>
-              </a>
-            </article>
-
-            <article class="eq-product-card eq-saree-card" id="saree-grid-item-03">
-              <a href="{{ url('/product/royal-champagne-half-silk') }}" class="eq-product-card__link">
-                <div class="eq-product-card__frame">
-                  <img src="{{ asset('images/saree/saree-3.webp') }}" alt="Handloom Tangail Saree" loading="lazy" decoding="async" />
-                  <span class="eq-product-card__quick-add">View product</span>
-                </div>
-                <div class="eq-product-card__body">
-                  <h3 class="eq-product-card__name">Handloom Tangail</h3>
-                  <p class="eq-product-card__price">৳4,200</p>
-                </div>
-              </a>
-            </article>
-
-            <article class="eq-product-card eq-saree-card" id="saree-grid-item-02">
-              <a href="{{ url('/product/midnight-indigo-tantuj-drape') }}" class="eq-product-card__link">
-                <div class="eq-product-card__frame">
-                  <img src="{{ asset('images/saree/saree-4.webp') }}" alt="Rajshahi Silk Saree" loading="lazy" decoding="async" />
-                  <span class="eq-product-card__quick-add">View product</span>
-                </div>
-                <div class="eq-product-card__body">
-                  <h3 class="eq-product-card__name">Rajshahi Silk</h3>
-                  <p class="eq-product-card__price">৳5,400</p>
-                </div>
-              </a>
-            </article>
-
-            <article class="eq-product-card eq-saree-card" id="saree-grid-item-06">
-              <a href="{{ url('/shop/women/saree') }}" class="eq-product-card__link">
-                <div class="eq-product-card__frame">
-                  <img src="{{ asset('images/saree/saree-5.webp') }}" alt="Cotton Nakshi Saree" loading="lazy" decoding="async" />
-                  <span class="eq-product-card__quick-add">View product</span>
-                </div>
-                <div class="eq-product-card__body">
-                  <h3 class="eq-product-card__name">Cotton Nakshi</h3>
-                  <p class="eq-product-card__price">৳3,500</p>
-                </div>
-              </a>
-            </article>
-
-            <article class="eq-product-card eq-saree-card eq-saree-card--desktop-repeat" id="saree-grid-item-04-b">
-              <a href="{{ url('/product/emerald-rajshahi-pure-silk') }}" class="eq-product-card__link">
-                <div class="eq-product-card__frame">
-                  <img src="{{ asset('images/saree/saree-2.webp') }}" alt="Organza Pearl Saree" loading="lazy" decoding="async" />
-                  <span class="eq-product-card__quick-add">View product</span>
-                </div>
-                <div class="eq-product-card__body">
-                  <h3 class="eq-product-card__name">Organza Pearl</h3>
-                  <p class="eq-product-card__price">৳6,800</p>
-                </div>
-              </a>
-            </article>
-
-            <article class="eq-product-card eq-saree-card eq-saree-card--desktop-repeat" id="saree-grid-item-03-b">
-              <a href="{{ url('/product/royal-champagne-half-silk') }}" class="eq-product-card__link">
-                <div class="eq-product-card__frame">
-                  <img src="{{ asset('images/saree/saree-3.webp') }}" alt="Handloom Tangail Saree" loading="lazy" decoding="async" />
-                  <span class="eq-product-card__quick-add">View product</span>
-                </div>
-                <div class="eq-product-card__body">
-                  <h3 class="eq-product-card__name">Handloom Tangail</h3>
-                  <p class="eq-product-card__price">৳4,200</p>
-                </div>
-              </a>
-            </article>
-
-            <article class="eq-product-card eq-saree-card eq-saree-card--desktop-repeat" id="saree-grid-item-02-b">
-              <a href="{{ url('/product/midnight-indigo-tantuj-drape') }}" class="eq-product-card__link">
-                <div class="eq-product-card__frame">
-                  <img src="{{ asset('images/saree/saree-4.webp') }}" alt="Rajshahi Silk Saree" loading="lazy" decoding="async" />
-                  <span class="eq-product-card__quick-add">View product</span>
-                </div>
-                <div class="eq-product-card__body">
-                  <h3 class="eq-product-card__name">Rajshahi Silk</h3>
-                  <p class="eq-product-card__price">৳5,400</p>
-                </div>
-              </a>
-            </article>
-
-            <article class="eq-product-card eq-saree-card eq-saree-card--desktop-repeat" id="saree-grid-item-06-b">
-              <a href="{{ url('/shop/women/saree') }}" class="eq-product-card__link">
-                <div class="eq-product-card__frame">
-                  <img src="{{ asset('images/saree/saree-5.webp') }}" alt="Cotton Nakshi Saree" loading="lazy" decoding="async" />
-                  <span class="eq-product-card__quick-add">View product</span>
-                </div>
-                <div class="eq-product-card__body">
-                  <h3 class="eq-product-card__name">Cotton Nakshi</h3>
-                  <p class="eq-product-card__price">৳3,500</p>
-                </div>
-              </a>
-            </article>
+              @foreach($sarees->take(4) as $saree)
+                @include('partials.home-product-card', ['product' => $saree, 'cardClass' => 'eq-saree-card', 'cardId' => 'saree-grid-item-'.$saree->id])
+              @endforeach
+              @foreach($sarees->take(4) as $saree)
+                @include('partials.home-product-card', ['product' => $saree, 'cardClass' => 'eq-saree-card eq-saree-card--desktop-repeat', 'cardId' => 'saree-grid-item-'.$saree->id.'-b'])
+              @endforeach
 
             </div>
           </div>
@@ -697,82 +510,11 @@
           <div class="eq-carousel__viewport">
             <div class="eq-carousel__track">
 
-              <!-- Item 1: Aarna Embroidered -->
-              <article class="eq-product-card" id="card-three-piece-01">
-                <a href="{{ url('/product/ivory-organza-embroidered-set') }}" class="eq-product-card__link">
-                  <div class="eq-product-card__frame">
-                    <span class="eq-badge">New</span>
-                    <img src="{{ asset('images/two-piece/2pc-1.webp') }}" alt="Aarna Embroidered Set" loading="lazy" decoding="async" />
-                    <span class="eq-product-card__quick-add">View product</span>
-                  </div>
-                  <div class="eq-product-card__body">
-                    <span class="eq-product-card__category">Three Piece</span>
-                    <h3 class="eq-product-card__name">Aarna Embroidered</h3>
-                    <p class="eq-product-card__price">৳4,500</p>
-                  </div>
-                </a>
-              </article>
-
-              <!-- Item 2: Noor Block Print -->
-              <article class="eq-product-card" id="card-three-piece-02">
-                <a href="{{ url('/product/blush-pink-hand-embroidered-kameez') }}" class="eq-product-card__link">
-                  <div class="eq-product-card__frame">
-                    <span class="eq-badge">Sale</span>
-                    <img src="{{ asset('images/two-piece/2pc-2.webp') }}" alt="Noor Block Print Set" loading="lazy" decoding="async" />
-                    <span class="eq-product-card__quick-add">View product</span>
-                  </div>
-                  <div class="eq-product-card__body">
-                    <span class="eq-product-card__category">Three Piece</span>
-                    <h3 class="eq-product-card__name">Noor Block Print</h3>
-                    <p class="eq-product-card__price"><span class="eq-price--old">৳3,600</span>৳3,200</p>
-                  </div>
-                </a>
-              </article>
-
-              <!-- Item 3: Zara Chikankari -->
-              <article class="eq-product-card" id="card-three-piece-03">
-                <a href="{{ url('/shop/women/three-piece') }}" class="eq-product-card__link">
-                  <div class="eq-product-card__frame">
-                    <img src="{{ asset('images/two-piece/2pc-3.webp') }}" alt="Zara Chikankari Set" loading="lazy" decoding="async" />
-                    <span class="eq-product-card__quick-add">View product</span>
-                  </div>
-                  <div class="eq-product-card__body">
-                    <span class="eq-product-card__category">Three Piece</span>
-                    <h3 class="eq-product-card__name">Zara Chikankari</h3>
-                    <p class="eq-product-card__price">৳5,100</p>
-                  </div>
-                </a>
-              </article>
-
-              <!-- Item 4: Elan Georgette -->
-              <article class="eq-product-card" id="card-three-piece-05">
-                <a href="{{ url('/shop/women/three-piece') }}" class="eq-product-card__link">
-                  <div class="eq-product-card__frame">
-                    <img src="{{ asset('images/two-piece/2pc-4.webp') }}" alt="Elan Georgette Set" loading="lazy" decoding="async" />
-                    <span class="eq-product-card__quick-add">View product</span>
-                  </div>
-                  <div class="eq-product-card__body">
-                    <span class="eq-product-card__category">Three Piece</span>
-                    <h3 class="eq-product-card__name">Elan Georgette</h3>
-                    <p class="eq-product-card__price">৳4,700</p>
-                  </div>
-                </a>
-              </article>
-
-              <!-- Item 5: Iris Linen -->
-              <article class="eq-product-card" id="card-three-piece-06">
-                <a href="{{ url('/shop/women/three-piece') }}" class="eq-product-card__link">
-                  <div class="eq-product-card__frame">
-                    <img src="{{ asset('images/two-piece/two-piece-01.jpg') }}" alt="Iris Linen Set" loading="lazy" decoding="async" />
-                    <span class="eq-product-card__quick-add">View product</span>
-                  </div>
-                  <div class="eq-product-card__body">
-                    <span class="eq-product-card__category">Three Piece</span>
-                    <h3 class="eq-product-card__name">Iris Linen</h3>
-                    <p class="eq-product-card__price">৳3,900</p>
-                  </div>
-                </a>
-              </article>
+              @forelse($threePieces as $product)
+                @include('partials.home-product-card', ['product' => $product, 'cardId' => 'card-three-piece-'.$product->id, 'showCategory' => true])
+              @empty
+                <p class="eq-bags__empty">Three Piece products will appear here when available.</p>
+              @endforelse
 
             </div>
           </div>
@@ -818,78 +560,30 @@
         <!-- Featured Spotlight & Compact Grid Layout -->
         <div class="eq-two-piece-mobile-carousel">
           <div class="eq-two-piece__layout eq-reveal" id="two-piece-container">
-          <!-- Featured Set (Larger than the grid items) -->
-          <a href="{{ url('/shop/women/two-piece') }}" class="eq-two-piece__feature" id="two-piece-feature-card" aria-label="Selene Tunic Two Piece - Featured Set">
-            <img src="{{ asset('images/two-piece/2pc-1.webp') }}" alt="Selene Tunic Two Piece" loading="lazy" decoding="async" />
-            <div class="eq-two-piece__feature-info">
-              <span class="eq-two-piece__feature-badge">Featured Set</span>
-              <h3 class="eq-two-piece__feature-title">Selene Tunic Two Piece</h3>
-              <p class="eq-two-piece__feature-price">৳2,900</p>
-            </div>
-          </a>
+          <!-- Featured product and supporting cards share the public catalog. -->
+          @if($twoPieces->isNotEmpty())
+            @php($twoPieceFeature = $twoPieces->first())
+            <a href="{{ route('product.show', $twoPieceFeature->slug) }}" class="eq-two-piece__feature" id="two-piece-feature-card" aria-label="{{ $twoPieceFeature->name }} - Featured Set">
+              <img src="{{ asset($twoPieceFeature->optimized_image) }}" alt="{{ $twoPieceFeature->name }}" loading="lazy" decoding="async" />
+              <div class="eq-two-piece__feature-info">
+                <span class="eq-two-piece__feature-badge">Featured Set</span>
+                <h3 class="eq-two-piece__feature-title">{{ $twoPieceFeature->name }}</h3>
+                <p class="eq-two-piece__feature-price">৳{{ number_format($twoPieceFeature->price) }}</p>
+              </div>
+            </a>
+          @endif
 
-          <!-- Compact Product Grid (Smaller image cards) -->
           <div class="eq-two-piece__grid" id="two-piece-grid">
-            <!-- Item 1: Aria Linen -->
-            <article class="eq-product-card" id="two-piece-card-01">
-              <a href="{{ url('/product/minimalist-sand-linen-co-ord') }}" class="eq-product-card__link">
-                <div class="eq-product-card__frame">
-                  <span class="eq-badge">New</span>
-                  <img src="{{ asset('images/two-piece/2pc-2.webp') }}" alt="Aria Linen Two Piece" loading="lazy" decoding="async" />
-                  <span class="eq-product-card__quick-add">View product</span>
-                </div>
-                <div class="eq-product-card__body">
-                  <h3 class="eq-product-card__name">Aria Linen</h3>
-                  <p class="eq-product-card__price">৳2,600</p>
-                </div>
-              </a>
-            </article>
-
-            <!-- Item 2: Amara Printed -->
-            <article class="eq-product-card" id="two-piece-card-04">
-              <a href="{{ url('/shop/women/two-piece') }}" class="eq-product-card__link">
-                <div class="eq-product-card__frame">
-                  <span class="eq-badge">Sale</span>
-                  <img src="{{ asset('images/two-piece/2pc-3.webp') }}" alt="Amara Printed Two Piece" loading="lazy" decoding="async" />
-                  <span class="eq-product-card__quick-add">View product</span>
-                </div>
-                <div class="eq-product-card__body">
-                  <h3 class="eq-product-card__name">Amara Printed</h3>
-                  <p class="eq-product-card__price"><span class="eq-price--old">৳2,800</span>৳2,400</p>
-                </div>
-              </a>
-            </article>
-
-            <!-- Item 3: Rumi Everyday Co-ord -->
-            <article class="eq-product-card" id="two-piece-card-02">
-              <a href="{{ url('/product/ochre-terracotta-kurti-culotte') }}" class="eq-product-card__link">
-                <div class="eq-product-card__frame">
-                  <img src="{{ asset('images/two-piece/2pc-4.webp') }}" alt="Rumi Everyday Co-ord" loading="lazy" decoding="async" />
-                  <span class="eq-product-card__quick-add">View product</span>
-                </div>
-                <div class="eq-product-card__body">
-                  <h3 class="eq-product-card__name">Rumi Everyday Co-ord</h3>
-                  <p class="eq-product-card__price">৳2,750</p>
-                </div>
-              </a>
-            </article>
-
-            <!-- Item 4: Nori Modal Set -->
-            <article class="eq-product-card" id="two-piece-card-03">
-              <a href="{{ url('/shop/women/two-piece') }}" class="eq-product-card__link">
-                <div class="eq-product-card__frame">
-                  <img src="{{ asset('images/two-piece/two-piece-01.jpg') }}" alt="Nori Modal Set" loading="lazy" decoding="async" />
-                  <span class="eq-product-card__quick-add">View product</span>
-                </div>
-                <div class="eq-product-card__body">
-                  <h3 class="eq-product-card__name">Nori Modal Set</h3>
-                  <p class="eq-product-card__price">৳3,100</p>
-                </div>
-              </a>
-            </article>
-          </div>
+            @forelse($twoPieces->skip(1) as $product)
+              @include('partials.home-product-card', ['product' => $product, 'cardId' => 'two-piece-card-'.$product->id])
+            @empty
+              @if($twoPieces->isEmpty())
+                <p class="eq-bags__empty">Two Piece products will appear here when available.</p>
+              @endif
+            @endforelse
           </div>
 
+        </div>
         </div>
 
         <div class="eq-reveal" style="margin-top: var(--space-lg); text-align:center;">

@@ -39,15 +39,24 @@ class HomeController extends Controller
         }
         $products = (clone $flagshipProducts)->latest()->take(8)->get();
         $featuredProducts = (clone $flagshipProducts)->where('is_featured', true)->take(8)->get();
-        $newArrivals = (clone $flagshipProducts)->where('is_new_arrival', true)->latest()->take(8)->get();
+        $newArrivals = (clone $flagshipProducts)->with(['category', 'subcategory'])
+            ->where('is_new_arrival', true)->latest()->orderByDesc('id')->take(8)->get();
 
         // Authentic handloom Sarees for flagship atelier showcase
         $sarees = (clone $flagshipProducts)->whereHas('subcategory', function ($q) {
             $q->where('slug', 'saree');
-        })->where('in_stock', true)->get();
+        })->latest()->take(5)->get();
 
         // Left-side masterpiece spotlight saree
-        $sareeSpotlight = $sarees->first() ?? $featuredProducts->first();
+        $sareeSpotlight = $sarees->first();
+
+        $threePieces = (clone $flagshipProducts)->whereHas('subcategory', function ($q) {
+            $q->where('slug', 'three-piece');
+        })->latest()->take(8)->get();
+
+        $twoPieces = (clone $flagshipProducts)->whereHas('subcategory', function ($q) {
+            $q->where('slug', 'two-piece');
+        })->latest()->take(5)->get();
 
         // Handcrafted Bags collection
         $bags = (clone $flagshipProducts)->whereHas('category', function ($q) {
@@ -63,6 +72,8 @@ class HomeController extends Controller
             'newArrivals',
             'sarees',
             'sareeSpotlight',
+            'threePieces',
+            'twoPieces',
             'bags'
         ));
     }
