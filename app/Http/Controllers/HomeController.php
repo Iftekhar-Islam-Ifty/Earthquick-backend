@@ -40,7 +40,7 @@ class HomeController extends Controller
         // Authentic handloom Sarees for flagship atelier showcase
         $sarees = (clone $flagshipProducts)->whereHas('subcategory', function ($q) {
             $q->where('slug', 'saree');
-        })->latest()->take(5)->get();
+        })->latest()->orderByDesc('id')->take(9)->get();
 
         // Left-side masterpiece spotlight saree
         $sareeSpotlight = $sarees->first();

@@ -450,11 +450,8 @@
               </div>
             </div>
             <div class="eq-saree-gallery" id="saree-grid">
-              @foreach($sarees->take(4) as $saree)
+              @foreach($sarees->skip(1) as $saree)
                 @include('partials.home-product-card', ['product' => $saree, 'cardClass' => 'eq-saree-card', 'cardId' => 'saree-grid-item-'.$saree->id])
-              @endforeach
-              @foreach($sarees->take(4) as $saree)
-                @include('partials.home-product-card', ['product' => $saree, 'cardClass' => 'eq-saree-card eq-saree-card--desktop-repeat', 'cardId' => 'saree-grid-item-'.$saree->id.'-b'])
               @endforeach
 
             </div>

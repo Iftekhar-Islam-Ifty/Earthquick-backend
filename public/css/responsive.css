@@ -5009,8 +5009,7 @@
     gap: 0.4rem;
   }
 
-  #saree-section .eq-saree-gallery-head > span,
-  #saree-section .eq-saree-gallery .eq-saree-card--desktop-repeat {
+  #saree-section .eq-saree-gallery-head > span {
     display: none !important;
   }
 

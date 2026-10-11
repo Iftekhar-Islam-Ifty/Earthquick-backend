@@ -197,19 +197,40 @@ class PlatformIdentityTest extends TestCase
         }
     }
 
-    public function test_saree_editorial_keeps_four_mobile_cards_and_desktop_gallery_row(): void
+    public function test_saree_gallery_uses_distinct_products_without_repeating_the_spotlight(): void
     {
+        $spotlight = Product::where('slug', 'test-jamdani-saree')->firstOrFail();
+        for ($index = 1; $index <= 4; $index++) {
+            Product::create([
+                'vendor_id' => $spotlight->vendor_id,
+                'category_id' => $spotlight->category_id,
+                'subcategory_id' => $spotlight->subcategory_id,
+                'sku' => 'NT-SAREE-QA-'.$index,
+                'name' => 'Distinct Gallery Saree '.$index,
+                'slug' => 'distinct-gallery-saree-'.$index,
+                'price' => 7000 + $index,
+                'image' => 'images/products/gallery-'.$index.'.webp',
+                'in_stock' => true,
+                'stock_quantity' => 2,
+                'is_active' => true,
+            ]);
+        }
+
         $response = $this->get('/')->assertOk();
         $html = $response->getContent();
 
-        $galleryCount = $response->viewData('sarees')->take(4)->count();
-        $this->assertSame($galleryCount, substr_count($html, 'class="eq-product-card eq-saree-card"'));
-        $this->assertSame($galleryCount, substr_count($html, 'class="eq-product-card eq-saree-card eq-saree-card--desktop-repeat"'));
+        $sarees = $response->viewData('sarees');
+        $gallery = $sarees->skip(1);
+        $this->assertSame($sarees->first()->id, $response->viewData('sareeSpotlight')->id);
+        $this->assertSame($gallery->count(), substr_count($html, 'class="eq-product-card eq-saree-card"'));
+        $this->assertSame(0, substr_count($html, 'eq-saree-card--desktop-repeat'));
         $response->assertSee('id="saree-gallery-prev"', false);
         $response->assertSee('id="saree-gallery-next"', false);
         $response->assertSee('id="link-view-all-sarees"', false);
-        foreach ($response->viewData('sarees')->take(4) as $saree) {
-            $response->assertSee('id="saree-grid-item-'.$saree->id.'-b"', false);
+        preg_match_all('/id="saree-grid-item-(\d+)"/', $html, $matches);
+        $this->assertEqualsCanonicalizing($gallery->pluck('id')->all(), array_map('intval', $matches[1]));
+        foreach ($gallery as $saree) {
+            $response->assertSee(route('product.show', $saree->slug), false);
         }
     }
 
