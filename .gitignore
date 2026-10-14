@@ -27,3 +27,5 @@ public/images/vendors/*
 !public/images/vendors/.gitkeep
 public/images/products/*
 !public/images/products/.gitkeep
+public/images/homepage/*
+!public/images/homepage/.gitkeep

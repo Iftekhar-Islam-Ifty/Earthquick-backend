@@ -12,7 +12,7 @@
   <meta name="description" content="Discover independent Bangladeshi brands at Rthquick, led by Nous Telos heritage handloom with Bright electronics joining the marketplace." />
   <meta name="keywords" content="rthquick, bangladesh marketplace, nous telos, bright electronics, handloom saree" />
   <link rel="canonical" href="{{ url('/') }}" />
-  <link rel="preload" as="image" href="{{ asset('images/hero/hero-main-saree-2.webp') }}" fetchpriority="high" />
+  <link rel="preload" as="image" href="{{ asset($homepageMedia['hero-1']['image']) }}" fetchpriority="high" />
 
   <!-- Open Graph Protocol -->
   <meta property="og:site_name" content="Rthquick" />
@@ -20,13 +20,13 @@
   <meta property="og:title" content="Rthquick — Independent Bangladeshi brands" />
   <meta property="og:description" content="Discover independent Bangladeshi brands at Rthquick, led by Nous Telos heritage handloom." />
   <meta property="og:url" content="{{ url('/') }}" />
-  <meta property="og:image" content="{{ asset('images/hero/hero-main-saree-2.jpg') }}" />
+  <meta property="og:image" content="{{ asset($homepageMedia['hero-1']['image']) }}" />
 
   <!-- Twitter Card Protocol -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Rthquick — Independent Bangladeshi brands" />
   <meta name="twitter:description" content="Discover independent Bangladeshi brands at Rthquick, led by Nous Telos heritage handloom." />
-  <meta name="twitter:image" content="{{ asset('images/hero/hero-main-saree-2.jpg') }}" />
+  <meta name="twitter:image" content="{{ asset($homepageMedia['hero-1']['image']) }}" />
 
   <!-- Google Fonts: Fraunces (display/serif) + Jost (body/sans) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -84,7 +84,7 @@
         <!-- Slide 1: Saree Masterpiece & Handloom Heritage -->
         <div class="eq-hero__slide is-active" data-slide-index="0">
           <div class="eq-hero__media">
-            <img src="{{ asset('images/hero/hero-main-saree-2.webp') }}" alt="Rthquick handloom saree collection campaign" fetchpriority="high" decoding="async" />
+            <img src="{{ asset($homepageMedia['hero-1']['image']) }}" alt="{{ $homepageMedia['hero-1']['alt'] }}" fetchpriority="high" decoding="async" />
           </div>
           <div class="eq-hero__content">
             <span class="eq-eyebrow">NOUS TELOS — FLAGSHIP STORE</span>
@@ -100,7 +100,7 @@
         <!-- Slide 2: Contemporary Three-Piece Sets -->
         <div class="eq-hero__slide" data-slide-index="1">
           <div class="eq-hero__media">
-            <img src="{{ asset('images/hero/hero-three-piece-page.jpg') }}" alt="Contemporary Three Piece collection campaign" loading="lazy" decoding="async" />
+            <img src="{{ asset($homepageMedia['hero-2']['image']) }}" alt="{{ $homepageMedia['hero-2']['alt'] }}" loading="lazy" decoding="async" />
           </div>
           <div class="eq-hero__content">
             <span class="eq-eyebrow">NOUS TELOS &bull; READY TO WEAR</span>
@@ -116,7 +116,7 @@
         <!-- Slide 3: Artisanal Bags & Everyday Sets -->
         <div class="eq-hero__slide" data-slide-index="2">
           <div class="eq-hero__media">
-            <img src="{{ asset('images/hero/hero-bags-page.jpg') }}" alt="Handcrafted leather bags and everyday bags" loading="lazy" decoding="async" />
+            <img src="{{ asset($homepageMedia['hero-3']['image']) }}" alt="{{ $homepageMedia['hero-3']['alt'] }}" loading="lazy" decoding="async" />
           </div>
           <div class="eq-hero__content">
             <span class="eq-eyebrow">NOUS TELOS &bull; CRAFTED ACCESSORIES</span>
@@ -714,37 +714,37 @@
             
             <!-- Slide 1: Jamdani Saree -->
             <div class="eq-coverflow-card" data-category="full-look heritage" id="coverflow-card-1" role="group" aria-roledescription="slide" aria-label="1 of 7">
-              <img src="{{ asset('images/saree/saree-01.jpg') }}" alt="Muslin Jamdani draped by Tasnia in Banani" class="eq-coverflow-card__img" loading="lazy" />
+              <img src="{{ asset($homepageMedia['look-1']['image']) }}" alt="{{ $homepageMedia['look-1']['alt'] }}" class="eq-coverflow-card__img" loading="lazy" />
             </div>
 
             <!-- Slide 2: Aria Linen Two Piece -->
             <div class="eq-coverflow-card" data-category="full-look everyday" id="coverflow-card-2" role="group" aria-roledescription="slide" aria-label="2 of 7">
-              <img src="{{ asset('images/two-piece/2pc-1.webp') }}" alt="Aria Linen Two Piece styled by Samira" class="eq-coverflow-card__img" loading="lazy" />
+              <img src="{{ asset($homepageMedia['look-2']['image']) }}" alt="{{ $homepageMedia['look-2']['alt'] }}" class="eq-coverflow-card__img" loading="lazy" />
             </div>
 
             <!-- Slide 3: Heritage Canvas Bag -->
             <div class="eq-coverflow-card" data-category="details everyday" id="coverflow-card-3" role="group" aria-roledescription="slide" aria-label="3 of 7">
-              <img src="{{ asset('images/bags/bag-1.webp') }}" alt="Heritage Canvas Tote with Zarin in Gulshan" class="eq-coverflow-card__img" loading="lazy" />
+              <img src="{{ asset($homepageMedia['look-3']['image']) }}" alt="{{ $homepageMedia['look-3']['alt'] }}" class="eq-coverflow-card__img" loading="lazy" />
             </div>
 
             <!-- Slide 4: Tangail Handloom Saree -->
             <div class="eq-coverflow-card" data-category="heritage full-look" id="coverflow-card-4" role="group" aria-roledescription="slide" aria-label="4 of 7">
-              <img src="{{ asset('images/saree/saree-03.jpg') }}" alt="Tangail Handloom Saree styled by Nawrin" class="eq-coverflow-card__img" loading="lazy" />
+              <img src="{{ asset($homepageMedia['look-4']['image']) }}" alt="{{ $homepageMedia['look-4']['alt'] }}" class="eq-coverflow-card__img" loading="lazy" />
             </div>
 
             <!-- Slide 5: Three Piece Kurti Set -->
             <div class="eq-coverflow-card" data-category="celebration full-look" id="coverflow-card-5" role="group" aria-roledescription="slide" aria-label="5 of 7">
-              <img src="{{ asset('images/three-piece/three-piece-01.jpg') }}" alt="Artisanal Three Piece ensemble styled by Anika" class="eq-coverflow-card__img" loading="lazy" />
+              <img src="{{ asset($homepageMedia['look-5']['image']) }}" alt="{{ $homepageMedia['look-5']['alt'] }}" class="eq-coverflow-card__img" loading="lazy" />
             </div>
 
             <!-- Slide 6: Terra Leather Bag -->
             <div class="eq-coverflow-card" data-category="details celebration" id="coverflow-card-6" role="group" aria-roledescription="slide" aria-label="6 of 7">
-              <img src="{{ asset('images/bags/bag-3.webp') }}" alt="Terra Handbag styled by Maheen in Chattogram" class="eq-coverflow-card__img" loading="lazy" />
+              <img src="{{ asset($homepageMedia['look-6']['image']) }}" alt="{{ $homepageMedia['look-6']['alt'] }}" class="eq-coverflow-card__img" loading="lazy" />
             </div>
 
             <!-- Slide 7: Emerald Rajshahi Pure Silk -->
             <div class="eq-coverflow-card" data-category="heritage celebration" id="coverflow-card-7" role="group" aria-roledescription="slide" aria-label="7 of 7">
-              <img src="{{ asset('images/saree/saree-04.jpg') }}" alt="Rajshahi Pure Silk Saree draped by Fariha" class="eq-coverflow-card__img" loading="lazy" />
+              <img src="{{ asset($homepageMedia['look-7']['image']) }}" alt="{{ $homepageMedia['look-7']['alt'] }}" class="eq-coverflow-card__img" loading="lazy" />
             </div>
 
           </div>

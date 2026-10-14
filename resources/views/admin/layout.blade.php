@@ -884,6 +884,14 @@
         </a>
       </li>
 
+      <li class="eq-admin-nav__heading">Site Content</li>
+      <li>
+        <a href="{{ route('admin.homepage-images.index') }}" class="eq-admin-nav__link {{ request()->routeIs('admin.homepage-images.*') ? 'is-active' : '' }}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><path d="m3 17 5-5 4 4 3-3 6 6"></path></svg>
+          <span>Homepage Images</span>
+        </a>
+      </li>
+
       <li class="eq-admin-nav__heading">Customer Care</li>
       <li>
         <a href="{{ route('admin.support.index') }}" class="eq-admin-nav__link {{ request()->routeIs('admin.support.*') ? 'is-active' : '' }}">

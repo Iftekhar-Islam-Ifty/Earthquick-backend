@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\HomepageImage;
 use App\Models\Vendor;
 use Illuminate\View\View;
 
@@ -58,6 +59,8 @@ class HomeController extends Controller
             $q->where('slug', 'bags');
         })->where('in_stock', true)->latest()->take(5)->get();
 
+        $homepageMedia = HomepageImage::resolvedSlots();
+
         return view('home', compact(
             'nousTelos',
             'bright',
@@ -66,7 +69,8 @@ class HomeController extends Controller
             'sareeSpotlight',
             'threePieces',
             'twoPieces',
-            'bags'
+            'bags',
+            'homepageMedia'
         ));
     }
 }

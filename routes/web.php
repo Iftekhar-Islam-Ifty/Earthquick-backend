@@ -3,6 +3,7 @@
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AdminEmailDeliveryController;
+use App\Http\Controllers\AdminHomepageImageController;
 use App\Http\Controllers\AdminVendorController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CartController;
@@ -119,6 +120,8 @@ Route::get('/api/search/suggestions', [SearchController::class, 'suggestions'])-
  * ========================================================================= */
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [AdminController::class, 'dashboard'])->name('dashboard');
+    Route::get('/homepage-images', [AdminHomepageImageController::class, 'index'])->name('homepage-images.index');
+    Route::post('/homepage-images/{slot}', [AdminHomepageImageController::class, 'update'])->name('homepage-images.update');
     Route::get('/orders', [AdminController::class, 'orders'])->name('orders');
     Route::get('/support-inquiries', [SupportInquiryController::class, 'index'])->name('support.index');
     Route::post('/support-inquiries/{inquiry}', [SupportInquiryController::class, 'update'])->name('support.update');
