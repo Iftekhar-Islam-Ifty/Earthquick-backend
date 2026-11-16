@@ -1337,6 +1337,25 @@
     color: var(--eq-gold-dark) !important;
   }
 
+  .eq-navbar__links a.eq-brand-highlight__title--link,
+  .eq-navbar__links a.eq-brand-highlight__title--link:hover,
+  .eq-navbar__links a.eq-brand-highlight__title--link:focus-visible {
+    justify-content: space-between !important;
+    width: 100% !important;
+    min-height: 2.75rem !important;
+    border: 1px solid rgba(169, 122, 32, 0.28) !important;
+    border-radius: 7px !important;
+    background: var(--eq-cream) !important;
+    color: var(--eq-navy) !important;
+    padding: 0.58rem 0.7rem !important;
+  }
+
+  .eq-navbar__links a.eq-brand-highlight__title--link:hover,
+  .eq-navbar__links a.eq-brand-highlight__title--link:focus-visible {
+    border-color: var(--eq-gold-dark) !important;
+    background: var(--eq-cream-deep) !important;
+  }
+
   /* Dropdown Row */
   .eq-nav-item--has-dropdown {
     width: 100% !important;
