@@ -50,6 +50,12 @@ store pages, admin vendor management, product-store filters, about content and
 invoice identity. Product brand filters/labels remain available for actual
 product brands; vendor-backed filter fields are labelled Store in the UI.
 
+The Bright storefront now shows its Electronics subcategories (switches,
+sockets, LED lights, circuit breakers, fans and electrical accessories) as the
+browse links instead of repeating the parent Electronics category. Store filters
+open as a compact panel aligned beside sorting on both Bright and Nous Telos
+pages, with a full-width layout on small screens.
+
 ## Demo listings - 2026-11-16
 
 At the owner's request, six clearly marked, replaceable `[DEMO]` listings were

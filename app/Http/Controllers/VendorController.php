@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\Subcategory;
 use App\Models\Vendor;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -40,14 +41,16 @@ class VendorController extends Controller
         $vendor = Vendor::where('slug', $slug)
             ->where('is_active', true)
             ->firstOrFail();
+        $isBrightStore = $vendor->slug === 'bright';
 
         $storeQuery = [];
-        foreach (['category', 'product_type', 'delivery_class', 'returnable', 'min_price', 'max_price', 'sort'] as $key) {
+        foreach (['category', 'subcategory', 'product_type', 'delivery_class', 'returnable', 'min_price', 'max_price', 'sort'] as $key) {
             $value = $request->query($key);
             if (is_string($value) && $value !== '') {
                 $storeQuery[$key] = $value;
             }
         }
+        unset($storeQuery[$isBrightStore ? 'category' : 'subcategory']);
         if (isset($storeQuery['product_type']) && ! array_key_exists($storeQuery['product_type'], config('catalog.product_types'))) {
             unset($storeQuery['product_type']);
         }
@@ -74,11 +77,23 @@ class VendorController extends Controller
         $catalog = Product::where('vendor_id', $vendor->id)
             ->where('in_stock', true)
             ->where('is_active', true);
+        if (isset($storeQuery['subcategory'])) {
+            $subcategoryExists = Subcategory::where('slug', $storeQuery['subcategory'])
+                ->whereHas('products', fn ($query) => $query->where('vendor_id', $vendor->id)
+                    ->where('in_stock', true)->where('is_active', true))
+                ->exists();
+            if (! $subcategoryExists) {
+                unset($storeQuery['subcategory']);
+            }
+        }
         $allProductsCount = (clone $catalog)->count();
 
         $query = (clone $catalog)
             ->with(['category', 'subcategory'])
             ->applyCatalogFilters($storeQuery);
+        if (isset($storeQuery['subcategory'])) {
+            $query->whereHas('subcategory', fn ($subcategoryQuery) => $subcategoryQuery->where('slug', $storeQuery['subcategory']));
+        }
 
         // Apply sorting criteria
         match ($storeQuery['sort'] ?? null) {
@@ -92,6 +107,8 @@ class VendorController extends Controller
         // Retrieve distinct categories currently represented by this vendor's in-stock inventory
         $categories = Category::whereHas('products', fn ($q) => $q->where('vendor_id', $vendor->id)
             ->where('in_stock', true)->where('is_active', true))->get();
+        $electronics = $isBrightStore ? Category::where('slug', 'electronics')->first() : null;
+        $subcategories = $electronics?->subcategories()->orderBy('name')->get() ?? collect();
 
         $availableProductTypes = (clone $catalog)->whereNotNull('product_type')
             ->distinct()
@@ -100,14 +117,13 @@ class VendorController extends Controller
             ->distinct()
             ->pluck('delivery_class');
         $hasMixedReturnPolicies = (clone $catalog)->distinct()->count('is_returnable') > 1;
-        $isBrightStore = $vendor->slug === 'bright';
-
         return view('vendor.show', compact(
             'vendor',
             'isBrightStore',
             'products',
             'allProductsCount',
             'categories',
+            'subcategories',
             'availableProductTypes',
             'availableDeliveryClasses',
             'hasMixedReturnPolicies',

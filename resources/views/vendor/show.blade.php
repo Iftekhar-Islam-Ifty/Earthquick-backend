@@ -23,9 +23,10 @@
   .eq-store-filter-toggle::after { content: '+'; margin-left: auto; font-size: 1.1rem; line-height: 1; }
   .eq-store-filters[open] .eq-store-filter-toggle::after { content: '−'; }
   .eq-store-filter-count { display: inline-grid; place-items: center; min-width: 1.25rem; height: 1.25rem; padding: 0 .2rem; border-radius: 999px; background: var(--eq-navy); color: #fff; font-size: .7rem; }
-  .eq-store-filter-panel { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .85rem; padding: 1rem; border-top: 1px solid var(--eq-line); }
-  .eq-store-filter-panel.is-compact { display: flex; flex-wrap: wrap; align-items: end; }
-  .eq-store-filter-panel.is-compact .eq-store-filter-field { width: min(100%, 270px); }
+  .eq-store-filters { position: relative; flex: 0 0 auto; border: 0; border-radius: 9px; background: transparent; }
+  .eq-store-filter-toggle { min-height: 2.3rem; border: 1px solid var(--eq-line); border-radius: 6px; background: #fff; }
+  .eq-store-filter-panel { display: grid; position: absolute; z-index: 20; top: calc(100% + .5rem); right: 0; width: min(650px, calc(100vw - 2rem)); grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .85rem; padding: 1rem; border: 1px solid var(--eq-line); border-radius: 9px; background: #fff; box-shadow: 0 14px 36px rgba(24, 42, 56, .16); }
+  .eq-store-filter-panel.is-compact { grid-template-columns: minmax(220px, 1fr) auto; align-items: end; }
   .eq-store-filter-field { display: grid; align-content: start; gap: .35rem; min-width: 0; color: var(--eq-charcoal); font-size: .78rem; font-weight: 600; }
   .eq-store-price-fields { display: flex; gap: .4rem; }
   .eq-store-price-fields .eq-store-control { width: 50%; }
@@ -44,6 +45,10 @@
     .eq-store-hero__stats { margin: .2rem 0 0 !important; }
     .eq-store-hero__stats > div { display: flex; align-items: baseline; gap: .35rem; padding: .4rem .8rem !important; }
     .eq-store-toolbar { gap: .7rem; }
+    .eq-store-tools { align-items: center; }
+    .eq-store-filter-panel { position: static; width: 100%; box-shadow: none; }
+    .eq-store-filters { flex: 0 0 100%; }
+    .eq-store-filter-toggle { width: max-content; }
     .eq-store-categories { flex-wrap: nowrap; overflow-x: auto; padding-bottom: .3rem; scrollbar-width: thin; }
     .eq-store-category { flex: 0 0 auto; }
     .eq-store-filter-panel { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -136,19 +141,21 @@
       
       @php
         $selectedFilters = array_intersect_key($storeQuery, array_flip(['product_type', 'delivery_class', 'returnable', 'min_price', 'max_price']));
-        $clearFilterQuery = array_intersect_key($storeQuery, array_flip(['category', 'sort']));
+        $browseParam = $isBrightStore ? 'subcategory' : 'category';
+        $clearFilterQuery = array_intersect_key($storeQuery, array_flip([$browseParam, 'sort']));
         $showProductTypeFilter = $availableProductTypes->count() > 1 || isset($storeQuery['product_type']);
         $showDeliveryFilter = $availableDeliveryClasses->count() > 1 || isset($storeQuery['delivery_class']);
         $showReturnFilter = $hasMixedReturnPolicies || isset($storeQuery['returnable']);
+        $browseItems = $isBrightStore ? $subcategories : $categories;
       @endphp
 
       <div class="eq-store-toolbar">
         <nav class="eq-store-categories" aria-label="Browse {{ $vendor->name }} categories">
-          <a class="eq-store-category {{ !isset($storeQuery['category']) ? 'is-active' : '' }}" @if(!isset($storeQuery['category'])) aria-current="page" @endif
-             href="{{ route('stores.show', array_merge(['slug' => $vendor->slug], array_diff_key($storeQuery, ['category' => true]))) }}">{{ $isBrightStore ? 'All Products' : 'All Pieces' }} ({{ $allProductsCount }})</a>
-          @foreach($categories as $cat)
-            <a class="eq-store-category {{ ($storeQuery['category'] ?? null) === $cat->slug ? 'is-active' : '' }}" @if(($storeQuery['category'] ?? null) === $cat->slug) aria-current="page" @endif
-               href="{{ route('stores.show', array_merge(['slug' => $vendor->slug], $storeQuery, ['category' => $cat->slug])) }}">{{ $cat->name }}</a>
+          <a class="eq-store-category {{ !isset($storeQuery[$browseParam]) ? 'is-active' : '' }}" @if(!isset($storeQuery[$browseParam])) aria-current="page" @endif
+             href="{{ route('stores.show', array_merge(['slug' => $vendor->slug], array_diff_key($storeQuery, ['category' => true, 'subcategory' => true]))) }}">{{ $isBrightStore ? 'All Products' : 'All Pieces' }} ({{ $allProductsCount }})</a>
+          @foreach($browseItems as $browseItem)
+            <a class="eq-store-category {{ ($storeQuery[$browseParam] ?? null) === $browseItem->slug ? 'is-active' : '' }}" @if(($storeQuery[$browseParam] ?? null) === $browseItem->slug) aria-current="page" @endif
+               href="{{ route('stores.show', array_merge(['slug' => $vendor->slug], array_diff_key($storeQuery, ['category' => true, 'subcategory' => true]), [$browseParam => $browseItem->slug])) }}">{{ $browseItem->name }}</a>
           @endforeach
         </nav>
 
@@ -167,12 +174,10 @@
               </select>
               <noscript><button type="submit" class="eq-btn eq-btn--outline">Sort</button></noscript>
             </form>
-          </div>
-
-          <details class="eq-store-filters">
-            <summary class="eq-store-filter-toggle">Filters @if(count($selectedFilters)) <span class="eq-store-filter-count">{{ count($selectedFilters) }}</span> @endif</summary>
-            <form class="eq-store-filter-panel {{ !$showProductTypeFilter && !$showDeliveryFilter && !$showReturnFilter ? 'is-compact' : '' }}" method="GET" action="{{ route('stores.show', $vendor->slug) }}">
-              @foreach(array_intersect_key($storeQuery, array_flip(['category', 'sort'])) as $key => $value)
+            <details class="eq-store-filters">
+              <summary class="eq-store-filter-toggle">Filters @if(count($selectedFilters)) <span class="eq-store-filter-count">{{ count($selectedFilters) }}</span> @endif</summary>
+              <form class="eq-store-filter-panel {{ !$showProductTypeFilter && !$showDeliveryFilter && !$showReturnFilter ? 'is-compact' : '' }}" method="GET" action="{{ route('stores.show', $vendor->slug) }}">
+              @foreach(array_intersect_key($storeQuery, array_flip([$browseParam, 'sort'])) as $key => $value)
                 <input type="hidden" name="{{ $key }}" value="{{ $value }}" />
               @endforeach
               @if($showProductTypeFilter)
@@ -217,8 +222,9 @@
                   <a class="eq-store-clear" href="{{ route('stores.show', array_merge(['slug' => $vendor->slug], $clearFilterQuery)) }}">Clear filters</a>
                 @endif
               </div>
-            </form>
-          </details>
+              </form>
+            </details>
+          </div>
 
           @if(count($selectedFilters))
             <div class="eq-store-active" aria-label="Applied filters">
