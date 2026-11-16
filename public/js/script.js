@@ -475,7 +475,7 @@ function initSearchModal() {
    Manages client-side cart storage, badge updates, quick-add actions,
    and dynamic interactive slide-in cart drawer.
    ===================================================================== */
-const EarthquickCart = {
+const RthquickCart = {
   drawerEl: null,
   backdropEl: null,
   freeShippingThreshold: 3000,
@@ -523,7 +523,7 @@ const EarthquickCart = {
         this.renderDrawer();
       }
     } catch (e) {
-      console.warn("EarthquickCart fetch error:", e);
+      console.warn("RthquickCart fetch error:", e);
     }
   },
 
@@ -902,15 +902,17 @@ const EarthquickCart = {
               <div>
                 <h4 class="eq-cart-item__title">${item.name}</h4>
                 <div class="eq-cart-item__variant">${item.size || "Standard"}</div>
+                ${item.brand_name ? `<div class="eq-cart-item__variant">Brand: ${item.brand_name}</div>` : ""}
+                ${item.vendor_name ? `<div class="eq-cart-item__variant">Sold by: ${item.vendor_name}</div>` : ""}
                 <div class="eq-cart-item__price">${this.formatMoney(item.price)}</div>
               </div>
               <div class="eq-cart-item__bottom">
                 <div class="eq-cart-item__qty">
-                  <button type="button" class="eq-cart-item__qty-btn" onclick="EarthquickCart.updateQty('${safeKey}', -1)" aria-label="Decrease quantity">&minus;</button>
+                  <button type="button" class="eq-cart-item__qty-btn" onclick="RthquickCart.updateQty('${safeKey}', -1)" aria-label="Decrease quantity">&minus;</button>
                   <span class="eq-cart-item__qty-val">${item.quantity}</span>
-                  <button type="button" class="eq-cart-item__qty-btn" onclick="EarthquickCart.updateQty('${safeKey}', 1)" aria-label="Increase quantity">&plus;</button>
+                  <button type="button" class="eq-cart-item__qty-btn" onclick="RthquickCart.updateQty('${safeKey}', 1)" aria-label="Increase quantity">&plus;</button>
                 </div>
-                <button type="button" class="eq-cart-item__remove" onclick="EarthquickCart.removeItem('${safeKey}')" aria-label="Remove item">
+                <button type="button" class="eq-cart-item__remove" onclick="RthquickCart.removeItem('${safeKey}')" aria-label="Remove item">
                   <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <polyline points="3 6 5 6 21 6"></polyline>
                     <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
@@ -939,7 +941,7 @@ const EarthquickCart = {
               <span style="background: #28a745; color: #fff; font-weight: 700; font-size: 0.72rem; padding: 2px 6px; border-radius: 4px; letter-spacing: 0.5px;">${this.coupon.code}</span>
               <span style="color: #1e7e34; font-weight: 600;">-${this.formatMoney(this.discount)}</span>
             </div>
-            <button type="button" onclick="EarthquickCart.removeCoupon()" style="background: none; border: none; color: #dc3545; font-size: 0.75rem; font-weight: 600; cursor: pointer; text-decoration: underline; padding: 0;">Remove</button>
+            <button type="button" onclick="RthquickCart.removeCoupon()" style="background: none; border: none; color: #dc3545; font-size: 0.75rem; font-weight: 600; cursor: pointer; text-decoration: underline; padding: 0;">Remove</button>
           </div>
         `;
         if (discountRow) {
@@ -953,7 +955,7 @@ const EarthquickCart = {
         }
       } else {
         couponBox.innerHTML = `
-          <form onsubmit="event.preventDefault(); EarthquickCart.applyCoupon();" style="display: flex; gap: 0.35rem; margin: 0;">
+          <form onsubmit="event.preventDefault(); RthquickCart.applyCoupon();" style="display: flex; gap: 0.35rem; margin: 0;">
             <input type="text" id="eq-drawer-coupon-input" placeholder="Promo code" style="flex: 1; min-height: 34px; padding: 0.3rem 0.55rem; font-size: 0.78rem; text-transform: uppercase; border: 1px solid #d1d5db; border-radius: 4px; font-family: monospace;" />
             <button type="submit" style="min-height: 34px; padding: 0 0.75rem; background: var(--eq-charcoal, #1a1a1a); color: #fff; font-size: 0.76rem; font-weight: 600; border: none; border-radius: 4px; cursor: pointer;">Apply</button>
           </form>
@@ -1021,7 +1023,7 @@ const EarthquickCart = {
         const qty = qtyInput ? parseInt(qtyInput.value, 10) || 1 : 1;
 
         if (prodId) {
-          EarthquickCart.addItem(prodId, qty, size, variantId);
+          RthquickCart.addItem(prodId, qty, size, variantId);
         } else {
           productForm.submit();
         }
@@ -1040,7 +1042,7 @@ const EarthquickCart = {
           if (btn.dataset.action === "quick-view") {
             window.openQuickView?.(card);
           } else {
-            EarthquickCart.addItem(parseInt(prodId, 10), 1, "Standard");
+            RthquickCart.addItem(parseInt(prodId, 10), 1, "Standard");
           }
         }
       });
@@ -1049,10 +1051,10 @@ const EarthquickCart = {
 };
 
 // Global expose
-window.EarthquickCart = EarthquickCart;
+window.RthquickCart = RthquickCart;
 
 function initCart() {
-  EarthquickCart.init();
+  RthquickCart.init();
 }
 
 
@@ -1521,7 +1523,7 @@ function initQuickViewModal() {
         const productId = Number(card.dataset.id || card.id?.replace("card-", ""));
         if (!Number.isInteger(productId) || productId < 1) return;
         closeModal();
-        EarthquickCart.addItem(productId, 1, "Standard");
+        RthquickCart.addItem(productId, 1, "Standard");
       });
     }
 
@@ -1871,7 +1873,7 @@ function handleHashNavigationOnLoad() {
   scrollToSection(target, "auto");
 }
 
-function initEarthquickApp() {
+function initRthquickApp() {
   Toast.init();
   initNavbar();
   initHeroSlider();
@@ -1894,8 +1896,8 @@ document.addEventListener("eq:components-loaded", () => {
   initNavbar();
   initSearchModal();
   initQuickViewModal();
-  if (window.EarthquickCart && typeof window.EarthquickCart.init === "function") {
-    window.EarthquickCart.init();
+  if (window.RthquickCart && typeof window.RthquickCart.init === "function") {
+    window.RthquickCart.init();
   }
   handleHashNavigationOnLoad();
 });
@@ -1903,10 +1905,10 @@ document.addEventListener("eq:components-loaded", () => {
 // Expose globally for layout loader
 window.initNavbar = initNavbar;
 window.initSearchModal = initSearchModal;
-window.initEarthquickApp = initEarthquickApp;
+window.initRthquickApp = initRthquickApp;
 
 if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", initEarthquickApp);
+  document.addEventListener("DOMContentLoaded", initRthquickApp);
 } else {
-  initEarthquickApp();
+  initRthquickApp();
 }

@@ -74,6 +74,11 @@ class Vendor extends Model
         return $this->hasMany(Product::class);
     }
 
+    public function productBrands(): HasMany
+    {
+        return $this->hasMany(ProductBrand::class);
+    }
+
     /**
      * Line items ordered from this vendor.
      */

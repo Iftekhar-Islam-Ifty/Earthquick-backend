@@ -217,6 +217,9 @@
                         </div>
                         <div class="eq-order-item-meta">
                           <div class="eq-order-item-name">{{ $item->product_name }}</div>
+                          @if($item->product_brand_name)<div class="eq-order-item-sub">Brand: {{ $item->product_brand_name }}</div>@endif
+                          @if($item->vendor_name)<div class="eq-order-item-sub">Sold by: {{ $item->vendor_name }}</div>@endif
+                          @if($item->warranty_provider_name)<div class="eq-order-item-sub">Warranty: {{ $item->warranty_provider_name }}</div>@endif
                           @if($item->variant_label)
                             <div class="eq-order-item-sub">{{ $item->variant_label }}</div>
                           @endif

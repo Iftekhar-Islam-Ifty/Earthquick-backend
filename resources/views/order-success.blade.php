@@ -93,6 +93,9 @@
                   @endif
                   <div>
                     <div style="font-weight: 500; color: var(--eq-charcoal);">{{ $item->product_name }}</div>
+                    @if($item->product_brand_name)<div style="font-size:.76rem;color:var(--eq-gold-dark);">Brand: {{ $item->product_brand_name }}</div>@endif
+                    @if($item->vendor_name)<div style="font-size:.76rem;color:var(--eq-charcoal-soft);">Sold by: {{ $item->vendor_name }}</div>@endif
+                    @if($item->warranty_provider_name)<div style="font-size:.76rem;color:var(--eq-charcoal-soft);">Warranty provider: {{ $item->warranty_provider_name }}</div>@endif
                     @if($item->variant_label)
                       <div style="font-size: 0.76rem; color: var(--eq-charcoal-soft);">{{ $item->variant_label }}</div>
                     @endif

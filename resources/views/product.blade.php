@@ -81,7 +81,7 @@
           <!-- RIGHT: PRIMARY INFO (SITS BESIDE THE PICTURE) -->
           <div class="eq-product-header">
             <div class="eq-product-info__category" id="product-category-label">
-              {{ strtoupper($product->vendor->name ?? 'RTHQUICK') }} &bull; {{ strtoupper($product->category->name) }}{{ $product->subcategory ? ' &bull; ' . strtoupper($product->subcategory->name) : '' }}
+              {{ strtoupper($product->category->name) }}{{ $product->subcategory ? ' &bull; ' . strtoupper($product->subcategory->name) : '' }}
             </div>
             <h1 id="product-name">{{ $product->name }}</h1>
 
@@ -202,7 +202,7 @@
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
               </svg>
-              <span><strong>Verified Brand:</strong> Sold through {{ $product->vendor->name ?? 'Rthquick' }} with product details recorded by Rthquick.</span>
+              <span><strong>Store:</strong> {{ $product->vendor->name ?? 'Rthquick' }}@if($product->brand) &bull; <strong>Brand:</strong> {{ $product->brand->name }}@endif</span>
             </div>
             <div class="eq-product-meta-list__item">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -305,6 +305,9 @@
                 @endif
                 @if($product->warranty_info)
                   <br /><strong>Warranty / Support:</strong> {{ $product->warranty_info }}
+                @endif
+                @if($product->brand?->warrantyProvider)
+                  <br /><strong>Warranty provider:</strong> {{ $product->brand->warrantyProvider->name }}
                 @endif
               </div>
             </details>

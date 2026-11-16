@@ -142,7 +142,7 @@ class CheckoutController extends Controller
             foreach ($cart as $item) {
                 $productId = $item['product_id'] ?? $item['id'] ?? null;
                 $quantity = (int) ($item['quantity'] ?? 0);
-                $product = Product::with('vendor')->lockForUpdate()->find($productId);
+                $product = Product::with(['vendor', 'brand.warrantyProvider'])->lockForUpdate()->find($productId);
                 $variantId = $item['variant_id'] ?? null;
                 $variant = $variantId
                     ? ProductVariant::query()
@@ -264,6 +264,9 @@ class CheckoutController extends Controller
                     'product_id' => $product->id,
                     'variant_id' => $variant?->id,
                     'product_name' => $product->name.(! $variant && $size !== 'Standard' ? " ({$size})" : ''),
+                    'vendor_name' => $product->vendor?->name,
+                    'product_brand_name' => $product->brand?->name,
+                    'warranty_provider_name' => $product->brand?->warrantyProvider?->name,
                     'variant_sku' => $variant?->sku,
                     'variant_label' => $variant?->label,
                     'variant_attributes' => $variant?->attributes,

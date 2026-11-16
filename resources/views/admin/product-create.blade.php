@@ -58,10 +58,10 @@
             />
           </div>
 
-          <!-- Brand / Vendor Partner -->
+          <!-- Store / Seller -->
           <div style="margin-bottom: 1.25rem;">
             <label for="select-vendor" style="display: block; font-size: 0.84rem; font-weight: 600; color: var(--eq-charcoal); margin-bottom: 0.4rem;">
-              Brand / Vendor Partner <span style="color: #dc2626;">*</span>
+              Store / Seller <span style="color: #dc2626;">*</span>
             </label>
             <select 
               name="vendor_id" 
@@ -75,6 +75,16 @@
                 </option>
               @endforeach
             </select>
+          </div>
+          <div style="margin-bottom: 1.25rem;">
+            <label for="select-brand" style="display:block;font-size:.84rem;font-weight:600;margin-bottom:.4rem;">Product Brand</label>
+            <select name="brand_id" id="select-brand" data-selected="{{ old('brand_id') }}" style="width:100%;padding:.65rem .85rem;border-radius:6px;border:1px solid var(--eq-line);background:#fff;">
+              <option value="">No product brand</option>
+              @foreach($productBrands as $brand)
+                <option value="{{ $brand->id }}" data-vendor="{{ $brand->vendor_id }}" data-warranty="{{ $brand->warrantyProvider?->name }}">{{ $brand->name }} ({{ $brand->vendor?->name }})</option>
+              @endforeach
+            </select>
+            <small id="brand-warranty-note" style="display:block;margin-top:.4rem;color:var(--eq-charcoal-soft);"></small>
           </div>
 
           <!-- Category & Subcategory Row -->
@@ -441,6 +451,23 @@
 <script>
   // Dynamic Subcategory Filtering based on Primary Category Selection
   const categorySelect = document.getElementById('select-category');
+  const vendorSelect = document.getElementById('select-vendor');
+  const brandSelect = document.getElementById('select-brand');
+  const warrantyNote = document.getElementById('brand-warranty-note');
+  function filterBrands() {
+    const selected = brandSelect.dataset.selected || brandSelect.value;
+    [...brandSelect.options].forEach(option => {
+      if (!option.value) return;
+      const visible = option.dataset.vendor === vendorSelect.value;
+      option.hidden = !visible;
+      if (!visible && option.selected) brandSelect.value = '';
+    });
+    if (selected && [...brandSelect.options].some(option => option.value === selected && !option.hidden)) brandSelect.value = selected;
+    brandSelect.dataset.selected = '';
+    warrantyNote.textContent = brandSelect.selectedOptions[0]?.dataset.warranty ? `Warranty provided by ${brandSelect.selectedOptions[0].dataset.warranty}.` : '';
+  }
+  vendorSelect.addEventListener('change', filterBrands);
+  brandSelect.addEventListener('change', filterBrands);
   const subcategorySelect = document.getElementById('select-subcategory');
   const productTypeSelect = document.getElementById('select-product-type');
   const specificationsField = document.getElementById('textarea-specifications');
@@ -495,6 +522,7 @@
     updateSpecificationTemplate();
   });
   document.addEventListener('DOMContentLoaded', () => {
+    filterBrands();
     filterSubcategories();
     inferProductType();
   });

@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\Coupon;
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\ProductBrand;
 use App\Models\Subcategory;
 use App\Models\Vendor;
 use App\Services\AdminImageUpload;
@@ -620,9 +621,10 @@ class AdminController extends Controller
     {
         $categories = Category::with('subcategories')->orderBy('sort_order')->orderBy('name')->get();
         $vendors = Vendor::where('is_active', true)->orderBy('name')->get();
+        $productBrands = ProductBrand::where('is_active', true)->with(['vendor', 'warrantyProvider'])->orderBy('name')->get();
         $catalogSchema = config('catalog');
 
-        return view('admin.product-create', compact('categories', 'vendors', 'catalogSchema'));
+        return view('admin.product-create', compact('categories', 'vendors', 'productBrands', 'catalogSchema'));
     }
 
     /**
@@ -633,6 +635,7 @@ class AdminController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'vendor_id' => 'nullable|exists:vendors,id',
+            'brand_id' => 'nullable|exists:product_brands,id',
             'category_id' => 'required|exists:categories,id',
             'subcategory_id' => 'nullable|exists:subcategories,id',
             'product_type' => 'nullable|in:apparel,accessories,electronics,home,general',
@@ -672,6 +675,10 @@ class AdminController extends Controller
         if (! $vendor) {
             $vendor = Vendor::where('slug', 'nous-telos')->first() ?? Vendor::first();
         }
+        $brandId = $request->input('brand_id');
+        if ($brandId && ! ProductBrand::whereKey($brandId)->where('vendor_id', $vendor->id)->where('is_active', true)->exists()) {
+            throw ValidationException::withMessages(['brand_id' => 'Choose an active brand owned by the selected store.']);
+        }
 
         // Generate collision-resistant unique slug
         $baseSlug = Str::slug($request->name);
@@ -700,10 +707,11 @@ class AdminController extends Controller
         $sku = $vendorCode.'-'.strtoupper(Str::random(3)).'-'.rand(100, 999);
 
         try {
-            $product = DB::transaction(function () use ($request, $vendor, $slug, $sku, $variants, $imagePath, $hoverPath, $galleryPaths) {
+            $product = DB::transaction(function () use ($request, $vendor, $brandId, $slug, $sku, $variants, $imagePath, $hoverPath, $galleryPaths) {
                 $product = Product::create([
                     'name' => $request->name,
                     'vendor_id' => $vendor ? $vendor->id : null,
+                    'brand_id' => $brandId ?: null,
                     'slug' => $slug,
                     'sku' => $sku,
                     'category_id' => $request->category_id,
@@ -768,9 +776,10 @@ class AdminController extends Controller
         $product = Product::with(['variants', 'images'])->findOrFail($id);
         $categories = Category::with('subcategories')->orderBy('sort_order')->orderBy('name')->get();
         $vendors = Vendor::where('is_active', true)->orderBy('name')->get();
+        $productBrands = ProductBrand::where('is_active', true)->with(['vendor', 'warrantyProvider'])->orderBy('name')->get();
         $catalogSchema = config('catalog');
 
-        return view('admin.product-edit', compact('product', 'categories', 'vendors', 'catalogSchema'));
+        return view('admin.product-edit', compact('product', 'categories', 'vendors', 'productBrands', 'catalogSchema'));
     }
 
     /**
@@ -783,6 +792,7 @@ class AdminController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'vendor_id' => 'nullable|exists:vendors,id',
+            'brand_id' => 'nullable|exists:product_brands,id',
             'category_id' => 'required|exists:categories,id',
             'subcategory_id' => 'nullable|exists:subcategories,id',
             'product_type' => 'nullable|in:apparel,accessories,electronics,home,general',
@@ -819,10 +829,15 @@ class AdminController extends Controller
             'existing_media.*.remove' => 'nullable|boolean',
         ]);
         $this->ensureSubcategoryMatchesCategory($request);
+        $effectiveVendorId = $request->filled('vendor_id') ? (int) $request->vendor_id : (int) $product->vendor_id;
+        if ($request->filled('brand_id') && ! ProductBrand::whereKey($request->brand_id)->where('vendor_id', $effectiveVendorId)->where('is_active', true)->exists()) {
+            throw ValidationException::withMessages(['brand_id' => 'Choose an active brand owned by the selected store.']);
+        }
         $variants = $request->has('variants') ? $this->decodeVariants($request, $product) : null;
 
         $updateData = [
             'name' => $request->name,
+            'brand_id' => $request->input('brand_id') ?: null,
             'category_id' => $request->category_id,
             'subcategory_id' => $request->subcategory_id ?: null,
             'product_type' => $request->input('product_type', 'general'),

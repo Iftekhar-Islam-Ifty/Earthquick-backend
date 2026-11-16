@@ -87,7 +87,7 @@ class CartController extends Controller
             'variant_id' => 'nullable|integer|exists:product_variants,id',
         ]);
 
-        $product = Product::with(['vendor', 'variants'])->findOrFail($request->product_id);
+        $product = Product::with(['vendor', 'brand.warrantyProvider', 'variants'])->findOrFail($request->product_id);
         if (! $product->isPubliclyAvailable()) {
             $message = 'This product is no longer available.';
 
@@ -144,6 +144,8 @@ class CartController extends Controller
                 'product_id' => $product->id,
                 'vendor_id' => $product->vendor_id,
                 'vendor_name' => $product->vendor ? $product->vendor->name : 'Rthquick',
+                'brand_name' => $product->brand?->name,
+                'warranty_provider_name' => $product->brand?->warrantyProvider?->name,
                 'name' => $product->name,
                 'slug' => $product->slug,
                 'price' => $unitPrice,
@@ -232,7 +234,7 @@ class CartController extends Controller
                 unset($cart[$key]);
             } else {
                 $productId = $cart[$key]['product_id'] ?? $cart[$key]['id'] ?? null;
-                $product = Product::with(['vendor', 'variants'])->find($productId);
+                $product = Product::with(['vendor', 'brand.warrantyProvider', 'variants'])->find($productId);
                 $variantId = $cart[$key]['variant_id'] ?? null;
                 $variant = $variantId
                     ? ProductVariant::query()

@@ -73,9 +73,9 @@
                         @endif
                         <div>
                           <div style="font-weight: 500; color: var(--eq-navy);">{{ $item->product_name }}</div>
-                          @if($item->vendor)
-                            <div style="font-size: 0.72rem; color: var(--eq-gold-dark); font-weight: 600;">Brand: {{ $item->vendor->name }}</div>
-                          @endif
+                          @if($item->product_brand_name)<div style="font-size: .72rem; color: var(--eq-gold-dark); font-weight: 600;">Brand: {{ $item->product_brand_name }}</div>@endif
+                          @if($item->vendor_name)<div style="font-size: .72rem; color: var(--eq-charcoal-soft);">Sold by: {{ $item->vendor_name }}</div>@endif
+                          @if($item->warranty_provider_name)<div style="font-size: .72rem; color: var(--eq-charcoal-soft);">Warranty provider: {{ $item->warranty_provider_name }}</div>@endif
                           @if($item->variant_label)
                             <div style="font-size: 0.74rem; color: var(--eq-charcoal-soft);">Option: {{ $item->variant_label }}{{ $item->variant_sku ? ' · '.$item->variant_sku : '' }}</div>
                           @endif
@@ -114,9 +114,9 @@
                 @endif
                 <div style="flex: 1; min-width: 0;">
                   <div style="font-weight: 600; font-size: 0.86rem; color: var(--eq-navy); line-height: 1.3;">{{ $item->product_name }}</div>
-                  @if($item->vendor)
-                    <div style="font-size: 0.7rem; color: var(--eq-gold-dark); font-weight: 600;">Brand: {{ $item->vendor->name }}</div>
-                  @endif
+                  @if($item->product_brand_name)<div style="font-size: .7rem; color: var(--eq-gold-dark); font-weight: 600;">Brand: {{ $item->product_brand_name }}</div>@endif
+                  @if($item->vendor_name)<div style="font-size: .7rem; color: var(--eq-charcoal-soft);">Sold by: {{ $item->vendor_name }}</div>@endif
+                  @if($item->warranty_provider_name)<div style="font-size: .7rem; color: var(--eq-charcoal-soft);">Warranty provider: {{ $item->warranty_provider_name }}</div>@endif
                   @if($item->variant_label)
                     <div style="font-size: 0.72rem; color: var(--eq-charcoal-soft); margin-top: 1px;">Option: {{ $item->variant_label }}{{ $item->variant_sku ? ' · '.$item->variant_sku : '' }}</div>
                   @endif
@@ -301,7 +301,7 @@
                 </form>
               @elseif($return->status === 'authorized')
                 <p style="font-size: 0.78rem; color: var(--eq-charcoal-soft);">Authorized by {{ $return->decisionMaker?->name ?? 'former admin' }}. This does not mean refunded or restocked.</p>
-                <p>Verified reason: {{ str_replace('_', ' ', $return->verified_issue_type ?? 'historical/unverified') }}. Return courier payer: {{ $return->return_shipping_payer === 'earthquick' ? 'Rthquick' : ucfirst($return->return_shipping_payer ?? 'manual review required') }}.</p>
+                <p>Verified reason: {{ str_replace('_', ' ', $return->verified_issue_type ?? 'historical/unverified') }}. Return courier payer: {{ in_array($return->return_shipping_payer, ['rthquick', 'earthquick'], true) ? 'Rthquick' : ucfirst($return->return_shipping_payer ?? 'manual review required') }}.</p>
                 <form method="POST" action="{{ route('admin.orders.return-receive', [$order->id, $return->id]) }}">
                   @csrf
                   <label for="return-receipt-{{ $return->id }}" style="display: block; margin-bottom: 0.3rem;">Receipt and inspection note</label>
@@ -312,7 +312,7 @@
               @else
                 <p style="font-size: 0.78rem; color: var(--eq-charcoal-soft);">@if($return->status === 'received') Received {{ $return->received_at?->format('d M Y, h:i A') }} by {{ $return->receiver?->name ?? 'former admin' }}. Refund and stock review remain separate. @else Decided by {{ $return->decisionMaker?->name ?? 'former admin' }}. @endif</p>
                 @if($return->status === 'received')
-                  <p>Verified reason: {{ str_replace('_', ' ', $return->verified_issue_type ?? 'historical/unverified') }}. Return courier payer: {{ $return->return_shipping_payer === 'earthquick' ? 'Rthquick' : ucfirst($return->return_shipping_payer ?? 'manual review required') }}.</p>
+                  <p>Verified reason: {{ str_replace('_', ' ', $return->verified_issue_type ?? 'historical/unverified') }}. Return courier payer: {{ in_array($return->return_shipping_payer, ['rthquick', 'earthquick'], true) ? 'Rthquick' : ucfirst($return->return_shipping_payer ?? 'manual review required') }}.</p>
                   @if(!$return->inspection_outcome)
                     <form method="POST" action="{{ route('admin.orders.return-inspect', [$order->id, $return->id]) }}">
                       @csrf
@@ -345,7 +345,7 @@
                           <label for="refund-note-{{ $return->id }}">Refund decision note</label>
                           <textarea id="refund-note-{{ $return->id }}" name="approval_note" required minlength="5" maxlength="2000" rows="2" style="display:block;width:100%;box-sizing:border-box;padding:0.6rem;margin:0.35rem 0;border:1px solid var(--eq-line);border-radius:6px;"></textarea>
                           <label style="display:flex;gap:0.5rem;align-items:flex-start;margin:0.5rem 0;"><input type="checkbox" name="include_delivery" value="1"> <span>Include delivery fee (full order return only, after admin review)</span></label>
-                          @if($return->return_shipping_payer === 'earthquick')
+                          @if(in_array($return->return_shipping_payer, ['rthquick', 'earthquick'], true))
                             <label for="return-postage-{{ $return->id }}">Verified return courier postage to reimburse (0 if Rthquick booked/paid courier directly)</label>
                             <input id="return-postage-{{ $return->id }}" type="number" name="return_shipping_amount" min="0" step="0.01" value="0" style="display:block;width:100%;box-sizing:border-box;padding:0.55rem;margin:0.35rem 0;border:1px solid var(--eq-line);border-radius:6px;">
                             <label for="return-postage-receipt-{{ $return->id }}">Courier receipt/tracking reference (required for reimbursement; use once)</label>

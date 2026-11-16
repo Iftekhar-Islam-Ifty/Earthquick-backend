@@ -28,6 +28,7 @@ class ProductController extends Controller
             'subcategory',
             'images',
             'vendor',
+            'brand.warrantyProvider',
             'variants' => fn ($query) => $query->where('is_active', true)->orderBy('id'),
         ])
             ->where('slug', $slug)
