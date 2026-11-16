@@ -1,10 +1,10 @@
 # Bright Phase 1 - Store, brand and warranty foundation
 
-**Status: In progress.** Started 2026-11-16 at the owner's request.
+**Status: Complete.** Implemented and migrated locally on 2026-11-16.
 
-## Implementation checkpoint - 2026-11-16
+## Completion record - 2026-11-16
 
-The first foundation slice is implemented locally and its migration is applied.
+The Phase 1 foundation is implemented locally and its migration is applied.
 The `product_brands` table now has an owner store and warranty-provider store;
 the local database contains Heaven owned by Bright with Bright as warranty
 provider. Products can hold an optional brand, and central-admin product forms
@@ -17,28 +17,14 @@ Before applying the migration, a full private local database backup was written
 to ignored `storage/qa/pre-bright-phase1-20261116/` storage. The migration is
 recorded as applied in the local database.
 
-Remaining in Phase 1: review the complete UI flow in a browser, refine copy/layout,
-and enter Heaven product details only when Bright supplies actual product and
-warranty terms. Automated tests were not run in this checkpoint.
+Verification: migration status confirms the migration is applied; PHP syntax
+checks passed for changed controllers, models and migration; Blade templates
+compiled successfully with `php artisan view:cache`. Automated tests and visual
+browser review were not run. The browser automation host could not determine the
+current Chrome URL, so it stopped before interacting with the page.
 
-## Implementation checkpoint - 2026-11-16
-
-The first foundation slice is implemented locally and its migration is applied.
-The `product_brands` table now has an owner store and warranty-provider store;
-the local database contains Heaven owned by Bright with Bright as warranty
-provider. Products can hold an optional brand, and central-admin product forms
-filter brands by selected store and enforce ownership on save. Product detail,
-cart/checkout summaries and order records distinguish brand, seller and warranty
-provider. New order lines snapshot those names. Existing order lines retain null
-snapshots and continue to render without changing historical data.
-
-Before applying the migration, a full private local database backup was written
-to ignored `storage/qa/pre-bright-phase1-20261116/` storage. The migration is
-recorded as applied in the local database.
-
-Remaining in Phase 1: review the complete UI flow in a browser, refine copy/layout,
-and enter Heaven product details only when Bright supplies actual product and
-warranty terms. Automated tests were not run in this checkpoint.
+Heaven product facts and warranty duration/terms remain Bright-supplied data and
+are outside this foundation implementation; no terms were fabricated.
 
 ## Confirmed structure
 
