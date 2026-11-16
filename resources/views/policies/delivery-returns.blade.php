@@ -78,7 +78,7 @@
     <div class="eq-container eq-policy-hero__inner">
       <span class="eq-policy-kicker">Rthquick customer care</span>
       <h1>Clear steps, from delivery to resolution.</h1>
-      <p>Know what you pay, when you can request a change, and what happens before a return or refund is complete. Rthquick's central team coordinates these decisions for every brand on the marketplace.</p>
+      <p>Know what you pay, when you can request a change, and what happens before a return or refund is complete. Rthquick's central team coordinates these decisions across all stores on the marketplace.</p>
       <nav class="eq-policy-quick" aria-label="On this page">
         <a href="#delivery">Delivery</a>
         <a href="#cancellations">Cancellations</a>
@@ -91,7 +91,7 @@
 
   <div class="eq-policy-shell">
     <div class="eq-policy-highlights eq-reveal" aria-label="Key policy points">
-      <div class="eq-policy-highlight"><strong>One order, one delivery</strong><span>Delivery charge and tracking are handled for the whole order, including orders with items from different brands.</span></div>
+      <div class="eq-policy-highlight"><strong>One order, one delivery</strong><span>Delivery charge and tracking are handled for the whole order, including products from different stores.</span></div>
       <div class="eq-policy-highlight"><strong>Check each product</strong><span>Return eligibility and the number of return days can differ by item. Your order keeps the rules shown at checkout.</span></div>
       <div class="eq-policy-highlight"><strong>Approval is not payment</strong><span>A return request, physical receipt or approved refund does not mean money has already been sent.</span></div>
     </div>

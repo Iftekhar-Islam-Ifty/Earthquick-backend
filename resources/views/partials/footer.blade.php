@@ -9,7 +9,7 @@
       <!-- Brand column -->
       <div class="eq-footer__brand" id="footer-col-brand">
         <a href="{{ route('home') }}" style="display: block; text-decoration: none;">
-          <img src="{{ asset('images/logo/earthquick-logo.png') }}" alt="Rthquick" />
+          <img src="{{ asset('images/logo/rthquick-logo.png') }}" alt="Rthquick" />
         </a>
         <p>Bangladesh's curated multi-vendor marketplace, starting with Nous Telos.</p>
         <nav class="eq-footer__social" aria-label="Social links">
@@ -37,7 +37,7 @@
           <li><a href="{{ route('category.show', 'ornaments') }}" id="footer-link-ornaments">Ornaments</a></li>
           <li><a href="{{ route('category.show', 'bags') }}" id="footer-link-bags">Bags</a></li>
           <li><a href="{{ route('category.show', 'home-decor') }}" id="footer-link-decor">Home Decor</a></li>
-          <li><a href="{{ route('stores.index') }}" id="footer-link-stores">Brand Stores</a></li>
+          <li><a href="{{ route('stores.index') }}" id="footer-link-stores">Stores</a></li>
         </ul>
       </div>
 

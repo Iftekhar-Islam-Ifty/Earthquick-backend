@@ -1,7 +1,7 @@
 @extends('admin.layout')
 
 @section('title', 'Onboard New Vendor — Rthquick Admin')
-@section('page_title', 'Onboard Brand Partner')
+@section('page_title', 'Onboard Store')
 
 @section('content')
 
@@ -12,7 +12,7 @@
         &larr; Back to Vendors Portfolio
       </a>
       <h2 style="font-family: var(--font-display); font-size: 1.5rem; color: var(--eq-navy); margin-top: 0.25rem;">
-        Onboard New Brand Partner
+        Onboard New Store
       </h2>
     </div>
   </div>
@@ -35,17 +35,17 @@
 
     <div class="eq-admin-2col-grid">
       
-      <!-- LEFT COLUMN: Brand Identity & Contact -->
+      <!-- LEFT COLUMN: Store Identity & Contact -->
       <div style="display: flex; flex-direction: column; gap: 1.25rem;">
         
         <!-- Identity Card -->
         <div class="eq-admin-card" style="margin-bottom: 0;">
-          <h3 class="eq-admin-card__title" style="margin-bottom: 1.25rem; font-size: 1.05rem;">Brand Identity</h3>
+          <h3 class="eq-admin-card__title" style="margin-bottom: 1.25rem; font-size: 1.05rem;">Store Identity</h3>
 
           <!-- Name -->
           <div style="margin-bottom: 1.25rem;">
             <label for="input-name" style="display: block; font-size: 0.84rem; font-weight: 600; color: var(--eq-charcoal); margin-bottom: 0.4rem;">
-              Brand / Vendor Name <span style="color: #dc2626;">*</span>
+              Store Name <span style="color: #dc2626;">*</span>
             </label>
             <input 
               type="text" 
@@ -97,7 +97,7 @@
           <!-- Tagline -->
           <div style="margin-bottom: 1.25rem;">
             <label for="input-tagline" style="display: block; font-size: 0.84rem; font-weight: 600; color: var(--eq-charcoal); margin-bottom: 0.4rem;">
-              Brand Tagline
+              Store Tagline
             </label>
             <input 
               type="text" 
@@ -112,7 +112,7 @@
           <!-- Description / Bio -->
           <div>
             <label for="input-description" style="display: block; font-size: 0.84rem; font-weight: 600; color: var(--eq-charcoal); margin-bottom: 0.4rem;">
-              Atelier Biography / Storefront Description
+              Store Description
             </label>
             <textarea 
               name="description" 
@@ -139,7 +139,7 @@
                 name="email" 
                 id="input-email" 
                 value="{{ old('email') }}" 
-                placeholder="concierge@brand.com" 
+                placeholder="store@example.com"
                 style="width: 100%; padding: 0.65rem 0.85rem; border-radius: 6px; border: 1px solid var(--eq-line); font-size: 0.9rem; font-family: inherit; background: #ffffff;"
               />
             </div>
@@ -214,7 +214,7 @@
           <!-- Logo Upload -->
           <div style="margin-bottom: 1.5rem;">
             <label for="input-logo" style="display: block; font-size: 0.84rem; font-weight: 600; color: var(--eq-charcoal); margin-bottom: 0.4rem;">
-              Brand Logo / Monogram Avatar
+              Store Logo / Monogram Avatar
             </label>
             <input 
               type="file" 
@@ -249,7 +249,7 @@
 
         <!-- Submit Button -->
         <button type="submit" class="eq-admin-btn eq-admin-btn--primary" style="width: 100%; padding: 0.85rem; font-size: 0.95rem; font-weight: 600;">
-          Onboard &amp; Publish Brand Partner
+          Onboard &amp; Publish Store
         </button>
 
       </div>

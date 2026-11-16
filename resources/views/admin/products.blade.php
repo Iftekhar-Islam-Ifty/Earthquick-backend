@@ -52,11 +52,11 @@
         </select>
       </div>
 
-      <!-- Vendor / Brand Filter -->
+      <!-- Store Filter -->
       <div style="display: flex; align-items: center; gap: 0.5rem;">
-        <label for="filter-vendor" style="font-size: 0.8rem; font-weight: 500; color: var(--eq-charcoal-soft);">Brand:</label>
+        <label for="filter-vendor" style="font-size: 0.8rem; font-weight: 500; color: var(--eq-charcoal-soft);">Store:</label>
         <select name="vendor" id="filter-vendor" onchange="this.form.submit()" style="padding: 0.4rem 0.65rem; border-radius: 5px; border: 1px solid var(--eq-line); font-size: 0.84rem; background: #ffffff;">
-          <option value="">All Brands</option>
+          <option value="">All Stores</option>
           @foreach($vendors as $v)
             <option value="{{ $v->slug }}" {{ ($vendorSlug ?? '') === $v->slug ? 'selected' : '' }}>
               {{ $v->name }}
@@ -97,7 +97,7 @@
           <thead>
             <tr>
               <th>Product Creation</th>
-              <th>Brand</th>
+              <th>Store</th>
               <th>Category</th>
               <th>Fabric</th>
               <th>Unit Price</th>

@@ -67,7 +67,7 @@
       <ol class="eq-breadcrumb__list" style="display: flex; align-items: center; flex-wrap: wrap; gap: 0.45rem; list-style: none; margin: 0; padding: 0; font-size: 0.82rem; color: var(--eq-charcoal-soft);">
         <li><a href="{{ route('home') }}" style="color: inherit; text-decoration: none;">Home</a></li>
         <li><span style="opacity: 0.5;">&rsaquo;</span></li>
-        <li><a href="{{ route('stores.index') }}" style="color: inherit; text-decoration: none;">Brand Stores</a></li>
+        <li><a href="{{ route('stores.index') }}" style="color: inherit; text-decoration: none;">Stores</a></li>
         <li><span style="opacity: 0.5;">&rsaquo;</span></li>
         <li style="color: var(--eq-gold-dark); font-weight: 500;">{{ $vendor->name }}</li>
       </ol>
@@ -94,7 +94,7 @@
           @endif
         </div>
 
-        <!-- Brand Identity Info -->
+        <!-- Store Identity Info -->
         <div class="eq-store-hero__identity" style="flex: 1; min-width: 260px;">
           <div class="eq-store-hero__heading" style="display: flex; align-items: center; gap: 0.65rem; margin-bottom: 0.25rem;">
             <h1 style="font-family: var(--font-display); font-size: 2rem; margin: 0; font-weight: 600; color: #ffffff; line-height: 1.2;">
@@ -290,7 +290,7 @@
             @else
               <h3 style="font-family: var(--font-display); font-size: 1.35rem; color: var(--eq-navy); margin-bottom: 0.5rem; font-weight: 600;">{{ $isBrightStore ? 'Electrical Catalog in Preparation' : 'Collection in Preparation' }}</h3>
               <p style="max-width: 460px; margin: 0 auto 1.75rem; color: var(--eq-charcoal-soft); font-size: 0.88rem; line-height: 1.6;">{{ $isBrightStore ? 'Bright Electrical Company product listings are being prepared. Product details will appear here when added by the Rthquick admin.' : 'The '.$vendor->name.' catalog is currently being prepared for the Rthquick collective. New curated arrivals will debut here shortly.' }}</p>
-              <a href="{{ route('stores.index') }}" class="eq-btn eq-btn--outline" style="padding: 0.55rem 1.25rem; font-size: 0.82rem; text-decoration: none;">&larr; Discover All Partner Brands</a>
+              <a href="{{ route('stores.index') }}" class="eq-btn eq-btn--outline" style="padding: 0.55rem 1.25rem; font-size: 0.82rem; text-decoration: none;">&larr; Explore All Stores</a>
             @endif
           </div>
         @endforelse

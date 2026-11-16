@@ -13,23 +13,23 @@
     @endphp
     <meta name="robots" content="{{ $noindex ? 'noindex,follow' : 'index,follow' }}" />
     <!-- Dynamic SEO Titles & Meta -->
-    <title>@yield('title', 'Rthquick — Discover independent Bangladeshi brands')</title>
-    <meta name="description" content="@yield('meta_description', 'Discover independent Bangladeshi brands, starting with Nous Telos heritage handloom and Bright electronics, at Rthquick.')" />
-    <meta name="keywords" content="@yield('meta_keywords', 'rthquick, bangladesh marketplace, independent brands, nous telos, bright electronics')" />
+    <title>@yield('title', 'Rthquick — Independent Bangladeshi Stores')</title>
+    <meta name="description" content="@yield('meta_description', 'Shop independent Bangladeshi stores at Rthquick, including Nous Telos and Bright Electrical Company.')" />
+    <meta name="keywords" content="@yield('meta_keywords', 'rthquick, bangladesh marketplace, stores, nous telos, bright electrical company')" />
     <link rel="canonical" href="@yield('canonical_url', url()->current())" />
 
     <!-- Open Graph Social Protocol -->
     <meta property="og:site_name" content="Rthquick" />
     <meta property="og:type" content="@yield('og_type', 'website')" />
-    <meta property="og:title" content="@yield('og_title', 'Rthquick — Discover independent Bangladeshi brands')" />
-    <meta property="og:description" content="@yield('og_description', 'Discover independent Bangladeshi brands at Rthquick.')" />
+    <meta property="og:title" content="@yield('og_title', 'Rthquick — Independent Bangladeshi Stores')" />
+    <meta property="og:description" content="@yield('og_description', 'Explore distinct independent stores at Rthquick.')" />
     <meta property="og:url" content="@yield('og_url', url()->current())" />
     <meta property="og:image" content="@yield('og_image', asset('images/hero/hero-main-saree-2.jpg'))" />
 
     <!-- Twitter Card Protocol -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="@yield('og_title', 'Rthquick — Discover independent Bangladeshi brands')" />
-    <meta name="twitter:description" content="@yield('og_description', 'Discover independent Bangladeshi brands at Rthquick.')" />
+    <meta name="twitter:title" content="@yield('og_title', 'Rthquick — Independent Bangladeshi Stores')" />
+    <meta name="twitter:description" content="@yield('og_description', 'Explore distinct independent stores at Rthquick.')" />
     <meta name="twitter:image" content="@yield('og_image', asset('images/hero/hero-main-saree-2.jpg'))" />
 
     <!-- Google Fonts: Fraunces (display/serif) + Jost (body/sans) -->

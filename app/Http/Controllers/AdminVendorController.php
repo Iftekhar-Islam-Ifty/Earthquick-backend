@@ -12,8 +12,8 @@ use Illuminate\View\View;
 
 /* =========================================================================
  * ADMIN VENDOR CONTROLLER
- * Super-Admin management for vendor entities, brand onboardings,
- * storefront branding and active/inactive toggling.
+ * Central-admin management for vendor/store profiles, store onboarding,
+ * storefront identity and active/inactive toggling.
  * Protected by 'auth' and 'admin' middleware guards.
  * ========================================================================= */
 class AdminVendorController extends Controller

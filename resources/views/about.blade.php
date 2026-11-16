@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
-@section('title', 'About Rthquick — Independent Bangladeshi Brands')
-@section('meta_description', 'Meet Rthquick, a marketplace for independent Bangladeshi brands. Explore Nous Telos, learn how orders work and contact our central support team.')
+@section('title', 'About Rthquick — Independent Bangladeshi Stores')
+@section('meta_description', 'Meet Rthquick, a marketplace for independent Bangladeshi stores, including Nous Telos and Bright Electrical Company.')
 @section('body_class', 'eq-about-page')
 @section('scroll_motion', '1')
 
@@ -98,11 +98,11 @@
   <header class="eq-about-hero">
     <div class="eq-container eq-about-hero__inner">
       <span class="eq-about-kicker">RTHQUICK MARKETPLACE</span>
-      <h1>Independent brands. One place to shop.</h1>
-      <p class="eq-about-hero__lead">Discover independent Bangladeshi brands in one marketplace. Each store keeps its own identity; Rthquick brings shopping, order updates and customer support together.</p>
+      <h1>Independent stores. One place to shop.</h1>
+      <p class="eq-about-hero__lead">Explore distinct Bangladeshi stores in one marketplace. Each store keeps its own identity, while product brands are shown separately on their products.</p>
       <nav class="eq-about-quick" aria-label="On this page">
         <a href="#our-story">Why Rthquick</a>
-        <a href="#brand-ecosystem">Our Brands</a>
+        <a href="#store-ecosystem">Our Stores</a>
         <a href="#contact-support">Contact Us</a>
         <a href="#help-faq">Help &amp; FAQ</a>
         <a href="#shop-hubs" id="pill-shop">Shop Categories</a>
@@ -112,31 +112,31 @@
 
   <section class="eq-about-section" id="our-story" aria-labelledby="about-story-title">
     <div class="eq-container">
-      <div class="eq-about-head eq-reveal"><div><span>How it works</span><h2 id="about-story-title">Different brands. One clear experience.</h2></div></div>
-      <p class="eq-about-intro">Rthquick is a shared storefront for distinctive brands, starting with Nous Telos. Our central team manages checkout, order updates and after-sales requests across the marketplace.</p>
+      <div class="eq-about-head eq-reveal"><div><span>How it works</span><h2 id="about-story-title">Different stores. One clear experience.</h2></div></div>
+      <p class="eq-about-intro">Rthquick is a shared marketplace for stores such as Nous Telos and Bright Electrical Company. Our central team manages checkout, order updates and after-sales requests across the marketplace.</p>
       <div class="eq-about-values eq-reveal">
-        <article class="eq-about-value"><h3>Distinct stores</h3><p>Explore each brand's own products and story without losing the convenience of one marketplace.</p></article>
+        <article class="eq-about-value"><h3>Distinct stores</h3><p>Explore each store's products and story. Product brands, such as Heaven, are identified separately.</p></article>
         <article class="eq-about-value"><h3>One checkout</h3><p>Choose from different stores in one order, with the delivery charge shown before you place it.</p></article>
-        <article class="eq-about-value"><h3>Central customer care</h3><p>Our team reviews order, delivery, return and refund questions for every brand.</p></article>
+        <article class="eq-about-value"><h3>Central customer care</h3><p>Our team reviews order, delivery, return and refund questions across all stores.</p></article>
       </div>
     </div>
   </section>
 
-  <section class="eq-about-section eq-about-section--tint" id="brand-ecosystem" aria-labelledby="about-brands-title">
+  <section class="eq-about-section eq-about-section--tint" id="store-ecosystem" aria-labelledby="about-stores-title">
     <div class="eq-container">
-      <div class="eq-about-head eq-reveal"><div><span>Our brands</span><h2 id="about-brands-title">Meet the stores</h2></div><a href="{{ route('stores.index') }}">Explore all stores &rarr;</a></div>
+      <div class="eq-about-head eq-reveal"><div><span>Our stores</span><h2 id="about-stores-title">Meet the stores</h2></div><a href="{{ route('stores.index') }}">Explore all stores &rarr;</a></div>
       <div class="eq-about-brands eq-reveal">
         <article class="eq-about-brand" id="vendor-card-nous-telos">
-          <span class="eq-about-brand__status">Flagship brand</span>
+          <span class="eq-about-brand__status">Flagship store</span>
           <h3>Nous Telos</h3>
           <p>Heritage-led clothing and accessories, from sarees and sets to bags and home textiles.</p>
           <a class="eq-about-link" href="{{ route('stores.show', 'nous-telos') }}">Explore Nous Telos &rarr;</a>
         </article>
         <article class="eq-about-brand" id="vendor-card-bright">
-          <span class="eq-about-brand__status">Store in preparation</span>
-          <h3>Bright</h3>
-          <p>An electronics storefront being prepared for practical devices and everyday technology.</p>
-          <a class="eq-about-link" href="{{ route('stores.show', 'bright') }}">Preview Bright &rarr;</a>
+          <span class="eq-about-brand__status">Catalog in preparation</span>
+          <h3>Bright Electrical Company</h3>
+          <p>A Chattogram electrical supplier offering switches, sockets, LED lights, circuit breakers, fans and other accessories.</p>
+          <a class="eq-about-link" href="{{ route('stores.show', 'bright') }}">Preview store &rarr;</a>
         </article>
       </div>
     </div>
@@ -182,7 +182,7 @@
               <option value="General Inquiry" @selected(old('subject') === 'General Inquiry')>Product or general question</option>
               <option value="Order Status & Delivery" @selected(old('subject') === 'Order Status & Delivery')>Order or delivery</option>
               <option value="Exchange or Return" @selected(old('subject') === 'Exchange or Return')>Return or refund</option>
-              <option value="Vendor / Artisan Partnership" @selected(old('subject') === 'Vendor / Artisan Partnership')>Brand partnership</option>
+              <option value="Vendor / Artisan Partnership" @selected(old('subject') === 'Vendor / Artisan Partnership')>Store partnership</option>
               <option value="Custom Tailoring & Sizing" @selected(old('subject') === 'Custom Tailoring & Sizing')>Sizing or other request</option>
             </select></div>
             <div class="eq-about-field"><label for="contact-message">Message *</label><textarea id="contact-message" name="message" required minlength="10" maxlength="5000" placeholder="How can we help?">{{ old('message') }}</textarea></div>
@@ -200,7 +200,7 @@
         <details class="eq-about-faq"><summary>How can I pay for an order?</summary><p>Cash on Delivery is available at checkout. bKash online payment is coming soon; manual mobile-banking and card payments are not currently available.</p></details>
         <details class="eq-about-faq"><summary>What does delivery cost?</summary><p>Delivery is charged once for the whole order: ৳80 inside Chattogram or ৳150 outside Chattogram when the product subtotal is below ৳3,000. Standard delivery is free from ৳3,000 before coupon discounts. Timing varies by destination. <a href="{{ route('policies.delivery-returns') }}#delivery">Delivery details</a>.</p></details>
         <details class="eq-about-faq"><summary>How do returns and refunds work?</summary><p>Check each item's return eligibility and window. For an eligible delivered order, request a return from the order page and wait for Rthquick's decision before sending the item. Wrong or damaged items, courier responsibility and COD refunds are reviewed by our central team. <a href="{{ route('policies.delivery-returns') }}#returns">Returns and refunds guide</a>.</p></details>
-        <details class="eq-about-faq"><summary>Can my brand join Rthquick?</summary><p>Tell us about your brand and products using the <a href="#contact-support" onclick="prefillVendorInquiry()">partnership inquiry form</a>. Our team will review your message; there is no separate vendor dashboard or automatic approval.</p></details>
+        <details class="eq-about-faq"><summary>Can my store join Rthquick?</summary><p>Tell us about your store and its product brands using the <a href="#contact-support" onclick="prefillVendorInquiry()">store partnership inquiry form</a>. Our team will review your message; there is no separate vendor dashboard or automatic approval.</p></details>
       </div>
     </div>
   </section>

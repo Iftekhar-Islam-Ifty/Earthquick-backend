@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
-@section('title', 'Brand Partners & Stores — Rthquick Collective')
-@section('meta_description', 'Discover curated partner ateliers, heritage textile houses, and innovative lifestyle brands across the Rthquick collective.')
+@section('title', 'Our Stores — Rthquick')
+@section('meta_description', 'Explore independent stores at Rthquick, from Nous Telos Bengali handloom to Bright Electrical Company in Chattogram.')
 @section('canonical_url', route('stores.index'))
 @section('body_class', 'eq-stores-page')
 @section('scroll_motion', '1')
@@ -15,7 +15,7 @@
       <ol class="eq-breadcrumb__list" style="display: flex; align-items: center; flex-wrap: wrap; gap: 0.45rem; list-style: none; margin: 0; padding: 0; font-size: 0.82rem; color: var(--eq-charcoal-soft);">
         <li><a href="{{ route('home') }}" style="color: inherit; text-decoration: none;">Home</a></li>
         <li><span style="opacity: 0.5;">&rsaquo;</span></li>
-        <li style="color: var(--eq-gold-dark); font-weight: 500;">Brand Stores</li>
+        <li style="color: var(--eq-gold-dark); font-weight: 500;">Stores</li>
       </ol>
     </div>
   </nav>
@@ -27,15 +27,15 @@
         Rthquick Collective
       </span>
       <h1 style="font-family: var(--font-display); font-size: 2.2rem; color: var(--eq-navy); margin-bottom: 0.75rem; font-weight: 600; line-height: 1.2;">
-        Partner Ateliers &amp; Brands
+        Independent Stores
       </h1>
       <p style="font-size: 0.95rem; line-height: 1.6; color: var(--eq-charcoal-soft); margin: 0;">
-        Rthquick unites artisanal design houses, master handloom weavers, and visionary lifestyle innovators into one seamless luxury shopping destination.
+        Explore distinct stores on Rthquick, each with its own products, identity and customer-facing store page.
       </p>
     </div>
   </section>
 
-  <!-- Brands Grid -->
+  <!-- Stores Grid -->
   <section style="padding: 3.5rem 0 5rem;">
     <div class="eq-container">
       <div class="eq-reveal" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 2rem;">
@@ -76,21 +76,21 @@
               @endif
 
               <p style="font-size: 0.86rem; line-height: 1.55; color: var(--eq-charcoal-soft); margin-bottom: 1.25rem; flex: 1;">
-                {{ Str::limit($vendor->description ?? 'Discover exclusive designer collections crafted with timeless quality and contemporary elegance.', 130) }}
+                {{ Str::limit($vendor->description ?? 'Explore products and information from this Rthquick store.', 130) }}
               </p>
 
               <!-- Footer Meta & Link -->
               <div style="border-top: 1px solid var(--eq-line); padding-top: 1rem; display: flex; align-items: center; justify-content: space-between; margin-top: auto;">
                 <span style="font-size: 0.78rem; color: var(--eq-charcoal-muted);">
                   @if($vendor->products_count > 0)
-                    <strong style="color: var(--eq-charcoal);">{{ $vendor->products_count }}</strong> Available Pieces
+                    <strong style="color: var(--eq-charcoal);">{{ $vendor->products_count }}</strong> Available Products
                   @else
-                    <span style="font-style: italic; color: var(--eq-gold-dark);">Collection in Curation</span>
+                    <span style="font-style: italic; color: var(--eq-gold-dark);">Catalog in Preparation</span>
                   @endif
                 </span>
 
                 <a href="{{ route('stores.show', $vendor->slug) }}" class="eq-btn eq-btn--outline" style="font-size: 0.76rem; padding: 0.45rem 0.9rem; text-decoration: none;">
-                  Visit Boutique &rarr;
+                  Visit Store &rarr;
                 </a>
               </div>
 
@@ -99,7 +99,7 @@
           </article>
         @empty
           <div style="grid-column: 1 / -1; text-align: center; padding: 4rem 1rem;">
-            <p style="font-size: 1rem; color: var(--eq-charcoal-soft);">No partner stores currently published.</p>
+            <p style="font-size: 1rem; color: var(--eq-charcoal-soft);">No stores are currently published.</p>
           </div>
         @endforelse
       </div>

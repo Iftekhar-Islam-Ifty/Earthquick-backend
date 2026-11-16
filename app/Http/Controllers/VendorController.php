@@ -10,13 +10,13 @@ use Illuminate\View\View;
 
 /* =========================================================================
  * VENDOR STOREFRONT CONTROLLER
- * Handles public brand directories (/stores) and dedicated multi-vendor
- * brand boutiques (/stores/{slug}) across the Rthquick collective.
+ * Handles public store directories (/stores) and dedicated store pages
+ * (/stores/{slug}) across the Rthquick marketplace.
  * ========================================================================= */
 class VendorController extends Controller
 {
     /**
-     * Display directory of all active brand partners and atelier stores.
+     * Display directory of all active stores.
      */
     public function index(): View
     {
@@ -33,7 +33,7 @@ class VendorController extends Controller
     }
 
     /**
-     * Display an individual partner boutique/storefront with curated products.
+     * Display an individual store page with its available products.
      */
     public function show(Request $request, string $slug): View
     {

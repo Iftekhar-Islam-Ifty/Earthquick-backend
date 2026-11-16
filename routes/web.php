@@ -28,7 +28,7 @@ use Illuminate\Support\Facades\Route;
  * ========================================================================= */
 
 /* =========================================================================
- * 1. HOMEPAGE & BRAND SHOWCASE
+ * 1. HOMEPAGE & STORE SHOWCASE
  * Curated editorial showcase, flagship handloom atelier, and hero banners.
  * ========================================================================= */
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -45,8 +45,8 @@ Route::get('/shop/{slug}', [CategoryController::class, 'showCategory'])->name('c
 Route::get('/shop/{categorySlug}/{subcategorySlug}', [CategoryController::class, 'showSubcategory'])->name('subcategory.show');
 
 /* =========================================================================
- * 2b. BRAND STORES & MULTI-VENDOR SHOWCASE
- * Public directory of brand partners and dedicated storefront showcases.
+ * 2b. STORES & MULTI-VENDOR SHOWCASE
+ * Public directory of stores and dedicated storefront pages.
  * ========================================================================= */
 Route::get('/stores', [VendorController::class, 'index'])->name('stores.index');
 Route::get('/stores/{slug}', [VendorController::class, 'show'])->name('stores.show');
@@ -161,7 +161,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::post('/coupons/{id}/toggle', [AdminController::class, 'couponToggle'])->name('coupons.toggle');
     Route::delete('/coupons/{id}', [AdminController::class, 'couponDestroy'])->name('coupons.destroy');
 
-    // Vendor & Multi-Brand Store Management
+    // Store and vendor administration
     Route::get('/vendors', [AdminVendorController::class, 'index'])->name('vendors.index');
     Route::get('/vendors/create', [AdminVendorController::class, 'create'])->name('vendors.create');
     Route::post('/vendors', [AdminVendorController::class, 'store'])->name('vendors.store');

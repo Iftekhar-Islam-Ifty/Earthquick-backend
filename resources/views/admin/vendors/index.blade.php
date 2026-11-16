@@ -1,7 +1,7 @@
 @extends('admin.layout')
 
-@section('title', 'Brand Partners & Stores — Rthquick Admin')
-@section('page_title', 'Vendors & Brand Partners')
+@section('title', 'Stores — Rthquick Admin')
+@section('page_title', 'Stores')
 
 @section('content')
 
@@ -9,10 +9,10 @@
   <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem;">
     <div>
       <h2 style="font-family: var(--font-display); font-size: 1.45rem; color: var(--eq-navy); margin: 0 0 0.25rem 0; font-weight: 600;">
-        Brand Partners &amp; Stores
+        Store Management
       </h2>
       <p style="font-size: 0.84rem; color: var(--eq-charcoal-soft); margin: 0;">
-        Manage multi-vendor storefronts, brand metadata, SKUs prefixes, and active store statuses.
+        Manage store profiles, product catalog ownership, SKU prefixes and store status.
       </p>
     </div>
 
@@ -42,7 +42,7 @@
           type="text" 
           name="search" 
           value="{{ $search }}" 
-          placeholder="Search by brand name, code (e.g. NT, BRT), or email..." 
+          placeholder="Search by store name, code (e.g. NT, BRT), or email..."
           style="width: 100%; padding: 0.4rem 0.75rem; border-radius: 5px; border: 1px solid var(--eq-line); font-size: 0.84rem; background: #ffffff;"
         />
       </div>
@@ -68,7 +68,7 @@
       @endif
 
       <div style="margin-left: auto; font-size: 0.82rem; color: var(--eq-charcoal-soft);">
-        Total: <strong>{{ $vendors->total() }}</strong> partner brands
+        Total: <strong>{{ $vendors->total() }}</strong> stores
       </div>
 
     </form>
@@ -82,7 +82,7 @@
         <table class="eq-admin-table">
           <thead>
             <tr>
-              <th>Brand Partner</th>
+              <th>Store</th>
               <th>Code / Prefix</th>
               <th>Contact Info</th>
               <th style="text-align: center;">Catalog Units</th>
@@ -107,7 +107,7 @@
                         {{ $vendor->name }}
                       </div>
                       <div style="font-size: 0.74rem; color: var(--eq-charcoal-soft); margin-top: 0.15rem;">
-                        {{ $vendor->tagline ?? 'Partner Brand' }}
+                        {{ $vendor->tagline ?? 'Store' }}
                       </div>
                     </div>
                   </div>

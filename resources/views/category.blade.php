@@ -1,10 +1,10 @@
 @extends('layouts.app')
 
 @section('title', (isset($subcategory) ? $subcategory->name : $category->name) . ' | Rthquick')
-@section('meta_description', $category->description ?: ('Shop ' . (isset($subcategory) ? $subcategory->name : $category->name) . ' products from independent brands at Rthquick.'))
+@section('meta_description', $category->description ?: ('Shop ' . (isset($subcategory) ? $subcategory->name : $category->name) . ' products from independent stores at Rthquick.'))
 @section('canonical_url', request()->integer('page') > 1 ? url()->current().'?page='.request()->integer('page') : url()->current())
 @section('og_title', (isset($subcategory) ? $subcategory->name : $category->name) . ' | Rthquick')
-@section('og_description', $category->description ?: ('Shop ' . (isset($subcategory) ? $subcategory->name : $category->name) . ' products from independent brands at Rthquick.'))
+@section('og_description', $category->description ?: ('Shop ' . (isset($subcategory) ? $subcategory->name : $category->name) . ' products from independent stores at Rthquick.'))
 @section('og_image', asset($category->image ?? 'images/hero/hero-main-saree-2.jpg'))
 @section('body_class', 'eq-catalog-page')
 @section('scroll_motion', '1')
@@ -141,7 +141,7 @@
           @endif
           @if(request('vendor'))
             <span class="eq-active-chip">
-              <span>Brand: {{ $availableVendors->firstWhere('slug', request('vendor'))?->name ?? request('vendor') }}</span>
+              <span>Store: {{ $availableVendors->firstWhere('slug', request('vendor'))?->name ?? request('vendor') }}</span>
               <button type="button" aria-label="Remove filter" onclick="updateFilterParam('vendor', null)">&times;</button>
             </span>
           @endif
@@ -241,12 +241,12 @@
           @if($availableVendors->isNotEmpty())
             <div class="eq-filter-group">
               <button type="button" class="eq-filter-group__header" aria-expanded="true">
-                <span>Brand</span>
+                <span>Store</span>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
               </button>
               <div class="eq-filter-group__body">
-                <select aria-label="Brand" onchange="updateFilterParam('vendor', this.value || null)" style="width: 100%; padding: 0.55rem; border: 1px solid var(--eq-line); border-radius: 5px; background: #fff;">
-                  <option value="">All Brands</option>
+                <select aria-label="Store" onchange="updateFilterParam('vendor', this.value || null)" style="width: 100%; padding: 0.55rem; border: 1px solid var(--eq-line); border-radius: 5px; background: #fff;">
+                  <option value="">All Stores</option>
                   @foreach($availableVendors as $filterVendor)
                     <option value="{{ $filterVendor->slug }}" {{ request('vendor') === $filterVendor->slug ? 'selected' : '' }}>{{ $filterVendor->name }}</option>
                   @endforeach

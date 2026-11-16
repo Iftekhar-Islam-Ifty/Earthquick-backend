@@ -8,8 +8,8 @@
   <meta name="app-url" content="{{ url('/') }}" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="csrf-token" content="{{ csrf_token() }}" />
-  <title>Rthquick — Independent Bangladeshi brands</title>
-  <meta name="description" content="Discover independent Bangladeshi brands at Rthquick, led by Nous Telos heritage handloom with Bright electronics joining the marketplace." />
+  <title>Rthquick — Independent Bangladeshi Stores</title>
+  <meta name="description" content="Shop independent Bangladeshi stores at Rthquick, including Nous Telos handloom and Bright Electrical Company." />
   <meta name="keywords" content="rthquick, bangladesh marketplace, nous telos, bright electronics, handloom saree" />
   <link rel="canonical" href="{{ url('/') }}" />
   <link rel="preload" as="image" href="{{ asset($homepageMedia['hero-1']['image']) }}" fetchpriority="high" />
@@ -17,15 +17,15 @@
   <!-- Open Graph Protocol -->
   <meta property="og:site_name" content="Rthquick" />
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="Rthquick — Independent Bangladeshi brands" />
-  <meta property="og:description" content="Discover independent Bangladeshi brands at Rthquick, led by Nous Telos heritage handloom." />
+  <meta property="og:title" content="Rthquick — Independent Bangladeshi Stores" />
+  <meta property="og:description" content="Explore Nous Telos and Bright Electrical Company, two independent stores on Rthquick." />
   <meta property="og:url" content="{{ url('/') }}" />
   <meta property="og:image" content="{{ asset($homepageMedia['hero-1']['image']) }}" />
 
   <!-- Twitter Card Protocol -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Rthquick — Independent Bangladeshi brands" />
-  <meta name="twitter:description" content="Discover independent Bangladeshi brands at Rthquick, led by Nous Telos heritage handloom." />
+  <meta name="twitter:title" content="Rthquick — Independent Bangladeshi Stores" />
+  <meta name="twitter:description" content="Explore Nous Telos and Bright Electrical Company, two independent stores on Rthquick." />
   <meta name="twitter:image" content="{{ asset($homepageMedia['hero-1']['image']) }}" />
 
   <!-- Google Fonts: Fraunces (display/serif) + Jost (body/sans) -->
@@ -265,8 +265,8 @@
               </svg>
             </div>
             <div class="eq-trust-content">
-              <h3 class="eq-trust-title">Curated Brands</h3>
-              <p class="eq-trust-desc">Distinctive stores selected for quality and authenticity</p>
+              <h3 class="eq-trust-title">Distinct Stores</h3>
+              <p class="eq-trust-desc">Independent stores with their own products and identity</p>
             </div>
           </div>
 
@@ -354,14 +354,14 @@
 
     <!-- ================================================================
          EXPLORE OUR STORES
-         Product discovery comes first; brand discovery follows arrivals.
+         Product discovery comes first; store discovery follows arrivals.
          ================================================================ -->
     <section class="eq-home-stores" id="explore-stores" aria-labelledby="explore-stores-title">
       <div class="eq-container">
         <div class="eq-home-stores__intro eq-reveal">
           <span class="eq-eyebrow">OUR STORES</span>
           <h2 class="eq-heading-lg" id="explore-stores-title">Explore Rthquick</h2>
-          <p>Distinct brands, one curated marketplace</p>
+          <p>Two independent stores, one marketplace</p>
         </div>
 
         <div class="eq-home-stores__grid eq-reveal">
@@ -383,10 +383,10 @@
           @if($bright)
             <article class="eq-home-store-card eq-home-store-card--upcoming" id="home-store-bright">
               <div class="eq-home-store-card__body">
-                <span class="eq-home-store-card__eyebrow">COMING SOON</span>
-                <h3>Bright</h3>
-                <p class="eq-home-store-card__specialty">Electronics &amp; Smart Living</p>
-                <p class="eq-home-store-card__description">A new electronics store is being prepared for launch on Rthquick.</p>
+                <span class="eq-home-store-card__eyebrow">CATALOG IN PREPARATION</span>
+                <h3>Bright Electrical Company</h3>
+                <p class="eq-home-store-card__specialty">Wholesale &amp; Retail Electrical Supplier</p>
+                <p class="eq-home-store-card__description">Based in Chattogram, Bright supplies switches, sockets, LED lights, circuit breakers, fans and other electrical accessories.</p>
                 <a href="{{ route('stores.show', 'bright') }}" class="eq-btn eq-btn--light eq-home-store-card__cta">Preview Store <span aria-hidden="true">&rarr;</span></a>
               </div>
             </article>

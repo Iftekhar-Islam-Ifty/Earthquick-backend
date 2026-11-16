@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title', ($query ? 'Search: "' . $query . '"' : 'Search Collection') . ' | Rthquick')
-@section('meta_description', 'Search products and collections from independent Bangladeshi brands at Rthquick.')
+@section('meta_description', 'Search products and collections from independent Bangladeshi stores at Rthquick.')
 @section('body_class', 'eq-catalog-page')
 @section('scroll_motion', '1')
 
@@ -115,8 +115,8 @@
             <option value="{{ $filterCategory->slug }}" {{ request('category') === $filterCategory->slug ? 'selected' : '' }}>{{ $filterCategory->name }}</option>
           @endforeach
         </select>
-        <select name="vendor" aria-label="Brand" style="padding: 0.55rem; border: 1px solid var(--eq-line); border-radius: 5px; background: #fff;">
-          <option value="">All Brands</option>
+        <select name="vendor" aria-label="Store" style="padding: 0.55rem; border: 1px solid var(--eq-line); border-radius: 5px; background: #fff;">
+          <option value="">All Stores</option>
           @foreach($vendors as $filterVendor)
             <option value="{{ $filterVendor->slug }}" {{ request('vendor') === $filterVendor->slug ? 'selected' : '' }}>{{ $filterVendor->name }}</option>
           @endforeach

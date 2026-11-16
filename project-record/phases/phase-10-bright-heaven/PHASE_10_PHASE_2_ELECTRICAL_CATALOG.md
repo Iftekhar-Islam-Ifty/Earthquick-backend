@@ -19,8 +19,9 @@ this first Phase 2 slice.
    Circuit Breakers, Fans and Electrical Accessories.
 3. Guide and validate Bright product entry under Electronics and electronics
    product type, while keeping its Heaven brand attached from Phase 1.
-4. Use product/store language for Bright while preserving Nous Telos's existing
-   fashion-oriented store copy.
+4. Identify Nous Telos and Bright as stores in customer/admin navigation,
+   directories and seller filters; reserve Brand labels for product brands such
+   as Heaven. Preserve Nous Telos's existing fashion-oriented store copy.
 5. Add Bright product listings only from facts Bright has supplied; do not invent
    SKUs, prices, specs, certifications, manufacturer claims or warranty terms.
 
@@ -43,6 +44,11 @@ Admin product data entry and order/cart warranty-provider labels from Phase 1
 were also tightened during this work. Bright currently has zero products, so no
 SKU, price, stock or specifications were added. PHP syntax checks and Blade
 compilation passed; automated tests and browser visual review were not run.
+
+The store/brand distinction is now reflected in navigation, store directory,
+store pages, admin vendor management, product-store filters, about content and
+invoice identity. Product brand filters/labels remain available for actual
+product brands; vendor-backed filter fields are labelled Store in the UI.
 
 ## Reviewed local data change
 

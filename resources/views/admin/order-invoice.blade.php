@@ -370,10 +370,9 @@
     <header class="eq-invoice-header">
       <div>
         <div class="eq-brand-title">RTHQUICK</div>
-        <div class="eq-brand-sub">NOUS TELOS &bull; DESIGN STUDIO</div>
-        <div class="eq-brand-sub">ATELIER &amp; MULTI-BRAND COLLECTIVE</div>
+        <div class="eq-brand-sub">MARKETPLACE &amp; CENTRAL CUSTOMER CARE</div>
+        <div class="eq-brand-sub">MULTI-STORE CATALOG</div>
         <div class="eq-brand-address">
-          Shop #215, RF Police Plaza (2nd floor), JC Guha Road, Nandankanan, Chittagong 4100, Bangladesh<br>
           @if(config('communications.support_phone'))Phone: {{ config('communications.support_phone') }}<br>@endif @if(config('communications.support_email'))Email: {{ config('communications.support_email') }}<br>@endif
           Web: rthquick.com
         </div>

@@ -7,7 +7,7 @@
   <div class="eq-navbar__inner">
     <!-- Brand Logo -->
     <a href="{{ route('home') }}" class="eq-navbar__logo" id="eq-brand-logo" aria-label="Rthquick Home">
-      <img src="{{ asset('images/logo/earthquick-logo.png') }}" alt="Rthquick — Crafted for the Modern You" width="150" height="32" decoding="async" />
+      <img src="{{ asset('images/logo/rthquick-logo.png') }}" alt="Rthquick — Crafted for the Modern You" width="150" height="32" decoding="async" />
     </a>
 
     <!-- Desktop Navigation Menu -->
@@ -16,7 +16,7 @@
         <!-- Mobile Drawer Pinned Header with Brand Logo -->
         <li class="eq-drawer-header">
           <a href="{{ route('home') }}" class="eq-drawer-logo" aria-label="Rthquick Home">
-            <img src="{{ asset('images/logo/earthquick-logo.png') }}" alt="Rthquick — Crafted for the Modern You" width="130" height="28" decoding="async" />
+            <img src="{{ asset('images/logo/rthquick-logo.png') }}" alt="Rthquick — Crafted for the Modern You" width="130" height="28" decoding="async" />
           </a>
           <button type="button" class="eq-drawer-close-btn" id="eq-drawer-close" aria-label="Close navigation menu">
             <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -92,33 +92,33 @@
           </div>
         </li>
 
-        <!-- 2. Brand Dropdown -->
+        <!-- 2. Store Dropdown -->
         <li class="eq-nav-item eq-nav-item--has-dropdown" id="nav-item-stores">
           <div class="eq-nav-link-wrapper">
-            <a href="{{ route('stores.index') }}" id="nav-link-stores" class="{{ request()->is('stores*') ? 'is-active' : '' }}">Brand</a>
-            <button type="button" class="eq-dropdown-toggle-btn" id="btn-toggle-stores-sub" aria-expanded="false" aria-label="Toggle Brand list">
+            <a href="{{ route('stores.index') }}" id="nav-link-stores" class="{{ request()->is('stores*') ? 'is-active' : '' }}">Stores</a>
+            <button type="button" class="eq-dropdown-toggle-btn" id="btn-toggle-stores-sub" aria-expanded="false" aria-label="Toggle Stores list">
               <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <polyline points="6 9 12 15 18 9"></polyline>
               </svg>
             </button>
           </div>
 
-          <!-- Brand Dropdown Panel -->
-          <div class="eq-megamenu eq-megamenu--stores" id="megamenu-stores" role="region" aria-label="Brands">
+          <!-- Store Dropdown Panel -->
+          <div class="eq-megamenu eq-megamenu--stores" id="megamenu-stores" role="region" aria-label="Stores">
             <div class="eq-megamenu__grid eq-megamenu__grid--stores">
               <div class="eq-megamenu__col">
-                <div class="eq-megamenu__heading">Featured Brands</div>
-                <div class="eq-brand-highlights" aria-label="Featured brands">
+                <div class="eq-megamenu__heading">Featured Stores</div>
+                <div class="eq-brand-highlights" aria-label="Featured stores">
                   <div class="eq-brand-highlight">
                     <a href="{{ route('stores.show', 'nous-telos') }}" class="eq-brand-highlight__title">Nous Telos</a>
                     <span class="eq-brand-highlight__text">Bengali Heritage &amp; Handloom</span>
-                    <a href="{{ route('stores.show', 'nous-telos') }}" class="eq-brand-highlight__link">Visit Brand <span aria-hidden="true">&rarr;</span></a>
+                    <a href="{{ route('stores.show', 'nous-telos') }}" class="eq-brand-highlight__link">Visit Store <span aria-hidden="true">&rarr;</span></a>
                   </div>
                   <div class="eq-brand-highlight">
-                    <strong class="eq-brand-highlight__title">Bright</strong>
-                    <span class="eq-brand-highlight__badge">Coming Soon</span>
-                    <span class="eq-brand-highlight__text">Electronics &amp; Smart Living</span>
-                    <a href="{{ route('stores.show', 'bright') }}" class="eq-brand-highlight__link">Preview Brand <span aria-hidden="true">&rarr;</span></a>
+                    <strong class="eq-brand-highlight__title">Bright Electrical Company</strong>
+                    <span class="eq-brand-highlight__badge">Catalog in Preparation</span>
+                    <span class="eq-brand-highlight__text">Wholesale &amp; Retail Electrical Supplier</span>
+                    <a href="{{ route('stores.show', 'bright') }}" class="eq-brand-highlight__link">Preview Store <span aria-hidden="true">&rarr;</span></a>
                   </div>
                 </div>
               </div>
@@ -168,7 +168,7 @@
               </a>
             @endauth
           </div>
-          <p class="eq-drawer-tagline">Independent brands, one marketplace</p>
+          <p class="eq-drawer-tagline">Independent stores, one marketplace</p>
         </li>
       </ul>
     </nav>
