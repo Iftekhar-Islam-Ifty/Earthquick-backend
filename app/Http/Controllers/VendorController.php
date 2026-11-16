@@ -100,9 +100,11 @@ class VendorController extends Controller
             ->distinct()
             ->pluck('delivery_class');
         $hasMixedReturnPolicies = (clone $catalog)->distinct()->count('is_returnable') > 1;
+        $isBrightStore = $vendor->slug === 'bright';
 
         return view('vendor.show', compact(
             'vendor',
+            'isBrightStore',
             'products',
             'allProductsCount',
             'categories',

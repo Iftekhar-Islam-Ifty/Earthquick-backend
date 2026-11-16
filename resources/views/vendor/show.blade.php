@@ -59,7 +59,6 @@
 @endpush
 
 @section('content')
-@php($isBrightStore = $vendor->slug === 'bright')
 <main id="main-content" tabindex="-1">
 
   <!-- Breadcrumb Navigation -->
