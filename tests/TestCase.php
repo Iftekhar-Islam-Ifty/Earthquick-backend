@@ -19,7 +19,7 @@ abstract class TestCase extends BaseTestCase
 
     public function createApplication()
     {
-        if (! defined('EARTHQUICK_TEST_ROOT')) {
+        if (! defined('RTHQUICK_TEST_ROOT')) {
             throw new \RuntimeException('Run tests using phpunit.xml or phpunit.regressions.xml.');
         }
 
@@ -32,9 +32,9 @@ abstract class TestCase extends BaseTestCase
 
         // Remove alternative named connections so tests cannot reach the real DB.
         $config->set('database.connections', ['sqlite' => $config->get('database.connections.sqlite')]);
-        $app->usePublicPath(EARTHQUICK_TEST_ROOT.'/public');
-        $config->set('filesystems.disks.local.root', EARTHQUICK_TEST_ROOT.'/storage/app/private');
-        $config->set('filesystems.disks.public.root', EARTHQUICK_TEST_ROOT.'/storage/app/public');
+        $app->usePublicPath(RTHQUICK_TEST_ROOT.'/public');
+        $config->set('filesystems.disks.local.root', RTHQUICK_TEST_ROOT.'/storage/app/private');
+        $config->set('filesystems.disks.public.root', RTHQUICK_TEST_ROOT.'/storage/app/public');
 
         // A new application means a new in-memory DB, including tests without a
         // DatabaseTransactions trait. Never call the destructive production seeder.

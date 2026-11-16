@@ -820,7 +820,7 @@
   <aside class="eq-admin-sidebar">
     <div class="eq-admin-sidebar__brand">
       <a href="{{ route('admin.dashboard') }}" style="display: inline-flex; align-items: center; gap: 0.65rem; text-decoration: none;">
-        <img src="{{ asset('images/logo/earthquick-logo.png') }}" alt="Rthquick" class="eq-admin-sidebar__logo" />
+        <img src="{{ asset('images/logo/rthquick-logo.png') }}" alt="Rthquick" class="eq-admin-sidebar__logo" />
         <span class="eq-admin-badge">Admin Studio</span>
       </a>
       <button type="button" class="eq-admin-close-sidebar" id="adminSidebarClose" aria-label="Close Navigation">

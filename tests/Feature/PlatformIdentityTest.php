@@ -81,7 +81,7 @@ class PlatformIdentityTest extends TestCase
         }
     }
 
-    public function test_shared_pages_present_earthquick_as_the_platform(): void
+    public function test_shared_pages_present_rthquick_as_the_platform(): void
     {
         $this->get('/checkout')
             ->assertOk()
@@ -234,7 +234,7 @@ class PlatformIdentityTest extends TestCase
         }
     }
 
-    public function test_styled_by_you_uses_earthquick_community_copy_without_unverified_social_links(): void
+    public function test_styled_by_you_uses_rthquick_community_copy_without_unverified_social_links(): void
     {
         $response = $this->get('/')->assertOk();
 

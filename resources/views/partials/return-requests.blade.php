@@ -30,7 +30,7 @@
         @foreach($itemRequests as $itemRequest)
           <div style="font-size: 0.8rem; margin-top: 0.4rem;">{{ $itemRequest->quantity }} unit(s): <strong>{{ ucfirst($itemRequest->status) }}</strong> · requested {{ $itemRequest->created_at->format('d M Y') }}
             @if($itemRequest->status === 'authorized' || $itemRequest->status === 'received')
-              @if($itemRequest->return_shipping_payer === 'earthquick') · Return courier: Rthquick (keep courier receipt)
+              @if(in_array($itemRequest->return_shipping_payer, ['rthquick', 'earthquick'], true)) · Return courier: Rthquick (keep courier receipt)
               @elseif($itemRequest->return_shipping_payer === 'customer') · Return courier: customer
               @else · Return courier payer: contact support for review @endif
             @endif

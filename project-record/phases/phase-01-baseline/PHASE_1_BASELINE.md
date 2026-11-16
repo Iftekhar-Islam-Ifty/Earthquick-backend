@@ -1,8 +1,9 @@
 # Phase 1 — baseline and isolated test setup
 
 Historical Phase 1 results below are preserved. Phases 2 and 3 are now complete;
-see [Phase 2 shared UI](PHASE_2_SHARED_UI.md) and [Phase 3 catalog/vendor
-integrity](PHASE_3_CATALOG_VENDOR.md) for current results. `composer test` now
+see [Phase 2 shared UI](../phase-02-catalog-and-ui/PHASE_2_SHARED_UI.md) and
+[Phase 3 catalog/vendor integrity](../phase-03-vendor-integrity/PHASE_3_CATALOG_VENDOR.md)
+for current results. `composer test` now
 also runs the passing frontend suite. Only Phase 4 backend regressions remain pending.
 
 Completed 2026-09-18. Scope: test infrastructure and documentation only. No
@@ -11,7 +12,7 @@ behavior changed in this phase. Existing uncommitted vendor work was preserved.
 
 ## Owner constraints
 
-- Earthquick is the marketplace; Nous Telos remains the detailed flagship vendor.
+- Rthquick is the marketplace; Nous Telos remains the detailed flagship vendor.
 - Bright is an example electronics storefront for later development.
 - Preserve the existing theme and implement incremental changes.
 - One central admin only: no separate seller dashboards or management portals.
@@ -75,7 +76,7 @@ or invert their assertions simply to make the results green.
 `Tests\TestCase` refuses an unexpected environment/database, removes alternative
 named database connections, migrates a fresh in-memory database per application,
 and loads deterministic synthetic fixtures. It never runs DatabaseSeeder or
-EarthquickSeeder and does not require the original local database to be running.
+RthquickSeeder and does not require the original local database to be running.
 
 `tests/Support/CatalogFixture.php` provides two vendors, seven categories, six
 subcategories and four synthetic Nous Telos products. Bright starts empty. No

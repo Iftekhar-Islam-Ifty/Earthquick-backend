@@ -65,7 +65,7 @@ function harness(base = 'http://localhost/earthquick/public') {
   vm.createContext(context);
   vm.runInContext(fs.readFileSync(path.join(__dirname, '../../public/js/script.js'), 'utf8'), context);
   vm.runInContext('Toast.show = () => {}', context);
-  const cart = context.window.EarthquickCart;
+  const cart = context.window.RthquickCart;
   cart.buildDrawerDOM = () => {};
   cart.updateBadges = cart.renderDrawer = cart.openDrawer = () => {};
   return {

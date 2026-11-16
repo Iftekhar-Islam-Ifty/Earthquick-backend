@@ -34,7 +34,7 @@ class OrderDeletionTest extends TestCase
             'district' => 'Chattogram',
             'area' => 'QA Area',
             'address' => 'Synthetic QA address',
-            'order_notes' => 'EARTHQUICK QA TEST - do not dispatch',
+            'order_notes' => 'RTHQUICK QA TEST - do not dispatch',
             'payment_method' => 'cod',
         ])->assertRedirectContains('/checkout/success/EQ-');
 
@@ -43,7 +43,7 @@ class OrderDeletionTest extends TestCase
         $admin = User::factory()->create(['is_admin' => true]);
         $this->actingAs($admin)->post(route('admin.orders.update-status', $order), [
             'status' => 'cancelled',
-            'admin_notes' => 'EARTHQUICK QA TEST - controlled cancellation',
+            'admin_notes' => 'RTHQUICK QA TEST - controlled cancellation',
         ])->assertRedirect();
         $this->assertSame(5, $product->fresh()->stock_quantity);
 

@@ -186,7 +186,7 @@ class ReturnRequestWorkflowTest extends TestCase
             'decision' => 'authorize', 'decision_note' => 'Verified the wrong item was shipped',
             'verified_issue_type' => 'wrong_item',
         ])->assertRedirect();
-        $this->assertSame('earthquick', $returns[1]->fresh()->return_shipping_payer);
+        $this->assertSame('rthquick', $returns[1]->fresh()->return_shipping_payer);
         $this->get(route('admin.orders.show', $order->id))->assertOk()->assertSee('Return courier payer: Rthquick');
     }
 }

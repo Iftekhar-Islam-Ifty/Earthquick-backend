@@ -8,6 +8,6 @@ Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote');
 
-Schedule::command('earthquick:mail-retry --limit=25')
+Schedule::command('rthquick:mail-retry --limit=25')
     ->everyFiveMinutes()
     ->when(fn () => config('communications.email_enabled'));

@@ -104,7 +104,7 @@ class GeneralCatalogCompletionTest extends TestCase
     {
         $admin = User::create([
             'name' => 'Media Catalog Admin',
-            'email' => 'media-admin'.random_int(1000, 9999).'@earthquick.com',
+            'email' => 'media-admin'.random_int(1000, 9999).'@rthquick.com',
             'password' => Hash::make('password123'),
             'is_admin' => true,
         ]);

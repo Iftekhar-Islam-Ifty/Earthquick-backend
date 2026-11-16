@@ -1,6 +1,6 @@
 # Admin order retention
 
-Earthquick Admin → Customer Orders has three folders: Active, Archive and Trash.
+Rthquick Admin → Customer Orders has three folders: Active, Archive and Trash.
 
 - Archive is available for delivered or cancelled orders. It hides them from the active list, but keeps all data, financial reports and the customer-facing order record. Archive has no expiry; admin can restore an order to Active at any time.
 - Trash is available only for cancelled, unpaid, unfulfilled COD orders with a completed cancellation and no payment, dispatch, return or refund history. An order may be moved from Active or Archive. It disappears from normal order queries and the customer's order history while in Trash, but its data and related records remain in the database.

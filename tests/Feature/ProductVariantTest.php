@@ -99,7 +99,7 @@ class ProductVariantTest extends TestCase
         [$product] = $this->makeVariantProduct();
         $admin = User::create([
             'name' => 'Variant Catalog Admin',
-            'email' => 'variant-admin'.random_int(1000, 9999).'@earthquick.com',
+            'email' => 'variant-admin'.random_int(1000, 9999).'@rthquick.com',
             'password' => Hash::make('password123'),
             'is_admin' => true,
         ]);

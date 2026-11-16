@@ -1,4 +1,4 @@
-# Phase 0 — Earthquick Marketplace Business Rules
+# Phase 0 — Rthquick Marketplace Business Rules
 
 Status: Approved for implementation planning
 
@@ -8,7 +8,7 @@ database or storefront behavior change.
 
 ## 1. Platform ownership and administration
 
-Earthquick has one central platform administration. The Earthquick admin owns
+Rthquick has one central platform administration. The Rthquick admin owns
 and manages every vendor/brand, product, order, customer issue, promotion and
 catalog decision.
 
@@ -43,12 +43,12 @@ delivery rule used at checkout.
 
 ## 4. Return, cancellation and refund ownership
 
-Earthquick central admin handles customer cancellation, return and refund
+Rthquick central admin handles customer cancellation, return and refund
 requests.
 
 Vendors do not receive a separate support or approval workflow. The admin may
 coordinate with a vendor internally, but the customer-facing decision and order
-state are controlled by Earthquick.
+state are controlled by Rthquick.
 
 The later order system should support, at minimum:
 
@@ -105,7 +105,7 @@ The next implementation phases must preserve these rules:
 
 | Topic | Decision |
 |---|---|
-| Administration | One central Earthquick admin |
+| Administration | One central Rthquick admin |
 | Vendor dashboards | Not required |
 | Multi-vendor cart | Allowed |
 | Delivery | Order-wise |

@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Mail\EarthquickNotice;
+use App\Mail\RthquickNotice;
 use App\Models\OutboundMessage;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -63,7 +63,7 @@ class OutboundMailService
         }
 
         try {
-            Mail::to($message->recipient)->send(new EarthquickNotice($message->subject, $message->body));
+            Mail::to($message->recipient)->send(new RthquickNotice($message->subject, $message->body));
             // Clear recoverable recipient/content after successful handoff.
             OutboundMessage::whereKey($id)->where('status', 'sending')->update([
                 'status' => 'sent',

@@ -69,7 +69,7 @@ class OrderRefundService
                 $delivery = $this->cents($order->delivery_fee);
             }
             $returnShipping = $this->cents($returnShippingAmount);
-            if ($returnShipping > 0 && ($return->return_shipping_payer !== 'earthquick'
+            if ($returnShipping > 0 && (! in_array($return->return_shipping_payer, ['rthquick', 'earthquick'], true)
                 || ! $shippingReceiptReference)) {
                 throw ValidationException::withMessages([
                     'return_shipping_amount' => 'Return postage reimbursement requires a verified Rthquick-paid reason and a courier receipt reference.',

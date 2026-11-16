@@ -4,7 +4,7 @@ Status: COD-only local implementation complete; bKash integration explicitly def
 
 ## Approved payment scope
 
-- Earthquick accepts one combined order across brands, administered centrally.
+- Rthquick accepts one combined order across brands, administered centrally.
 - Initial methods are COD and bKash online gateway only. Card, Nagad, Rocket, manual transfers, commissions and vendor payouts are not part of this phase.
 - A browser redirect or customer-provided transaction ID must never by itself mark an order paid. Payment success requires server-side verification against bKash.
 

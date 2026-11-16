@@ -215,7 +215,7 @@ class RefundWorkflowTest extends TestCase
         $this->assertSame(3, $product->fresh()->stock_quantity);
     }
 
-    public function test_return_courier_reimbursement_requires_verified_earthquick_liability_and_unique_receipt(): void
+    public function test_return_courier_reimbursement_requires_verified_rthquick_liability_and_unique_receipt(): void
     {
         [$admin, $order, , , $returns] = $this->fixture();
         foreach ($returns as $return) {
@@ -231,7 +231,7 @@ class RefundWorkflowTest extends TestCase
             'approval_note' => 'Customer-funded postage', 'return_shipping_amount' => '75.50',
             'return_shipping_receipt_reference' => 'COURIER-QA-1',
         ])->assertSessionHasErrors('return_shipping_amount');
-        $returns[0]->update(['verified_issue_type' => 'wrong_item', 'return_shipping_payer' => 'earthquick']);
+        $returns[0]->update(['verified_issue_type' => 'wrong_item', 'return_shipping_payer' => 'rthquick']);
         $this->post($this->approveUrl($order, $returns[0]->id), [
             'approval_note' => 'Missing courier receipt', 'return_shipping_amount' => '75.50',
         ])->assertSessionHasErrors('return_shipping_amount');
@@ -242,7 +242,7 @@ class RefundWorkflowTest extends TestCase
         $first = $order->refunds()->sole();
         $this->assertSame('75.50', $first->return_shipping_amount);
         $this->assertSame('975.50', $first->total_amount);
-        $returns[1]->update(['verified_issue_type' => 'damaged_defective', 'return_shipping_payer' => 'earthquick']);
+        $returns[1]->update(['verified_issue_type' => 'damaged_defective', 'return_shipping_payer' => 'rthquick']);
         $this->post($this->approveUrl($order, $returns[1]->id), [
             'approval_note' => 'Duplicate courier receipt', 'return_shipping_amount' => '75.50',
             'return_shipping_receipt_reference' => 'COURIER-QA-1',

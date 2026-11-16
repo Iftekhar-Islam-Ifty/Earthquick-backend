@@ -50,6 +50,22 @@ store pages, admin vendor management, product-store filters, about content and
 invoice identity. Product brand filters/labels remain available for actual
 product brands; vendor-backed filter fields are labelled Store in the UI.
 
+## Demo listings - 2026-11-16
+
+At the owner's request, six clearly marked, replaceable `[DEMO]` listings were
+added locally for switches, sockets, LED lights, circuit breakers, fans and
+electrical accessories. Each is assigned to Bright, the Heaven brand and its
+matching Electronics subcategory. The demo prices and stock are only for trying
+the storefront, product page, cart and checkout; they are not Bright quotations.
+Simple custom SVG illustrations identify each product type. No product
+specifications or warranty terms were invented, and the demo records state that
+Bright's return policy has not been provided. Replace these with Bright-verified
+catalog data before launch. `BrightDemoProductsSeeder` is safe to rerun and
+updates only these six demo slugs. The local database was backed up at
+`storage/qa/pre-bright-demo-products-20261116/earthquick_db-pre-bright-demo-products.sql`
+before seeding. No schema migration was needed. These local demo listings have
+not been pushed or deployed.
+
 ## Reviewed local data change
 
 Preflight on 2026-11-16 found zero Bright products and zero existing Electronics

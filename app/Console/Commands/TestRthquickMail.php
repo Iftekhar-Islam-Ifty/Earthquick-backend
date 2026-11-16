@@ -2,14 +2,14 @@
 
 namespace App\Console\Commands;
 
-use App\Mail\EarthquickNotice;
+use App\Mail\RthquickNotice;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
 use Throwable;
 
-class TestEarthquickMail extends Command
+class TestRthquickMail extends Command
 {
-    protected $signature = 'earthquick:mail-test {to : Inbox for one controlled test email}';
+    protected $signature = 'rthquick:mail-test {to : Inbox for one controlled test email}';
 
     protected $description = 'Send one controlled Rthquick email without creating an order or inquiry';
 
@@ -32,7 +32,7 @@ class TestEarthquickMail extends Command
         }
 
         try {
-            Mail::to($to)->send(new EarthquickNotice(
+            Mail::to($to)->send(new RthquickNotice(
                 'Rthquick: Email delivery test',
                 'This is a controlled delivery test. No customer order or support inquiry was created.'
             ));

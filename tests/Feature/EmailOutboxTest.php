@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Mail\EarthquickNotice;
+use App\Mail\RthquickNotice;
 use App\Models\OutboundMessage;
 use App\Models\SupportInquiry;
 use App\Models\User;
@@ -35,7 +35,7 @@ class EmailOutboxTest extends TestCase
         $this->assertNull($message->recipient);
         $this->assertNull($message->subject);
         $this->assertNull($message->body);
-        Mail::assertSent(EarthquickNotice::class, 1);
+        Mail::assertSent(RthquickNotice::class, 1);
     }
 
     public function test_failure_is_encrypted_and_retried_only_when_due(): void
@@ -56,8 +56,8 @@ class EmailOutboxTest extends TestCase
         $this->travel(6)->minutes();
         Mail::swap(new MailManager(app()));
         Mail::fake();
-        $this->artisan('earthquick:mail-retry')->assertExitCode(0);
-        Mail::assertSent(EarthquickNotice::class, 1);
+        $this->artisan('rthquick:mail-retry')->assertExitCode(0);
+        Mail::assertSent(RthquickNotice::class, 1);
         $this->assertSame('sent', $message->fresh()->status);
         $this->assertSame(2, $message->fresh()->attempts);
         $this->assertNull($message->fresh()->recipient);
@@ -89,7 +89,7 @@ class EmailOutboxTest extends TestCase
         $this->post(route('admin.email-deliveries.retry', $message->id), [])->assertSessionHasErrors('confirm_retry');
         $this->post(route('admin.email-deliveries.retry', $message->id), ['confirm_retry' => '1'])
             ->assertRedirect(route('admin.email-deliveries', ['status' => 'sent']));
-        Mail::assertSent(EarthquickNotice::class, 1);
+        Mail::assertSent(RthquickNotice::class, 1);
         $this->assertSame('sent', $message->fresh()->status);
         $this->assertNull($message->fresh()->body);
     }
@@ -100,8 +100,8 @@ class EmailOutboxTest extends TestCase
         config()->set('mail.default', 'log');
         app(OutboundMailService::class)->queueAndSend('customer@example.test', 'Notice', 'Body', ['event' => 'placed']);
         $this->assertSame('pending', OutboundMessage::query()->sole()->status);
-        $this->artisan('earthquick:mail-health')->assertExitCode(0);
-        $this->artisan('earthquick:mail-retry')->assertExitCode(1);
+        $this->artisan('rthquick:mail-health')->assertExitCode(0);
+        $this->artisan('rthquick:mail-retry')->assertExitCode(1);
         Mail::assertNothingSent();
     }
 

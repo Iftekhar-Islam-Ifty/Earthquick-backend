@@ -1,6 +1,6 @@
 # Phase 3 — catalog and vendor integrity
 
-Completed 2026-09-18. This phase keeps Earthquick under one central admin. It
+Completed 2026-09-18. This phase keeps Rthquick under one central admin. It
 does not add seller dashboards, vendor management portals, commission, payout,
 or split-fulfilment features.
 

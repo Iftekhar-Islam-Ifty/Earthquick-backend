@@ -1,4 +1,33 @@
-# Earthquick: project memory and architecture review
+# Rthquick: project memory and architecture review
+
+## Current owner direction - 2026-11-16
+
+Rthquick is the platform identity. The two initial stores are Nous Telos and
+Bright. Bright is the electrical-products store/business; Heaven is its
+Bright-owned product brand, not a separate store. Bright provides Heaven product
+warranties. Phase 10 Phase 1 (store/brand/warranty foundation) is complete;
+Phase 2 (Bright electrical catalog) is in progress.
+Warranty duration and terms must come from Bright; do not invent them. See
+[Phase 10 Phase 1](project-record/phases/phase-10-bright-heaven/PHASE_10_PHASE_1_BRAND_FOUNDATION.md),
+[the plan](project-record/plans/PHASE_10_BRIGHT_STORE_HEAVEN_BRAND.md), and the
+[project record index](project-record/README.md). The local identity update is
+recorded at project-record/reference/RTHQUICK_RENAME_2026-11-16.md.
+
+The remainder preserves the earlier architecture review and phase-era notes.
+Where they conflict with current source, owner direction or the project-record
+index, those newer sources take precedence. Historical database names, migration
+filenames and the local XAMPP folder remain technical identifiers until a
+separate data/deployment migration is planned.
+
+Phase 10 Phase 1 delivered Bright-owned Heaven brand data, product-to-brand
+association, admin store/brand selection and ownership validation, customer-facing
+seller/brand/warranty-provider labels, and order-item snapshots. The 2026-11-16
+migration is applied locally after a private database backup. Phase 2 uses Bright's
+supplied Facebook page screenshot to correct its electrical supplier profile and
+establish shared Electronics subcategories. No product specifications or
+warranty terms have been invented.
+
+## Historical review
 
 ## Current scope update — Phase 2
 
@@ -10,16 +39,16 @@ without variants; variant products are revalidated and decremented atomically,
 and order items retain variant snapshots. Products also carry delivery classes,
 return eligibility/windows/notes and role-based secondary media. General filters
 are available across category, search and brand storefront catalogs, while order
-items retain delivery/return snapshots. See `docs/PHASE_2_GENERAL_CATALOG.md`.
+items retain delivery/return snapshots. See `project-record/phases/phase-02-catalog-and-ui/PHASE_2_GENERAL_CATALOG.md`.
 The full suite passes 98 PHP tests / 545 assertions and 10 frontend tests.
 
 The owner has authorized and completed Phase 1 (isolated test setup), Phase 2
 (shared frontend URL/event/quick-view/DOM corrections), Phase 3 (catalog and
 vendor integrity), Phase 4 (checkout and order correctness), and Phase 5
 (platform identity and flagship editorial scope). See
-`docs/PHASE_5_PLATFORM_IDENTITY.md`: `composer test` passes 83 PHP tests / 411
+`project-record/phases/phase-05-platform-identity/PHASE_5_PLATFORM_IDENTITY.md`: `composer test` passes 83 PHP tests / 411
 assertions and 10 JS tests. There is no separate vendor dashboard/portal or
-commission/payout system. Phase 5 presents Earthquick as the marketplace,
+commission/payout system. Phase 5 presents Rthquick as the marketplace,
 preserves Nous Telos as its flagship heritage store, gives Bright an honest
 electronics-store-in-preparation presence, and scopes home fashion editorial
 queries to Nous Telos. Browser visual verification remains unavailable; HTTP and
@@ -30,7 +59,7 @@ It is not a claim of account-wide or permanent assistant memory.
 
 ## Owner's confirmed intent
 
-Earthquick is a multivendor website. Nous Telos is the main initial vendor, a real
+Rthquick is a multivendor website. Nous Telos is the main initial vendor, a real
 Bengali heritage/handloom shop comparable in category to Aarong, which commissioned
 the project. Bright is another vendor, an electronics shop, initially an example
 to develop fully later. More vendors will follow. The original implementation
@@ -40,10 +69,10 @@ most detailed and prominent store without defining every vendor's identity.
 
 ## Confirmed Phase 0 operating rules
 
-- Earthquick has one central admin for all vendors; no vendor dashboards or seller logins are required.
+- Rthquick has one central admin for all vendors; no vendor dashboards or seller logins are required.
 - A customer may place products from multiple vendors in one combined order.
 - Delivery, customer-facing status and tracking remain order-wise.
-- Earthquick central admin owns cancellation, return and refund decisions.
+- Rthquick central admin owns cancellation, return and refund decisions.
 - The initial payment methods are COD and bKash.
 - Suspending a vendor stops new purchases while existing confirmed orders remain for admin review and resolution.
 - Commission, payout and vendor settlement systems are not in scope.
@@ -124,7 +153,7 @@ plus an Electronics category. Bright's current sample copy emphasizes lighting;
 the owner's broader electronics intent takes precedence. Seed contact details
 and marketing claims should be treated as placeholders until confirmed.
 
-`EarthquickSeeder` defines 13 Nous Telos products across six categories: Men,
+`RthquickSeeder` defines 13 Nous Telos products across six categories: Men,
 Women, Kids, Ornaments, Bags, Home Decor. Subcategories include Saree, Three Piece,
 Two Piece, Kantha, Bedsheet, Cushion Cover. Bright has no products in these seeds.
 
@@ -133,7 +162,7 @@ Two Piece, Kantha, Bedsheet, Cushion Cover. Bright has no products in these seed
 1. **Platform/vendor branding is mixed.** Layout/home SEO, footer (including
    "A Nous Telos brand"), mobile drawer, checkout, and search/cart fallbacks assume
    Nous Telos. Store directory language also assumes artisans/ateliers. About
-   presents hardcoded Nous Telos Living and Earthquick Studio instead of reflecting
+   presents hardcoded Nous Telos Living and Rthquick Studio instead of reflecting
    the intended initial Nous Telos/Bright pair. Separate platform-wide text from
    Nous Telos-specific editorial content.
 2. **Home queries are not vendor-scoped.** Featured/new lists query all products;
@@ -147,7 +176,7 @@ Two Piece, Kantha, Bedsheet, Cushion Cover. Bright has no products in these seed
    or Vendor fillable list. These are not working persisted vendor capabilities;
    decide whether to implement or remove their UI expectations.
 5. **Seed order removes Electronics.** DatabaseSeeder runs VendorSeeder, then
-   EarthquickSeeder, which truncates categories/subcategories/products and recreates
+   RthquickSeeder, which truncates categories/subcategories/products and recreates
    only the six original categories. Electronics is therefore removed by the
    normal full seed sequence. This destructive seeder is not a data migration.
 6. **Existing data needs an explicit backfill strategy.** Vendor migrations only
@@ -171,7 +200,7 @@ Two Piece, Kantha, Bedsheet, Cushion Cover. Bright has no products in these seed
 
 ## Recommended incremental direction (not implemented by this review)
 
-1. Establish Earthquick's platform identity in common navigation, SEO, footer,
+1. Establish Rthquick's platform identity in common navigation, SEO, footer,
    checkout and About. Keep Nous Telos prominent as the flagship vendor.
 2. Reuse the store directory and vendor profiles; enrich Nous Telos's own store
    with its existing heritage content. Give Bright an appropriate electronics
@@ -188,7 +217,7 @@ Two Piece, Kantha, Bedsheet, Cushion Cover. Bright has no products in these seed
 
 ## বাংলা সারাংশ
 
-Earthquick মূল মার্কেটপ্লেস; Nous Telos তার প্রধান হেরিটেজ/হ্যান্ডলুম ভেন্ডর,
+Rthquick মূল মার্কেটপ্লেস; Nous Telos তার প্রধান হেরিটেজ/হ্যান্ডলুম ভেন্ডর,
 আর Bright ইলেকট্রনিকস ভেন্ডরের প্রাথমিক উদাহরণ। বর্তমান Laravel/Blade প্রজেক্টে
 ক্যাটালগ, সার্চ, কার্ট, চেকআউট, কাস্টমার অ্যাকাউন্ট ও অ্যাডমিন প্যানেল আছে।
 ভেন্ডর প্রোফাইল, স্টোর পেজ এবং পণ্য/অর্ডার আইটেমে ভেন্ডর সংযোগও ইতিমধ্যে আছে।

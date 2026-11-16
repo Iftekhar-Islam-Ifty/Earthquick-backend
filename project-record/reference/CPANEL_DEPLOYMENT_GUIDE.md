@@ -1,6 +1,6 @@
-# Earthquick (Nous Telos) — cPanel Production Deployment Guide
+# Rthquick (Nous Telos) — cPanel Production Deployment Guide
 
-This comprehensive, step-by-step operational guide explains how to safely and securely deploy the **Earthquick (Nous Telos)** Laravel 11 e-commerce engine to a standard or shared cPanel hosting environment.
+This comprehensive, step-by-step operational guide explains how to safely and securely deploy the **Rthquick (Nous Telos)** Laravel 11 e-commerce engine to a standard or shared cPanel hosting environment.
 
 ---
 
@@ -14,7 +14,7 @@ To maintain enterprise-grade security, separate the core application files from 
 
 ```text
 /home/cpanel_username/
-├── earthquick_core/             <-- [NON-PUBLIC] Laravel core source code & .env
+├── rthquick_core/             <-- [NON-PUBLIC] Laravel core source code & .env
 │   ├── app/
 │   ├── bootstrap/
 │   ├── config/
@@ -55,10 +55,10 @@ On your local machine or build workstation:
 ### Step 2: Upload Files to cPanel
 1. Log in to your **cPanel Dashboard** and open **File Manager**.
 2. Navigate to your home root directory (`/home/username/`).
-3. Create a new directory named `earthquick_core`.
-4. Upload your ZIP archive into `/home/username/earthquick_core` and extract it.
+3. Create a new directory named `rthquick_core`.
+4. Upload your ZIP archive into `/home/username/rthquick_core` and extract it.
 5. Move the entire contents of the project's `public/` directory (all CSS, JS, images, `.htaccess`, and `index.php`) into `/home/username/public_html/`.
-6. You may safely delete the now-empty `public/` directory inside `earthquick_core`.
+6. You may safely delete the now-empty `public/` directory inside `rthquick_core`.
 
 ### Step 3: Configure `public_html/index.php` Entrypoint
 Open `/home/username/public_html/index.php` in the cPanel File Editor and update the relative paths pointing to `autoload.php` and `app.php`:
@@ -71,15 +71,15 @@ use Illuminate\Http\Request;
 define('LARAVEL_START', microtime(true));
 
 // Determine if the application is in maintenance mode...
-if (file_exists($maintenance = __DIR__.'/../earthquick_core/storage/framework/maintenance.php')) {
+if (file_exists($maintenance = __DIR__.'/../rthquick_core/storage/framework/maintenance.php')) {
     require $maintenance;
 }
 
 // Register the Composer Autoloader...
-require __DIR__.'/../earthquick_core/vendor/autoload.php';
+require __DIR__.'/../rthquick_core/vendor/autoload.php';
 
 // Bootstrap Laravel and handle the request...
-(require_once __DIR__.'/../earthquick_core/bootstrap/app.php')
+(require_once __DIR__.'/../rthquick_core/bootstrap/app.php')
     ->handleRequest(Request::capture());
 ```
 
@@ -88,28 +88,28 @@ require __DIR__.'/../earthquick_core/vendor/autoload.php';
 ## 3. MySQL Database Setup and Migration
 
 1. In cPanel, navigate to **MySQL Databases**:
-   - Create a database: `username_earthquick`
+   - Create a database: `username_rthquick`
    - Create a user: `username_eq_user` with a strong password.
    - Add the user to the database and grant **ALL PRIVILEGES**.
 2. Before running any command, take and verify a database backup. If SSH is available, run only the reviewed migrations:
    ```bash
-    cd /home/username/earthquick_core
+    cd /home/username/rthquick_core
     php artisan migrate --force
     ```
 3. Do not run development seeders against an existing production catalog. Product/vendor ownership must be reviewed and migrated deliberately; a seeder is not a production backfill tool.
    The local bootstrap admin is opt-in and never created in production by `DatabaseSeeder`. Provision the production admin through a reviewed, secure process. If an earlier development seed password was ever used for an admin account on this database, rotate that account's password before launch.
 4. If SSH is **not** available:
    - Export your local database `earthquick_db` to an `.sql` file using phpMyAdmin.
-   - Open **phpMyAdmin** in cPanel, select `username_earthquick`, and click **Import**.
+   - Open **phpMyAdmin** in cPanel, select `username_rthquick`, and click **Import**.
 
 ---
 
 ## 4. Production Environment Configuration (`.env`)
 
-Create or edit `/home/username/earthquick_core/.env`:
+Create or edit `/home/username/rthquick_core/.env`:
 
 ```ini
-APP_NAME=Earthquick
+APP_NAME=Rthquick
 APP_ENV=production
 APP_KEY=base64:YOUR_GENERATED_APP_KEY
 APP_DEBUG=false
@@ -122,7 +122,7 @@ LOG_LEVEL=error
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
 DB_PORT=3306
-DB_DATABASE=username_earthquick
+DB_DATABASE=username_rthquick
 DB_USERNAME=username_eq_user
 DB_PASSWORD="YourStrongPasswordHere"
 
@@ -164,8 +164,8 @@ If SSH is unavailable, use the hosting provider's supported file/symlink tool. D
 ### Folder Permissions
 Laravel requires write access to `storage` and `bootstrap/cache`:
 ```bash
-chmod -R 775 /home/username/earthquick_core/storage
-chmod -R 775 /home/username/earthquick_core/bootstrap/cache
+chmod -R 775 /home/username/rthquick_core/storage
+chmod -R 775 /home/username/rthquick_core/bootstrap/cache
 ```
 
 ---
@@ -175,7 +175,7 @@ chmod -R 775 /home/username/earthquick_core/bootstrap/cache
 Run these commands in the cPanel Terminal or via SSH to optimize route dispatching and template compilation:
 
 ```bash
-cd /home/username/earthquick_core
+cd /home/username/rthquick_core
 
 # Cache configuration files into a single optimized file
 php artisan config:cache
@@ -242,7 +242,7 @@ If you plan to utilize Laravel's task scheduler (e.g., pruning old abandoned car
 1. In cPanel, navigate to **Cron Jobs**.
 2. Add a new cron job configured to run every minute (`* * * * *`):
    ```text
-   cd /home/username/earthquick_core && php artisan schedule:run >> /dev/null 2>&1
+   cd /home/username/rthquick_core && php artisan schedule:run >> /dev/null 2>&1
    ```
 
 ---
@@ -263,8 +263,8 @@ If you plan to utilize Laravel's task scheduler (e.g., pruning old abandoned car
 
 | Issue | Likely Root Cause | Resolution |
 | :--- | :--- | :--- |
-| **500 Internal Server Error (Blank Screen)** | File permissions or syntax error in `index.php` paths | Check `/home/username/earthquick_core/storage/logs/laravel.log`. Ensure `storage` is `chmod 775`. Verify paths in `public_html/index.php`. |
-| **Missing CSS / JS / Images** | Assets referencing wrong base URL | Confirm `APP_URL=https://yourdomain.com` in `.env`. Ensure static files were placed in `public_html/` and not left in `earthquick_core/public/`. |
+| **500 Internal Server Error (Blank Screen)** | File permissions or syntax error in `index.php` paths | Check `/home/username/rthquick_core/storage/logs/laravel.log`. Ensure `storage` is `chmod 775`. Verify paths in `public_html/index.php`. |
+| **Missing CSS / JS / Images** | Assets referencing wrong base URL | Confirm `APP_URL=https://yourdomain.com` in `.env`. Ensure static files were placed in `public_html/` and not left in `rthquick_core/public/`. |
 | **Database Connection Refused** | Incorrect DB credentials or host | In shared cPanel, `DB_HOST` is almost always `127.0.0.1` or `localhost`. Double check database user prefix (`username_dbname`). |
 | **Changes to `.env` Not Reflected** | Configuration is cached | Execute `php artisan config:clear` or delete `bootstrap/cache/config.php`. |
 | **403 Forbidden on `/admin`** | User does not have `is_admin = 1` | Check the `users` table via phpMyAdmin and ensure `is_admin` column is set to `1` for your account. |

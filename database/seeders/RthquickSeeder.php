@@ -8,7 +8,7 @@ use App\Models\Subcategory;
 use App\Models\Vendor;
 use Illuminate\Database\Seeder;
 
-class EarthquickSeeder extends Seeder
+class RthquickSeeder extends Seeder
 {
     public function run(): void
     {

@@ -230,7 +230,7 @@ class CartAndCheckoutTest extends TestCase
         $response = $this->post('/checkout/order', [
             'customer_name' => 'Iftekhar Islam Ifty',
             'customer_phone' => '01793123456',
-            'customer_email' => 'ifty@earthquick.com',
+            'customer_email' => 'ifty@rthquick.com',
             'delivery_zone' => 'inside_ctg',
             'district' => 'Chattogram',
             'area' => 'Nasirabad',
@@ -520,7 +520,7 @@ class CartAndCheckoutTest extends TestCase
         $response = $this->post('/checkout/order', [
             'customer_name' => 'Promo Customer',
             'customer_phone' => '01711223344',
-            'customer_email' => 'promo@earthquick.com',
+            'customer_email' => 'promo@rthquick.com',
             'delivery_zone' => 'inside_ctg',
             'district' => 'Chattogram',
             'area' => 'Panchlaish',

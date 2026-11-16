@@ -3,13 +3,13 @@
 // PHPUnit only: never load application config/cache before establishing isolation.
 require dirname(__DIR__).'/vendor/autoload.php';
 
-define('EARTHQUICK_TEST_ROOT', sys_get_temp_dir().'/earthquick-tests-'.bin2hex(random_bytes(8)));
-$cacheRelative = 'storage/qa/cache-'.basename(EARTHQUICK_TEST_ROOT);
+define('RTHQUICK_TEST_ROOT', sys_get_temp_dir().'/rthquick-tests-'.bin2hex(random_bytes(8)));
+$cacheRelative = 'storage/qa/cache-'.basename(RTHQUICK_TEST_ROOT);
 mkdir(dirname(__DIR__).'/'.$cacheRelative, 0777, true);
 
 foreach (['bootstrap', 'public', 'storage/framework/views', 'storage/framework/sessions',
     'storage/framework/cache/data', 'storage/logs', 'storage/app/private', 'storage/app/public'] as $directory) {
-    if (! mkdir(EARTHQUICK_TEST_ROOT.'/'.$directory, 0777, true) && ! is_dir(EARTHQUICK_TEST_ROOT.'/'.$directory)) {
+    if (! mkdir(RTHQUICK_TEST_ROOT.'/'.$directory, 0777, true) && ! is_dir(RTHQUICK_TEST_ROOT.'/'.$directory)) {
         throw new RuntimeException('Cannot create isolated test directory.');
     }
 }
@@ -29,8 +29,8 @@ $environment = [
     'QUEUE_CONNECTION' => 'sync',
     'LOG_CHANNEL' => 'single',
     'APP_MAINTENANCE_DRIVER' => 'file',
-    'LARAVEL_STORAGE_PATH' => EARTHQUICK_TEST_ROOT.'/storage',
-    'VIEW_COMPILED_PATH' => EARTHQUICK_TEST_ROOT.'/storage/framework/views',
+    'LARAVEL_STORAGE_PATH' => RTHQUICK_TEST_ROOT.'/storage',
+    'VIEW_COMPILED_PATH' => RTHQUICK_TEST_ROOT.'/storage/framework/views',
     // Relative paths also work with Laravel's cache-path resolver on Windows.
     'APP_CONFIG_CACHE' => $cacheRelative.'/config.php',
     'APP_ROUTES_CACHE' => $cacheRelative.'/routes.php',

@@ -53,7 +53,7 @@ class AdminFeatureTest extends TestCase
 
         $admin = User::create([
             'name'     => 'Chief Administrator',
-            'email'    => 'admin' . rand(1000, 9999) . '@earthquick.com',
+            'email'    => 'admin' . rand(1000, 9999) . '@rthquick.com',
             'phone'    => '01811' . rand(100000, 999999),
             'password' => Hash::make('password123'),
             'is_admin' => true,
@@ -74,7 +74,7 @@ class AdminFeatureTest extends TestCase
     {
         $admin = User::create([
             'name'     => 'Order Manager',
-            'email'    => 'orders' . rand(1000, 9999) . '@earthquick.com',
+            'email'    => 'orders' . rand(1000, 9999) . '@rthquick.com',
             'phone'    => '01911' . rand(100000, 999999),
             'password' => Hash::make('password123'),
             'is_admin' => true,
@@ -113,7 +113,7 @@ class AdminFeatureTest extends TestCase
     {
         $admin = User::create([
             'name'     => 'Dispatch Lead',
-            'email'    => 'dispatch' . rand(1000, 9999) . '@earthquick.com',
+            'email'    => 'dispatch' . rand(1000, 9999) . '@rthquick.com',
             'phone'    => '01511' . rand(100000, 999999),
             'password' => Hash::make('password123'),
             'is_admin' => true,
@@ -163,7 +163,7 @@ class AdminFeatureTest extends TestCase
     {
         $admin = User::create([
             'name'     => 'Inventory Head',
-            'email'    => 'stock' . rand(1000, 9999) . '@earthquick.com',
+            'email'    => 'stock' . rand(1000, 9999) . '@rthquick.com',
             'phone'    => '01311' . rand(100000, 999999),
             'password' => Hash::make('password123'),
             'is_admin' => true,
@@ -210,7 +210,7 @@ class AdminFeatureTest extends TestCase
     {
         $admin = User::create([
             'name'     => 'Auto Redirect Admin',
-            'email'    => 'autoadmin' . rand(1000, 9999) . '@earthquick.com',
+            'email'    => 'autoadmin' . rand(1000, 9999) . '@rthquick.com',
             'phone'    => '01722' . rand(100000, 999999),
             'password' => Hash::make('password123'),
             'is_admin' => true,
@@ -232,7 +232,7 @@ class AdminFeatureTest extends TestCase
     {
         $admin = User::create([
             'name'     => 'Navbar Admin',
-            'email'    => 'navbaradmin' . rand(1000, 9999) . '@earthquick.com',
+            'email'    => 'navbaradmin' . rand(1000, 9999) . '@rthquick.com',
             'phone'    => '01733' . rand(100000, 999999),
             'password' => Hash::make('password123'),
             'is_admin' => true,
@@ -268,7 +268,7 @@ class AdminFeatureTest extends TestCase
     {
         $admin = User::create([
             'name'     => 'Product Creator Admin',
-            'email'    => 'prodcreate' . rand(1000, 9999) . '@earthquick.com',
+            'email'    => 'prodcreate' . rand(1000, 9999) . '@rthquick.com',
             'phone'    => '01755' . rand(100000, 999999),
             'password' => Hash::make('password123'),
             'is_admin' => true,
@@ -289,7 +289,7 @@ class AdminFeatureTest extends TestCase
     {
         $admin = User::create([
             'name'     => 'Catalog Uploader Admin',
-            'email'    => 'uploader' . rand(1000, 9999) . '@earthquick.com',
+            'email'    => 'uploader' . rand(1000, 9999) . '@rthquick.com',
             'phone'    => '01766' . rand(100000, 999999),
             'password' => Hash::make('password123'),
             'is_admin' => true,
@@ -351,7 +351,7 @@ class AdminFeatureTest extends TestCase
     {
         $admin = User::create([
             'name' => 'Specification Validator',
-            'email' => 'spec-validator'.rand(1000, 9999).'@earthquick.com',
+            'email' => 'spec-validator'.rand(1000, 9999).'@rthquick.com',
             'password' => Hash::make('password123'),
             'is_admin' => true,
         ]);
@@ -377,7 +377,7 @@ class AdminFeatureTest extends TestCase
     {
         $admin = User::create([
             'name'     => 'Editor Admin',
-            'email'    => 'editor' . rand(1000, 9999) . '@earthquick.com',
+            'email'    => 'editor' . rand(1000, 9999) . '@rthquick.com',
             'phone'    => '01777' . rand(100000, 999999),
             'password' => Hash::make('password123'),
             'is_admin' => true,
@@ -398,7 +398,7 @@ class AdminFeatureTest extends TestCase
     {
         $admin = User::create([
             'name'     => 'Updater Admin',
-            'email'    => 'updater' . rand(1000, 9999) . '@earthquick.com',
+            'email'    => 'updater' . rand(1000, 9999) . '@rthquick.com',
             'phone'    => '01788' . rand(100000, 999999),
             'password' => Hash::make('password123'),
             'is_admin' => true,
@@ -446,7 +446,7 @@ class AdminFeatureTest extends TestCase
     {
         $admin = User::create([
             'name'     => 'Deletion Admin',
-            'email'    => 'deleter' . rand(1000, 9999) . '@earthquick.com',
+            'email'    => 'deleter' . rand(1000, 9999) . '@rthquick.com',
             'phone'    => '01799' . rand(100000, 999999),
             'password' => Hash::make('password123'),
             'is_admin' => true,
@@ -482,7 +482,7 @@ class AdminFeatureTest extends TestCase
     {
         $admin = User::create([
             'name'     => 'Order Searcher',
-            'email'    => 'searcher' . rand(1000, 9999) . '@earthquick.com',
+            'email'    => 'searcher' . rand(1000, 9999) . '@rthquick.com',
             'phone'    => '01722' . rand(100000, 999999),
             'password' => Hash::make('password123'),
             'is_admin' => true,
@@ -530,7 +530,7 @@ class AdminFeatureTest extends TestCase
     {
         $admin = User::create([
             'name'     => 'Courier Dispatcher',
-            'email'    => 'dispatcher' . rand(1000, 9999) . '@earthquick.com',
+            'email'    => 'dispatcher' . rand(1000, 9999) . '@rthquick.com',
             'phone'    => '01633' . rand(100000, 999999),
             'password' => Hash::make('password123'),
             'is_admin' => true,
@@ -575,7 +575,7 @@ class AdminFeatureTest extends TestCase
     {
         $admin = User::create([
             'name'     => 'Billing Specialist',
-            'email'    => 'billing' . rand(1000, 9999) . '@earthquick.com',
+            'email'    => 'billing' . rand(1000, 9999) . '@rthquick.com',
             'phone'    => '01844' . rand(100000, 999999),
             'password' => Hash::make('password123'),
             'is_admin' => true,
@@ -629,7 +629,7 @@ class AdminFeatureTest extends TestCase
     {
         $admin = User::create([
             'name'     => 'Analytics Lead',
-            'email'    => 'analytics' . rand(1000, 9999) . '@earthquick.com',
+            'email'    => 'analytics' . rand(1000, 9999) . '@rthquick.com',
             'phone'    => '01777' . rand(100000, 999999),
             'password' => Hash::make('password123'),
             'is_admin' => true,
@@ -678,7 +678,7 @@ class AdminFeatureTest extends TestCase
     {
         $admin = User::create([
             'name'     => 'Export Auditor',
-            'email'    => 'export' . rand(1000, 9999) . '@earthquick.com',
+            'email'    => 'export' . rand(1000, 9999) . '@rthquick.com',
             'phone'    => '01633' . rand(100000, 999999),
             'password' => Hash::make('password123'),
             'is_admin' => true,
@@ -723,7 +723,7 @@ class AdminFeatureTest extends TestCase
     {
         $admin = User::create([
             'name'     => 'Filtered Auditor',
-            'email'    => 'filter' . rand(1000, 9999) . '@earthquick.com',
+            'email'    => 'filter' . rand(1000, 9999) . '@rthquick.com',
             'phone'    => '01988' . rand(100000, 999999),
             'password' => Hash::make('password123'),
             'is_admin' => true,
@@ -774,7 +774,7 @@ class AdminFeatureTest extends TestCase
     {
         $admin = User::create([
             'name'     => 'Coupon Admin',
-            'email'    => 'couponadmin' . rand(1000, 9999) . '@earthquick.com',
+            'email'    => 'couponadmin' . rand(1000, 9999) . '@rthquick.com',
             'phone'    => '01711' . rand(100000, 999999),
             'password' => Hash::make('password123'),
             'is_admin' => true,
@@ -802,7 +802,7 @@ class AdminFeatureTest extends TestCase
     {
         $admin = User::create([
             'name'     => 'Campaign Creator',
-            'email'    => 'creator' . rand(1000, 9999) . '@earthquick.com',
+            'email'    => 'creator' . rand(1000, 9999) . '@rthquick.com',
             'phone'    => '01822' . rand(100000, 999999),
             'password' => Hash::make('password123'),
             'is_admin' => true,
@@ -836,7 +836,7 @@ class AdminFeatureTest extends TestCase
     {
         $admin = User::create([
             'name'     => 'Toggle Admin',
-            'email'    => 'toggle' . rand(1000, 9999) . '@earthquick.com',
+            'email'    => 'toggle' . rand(1000, 9999) . '@rthquick.com',
             'phone'    => '01833' . rand(100000, 999999),
             'password' => Hash::make('password123'),
             'is_admin' => true,
@@ -865,7 +865,7 @@ class AdminFeatureTest extends TestCase
     {
         $admin = User::create([
             'name'     => 'Delete Coupon Admin',
-            'email'    => 'delcoupon' . rand(1000, 9999) . '@earthquick.com',
+            'email'    => 'delcoupon' . rand(1000, 9999) . '@rthquick.com',
             'phone'    => '01844' . rand(100000, 999999),
             'password' => Hash::make('password123'),
             'is_admin' => true,

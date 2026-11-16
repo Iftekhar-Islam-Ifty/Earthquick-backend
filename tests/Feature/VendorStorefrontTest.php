@@ -23,7 +23,7 @@ class VendorStorefrontTest extends TestCase
     {
         return User::create([
             'name' => 'Vendor Test Admin',
-            'email' => 'vendoradmin'.rand(1000, 9999).'@earthquick.com',
+            'email' => 'vendoradmin'.rand(1000, 9999).'@rthquick.com',
             'phone' => '01711'.rand(100000, 999999),
             'password' => Hash::make('secret123'),
             'is_admin' => true,

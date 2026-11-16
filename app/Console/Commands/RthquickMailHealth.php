@@ -6,9 +6,9 @@ use App\Models\OutboundMessage;
 use App\Services\OutboundMailService;
 use Illuminate\Console\Command;
 
-class EarthquickMailHealth extends Command
+class RthquickMailHealth extends Command
 {
-    protected $signature = 'earthquick:mail-health';
+    protected $signature = 'rthquick:mail-health';
 
     protected $description = 'Show safe email transport and outbox health information without sending email';
 

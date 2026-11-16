@@ -12,7 +12,7 @@ use App\Models\OrderItem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 
-echo "=== STARTING EARTHQUICK CART & CHECKOUT TEST ===\n\n";
+echo "=== STARTING RTHQUICK CART & CHECKOUT TEST ===\n\n";
 
 // 1. Find a sample product
 $product = Product::first();
@@ -76,7 +76,7 @@ if ($responseCheckout->getStatusCode() === 200) {
 $orderPayload = [
     'customer_name'  => 'Test Customer Iftekhar',
     'customer_phone' => '01793123456',
-    'customer_email' => 'ifty.test@earthquick.com',
+    'customer_email' => 'ifty.test@rthquick.com',
     'delivery_zone'  => 'inside_ctg',
     'district'       => 'Chattogram',
     'area'           => 'Nasirabad',

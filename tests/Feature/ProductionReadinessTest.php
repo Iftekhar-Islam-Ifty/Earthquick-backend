@@ -53,7 +53,7 @@ class ProductionReadinessTest extends TestCase
 
     public function test_catalog_seeding_never_installs_a_default_admin_or_resets_an_opt_in_admin(): void
     {
-        $names = ['EARTHQUICK_SEED_ADMIN_EMAIL', 'EARTHQUICK_SEED_ADMIN_PASSWORD'];
+        $names = ['RTHQUICK_SEED_ADMIN_EMAIL', 'RTHQUICK_SEED_ADMIN_PASSWORD'];
         $previous = [];
         foreach ($names as $name) {
             $previous[$name] = [getenv($name), $_ENV[$name] ?? null, $_SERVER[$name] ?? null];
@@ -66,21 +66,21 @@ class ProductionReadinessTest extends TestCase
             }
 
             Artisan::call('db:seed', ['--force' => true]);
-            $this->assertDatabaseMissing('users', ['email' => 'admin@earthquick.com']);
+            $this->assertDatabaseMissing('users', ['email' => 'admin@rthquick.com']);
 
             $email = 'bootstrap-admin@example.test';
-            putenv('EARTHQUICK_SEED_ADMIN_EMAIL='.$email);
-            $_ENV['EARTHQUICK_SEED_ADMIN_EMAIL'] = $_SERVER['EARTHQUICK_SEED_ADMIN_EMAIL'] = $email;
-            putenv('EARTHQUICK_SEED_ADMIN_PASSWORD=first-private-passphrase');
-            $_ENV['EARTHQUICK_SEED_ADMIN_PASSWORD'] = $_SERVER['EARTHQUICK_SEED_ADMIN_PASSWORD'] = 'first-private-passphrase';
+            putenv('RTHQUICK_SEED_ADMIN_EMAIL='.$email);
+            $_ENV['RTHQUICK_SEED_ADMIN_EMAIL'] = $_SERVER['RTHQUICK_SEED_ADMIN_EMAIL'] = $email;
+            putenv('RTHQUICK_SEED_ADMIN_PASSWORD=first-private-passphrase');
+            $_ENV['RTHQUICK_SEED_ADMIN_PASSWORD'] = $_SERVER['RTHQUICK_SEED_ADMIN_PASSWORD'] = 'first-private-passphrase';
 
             Artisan::call('db:seed', ['--force' => true]);
             $admin = User::where('email', $email)->firstOrFail();
             $this->assertTrue($admin->is_admin);
             $this->assertTrue(Hash::check('first-private-passphrase', $admin->password));
 
-            putenv('EARTHQUICK_SEED_ADMIN_PASSWORD=changed-passphrase');
-            $_ENV['EARTHQUICK_SEED_ADMIN_PASSWORD'] = $_SERVER['EARTHQUICK_SEED_ADMIN_PASSWORD'] = 'changed-passphrase';
+            putenv('RTHQUICK_SEED_ADMIN_PASSWORD=changed-passphrase');
+            $_ENV['RTHQUICK_SEED_ADMIN_PASSWORD'] = $_SERVER['RTHQUICK_SEED_ADMIN_PASSWORD'] = 'changed-passphrase';
             Artisan::call('db:seed', ['--force' => true]);
 
             $this->assertSame(1, User::where('email', $email)->count());

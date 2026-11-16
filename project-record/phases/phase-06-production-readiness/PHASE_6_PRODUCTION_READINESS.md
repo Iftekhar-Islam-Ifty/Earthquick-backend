@@ -35,7 +35,7 @@ The public-page browser checks above used guest sessions. Payment submission, pr
 
 ## Final local hardening and admin QA (2026-09-27)
 
-- Removed the fixed-password admin account creation/reset from routine seeding. A bootstrap admin can now be created only by explicitly supplying `EARTHQUICK_SEED_ADMIN_EMAIL` and `EARTHQUICK_SEED_ADMIN_PASSWORD` in a local/test environment; rerunning the seeder never overwrites an existing account. Existing admin passwords in any deployed database are not changed by this code and must be reviewed/rotated separately.
+- Removed the fixed-password admin account creation/reset from routine seeding. A bootstrap admin can now be created only by explicitly supplying `RTHQUICK_SEED_ADMIN_EMAIL` and `RTHQUICK_SEED_ADMIN_PASSWORD` in a local/test environment; rerunning the seeder never overwrites an existing account. Existing admin passwords in any deployed database are not changed by this code and must be reviewed/rotated separately.
 - Used a disposable SQLite database under ignored `storage/qa/phase6-admin/` and a separate local server port for authenticated Chromium QA. The real application database and current `.env` were not altered.
 - Checked dashboard, orders, products, vendors and coupons at 1440px, 768px, 390px and 320px. All loaded without page-level horizontal overflow or duplicate IDs. The mobile admin menu opens and closes, including by Escape.
 - Found the dashboard charts failing when the external Chart.js CDN was unreachable. Chart.js is now part of the local Vite build. Both dashboard charts render at 1440px, 390px and 320px without JavaScript errors; `npm.cmd run build` passes.

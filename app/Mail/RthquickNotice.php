@@ -8,7 +8,7 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class EarthquickNotice extends Mailable
+class RthquickNotice extends Mailable
 {
     use Queueable, SerializesModels;
 

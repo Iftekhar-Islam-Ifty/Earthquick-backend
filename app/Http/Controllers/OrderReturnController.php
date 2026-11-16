@@ -84,7 +84,7 @@ class OrderReturnController extends Controller
                 'decided_at' => now(),
                 'verified_issue_type' => $data['decision'] === 'authorize' ? $data['verified_issue_type'] : null,
                 'return_shipping_payer' => $data['decision'] === 'authorize'
-                    ? (in_array($data['verified_issue_type'], ['wrong_item', 'damaged_defective'], true) ? 'earthquick' : 'customer')
+                    ? (in_array($data['verified_issue_type'], ['wrong_item', 'damaged_defective'], true) ? 'rthquick' : 'customer')
                     : null,
             ]);
             return $order;

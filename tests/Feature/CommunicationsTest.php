@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Mail\EarthquickNotice;
+use App\Mail\RthquickNotice;
 use App\Models\Order;
 use App\Models\SupportInquiry;
 use App\Models\User;
@@ -80,10 +80,10 @@ class CommunicationsTest extends TestCase
         config()->set('mail.default', 'smtp');
         config()->set('communications.support_email', 'support@example.test');
         $this->post(route('contact.store'), $this->inquiryData())->assertRedirect();
-        Mail::assertSent(EarthquickNotice::class, 2);
-        Mail::assertSent(EarthquickNotice::class, fn ($mail) => $mail->hasTo('customer@example.test')
+        Mail::assertSent(RthquickNotice::class, 2);
+        Mail::assertSent(RthquickNotice::class, fn ($mail) => $mail->hasTo('customer@example.test')
             && $mail->noticeSubject === 'Rthquick: Inquiry received');
-        Mail::assertSent(EarthquickNotice::class, fn ($mail) => $mail->hasTo('support@example.test')
+        Mail::assertSent(RthquickNotice::class, fn ($mail) => $mail->hasTo('support@example.test')
             && $mail->noticeSubject === 'Rthquick: New support inquiry');
     }
 
@@ -112,17 +112,17 @@ class CommunicationsTest extends TestCase
         $linked = $this->order(null);
         $linked->update(['user_id' => $customer->id]);
         app(CustomerCommunications::class)->order($linked, 'placed');
-        Mail::assertSent(EarthquickNotice::class, fn ($mail) => $mail->hasTo('account-owner@example.test'));
+        Mail::assertSent(RthquickNotice::class, fn ($mail) => $mail->hasTo('account-owner@example.test'));
         Mail::fake();
 
         $admin = User::factory()->create(['is_admin' => true]);
         $url = route('admin.orders.update-status', $order->id);
         $this->actingAs($admin)->post($url, ['status' => 'confirmed'])->assertRedirect();
-        Mail::assertSent(EarthquickNotice::class, 1);
-        Mail::assertSent(EarthquickNotice::class, fn ($mail) => $mail->hasTo('customer@example.test')
+        Mail::assertSent(RthquickNotice::class, 1);
+        Mail::assertSent(RthquickNotice::class, fn ($mail) => $mail->hasTo('customer@example.test')
             && $mail->noticeSubject === 'Rthquick: Order status updated');
         $this->post($url, ['status' => 'confirmed', 'courier_name' => 'QA Courier'])->assertRedirect();
-        Mail::assertSent(EarthquickNotice::class, 1);
+        Mail::assertSent(RthquickNotice::class, 1);
     }
 
     public function test_public_contact_links_are_real_actions_and_chat_requires_confirmed_number(): void
@@ -145,13 +145,13 @@ class CommunicationsTest extends TestCase
     {
         Mail::fake();
         config()->set('mail.default', 'log');
-        $this->artisan('earthquick:mail-test', ['to' => 'qa@example.test'])->assertExitCode(1);
+        $this->artisan('rthquick:mail-test', ['to' => 'qa@example.test'])->assertExitCode(1);
         Mail::assertNothingSent();
 
         config()->set('mail.default', 'smtp');
         config()->set('mail.from.address', 'support@example.test');
-        $this->artisan('earthquick:mail-test', ['to' => 'qa@example.test'])->assertExitCode(0);
-        Mail::assertSent(EarthquickNotice::class, fn ($mail) => $mail->hasTo('qa@example.test')
+        $this->artisan('rthquick:mail-test', ['to' => 'qa@example.test'])->assertExitCode(0);
+        Mail::assertSent(RthquickNotice::class, fn ($mail) => $mail->hasTo('qa@example.test')
             && $mail->noticeSubject === 'Rthquick: Email delivery test');
     }
 }
