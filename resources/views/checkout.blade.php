@@ -246,6 +246,7 @@
                 <div class="eq-summary-item__name">{{ $item['name'] }}</div>
                 @if(!empty($item['brand_name']))<div class="eq-summary-item__meta">Brand: {{ $item['brand_name'] }}</div>@endif
                 @if(!empty($item['vendor_name']))<div class="eq-summary-item__meta">Sold by: {{ $item['vendor_name'] }}</div>@endif
+                @if(!empty($item['warranty_provider_name']))<div class="eq-summary-item__meta">Warranty provider: {{ $item['warranty_provider_name'] }}</div>@endif
                 <div class="eq-summary-item__meta">{{ $item['size'] }} &bull; Qty: {{ $item['quantity'] }}</div>
               </div>
               <div class="eq-summary-item__price">৳{{ number_format($item['price'] * $item['quantity']) }}</div>

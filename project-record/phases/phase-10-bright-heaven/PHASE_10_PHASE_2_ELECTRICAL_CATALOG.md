@@ -1,0 +1,55 @@
+# Bright Phase 2 - Electrical catalog foundation
+
+**Status: In progress.** Started 2026-11-16 at the owner's request.
+
+## Verified source scope
+
+The owner supplied a screenshot of Bright Electrical Company's Facebook page.
+It identifies Bright as a wholesale and retail electrical supplier in
+Chattogram and lists switches, sockets, LED lights, circuit breakers, fans and
+other electrical accessories. Its cover lists the office at Police Plaza,
+Nandankanan, Chattogram. These are the categories and profile facts in scope for
+this first Phase 2 slice.
+
+## Phase 2 sequence
+
+1. Replace the seeded prototype copy and placeholder contact details on Bright's
+   vendor record with the information shown in the supplied page screenshot.
+2. Add shared Electronics subcategories for Switches, Sockets, LED Lights,
+   Circuit Breakers, Fans and Electrical Accessories.
+3. Guide and validate Bright product entry under Electronics and electronics
+   product type, while keeping its Heaven brand attached from Phase 1.
+4. Use product/store language for Bright while preserving Nous Telos's existing
+   fashion-oriented store copy.
+5. Add Bright product listings only from facts Bright has supplied; do not invent
+   SKUs, prices, specs, certifications, manufacturer claims or warranty terms.
+
+No product listings exist for Bright in the local database at Phase 2 start.
+The first slice therefore prepares the catalog and seller record; actual product
+entry awaits product data from Bright.
+
+## Implementation checkpoint - 2026-11-16
+
+The first catalog slice is implemented locally. Bright's prototype profile copy
+and placeholder email/phone were conditionally replaced with the supplied page's
+store name, supplier description, wholesale/retail tagline and office address.
+Six shared subcategories were created under Electronics. Central-admin product
+entry now guides Bright products to Electronics and enforces that category and
+electronics product type on save. Bright's storefront uses product/catalog
+language while Nous Telos keeps its existing fashion wording.
+
+The migration is applied locally after a private pre-migration database backup.
+Admin product data entry and order/cart warranty-provider labels from Phase 1
+were also tightened during this work. Bright currently has zero products, so no
+SKU, price, stock or specifications were added. PHP syntax checks and Blade
+compilation passed; automated tests and browser visual review were not run.
+
+## Reviewed local data change
+
+Preflight on 2026-11-16 found zero Bright products and zero existing Electronics
+subcategories. The data migration will create the six listed shared
+subcategories, update Electronics' prototype description, and correct Bright's
+vendor name/tagline/description/address only when fields still equal their
+known seeded prototype values. It clears only the known placeholder Bright
+email/phone values. It will not change product, order or customer rows. Before
+applying it locally, create a private database backup.

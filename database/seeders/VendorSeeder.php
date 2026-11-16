@@ -29,33 +29,52 @@ class VendorSeeder extends Seeder
             ]
         );
 
-        // 2. Architectural Vendor: Bright (Electronics & Lighting - Prototype)
+        // 2. Bright Electrical Company (verified electrical supplier)
         Vendor::firstOrCreate(
             ['slug' => 'bright'],
             [
-                'name' => 'Bright',
+                'name' => 'Bright Electrical Company',
                 'vendor_code' => 'BRT',
-                'tagline' => 'Modern Living & Smart Illumination',
-                'description' => 'Minimalist lighting and contemporary lifestyle electricals engineered for modern architectural spaces.',
-                'email' => 'support@brightliving.com',
-                'phone' => '01700000002',
-                'address' => 'Innovation Hub, Chattogram',
+                'tagline' => 'Wholesale & Retail Electrical Supplier',
+                'description' => 'Electrical products supplier in Chattogram offering switches, sockets, LED lights, circuit breakers, fans and other electrical accessories.',
+                'email' => null,
+                'phone' => null,
+                'address' => 'Police Plaza, Nandankanan, Chattogram, Bangladesh',
                 'is_active' => true,
                 'sort_order' => 2,
             ]
         );
 
-        // 3. Top-Level Category: Electronics (Associated conceptually with Bright, currently 0 products, 0 subcategories)
+        // 3. Shared top-level category and verified electrical subcategories.
         Category::firstOrCreate(
             ['slug' => 'electronics'],
             [
                 'name' => 'Electronics',
-                'description' => 'Modern lighting and smart electrical lifestyle products.',
+                'description' => 'Switches, sockets, LED lights, circuit breakers, fans and other electrical accessories.',
                 'image' => null,
                 'sort_order' => 7,
                 'is_active' => true,
             ]
         );
+
+        $electronics = Category::where('slug', 'electronics')->firstOrFail();
+        foreach ([
+            ['name' => 'Switches', 'slug' => 'switches'],
+            ['name' => 'Sockets', 'slug' => 'sockets'],
+            ['name' => 'LED Lights', 'slug' => 'led-lights'],
+            ['name' => 'Circuit Breakers', 'slug' => 'circuit-breakers'],
+            ['name' => 'Fans', 'slug' => 'fans'],
+            ['name' => 'Electrical Accessories', 'slug' => 'electrical-accessories'],
+        ] as $index => $subcategory) {
+            $electronics->subcategories()->firstOrCreate(
+                ['slug' => $subcategory['slug']],
+                [
+                    'name' => $subcategory['name'],
+                    'sort_order' => $index + 1,
+                    'is_active' => true,
+                ]
+            );
+        }
 
         // Existing unassigned legacy products are intentionally not changed
         // automatically. A reviewed backfill is safer than silently assigning

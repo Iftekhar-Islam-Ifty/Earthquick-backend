@@ -451,11 +451,9 @@
                 @endif
                 <div>
                   <div style="font-weight: 600; color: var(--eq-navy);">{{ $item->product_name }}</div>
-                  @if($item->vendor)
-                    @if($item->product_brand_name)<div style="font-size: .74rem; color: var(--eq-gold-dark); font-weight: 600;">Brand: {{ $item->product_brand_name }}</div>@endif
-                    @if($item->vendor_name)<div style="font-size: .74rem; color: #666;">Sold by: {{ $item->vendor_name }}</div>@endif
-                    @if($item->warranty_provider_name)<div style="font-size: .74rem; color: #666;">Warranty provider: {{ $item->warranty_provider_name }}</div>@endif
-                  @endif
+                  @if($item->product_brand_name)<div style="font-size: .74rem; color: var(--eq-gold-dark); font-weight: 600;">Brand: {{ $item->product_brand_name }}</div>@endif
+                  @if($item->vendor_name)<div style="font-size: .74rem; color: #666;">Sold by: {{ $item->vendor_name }}</div>@endif
+                  @if($item->warranty_provider_name)<div style="font-size: .74rem; color: #666;">Warranty provider: {{ $item->warranty_provider_name }}</div>@endif
                   @if($item->variant_label)
                     <div style="font-size: 0.78rem; color: var(--eq-charcoal-soft);">Option: {{ $item->variant_label }}{{ $item->variant_sku ? ' · '.$item->variant_sku : '' }}</div>
                   @endif

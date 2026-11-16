@@ -75,7 +75,7 @@
               style="width: 100%; padding: 0.65rem 0.85rem; border-radius: 6px; border: 1px solid var(--eq-line); font-size: 0.88rem; background: #ffffff; cursor: pointer;"
             >
               @foreach($vendors as $v)
-                <option value="{{ $v->id }}" {{ old('vendor_id', $product->vendor_id) == $v->id ? 'selected' : '' }}>
+                <option value="{{ $v->id }}" data-vendor-slug="{{ $v->slug }}" {{ old('vendor_id', $product->vendor_id) == $v->id ? 'selected' : '' }}>
                   {{ $v->name }} ({{ $v->vendor_code }}){{ $v->tagline ? ' — ' . $v->tagline : '' }}
                 </option>
               @endforeach
@@ -534,10 +534,24 @@
     specificationHelp.textContent = `Recommended ${productTypeSelect.options[productTypeSelect.selectedIndex].text} labels are shown in the placeholder. Existing specifications are never overwritten.`;
   }
 
+  function applyBrightCatalogDefaults() {
+    if (vendorSelect.selectedOptions[0]?.dataset.vendorSlug !== 'bright') return;
+    const electronics = [...categorySelect.options].find(option => option.dataset.slug === 'electronics');
+    if (electronics) {
+      categorySelect.value = electronics.value;
+      categorySelect.dispatchEvent(new Event('change'));
+    }
+    productTypeSelect.value = 'electronics';
+    updateSpecificationTemplate();
+  }
+
+  vendorSelect.addEventListener('change', applyBrightCatalogDefaults);
+
   categorySelect.addEventListener('change', filterSubcategories);
   productTypeSelect.addEventListener('change', updateSpecificationTemplate);
   document.addEventListener('DOMContentLoaded', () => {
     filterBrands();
+    applyBrightCatalogDefaults();
     filterSubcategories();
     updateSpecificationTemplate();
   });

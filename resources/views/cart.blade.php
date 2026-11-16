@@ -24,6 +24,7 @@
                   </h3>
                   @if(!empty($item['brand_name']))<p style="font-size:.82rem;color:var(--eq-charcoal-muted);margin:.15rem 0;">Brand: {{ $item['brand_name'] }}</p>@endif
                   @if(!empty($item['vendor_name']))<p style="font-size:.82rem;color:var(--eq-charcoal-muted);margin:.15rem 0;">Sold by: {{ $item['vendor_name'] }}</p>@endif
+                  @if(!empty($item['warranty_provider_name']))<p style="font-size:.82rem;color:var(--eq-charcoal-muted);margin:.15rem 0;">Warranty provider: {{ $item['warranty_provider_name'] }}</p>@endif
                   <p style="color: var(--eq-charcoal-muted); font-size: 0.85rem; margin-bottom: 0.45rem;">
                     Size: {{ $item['size'] }} &bull; Qty: {{ $item['quantity'] }}
                   </p>

@@ -904,6 +904,7 @@ const RthquickCart = {
                 <div class="eq-cart-item__variant">${item.size || "Standard"}</div>
                 ${item.brand_name ? `<div class="eq-cart-item__variant">Brand: ${item.brand_name}</div>` : ""}
                 ${item.vendor_name ? `<div class="eq-cart-item__variant">Sold by: ${item.vendor_name}</div>` : ""}
+                ${item.warranty_provider_name ? `<div class="eq-cart-item__variant">Warranty provider: ${item.warranty_provider_name}</div>` : ""}
                 <div class="eq-cart-item__price">${this.formatMoney(item.price)}</div>
               </div>
               <div class="eq-cart-item__bottom">

@@ -59,6 +59,7 @@
 @endpush
 
 @section('content')
+@php($isBrightStore = $vendor->slug === 'bright')
 <main id="main-content" tabindex="-1">
 
   <!-- Breadcrumb Navigation -->
@@ -122,7 +123,7 @@
         <div class="eq-store-hero__stats" style="display: flex; gap: 1rem; align-items: center; margin-left: auto;">
           <div style="text-align: center; background: rgba(255,255,255,0.08); backdrop-filter: blur(4px); padding: 0.65rem 1.25rem; border-radius: 6px; border: 1px solid rgba(255,255,255,0.15);">
             <div style="font-size: 1.35rem; font-weight: 700; color: #ffffff; font-family: var(--font-display);">{{ $allProductsCount }}</div>
-            <div style="font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(255,255,255,0.65);">Creations</div>
+            <div style="font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(255,255,255,0.65);">{{ $isBrightStore ? 'Products' : 'Creations' }}</div>
           </div>
         </div>
 
@@ -145,7 +146,7 @@
       <div class="eq-store-toolbar">
         <nav class="eq-store-categories" aria-label="Browse {{ $vendor->name }} categories">
           <a class="eq-store-category {{ !isset($storeQuery['category']) ? 'is-active' : '' }}" @if(!isset($storeQuery['category'])) aria-current="page" @endif
-             href="{{ route('stores.show', array_merge(['slug' => $vendor->slug], array_diff_key($storeQuery, ['category' => true]))) }}">All Pieces ({{ $allProductsCount }})</a>
+             href="{{ route('stores.show', array_merge(['slug' => $vendor->slug], array_diff_key($storeQuery, ['category' => true]))) }}">{{ $isBrightStore ? 'All Products' : 'All Pieces' }} ({{ $allProductsCount }})</a>
           @foreach($categories as $cat)
             <a class="eq-store-category {{ ($storeQuery['category'] ?? null) === $cat->slug ? 'is-active' : '' }}" @if(($storeQuery['category'] ?? null) === $cat->slug) aria-current="page" @endif
                href="{{ route('stores.show', array_merge(['slug' => $vendor->slug], $storeQuery, ['category' => $cat->slug])) }}">{{ $cat->name }}</a>
@@ -154,7 +155,7 @@
 
         @if($allProductsCount > 0)
           <div class="eq-store-tools">
-            <p class="eq-store-results">{{ $products->total() }} {{ $products->total() === 1 ? 'piece' : 'pieces' }} found</p>
+            <p class="eq-store-results">{{ $products->total() }} {{ $isBrightStore ? 'products' : ($products->total() === 1 ? 'piece' : 'pieces') }} found</p>
             <form class="eq-store-sort" method="GET" action="{{ route('stores.show', $vendor->slug) }}">
               @foreach(array_diff_key($storeQuery, ['sort' => true]) as $key => $value)
                 <input type="hidden" name="{{ $key }}" value="{{ $value }}" />
@@ -284,12 +285,12 @@
               <line x1="12" y1="16" x2="12.01" y2="16"></line>
             </svg>
             @if($allProductsCount > 0)
-              <h3 style="font-family: var(--font-display); font-size: 1.35rem; color: var(--eq-navy); margin-bottom: 0.5rem; font-weight: 600;">No pieces match this selection</h3>
+              <h3 style="font-family: var(--font-display); font-size: 1.35rem; color: var(--eq-navy); margin-bottom: 0.5rem; font-weight: 600;">{{ $isBrightStore ? 'No products match this selection' : 'No pieces match this selection' }}</h3>
               <p style="max-width: 460px; margin: 0 auto 1.75rem; color: var(--eq-charcoal-soft); font-size: 0.88rem; line-height: 1.6;">Try another category or clear the filters to see more from {{ $vendor->name }}.</p>
-              <a href="{{ route('stores.show', $vendor->slug) }}" class="eq-btn eq-btn--outline" style="padding: 0.55rem 1.25rem; font-size: 0.82rem; text-decoration: none;">View all pieces</a>
+              <a href="{{ route('stores.show', $vendor->slug) }}" class="eq-btn eq-btn--outline" style="padding: 0.55rem 1.25rem; font-size: 0.82rem; text-decoration: none;">{{ $isBrightStore ? 'View all products' : 'View all pieces' }}</a>
             @else
-              <h3 style="font-family: var(--font-display); font-size: 1.35rem; color: var(--eq-navy); margin-bottom: 0.5rem; font-weight: 600;">Collection in Preparation</h3>
-              <p style="max-width: 460px; margin: 0 auto 1.75rem; color: var(--eq-charcoal-soft); font-size: 0.88rem; line-height: 1.6;">The {{ $vendor->name }} catalog is currently being prepared for the Rthquick collective. New curated arrivals will debut here shortly.</p>
+              <h3 style="font-family: var(--font-display); font-size: 1.35rem; color: var(--eq-navy); margin-bottom: 0.5rem; font-weight: 600;">{{ $isBrightStore ? 'Electrical Catalog in Preparation' : 'Collection in Preparation' }}</h3>
+              <p style="max-width: 460px; margin: 0 auto 1.75rem; color: var(--eq-charcoal-soft); font-size: 0.88rem; line-height: 1.6;">{{ $isBrightStore ? 'Bright Electrical Company product listings are being prepared. Product details will appear here when added by the Rthquick admin.' : 'The '.$vendor->name.' catalog is currently being prepared for the Rthquick collective. New curated arrivals will debut here shortly.' }}</p>
               <a href="{{ route('stores.index') }}" class="eq-btn eq-btn--outline" style="padding: 0.55rem 1.25rem; font-size: 0.82rem; text-decoration: none;">&larr; Discover All Partner Brands</a>
             @endif
           </div>

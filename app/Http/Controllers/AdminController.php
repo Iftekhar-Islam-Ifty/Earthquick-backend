@@ -675,6 +675,9 @@ class AdminController extends Controller
         if (! $vendor) {
             $vendor = Vendor::where('slug', 'nous-telos')->first() ?? Vendor::first();
         }
+        if ($vendor?->slug === 'bright' && (int) Category::where('slug', 'electronics')->value('id') !== (int) $request->category_id) {
+            throw ValidationException::withMessages(['category_id' => 'Bright products must be filed under Electronics.']);
+        }
         $brandId = $request->input('brand_id');
         if ($brandId && ! ProductBrand::whereKey($brandId)->where('vendor_id', $vendor->id)->where('is_active', true)->exists()) {
             throw ValidationException::withMessages(['brand_id' => 'Choose an active brand owned by the selected store.']);
@@ -716,7 +719,7 @@ class AdminController extends Controller
                     'sku' => $sku,
                     'category_id' => $request->category_id,
                     'subcategory_id' => $request->subcategory_id ?: null,
-                    'product_type' => $request->input('product_type', 'general'),
+                    'product_type' => $vendor?->slug === 'bright' ? 'electronics' : $request->input('product_type', 'general'),
                     'price' => (float) $request->price,
                     'old_price' => $request->filled('old_price') ? (float) $request->old_price : null,
                     'fabric' => $request->filled('fabric') ? $request->fabric : null,
@@ -830,6 +833,10 @@ class AdminController extends Controller
         ]);
         $this->ensureSubcategoryMatchesCategory($request);
         $effectiveVendorId = $request->filled('vendor_id') ? (int) $request->vendor_id : (int) $product->vendor_id;
+        $effectiveVendor = Vendor::find($effectiveVendorId);
+        if ($effectiveVendor?->slug === 'bright' && (int) Category::where('slug', 'electronics')->value('id') !== (int) $request->category_id) {
+            throw ValidationException::withMessages(['category_id' => 'Bright products must be filed under Electronics.']);
+        }
         if ($request->filled('brand_id') && ! ProductBrand::whereKey($request->brand_id)->where('vendor_id', $effectiveVendorId)->where('is_active', true)->exists()) {
             throw ValidationException::withMessages(['brand_id' => 'Choose an active brand owned by the selected store.']);
         }
@@ -840,7 +847,7 @@ class AdminController extends Controller
             'brand_id' => $request->input('brand_id') ?: null,
             'category_id' => $request->category_id,
             'subcategory_id' => $request->subcategory_id ?: null,
-            'product_type' => $request->input('product_type', 'general'),
+            'product_type' => $effectiveVendor?->slug === 'bright' ? 'electronics' : $request->input('product_type', 'general'),
             'price' => (float) $request->price,
             'old_price' => $request->filled('old_price') ? (float) $request->old_price : null,
             'fabric' => $request->filled('fabric') ? $request->fabric : null,
