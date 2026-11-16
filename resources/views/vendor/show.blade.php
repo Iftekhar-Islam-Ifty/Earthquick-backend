@@ -16,7 +16,7 @@
   .eq-store-tools { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: .75rem; }
   .eq-store-results { margin: 0; color: var(--eq-charcoal-soft); font-size: .82rem; }
   .eq-store-sort { display: flex; align-items: center; gap: .45rem; margin: 0; font-size: .82rem; white-space: nowrap; }
-  .eq-store-control { min-width: 0; min-height: 2.3rem; padding: .4rem .6rem; border: 1px solid var(--eq-line); border-radius: 6px; background: #fff; color: var(--eq-charcoal); font: inherit; }
+  .eq-store-control { min-width: 0; min-height: 2.3rem; padding: .4rem .6rem; border: 1px solid var(--eq-line); border-radius: 6px; background: #fbf8f1; color: var(--eq-charcoal); color-scheme: light; font: inherit; }
   .eq-store-filters { border: 1px solid var(--eq-line); border-radius: 9px; background: #fff; }
   .eq-store-filter-toggle { display: flex; align-items: center; gap: .5rem; padding: .7rem .85rem; color: var(--eq-navy); font-size: .86rem; font-weight: 600; cursor: pointer; list-style: none; }
   .eq-store-filter-toggle::-webkit-details-marker { display: none; }
@@ -24,8 +24,9 @@
   .eq-store-filters[open] .eq-store-filter-toggle::after { content: '−'; }
   .eq-store-filter-count { display: inline-grid; place-items: center; min-width: 1.25rem; height: 1.25rem; padding: 0 .2rem; border-radius: 999px; background: var(--eq-navy); color: #fff; font-size: .7rem; }
   .eq-store-filters { position: relative; flex: 0 0 auto; border: 0; border-radius: 9px; background: transparent; }
-  .eq-store-filter-toggle { min-height: 2.3rem; border: 1px solid var(--eq-line); border-radius: 6px; background: #fff; }
-  .eq-store-filter-panel { display: grid; position: absolute; z-index: 20; top: calc(100% + .5rem); right: 0; width: min(650px, calc(100vw - 2rem)); grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .85rem; padding: 1rem; border: 1px solid var(--eq-line); border-radius: 9px; background: #fff; box-shadow: 0 14px 36px rgba(24, 42, 56, .16); }
+  .eq-store-filter-toggle { min-height: 2.3rem; border: 1px solid var(--eq-line); border-radius: 6px; background: var(--eq-cream); }
+  .eq-store-filter-panel { display: grid; position: absolute; z-index: 20; top: calc(100% + .5rem); right: 0; width: min(650px, calc(100vw - 2rem)); grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .85rem; padding: 1rem; border: 1px solid rgba(169, 122, 32, .24); border-radius: 9px; background: var(--eq-cream); box-shadow: 0 14px 36px rgba(58, 45, 25, .16); }
+  .eq-store-filter-panel option { background: #f7f2e9; color: #2a2622; }
   .eq-store-filter-panel.is-compact { grid-template-columns: minmax(220px, 1fr) auto; align-items: end; }
   .eq-store-filter-field { display: grid; align-content: start; gap: .35rem; min-width: 0; color: var(--eq-charcoal); font-size: .78rem; font-weight: 600; }
   .eq-store-price-fields { display: flex; gap: .4rem; }

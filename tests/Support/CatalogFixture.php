@@ -23,10 +23,13 @@ final class CatalogFixture
         $categories = [];
         foreach (['men' => 'Men', 'women' => 'Women', 'kids' => 'Kids', 'ornaments' => 'Ornaments',
             'bags' => 'Bags', 'home-decor' => 'Home Decor', 'electronics' => 'Electronics'] as $slug => $name) {
-            $categories[$slug] = Category::create([
-                'name' => $name, 'slug' => $slug, 'is_active' => true,
-                'sort_order' => count($categories) + 1,
-            ]);
+            $categories[$slug] = Category::firstOrCreate(
+                ['slug' => $slug],
+                [
+                    'name' => $name, 'is_active' => true,
+                    'sort_order' => count($categories) + 1,
+                ]
+            );
         }
 
         $subcategories = [];

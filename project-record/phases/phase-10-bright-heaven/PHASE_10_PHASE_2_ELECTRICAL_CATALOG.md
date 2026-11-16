@@ -56,6 +56,11 @@ browse links instead of repeating the parent Electronics category. Store filters
 open as a compact panel aligned beside sorting on both Bright and Nous Telos
 pages, with a full-width layout on small screens.
 
+Bright category selection validates against active Electronics subcategories and
+filters by the selected subcategory ID. A valid but empty subcategory now shows
+an empty result rather than dropping the selection and showing every product.
+Focused storefront filter/sort regression checks pass.
+
 ## Demo listings - 2026-11-16
 
 At the owner's request, six clearly marked, replaceable `[DEMO]` listings were

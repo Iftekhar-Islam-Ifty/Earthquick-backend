@@ -60,7 +60,7 @@ class VendorStorefrontTest extends TestCase
         $response = $this->get('/stores');
 
         $response->assertStatus(200);
-        $response->assertSee('Partner Ateliers &amp; Brands', false);
+        $response->assertSee('Independent Stores');
         $response->assertSee('Nous Telos');
         $response->assertSee('Bright');
     }
@@ -88,7 +88,7 @@ class VendorStorefrontTest extends TestCase
         $response->assertStatus(200);
         $response->assertSee('Bright');
         $response->assertSee('BRT');
-        $response->assertSee('Collection in Preparation');
+        $response->assertSee('Electrical Catalog in Preparation');
     }
 
     /**
@@ -117,7 +117,7 @@ class VendorStorefrontTest extends TestCase
         $response = $this->actingAs($admin)->get('/admin/vendors');
 
         $response->assertStatus(200);
-        $response->assertSee('Brand Partners &amp; Stores', false);
+        $response->assertSee('Store Management');
         $response->assertSee('Nous Telos');
         $response->assertSee('Bright');
     }
