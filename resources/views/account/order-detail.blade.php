@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Order #' . $order->order_number . ' Details — Rthquick by Nous Telos')
+@section('title', 'Order #' . $order->order_number . ' Details — Rthquick')
 @section('body_class', 'eq-checkout-page')
 
 @section('content')
@@ -157,7 +157,7 @@
       <table class="eq-receipt-items-table" aria-label="Purchased Items">
         <thead>
           <tr>
-            <th>Purchased Piece</th>
+            <th>Product</th>
             <th style="text-align: center;">Qty</th>
             <th style="text-align: right;">Total</th>
           </tr>

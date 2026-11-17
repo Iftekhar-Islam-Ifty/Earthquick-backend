@@ -425,8 +425,8 @@
             </label>
             <select name="status" id="order-status-select" style="width: 100%; padding: 0.65rem 0.85rem; border-radius: 6px; border: 1px solid var(--eq-line); font-family: var(--font-body); font-size: 0.9rem; background: var(--eq-white); color: var(--eq-charcoal); outline: none;">
               <option value="pending" {{ $order->status === 'pending' ? 'selected' : '' }}>Pending (Received)</option>
-              <option value="confirmed" {{ $order->status === 'confirmed' ? 'selected' : '' }}>Confirmed (Artisan Verified)</option>
-              <option value="processing" {{ $order->status === 'processing' ? 'selected' : '' }}>Processing (Packaging in Workshop)</option>
+              <option value="confirmed" {{ $order->status === 'confirmed' ? 'selected' : '' }}>Confirmed</option>
+              <option value="processing" {{ $order->status === 'processing' ? 'selected' : '' }}>Processing</option>
               <option value="in_transit" {{ $order->status === 'in_transit' ? 'selected' : '' }}>In Transit (Dispatched with Courier)</option>
               <option value="delivered" {{ $order->status === 'delivered' ? 'selected' : '' }}>Delivered (Complete)</option>
               <option value="cancelled" {{ $order->status === 'cancelled' ? 'selected' : '' }}>Cancelled</option>

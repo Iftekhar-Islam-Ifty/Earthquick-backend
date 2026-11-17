@@ -371,7 +371,7 @@ function initSearchModal() {
             <circle cx="12" cy="12" r="10" stroke-opacity="0.25"></circle>
             <path d="M12 2a10 10 0 0 1 10 10" stroke-linecap="round"></path>
           </svg>
-          <span>Searching handcrafted pieces...</span>
+          <span>Searching products...</span>
         </div>
       `;
     }
@@ -396,7 +396,7 @@ function initSearchModal() {
               <a href="${item.url}" class="eq-search-item">
                 <img src="${item.image}" alt="${escapeHtml(item.name)}" class="eq-search-item__thumb" />
                 <div class="eq-search-item__info">
-                  <span class="eq-search-item__category">${escapeHtml(item.category_name)}</span>
+                  <span class="eq-search-item__category">${escapeHtml(item.category_name)}${item.brand_name ? " · Brand: " + escapeHtml(item.brand_name) : ""}${item.vendor_name ? " · Store: " + escapeHtml(item.vendor_name) : ""}</span>
                   <span class="eq-search-item__title">${escapeHtml(item.name)}</span>
                 </div>
                 <span class="eq-search-item__price">${item.formatted_price || ('৳' + item.price)}</span>
@@ -413,7 +413,7 @@ function initSearchModal() {
         } else {
           liveDropdown.innerHTML = `
             <div class="eq-search-no-results">
-              No creations found for &ldquo;<strong>${escapeHtml(query)}</strong>&rdquo;.
+              No products found for &ldquo;<strong>${escapeHtml(query)}</strong>&rdquo;.
               <div style="margin-top: 0.65rem;">
                 <a href="${appUrl("/search")}?q=${encodeURIComponent(query)}" class="eq-search-view-all-btn">
                   Explore full catalog for &ldquo;${escapeHtml(query)}&rdquo; &rarr;
@@ -874,7 +874,7 @@ const RthquickCart = {
             <path d="M16 10a4 4 0 0 1-8 0"></path>
           </svg>
           <div class="eq-cart-empty__title">Your bag is empty</div>
-          <p class="eq-cart-empty__desc">Explore our handpicked collection and discover pieces crafted for you.</p>
+          <p class="eq-cart-empty__desc">Browse products from Nous Telos, Bright and other Rthquick stores.</p>
         </div>
       `;
       const couponBox = this.drawerEl.querySelector("#eq-drawer-coupon-box");
@@ -901,7 +901,7 @@ const RthquickCart = {
             <div class="eq-cart-item__info">
               <div>
                 <h4 class="eq-cart-item__title">${item.name}</h4>
-                <div class="eq-cart-item__variant">${item.size || "Standard"}</div>
+                ${item.size && item.size !== "Standard" ? `<div class="eq-cart-item__variant">${escapeMarkup(item.size)}</div>` : ""}
                 ${item.brand_name ? `<div class="eq-cart-item__variant">Brand: ${item.brand_name}</div>` : ""}
                 ${item.vendor_name ? `<div class="eq-cart-item__variant">Sold by: ${item.vendor_name}</div>` : ""}
                 ${item.warranty_provider_name ? `<div class="eq-cart-item__variant">Warranty provider: ${item.warranty_provider_name}</div>` : ""}
@@ -1462,17 +1462,26 @@ function initQuickViewModal() {
   window.openQuickView = function(card) {
     if (!card) return;
 
-    const name = card.querySelector(".eq-product-card__name, .eq-saree-masterpiece__name")?.textContent.trim() || "Rthquick Piece";
-    const category = card.querySelector(".eq-product-card__category")?.textContent.trim() || "Artisanal Collection";
+    const name = card.querySelector(".eq-product-card__name, .eq-saree-masterpiece__name")?.textContent.trim() || "Rthquick Product";
+    const category = card.querySelector(".eq-product-card__category")?.textContent.trim() || "Product Details";
     const priceEl = card.querySelector(".eq-product-card__price, .eq-saree-masterpiece__price");
     const oldPrice = priceEl?.querySelector(".eq-price--old")?.textContent.trim() || "";
-    const currentPrice = priceEl?.textContent.replace(oldPrice, "").trim() || "৳4,200";
+    const currentPrice = priceEl?.textContent.replace(oldPrice, "").trim() || "";
     const imgEl = card.querySelector(".eq-product-card__frame img, .eq-saree-masterpiece__frame img");
-    const imgSrc = imgEl ? imgEl.getAttribute("src") : appUrl("images/saree/saree-01.jpg");
+    const imgSrc = imgEl ? imgEl.getAttribute("src") : "";
     const linkEl = card.querySelector(".eq-product-card__link, .eq-saree-masterpiece__link");
     const linkHref = linkEl ? linkEl.getAttribute("href") : appUrl();
-
-    const isSaree = category.toLowerCase().includes("saree") || name.toLowerCase().includes("saree");
+    const description = card.dataset.productDescription || "See the product page for details provided by its store.";
+    const infoItems = [
+      card.dataset.brandName ? ["Brand", card.dataset.brandName] : null,
+      card.dataset.vendorName ? ["Store", card.dataset.vendorName] : null
+    ].filter(Boolean);
+    const infoMarkup = infoItems.map(([label, value]) => `
+      <div class="eq-quickview-spec-item">
+        <span class="eq-quickview-spec-label">${escapeMarkup(label)}:</span>
+        <span>${escapeMarkup(value)}</span>
+      </div>
+    `).join("");
 
     body.innerHTML = `
       <div class="eq-quickview-layout">
@@ -1488,23 +1497,8 @@ function initQuickViewModal() {
             <span class="eq-quickview-price">${escapeMarkup(currentPrice)}</span>
             ${oldPrice ? `<span class="eq-quickview-old-price">${escapeMarkup(oldPrice)}</span>` : ""}
           </div>
-          <p class="eq-quickview-desc">
-            Handcrafted with meticulous detail using heritage looms and artisanal dyes. Designed for longevity, effortless draping, and timeless occasion wear.
-          </p>
-          <div class="eq-quickview-spec-list">
-            <div class="eq-quickview-spec-item">
-              <span class="eq-quickview-spec-label">Origin:</span>
-              <span>Tangail &amp; Narayanganj Handlooms</span>
-            </div>
-            <div class="eq-quickview-spec-item">
-              <span class="eq-quickview-spec-label">Care:</span>
-              <span>Dry Clean Recommended &bull; Azo-free Natural Dyes</span>
-            </div>
-            <div class="eq-quickview-spec-item">
-              <span class="eq-quickview-spec-label">Sizing:</span>
-              <span>${isSaree ? "5.5m Standard Drape with 0.8m Blouse Piece" : "Tailored Relaxed Silhouette"}</span>
-            </div>
-          </div>
+          <p class="eq-quickview-desc">${escapeMarkup(description)}</p>
+          ${infoMarkup ? `<div class="eq-quickview-spec-list">${infoMarkup}</div>` : ""}
           <div class="eq-quickview-actions">
             <button type="button" class="eq-btn eq-btn--primary eq-btn--pill" id="quickview-add-bag">
               Add to Bag

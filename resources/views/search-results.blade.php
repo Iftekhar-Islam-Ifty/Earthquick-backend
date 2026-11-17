@@ -27,7 +27,7 @@
     <section class="eq-cat-banner" id="search-banner">
       <div class="eq-container">
         <div class="eq-cat-banner__inner">
-          <span class="eq-cat-banner__eyebrow">NOUS TELOS STUDIO</span>
+          <span class="eq-cat-banner__eyebrow">RTHQUICK MARKETPLACE</span>
           <h1 class="eq-cat-banner__title eq-reveal" id="search-title">
             @if($query)
               Search Results for &ldquo;{{ $query }}&rdquo;
@@ -37,9 +37,9 @@
           </h1>
           <p class="eq-cat-banner__desc eq-reveal">
             @if($query)
-              Discovered <strong>{{ $products->total() }}</strong> curated handcrafted piece{{ $products->total() === 1 ? '' : 's' }} matching your search.
+              Found <strong>{{ $products->total() }}</strong> product{{ $products->total() === 1 ? '' : 's' }} matching your search.
             @else
-              Browse our complete catalog of handloom weaves, tailored garments, and heritage essentials.
+              Search products from independent stores across the Rthquick marketplace.
             @endif
           </p>
 
@@ -54,7 +54,7 @@
                 type="search" 
                 name="q" 
                 value="{{ $query }}" 
-                placeholder="Search sarees, sets, bags, home decor..." 
+                placeholder="Search products, stores, categories..."
                 style="flex: 1; border: none; outline: none; background: transparent; font-family: var(--font-body); font-size: 0.95rem; color: var(--eq-charcoal);" 
               />
               <button type="submit" class="eq-btn eq-btn--primary eq-btn--pill" style="padding: 0.55rem 1.4rem; font-size: 0.84rem; border: none; cursor: pointer;">
@@ -75,7 +75,7 @@
         <div class="eq-cat-toolbar__left">
           <!-- Result Counter -->
           <span class="eq-cat-counter" id="catalog-counter">
-            Showing <strong>{{ $products->total() }}</strong> handcrafted {{ $products->total() === 1 ? 'piece' : 'pieces' }}
+            Showing <strong>{{ $products->total() }}</strong> {{ $products->total() === 1 ? 'product' : 'products' }}
           </span>
         </div>
 
@@ -155,7 +155,7 @@
         @if($products->count() > 0)
           <div class="eq-catalog-grid view-3col eq-reveal" id="catalog-grid">
             @foreach($products as $product)
-              <article class="eq-product-card" id="card-{{ $product->id }}" data-id="{{ $product->id }}" data-category="{{ $product->category ? $product->category->slug : '' }}">
+              <article class="eq-product-card" id="card-{{ $product->id }}" data-id="{{ $product->id }}" data-category="{{ $product->category?->slug ?? '' }}" data-product-description="{{ $product->short_desc ?? '' }}" data-brand-name="{{ $product->brand?->name ?? '' }}" data-vendor-name="{{ $product->vendor?->name ?? '' }}">
                 <div class="eq-product-card__frame">
                   <!-- Status Badge -->
                   @if($product->badge)
@@ -183,7 +183,10 @@
 
                 <div class="eq-product-card__body">
                   <span class="eq-product-card__category">
-                    {{ $product->subcategory ? $product->subcategory->name : ($product->category ? $product->category->name : 'Nous Telos') }} &bull; {{ $product->fabric ?? 'Handloom' }}
+                    {{ $product->subcategory?->name ?? $product->category?->name ?? 'Product' }}
+                    @if($product->brand) &bull; Brand: {{ $product->brand->name }} @endif
+                    @if($product->vendor) &bull; Store: {{ $product->vendor->name }} @endif
+                    @if(!$product->brand && $product->fabric) &bull; Material: {{ $product->fabric }} @endif
                   </span>
                   <h3 class="eq-product-card__name">
                     <a href="{{ route('product.show', $product->slug) }}" class="eq-product-card__link">{{ $product->name }}</a>
@@ -211,45 +214,20 @@
               <line x1="8" y1="11" x2="14" y2="11"></line>
             </svg>
             <h2 class="eq-catalog-empty__title" style="font-family: var(--font-display); font-size: 1.45rem; color: var(--eq-navy); margin-bottom: 0.5rem;">
-              No matching pieces found
+              No matching products found
             </h2>
             <p class="eq-catalog-empty__text" style="color: var(--eq-charcoal-soft); max-width: 480px; margin: 0 auto 1.75rem; font-size: 0.92rem; line-height: 1.5;">
               @if($query)
-                We couldn't find any creations matching &ldquo;<strong>{{ $query }}</strong>&rdquo;. Try searching with broader terms or explore our curated signature collections below.
+                We couldn't find any products matching &ldquo;<strong>{{ $query }}</strong>&rdquo;. Try a broader search or browse the available stores.
               @else
-                Please enter a search term above to explore our handcrafted collections.
+                Enter a search term above or browse all available stores.
               @endif
             </p>
 
             <div style="margin-bottom: 1.75rem;">
-              <a href="{{ route('subcategory.show', ['categorySlug' => 'women', 'subcategorySlug' => 'saree']) }}" class="eq-btn eq-btn--primary eq-btn--pill" style="padding: 0.65rem 1.8rem; margin: 0 0.35rem; text-decoration: none; display: inline-block;">
-                Explore All Sarees &rarr;
+              <a href="{{ route('stores.index') }}" class="eq-btn eq-btn--primary eq-btn--pill" style="padding: 0.65rem 1.8rem; margin: 0 0.35rem; text-decoration: none; display: inline-block;">
+                Explore Stores &rarr;
               </a>
-            </div>
-
-            <!-- Direct shortcut buttons to popular collections -->
-            <div style="margin-top: 2rem; border-top: 1px solid var(--eq-line); padding-top: 1.75rem;">
-              <span style="font-size: 0.8rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--eq-charcoal-soft); font-weight: 500;">
-                Popular Featured Collections
-              </span>
-              <div class="eq-shop-shortcuts" style="max-width: 650px; margin: 1rem auto 0; grid-template-columns: repeat(4, 1fr);">
-                <a href="{{ route('subcategory.show', ['categorySlug' => 'women', 'subcategorySlug' => 'saree']) }}" class="eq-shop-shortcut-card">
-                  <strong>Saree</strong>
-                  <span>Jamdani &amp; Katan</span>
-                </a>
-                <a href="{{ route('subcategory.show', ['categorySlug' => 'women', 'subcategorySlug' => 'three-piece']) }}" class="eq-shop-shortcut-card">
-                  <strong>Three Piece</strong>
-                  <span>Artisanal Sets</span>
-                </a>
-                <a href="{{ route('subcategory.show', ['categorySlug' => 'women', 'subcategorySlug' => 'two-piece']) }}" class="eq-shop-shortcut-card">
-                  <strong>Two Piece</strong>
-                  <span>Modern Co-ords</span>
-                </a>
-                <a href="{{ route('category.show', 'bags') }}" class="eq-shop-shortcut-card">
-                  <strong>Bags</strong>
-                  <span>Leather &amp; Canvas</span>
-                </a>
-              </div>
             </div>
 
           </div>

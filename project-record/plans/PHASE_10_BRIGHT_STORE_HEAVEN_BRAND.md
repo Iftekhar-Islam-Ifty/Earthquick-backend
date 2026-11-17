@@ -1,7 +1,7 @@
 ﻿# Phase 10 - Bright store and Heaven product brand
 
-**Status: Phase 1 complete; Phase 2 in progress.** The broader work was recorded 2026-11-16 from
-the owner's direction.
+**Status: Phase 1 complete; Phase 2 and Phase 3 implemented locally.** Bright-verified catalog data and browser review remain before launch.
+The broader work was recorded 2026-11-16 from the owner's direction.
 
 ## Owner-approved identity structure
 
@@ -48,9 +48,9 @@ Do not invent product or warranty claims.
 ## Delivery sequence
 
 1. [Phase 1 foundation](../phases/phase-10-bright-heaven/PHASE_10_PHASE_1_BRAND_FOUNDATION.md): brand/store/warranty relationships, admin product selection, customer labels and order snapshots.
-2. Complete the Bright catalog and category setup using verified product data.
-3. Refine Bright's storefront, search/filter experience and real product presentation.
-4. Review desktop/mobile product, cart, checkout, receipt and after-sales flows.
+2. [Phase 2 catalog foundation](../phases/phase-10-bright-heaven/PHASE_10_PHASE_2_ELECTRICAL_CATALOG.md): implement Bright catalog/category setup and demo listings. Real commercial product data remains subject to Bright verification.
+3. [Phase 3 product experience](../phases/phase-10-bright-heaven/PHASE_10_PHASE_3_PRODUCT_EXPERIENCE.md): refine storefront/search and product presentation without inventing product claims.
+4. Browser review of desktop/mobile product, cart, checkout, receipt and after-sales flows remains a release check.
 
 ## Explicit boundaries
 

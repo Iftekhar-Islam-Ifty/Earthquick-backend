@@ -5,8 +5,11 @@
 Rthquick is the platform identity. The two initial stores are Nous Telos and
 Bright. Bright is the electrical-products store/business; Heaven is its
 Bright-owned product brand, not a separate store. Bright provides Heaven product
-warranties. Phase 10 Phase 1 (store/brand/warranty foundation) is complete;
-Phase 2 (Bright electrical catalog) is in progress.
+warranties. Phase 10 Phase 1 (store/brand/warranty foundation) is complete.
+Phase 2 (Bright electrical catalog structure and admin/storefront support) is
+implemented locally; Bright-verified commercial product details remain a launch
+input. Phase 3 (product and search presentation) is implemented locally; final
+browser review and Bright-verified product data remain release inputs.
 Warranty duration and terms must come from Bright; do not invent them. See
 [Phase 10 Phase 1](project-record/phases/phase-10-bright-heaven/PHASE_10_PHASE_1_BRAND_FOUNDATION.md),
 [the plan](project-record/plans/PHASE_10_BRIGHT_STORE_HEAVEN_BRAND.md), and the

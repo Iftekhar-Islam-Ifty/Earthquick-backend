@@ -17,7 +17,7 @@ operational references. Planned items are not complete implementation.
 | 7 - Payments | COD local work complete; bKash deferred | [Phase 7](phases/phase-07-payments/PHASE_7_ONLINE_PAYMENTS.md) |
 | 8 - After-sales | Local workflow complete; production gates pending | [Phase 8](phases/phase-08-after-sales/PHASE_8_AFTER_SALES.md) |
 | 9 - Customer communications | Local implementation complete; production gates pending | [Phase 9](phases/phase-09-customer-communications/PHASE_9_CUSTOMER_COMMUNICATIONS.md) |
-| 10 - Bright and Heaven | Phase 1 complete; Phase 2 in progress | [Phase 1 foundation](phases/phase-10-bright-heaven/PHASE_10_PHASE_1_BRAND_FOUNDATION.md) · [Phase 2 catalog](phases/phase-10-bright-heaven/PHASE_10_PHASE_2_ELECTRICAL_CATALOG.md) |
+| 10 - Bright and Heaven | Phase 1 complete; Phase 2 implemented locally (verified catalog data pending); Phase 3 implemented locally (browser review and verified product data pending) | [Phase 1 foundation](phases/phase-10-bright-heaven/PHASE_10_PHASE_1_BRAND_FOUNDATION.md) · [Phase 2 catalog](phases/phase-10-bright-heaven/PHASE_10_PHASE_2_ELECTRICAL_CATALOG.md) · [Phase 3 product experience](phases/phase-10-bright-heaven/PHASE_10_PHASE_3_PRODUCT_EXPERIENCE.md) |
 
 Use the current source as the implementation authority when historical documents
 conflict. See `PROJECT_MEMORY.md` for current owner direction.

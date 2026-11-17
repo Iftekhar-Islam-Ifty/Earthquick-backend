@@ -87,7 +87,7 @@ class VendorController extends Controller
         $allProductsCount = (clone $catalog)->count();
 
         $query = (clone $catalog)
-            ->with(['category', 'subcategory'])
+            ->with(['category', 'subcategory', 'brand'])
             ->applyCatalogFilters($storeQuery);
         if ($selectedSubcategory) {
             $query->where('subcategory_id', $selectedSubcategory->id);

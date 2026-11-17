@@ -31,7 +31,7 @@ class CategoryController extends Controller
 
         $facetQuery = Product::publiclyAvailable()->where('category_id', $category->id);
         $query = (clone $facetQuery)
-            ->with(['category', 'subcategory', 'vendor'])
+            ->with(['category', 'subcategory', 'vendor', 'brand'])
             ->applyCatalogFilters($request->query());
 
         // Apply sorting criteria
@@ -85,7 +85,7 @@ class CategoryController extends Controller
 
         $facetQuery = Product::publiclyAvailable()->where('subcategory_id', $subcategory->id);
         $query = (clone $facetQuery)
-            ->with(['category', 'subcategory', 'vendor'])
+            ->with(['category', 'subcategory', 'vendor', 'brand'])
             ->applyCatalogFilters($request->query());
 
         // Apply sorting criteria

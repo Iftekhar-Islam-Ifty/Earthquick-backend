@@ -247,7 +247,7 @@
       <!-- Catalog Grid -->
       <div class="eq-catalog-grid eq-reveal" id="store-catalog-grid">
         @forelse($products as $product)
-          <article class="eq-product-card" id="card-{{ $product->id }}" data-id="{{ $product->id }}">
+          <article class="eq-product-card" id="card-{{ $product->id }}" data-id="{{ $product->id }}" data-product-description="{{ $product->short_desc ?? '' }}" data-brand-name="{{ $product->brand?->name ?? '' }}" data-vendor-name="{{ $vendor->name }}">
             <div class="eq-product-card__frame">
               @if($product->badge)
                 <span class="eq-product-badge eq-product-badge--{{ $product->badge_type ?? 'ready' }}">{{ $product->badge }}</span>

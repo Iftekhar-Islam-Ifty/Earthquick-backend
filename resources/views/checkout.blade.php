@@ -40,9 +40,9 @@
         <path d="M16 10a4 4 0 0 1-8 0"></path>
       </svg>
       <h2>Your shopping bag is empty</h2>
-      <p>You haven't added any products to your bag yet. Discover our artisanal sarees, tailored three-piece sets, and curated bags.</p>
-      <a href="{{ route('category.show', 'women') }}" class="eq-btn eq-btn--primary" style="padding: 0.85rem 2rem; display: inline-block; text-decoration: none;">
-        Explore Collections &rarr;
+      <p>You haven't added any products to your bag yet. Browse products from Nous Telos, Bright and other Rthquick stores.</p>
+      <a href="{{ route('stores.index') }}" class="eq-btn eq-btn--primary" style="padding: 0.85rem 2rem; display: inline-block; text-decoration: none;">
+        Explore Stores &rarr;
       </a>
     </div>
   @else
@@ -247,7 +247,7 @@
                 @if(!empty($item['brand_name']))<div class="eq-summary-item__meta">Brand: {{ $item['brand_name'] }}</div>@endif
                 @if(!empty($item['vendor_name']))<div class="eq-summary-item__meta">Sold by: {{ $item['vendor_name'] }}</div>@endif
                 @if(!empty($item['warranty_provider_name']))<div class="eq-summary-item__meta">Warranty provider: {{ $item['warranty_provider_name'] }}</div>@endif
-                <div class="eq-summary-item__meta">{{ $item['size'] }} &bull; Qty: {{ $item['quantity'] }}</div>
+                <div class="eq-summary-item__meta">@if(($item['size'] ?? 'Standard') !== 'Standard') {{ $item['size'] }} &bull; @endif Qty: {{ $item['quantity'] }}</div>
               </div>
               <div class="eq-summary-item__price">৳{{ number_format($item['price'] * $item['quantity']) }}</div>
             </div>

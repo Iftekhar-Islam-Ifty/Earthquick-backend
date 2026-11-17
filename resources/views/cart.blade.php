@@ -26,7 +26,7 @@
                   @if(!empty($item['vendor_name']))<p style="font-size:.82rem;color:var(--eq-charcoal-muted);margin:.15rem 0;">Sold by: {{ $item['vendor_name'] }}</p>@endif
                   @if(!empty($item['warranty_provider_name']))<p style="font-size:.82rem;color:var(--eq-charcoal-muted);margin:.15rem 0;">Warranty provider: {{ $item['warranty_provider_name'] }}</p>@endif
                   <p style="color: var(--eq-charcoal-muted); font-size: 0.85rem; margin-bottom: 0.45rem;">
-                    Size: {{ $item['size'] }} &bull; Qty: {{ $item['quantity'] }}
+                    @if(($item['size'] ?? 'Standard') !== 'Standard') {{ $item['size'] }} &bull; @endif Qty: {{ $item['quantity'] }}
                   </p>
                   <p style="font-weight: 600; color: var(--eq-charcoal);">
                     ৳{{ number_format($item['price']) }} &times; {{ $item['quantity'] }} = ৳{{ number_format($item['price'] * $item['quantity']) }}
@@ -106,9 +106,9 @@
             <path d="M16 10a4 4 0 0 1-8 0"></path>
           </svg>
           <h2 style="font-family: var(--font-display); font-size: 1.5rem; margin-bottom: 0.5rem;">Your bag is empty</h2>
-          <p style="color: var(--eq-charcoal-muted); margin-bottom: 1.5rem;">Discover our authentic handwoven sarees and tailored artisanal sets.</p>
-          <a href="{{ route('category.show', 'women') }}" class="eq-btn eq-btn--primary eq-btn--pill">
-            Explore Collections
+          <p style="color: var(--eq-charcoal-muted); margin-bottom: 1.5rem;">Browse products from independent stores across the Rthquick marketplace.</p>
+          <a href="{{ route('stores.index') }}" class="eq-btn eq-btn--primary eq-btn--pill">
+            Explore Stores
           </a>
         </div>
       @endif

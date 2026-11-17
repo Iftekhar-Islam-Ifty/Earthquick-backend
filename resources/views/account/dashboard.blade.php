@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'My Account & Orders — Rthquick by Nous Telos')
+@section('title', 'My Account & Orders — Rthquick')
 @section('body_class', 'eq-checkout-page')
 
 @section('content')
@@ -254,8 +254,8 @@
                   <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
                 </svg>
                 <h3 style="font-family: var(--font-display); font-size: 1.25rem; margin-bottom: 0.35rem;">No orders placed yet</h3>
-                <p style="color: var(--eq-charcoal-soft); margin-bottom: 1.25rem; font-size: 0.9rem;">Explore our handwoven sarees, co-ords, and accessories crafted for you.</p>
-                <a href="{{ route('category.show', 'women') }}" class="eq-btn eq-btn--primary" style="padding: 0.65rem 1.75rem; text-decoration: none; display: inline-block;">
+                <p style="color: var(--eq-charcoal-soft); margin-bottom: 1.25rem; font-size: 0.9rem;">Explore products from Nous Telos, Bright and other Rthquick stores.</p>
+                <a href="{{ route('stores.index') }}" class="eq-btn eq-btn--primary" style="padding: 0.65rem 1.75rem; text-decoration: none; display: inline-block;">
                   Start Shopping &rarr;
                 </a>
               </div>

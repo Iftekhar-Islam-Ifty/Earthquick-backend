@@ -34,10 +34,12 @@ class ProductController extends Controller
             ->where('slug', $slug)
             ->firstOrFail();
 
-        // Curate related products from the same category for recommendation carousel
+        // Keep recommendations inside the same selling store and category.
         $relatedProducts = Product::publiclyAvailable()->where('category_id', $product->category_id)
+            ->where('vendor_id', $product->vendor_id)
             ->where('id', '!=', $product->id)
             ->where('in_stock', true)
+            ->with(['category', 'subcategory', 'brand', 'vendor'])
             ->take(4)
             ->get();
 

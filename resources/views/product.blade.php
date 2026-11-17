@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title', $product->name . ' — ' . ($product->vendor ? $product->vendor->name . ' | Rthquick' : 'Rthquick'))
-@section('meta_description', $product->short_desc ?? ('Discover authentic craftsmanship with ' . $product->name . ' from ' . ($product->vendor->name ?? 'Rthquick') . '.'))
+@section('meta_description', $product->short_desc ?? ('View price, availability and product details for ' . $product->name . ' from ' . ($product->vendor->name ?? 'Rthquick') . '.'))
 @section('meta_keywords', $product->name . ', ' . ($product->fabric ? $product->fabric . ' fabric, ' : '') . ($product->category ? $product->category->name . ', ' : '') . ($product->vendor ? strtolower($product->vendor->name) . ', ' : '') . 'rthquick')
 @section('canonical_url', route('product.show', $product->slug))
 @section('og_type', 'product')
@@ -85,11 +85,13 @@
             </div>
             <h1 id="product-name">{{ $product->name }}</h1>
 
-            <!-- Reviews rating summary -->
-            <div class="eq-product-rating-row" id="product-rating-row">
-              <div class="eq-rating-stars" id="rating-stars">★★★★★</div>
-              <span class="eq-rating-text" id="product-rating-text">{{ $product->rating ?? '4.9' }} ({{ $product->reviews_count ?? 48 }} customer reviews)</span>
-            </div>
+            @if($product->reviews_count > 0 && $product->rating > 0)
+              @php $fullStars = min(5, max(0, (int) round($product->rating))); @endphp
+              <div class="eq-product-rating-row" id="product-rating-row">
+                <div class="eq-rating-stars" id="rating-stars" aria-label="Rating {{ number_format($product->rating, 1) }} out of 5">{{ str_repeat('★', $fullStars) }}{{ str_repeat('☆', 5 - $fullStars) }}</div>
+                <span class="eq-rating-text" id="product-rating-text">{{ number_format($product->rating, 1) }} ({{ $product->reviews_count }} reviews)</span>
+              </div>
+            @endif
 
             <!-- Price row -->
             <div class="eq-product-info__price" id="product-price-row">
@@ -182,10 +184,9 @@
             </div>
           </form>
 
-          <!-- Short Description -->
-          <p class="eq-product-info__desc" id="product-description">
-            {{ $product->short_desc ?? 'Intricately hand-woven by master heritage artisans using traditional motifs. Made from breathable, pure combed threads offering timeless elegance and effortless drape for celebratory and festive gatherings.' }}
-          </p>
+          @if($product->short_desc)
+            <p class="eq-product-info__desc" id="product-description">{{ $product->short_desc }}</p>
+          @endif
 
           <!-- Highlights & Assurance Metadata -->
           <div class="eq-product-meta-list">
@@ -224,7 +225,7 @@
       </div>
 
       <!-- ===============================================================
-           SECTION: ARTISANAL DETAILS ACCORDION
+           SECTION: PRODUCT DETAILS ACCORDION
            =============================================================== -->
       <section class="eq-product-accordion-section eq-reveal">
         <div style="max-width: 800px; margin: 0 auto;">
@@ -269,18 +270,8 @@
                 {{ in_array($product->product_type, ['apparel', 'home']) ? 'Care & Longevity Instructions' : 'Usage & Support' }}
               </summary>
               <div class="eq-product-accordion__body">
-                @if(in_array($product->product_type, ['apparel', 'home']))
-                  &bull; Follow the material-specific care information supplied with the product.<br />
-                  &bull; Use gentle cleaning methods and avoid prolonged harsh sunlight.<br />
-                  &bull; Store clean and dry to preserve colour, shape and finish.
-                @elseif($product->product_type === 'electronics')
-                  &bull; Read the supplied usage and safety instructions before operation.<br />
-                  &bull; Use only compatible power sources and accessories.<br />
-                  &bull; Contact Rthquick support for warranty or technical assistance.
-                @else
-                  &bull; Follow the brand's supplied use, cleaning and storage instructions.<br />
-                  &bull; Contact Rthquick support if product-specific guidance is required.
-                @endif
+                Follow the product-specific use, care and safety information supplied with this item.
+                Contact the seller or Rthquick support if you need product-specific guidance.
 
                 @if($sizeChartMedia)
                   <figure style="margin: 1rem 0 0;">
@@ -325,12 +316,12 @@
               <span style="font-size: 0.82rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--eq-teal-dark);">Curated Suggestions</span>
               <h2 style="font-family: var(--font-display); font-size: 1.65rem; color: var(--eq-charcoal); margin: 0.25rem 0 0;">You May Also Admire</h2>
             </div>
-            <a href="{{ route('category.show', $product->category->slug) }}" id="related-view-all" style="font-size: 0.88rem; font-weight: 600; color: var(--eq-teal-dark); text-decoration: none;">View Entire Category &rarr;</a>
+            <a href="{{ $product->vendor?->slug === 'bright' ? route('stores.show', $product->vendor->slug) : route('category.show', $product->category->slug) }}" id="related-view-all" style="font-size: 0.88rem; font-weight: 600; color: var(--eq-teal-dark); text-decoration: none;">{{ $product->vendor?->slug === 'bright' ? 'View Bright store' : 'View Entire Category' }} &rarr;</a>
           </div>
 
           <div class="eq-catalog-grid" id="related-products-grid">
             @foreach($relatedProducts as $rel)
-              <article class="eq-product-card" id="card-{{ $rel->id }}">
+              <article class="eq-product-card" id="card-{{ $rel->id }}" data-id="{{ $rel->id }}" data-product-description="{{ $rel->short_desc ?? '' }}" data-brand-name="{{ $rel->brand?->name ?? '' }}" data-vendor-name="{{ $rel->vendor?->name ?? '' }}">
                 <div class="eq-product-card__frame">
                   @if($rel->badge)
                     <span class="eq-product-badge eq-product-badge--{{ $rel->badge_type ?? 'ready' }}">{{ $rel->badge }}</span>
@@ -344,7 +335,10 @@
                   </button>
                 </div>
                 <div class="eq-product-card__body">
-                  <span class="eq-product-card__category">{{ $rel->category->name }} &bull; {{ $rel->fabric ?? 'Handloom' }}</span>
+                  <span class="eq-product-card__category">
+                    {{ $rel->subcategory?->name ?? $rel->category?->name }}
+                    @if($rel->brand) &bull; Brand: {{ $rel->brand->name }} @elseif($rel->fabric) &bull; Material: {{ $rel->fabric }} @endif
+                  </span>
                   <h3 class="eq-product-card__name">
                     <a href="{{ route('product.show', $rel->slug) }}" class="eq-product-card__link">{{ $rel->name }}</a>
                   </h3>

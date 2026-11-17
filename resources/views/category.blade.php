@@ -5,7 +5,7 @@
 @section('canonical_url', request()->integer('page') > 1 ? url()->current().'?page='.request()->integer('page') : url()->current())
 @section('og_title', (isset($subcategory) ? $subcategory->name : $category->name) . ' | Rthquick')
 @section('og_description', $category->description ?: ('Shop ' . (isset($subcategory) ? $subcategory->name : $category->name) . ' products from independent stores at Rthquick.'))
-@section('og_image', asset($category->image ?? 'images/hero/hero-main-saree-2.jpg'))
+@section('og_image', asset($category->image ?? 'images/logo/rthquick-logo.png'))
 @section('body_class', 'eq-catalog-page')
 @section('scroll_motion', '1')
 
@@ -34,12 +34,12 @@
     <section class="eq-cat-banner" id="cat-banner">
       <div class="eq-container">
         <div class="eq-cat-banner__inner eq-reveal">
-          <span class="eq-cat-banner__eyebrow" id="cat-banner-eyebrow">NOUS TELOS STUDIO</span>
+          <span class="eq-cat-banner__eyebrow" id="cat-banner-eyebrow">RTHQUICK MARKETPLACE</span>
           <h1 class="eq-cat-banner__title" id="cat-banner-title">
             {{ isset($subcategory) ? $subcategory->name : $category->name }} Collection
           </h1>
           <p class="eq-cat-banner__desc" id="cat-banner-desc">
-            {{ $category->description ?? 'Artisanal sarees woven on heritage wooden looms, alongside impeccably tailored three-piece and modern co-ord ensembles.' }}
+            {{ $category->description ?: 'Explore products in this category from independent Rthquick stores.' }}
           </p>
 
           <!-- Subcategory Filter Pills Container -->
@@ -334,7 +334,7 @@
         <section class="eq-catalog-main" aria-label="Product listings">
           <div class="eq-catalog-grid eq-reveal" id="catalog-grid">
             @forelse($products as $product)
-              <article class="eq-product-card" id="card-{{ $product->id }}" data-id="{{ $product->id }}" data-category="{{ $category->slug }}">
+              <article class="eq-product-card" id="card-{{ $product->id }}" data-id="{{ $product->id }}" data-category="{{ $category->slug }}" data-product-description="{{ $product->short_desc ?? '' }}" data-brand-name="{{ $product->brand?->name ?? '' }}" data-vendor-name="{{ $product->vendor?->name ?? '' }}">
                 <div class="eq-product-card__frame">
                   <!-- Status Badge -->
                   @if($product->badge)
@@ -382,7 +382,7 @@
                   <line x1="8" y1="11" x2="14" y2="11"></line>
                 </svg>
                 <h3 class="eq-catalog-empty__title">No matching pieces found</h3>
-                <p class="eq-catalog-empty__text">Try adjusting your price range or clearing fabric filters to discover other curated items.</p>
+                <p class="eq-catalog-empty__text">Try adjusting your filters or price range to find more products in this category.</p>
                 <a href="{{ url()->current() }}" class="eq-btn eq-btn--primary eq-btn--pill" id="empty-reset-filters">
                   Reset All Filters
                 </a>

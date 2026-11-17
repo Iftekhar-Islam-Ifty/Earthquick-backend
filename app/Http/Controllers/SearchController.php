@@ -41,7 +41,7 @@ class SearchController extends Controller
         }
 
         // Query active inventory across product metadata and category associations
-        $products = Product::publiclyAvailable()->with(['category', 'subcategory'])
+        $products = Product::publiclyAvailable()->with(['category', 'subcategory', 'vendor', 'brand'])
             ->where('in_stock', true)
             ->where(function ($q) use ($query) {
                 $q->where('name', 'like', "%{$query}%")
@@ -67,7 +67,9 @@ class SearchController extends Controller
                     'price' => (float) $product->price,
                     'formatted_price' => '৳'.number_format($product->price),
                     'image' => asset($product->image),
-                    'category_name' => $product->subcategory ? $product->subcategory->name : ($product->category ? $product->category->name : 'Nous Telos Studio'),
+                    'category_name' => $product->subcategory ? $product->subcategory->name : ($product->category ? $product->category->name : 'Rthquick catalog'),
+                    'brand_name' => $product->brand?->name,
+                    'vendor_name' => $product->vendor?->name,
                     'url' => route('product.show', $product->slug),
                 ];
             });
@@ -93,7 +95,7 @@ class SearchController extends Controller
         $query = trim($request->input('q', ''));
         $sort = $request->input('sort', 'featured');
 
-        $productsQuery = Product::publiclyAvailable()->with(['category', 'subcategory']);
+        $productsQuery = Product::publiclyAvailable()->with(['category', 'subcategory', 'vendor', 'brand']);
         $productsQuery->applyCatalogFilters($request->query());
 
         if (! empty($query)) {

@@ -53,7 +53,7 @@
               <option value="">Choose a reason</option>
               <option value="wrong_item">Wrong item sent</option>
               <option value="damaged_defective">Damaged or defective item</option>
-              <option value="other">Fit, change of mind or other</option>
+              <option value="other">Change of mind or other reason</option>
             </select>
             <label for="return-reason-{{ $item->id }}" style="display: block; font-size: 0.8rem; margin: 0.55rem 0 0.3rem;">Reason for return</label>
             <textarea id="return-reason-{{ $item->id }}" name="reason" rows="2" minlength="10" maxlength="1000" required style="width: 100%; box-sizing: border-box; padding: 0.55rem; border: 1px solid var(--eq-line); border-radius: 6px;"></textarea>

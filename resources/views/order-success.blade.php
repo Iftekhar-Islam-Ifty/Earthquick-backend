@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Order Confirmed — Rthquick by Nous Telos')
+@section('title', 'Order Confirmed — Rthquick')
 @section('body_class', 'eq-checkout-page')
 
 @section('content')

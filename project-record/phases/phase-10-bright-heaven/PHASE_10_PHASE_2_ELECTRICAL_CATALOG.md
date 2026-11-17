@@ -1,6 +1,7 @@
 # Bright Phase 2 - Electrical catalog foundation
 
-**Status: In progress.** Started 2026-11-16 at the owner's request.
+**Status: Implemented locally. Bright-verified catalog data remains pending before launch.**
+Started 2026-11-16 at the owner's request; implementation completed 2026-11-17.
 
 ## Verified source scope
 
@@ -22,8 +23,8 @@ this first Phase 2 slice.
 4. Identify Nous Telos and Bright as stores in customer/admin navigation,
    directories and seller filters; reserve Brand labels for product brands such
    as Heaven. Preserve Nous Telos's existing fashion-oriented store copy.
-5. Add Bright product listings only from facts Bright has supplied; do not invent
-   SKUs, prices, specs, certifications, manufacturer claims or warranty terms.
+5. Add real Bright product listings only from facts Bright has supplied; do not
+   invent SKUs, prices, specs, certifications, manufacturer claims or warranty terms.
 
 No product listings exist for Bright in the local database at Phase 2 start.
 The first slice therefore prepares the catalog and seller record; actual product
@@ -41,8 +42,8 @@ language while Nous Telos keeps its existing fashion wording.
 
 The migration is applied locally after a private pre-migration database backup.
 Admin product data entry and order/cart warranty-provider labels from Phase 1
-were also tightened during this work. Bright currently has zero products, so no
-SKU, price, stock or specifications were added. PHP syntax checks and Blade
+were also tightened during this work. At this initial checkpoint Bright had zero
+products, so no real SKU, price, stock or specifications were added. PHP syntax checks and Blade
 compilation passed; automated tests and browser visual review were not run.
 
 The store/brand distinction is now reflected in navigation, store directory,
@@ -60,6 +61,17 @@ Bright category selection validates against active Electronics subcategories and
 filters by the selected subcategory ID. A valid but empty subcategory now shows
 an empty result rather than dropping the selection and showing every product.
 Focused storefront filter/sort regression checks pass.
+
+## Phase 2 completion - 2026-11-17
+
+The Phase 2 implementation scope is complete locally: vendor profile and shared
+electrical subcategories, Bright-specific admin product validation, Heaven store
+and brand labels, working subcategory links/filters, and explicitly marked local
+demo listings are present. The owner-authorized demo prices and stock are only
+for trying the site flows. Actual Bright product data, photos, specifications,
+and warranty terms remain unverified and must replace the demos before launch.
+Phase 3 proceeds with the existing demo records for interface work; they are not
+treated as verified commercial data.
 
 ## Demo listings - 2026-11-16
 
