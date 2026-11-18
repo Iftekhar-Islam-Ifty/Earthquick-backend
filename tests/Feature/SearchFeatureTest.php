@@ -188,19 +188,18 @@ class SearchFeatureTest extends TestCase
     }
 
     /**
-     * Test empty search results state displays shortcuts and friendly messaging.
+     * Test empty search results state offers marketplace-wide store discovery.
      */
     public function test_search_results_empty_state_and_collection_shortcuts(): void
     {
         $response = $this->get('/search?q=NonExistentSuperUnlikelyProductKeywordXYZ999');
 
         $response->assertStatus(200);
-        $response->assertSee('No matching pieces found');
+        $response->assertSee('No matching products found');
         $response->assertSee('NonExistentSuperUnlikelyProductKeywordXYZ999');
-        $response->assertSee('Explore All Sarees &rarr;', false);
-        $response->assertSee('Popular Featured Collections');
-        $response->assertSee('Three Piece');
-        $response->assertSee('Bags');
+        $response->assertSee('Explore Stores &rarr;', false);
+        $response->assertDontSee('Popular Featured Collections');
+        $response->assertDontSee('Explore All Sarees');
     }
 
     /**

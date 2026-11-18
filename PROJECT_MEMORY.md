@@ -8,8 +8,12 @@ Bright-owned product brand, not a separate store. Bright provides Heaven product
 warranties. Phase 10 Phase 1 (store/brand/warranty foundation) is complete.
 Phase 2 (Bright electrical catalog structure and admin/storefront support) is
 implemented locally; Bright-verified commercial product details remain a launch
-input. Phase 3 (product and search presentation) is implemented locally; final
-browser review and Bright-verified product data remain release inputs.
+input. Phase 3 (product and search presentation) and Phase 4 (Bright/Heaven
+integration verification) are complete locally. Phase 5 (verified catalog
+onboarding) is in progress. Browser review and Bright-verified product data
+remain release inputs. Phase 4 passed 186 PHP tests / 1,416
+assertions and 12 frontend interaction tests; GD was enabled only for the test
+process because the local CLI php.ini leaves it disabled.
 Warranty duration and terms must come from Bright; do not invent them. See
 [Phase 10 Phase 1](project-record/phases/phase-10-bright-heaven/PHASE_10_PHASE_1_BRAND_FOUNDATION.md),
 [the plan](project-record/plans/PHASE_10_BRIGHT_STORE_HEAVEN_BRAND.md), and the

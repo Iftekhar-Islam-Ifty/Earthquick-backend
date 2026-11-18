@@ -17,7 +17,7 @@ operational references. Planned items are not complete implementation.
 | 7 - Payments | COD local work complete; bKash deferred | [Phase 7](phases/phase-07-payments/PHASE_7_ONLINE_PAYMENTS.md) |
 | 8 - After-sales | Local workflow complete; production gates pending | [Phase 8](phases/phase-08-after-sales/PHASE_8_AFTER_SALES.md) |
 | 9 - Customer communications | Local implementation complete; production gates pending | [Phase 9](phases/phase-09-customer-communications/PHASE_9_CUSTOMER_COMMUNICATIONS.md) |
-| 10 - Bright and Heaven | Phase 1 complete; Phase 2 implemented locally (verified catalog data pending); Phase 3 implemented locally (browser review and verified product data pending) | [Phase 1 foundation](phases/phase-10-bright-heaven/PHASE_10_PHASE_1_BRAND_FOUNDATION.md) · [Phase 2 catalog](phases/phase-10-bright-heaven/PHASE_10_PHASE_2_ELECTRICAL_CATALOG.md) · [Phase 3 product experience](phases/phase-10-bright-heaven/PHASE_10_PHASE_3_PRODUCT_EXPERIENCE.md) |
+| 10 - Bright and Heaven | Phases 1-4 complete locally; Phase 5 (verified catalog onboarding) in progress; Bright data and browser review pending | [Phase 1 foundation](phases/phase-10-bright-heaven/PHASE_10_PHASE_1_BRAND_FOUNDATION.md) · [Phase 2 catalog](phases/phase-10-bright-heaven/PHASE_10_PHASE_2_ELECTRICAL_CATALOG.md) · [Phase 3 product experience](phases/phase-10-bright-heaven/PHASE_10_PHASE_3_PRODUCT_EXPERIENCE.md) · [Phase 4 integration verification](phases/phase-10-bright-heaven/PHASE_10_PHASE_4_INTEGRATION_VERIFICATION.md) · [Phase 5 catalog onboarding](phases/phase-10-bright-heaven/PHASE_10_PHASE_5_CATALOG_ONBOARDING.md) |
 
 Use the current source as the implementation authority when historical documents
 conflict. See `PROJECT_MEMORY.md` for current owner direction.
@@ -25,6 +25,7 @@ conflict. See `PROJECT_MEMORY.md` for current owner direction.
 ## Plans and references
 
 - [Phase 10 plan](plans/PHASE_10_BRIGHT_STORE_HEAVEN_BRAND.md)
+- [Bright catalog intake template](reference/BRIGHT_CATALOG_INTAKE_TEMPLATE.csv)
 - [Rthquick identity update](reference/RTHQUICK_RENAME_2026-11-16.md)
 - [Order retention reference](reference/ORDER_RETENTION.md)
 - [Historical cPanel deployment guide](reference/CPANEL_DEPLOYMENT_GUIDE.md) -
