@@ -43,6 +43,7 @@ class PageController extends Controller
 
         foreach (Vendor::where('is_active', true)->pluck('slug') as $slug) {
             $urls[] = route('stores.show', $slug);
+            $urls[] = route('stores.catalog', $slug);
         }
 
         foreach (Category::where('is_active', true)

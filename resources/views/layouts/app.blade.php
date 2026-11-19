@@ -8,7 +8,7 @@
 
     @php
       $noindex = request()->routeIs('search', 'cart.*', 'checkout.*', 'login', 'register', 'account.*')
-        || (request()->routeIs('category.show', 'subcategory.show', 'stores.show')
+        || (request()->routeIs('category.show', 'subcategory.show', 'stores.show', 'stores.catalog')
           && count(array_diff(array_keys(request()->query()), ['page'])) > 0);
     @endphp
     <meta name="robots" content="{{ $noindex ? 'noindex,follow' : 'index,follow' }}" />

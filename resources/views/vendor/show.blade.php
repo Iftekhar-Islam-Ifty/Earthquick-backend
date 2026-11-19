@@ -2,7 +2,7 @@
 
 @section('title', $vendor->name . ' — Storefront | Rthquick')
 @section('meta_description', $vendor->description ?? ('Discover exclusive creations by ' . $vendor->name . ' on Rthquick.'))
-@section('canonical_url', request()->integer('page') > 1 ? route('stores.show', $vendor->slug).'?page='.request()->integer('page') : route('stores.show', $vendor->slug))
+@section('canonical_url', request()->integer('page') > 1 ? route('stores.catalog', $vendor->slug).'?page='.request()->integer('page') : route('stores.catalog', $vendor->slug))
 @section('body_class', 'eq-storefront-page')
 @section('scroll_motion', '1')
 
@@ -75,7 +75,9 @@
         <li><span style="opacity: 0.5;">&rsaquo;</span></li>
         <li><a href="{{ route('stores.index') }}" style="color: inherit; text-decoration: none;">Stores</a></li>
         <li><span style="opacity: 0.5;">&rsaquo;</span></li>
-        <li style="color: var(--eq-gold-dark); font-weight: 500;">{{ $vendor->name }}</li>
+        <li><a href="{{ route('stores.show', $vendor->slug) }}" style="color: inherit; text-decoration: none;">{{ $vendor->name }}</a></li>
+        <li><span style="opacity: 0.5;">&rsaquo;</span></li>
+        <li style="color: var(--eq-gold-dark); font-weight: 500;">All products</li>
       </ol>
     </div>
   </nav>
@@ -151,19 +153,27 @@
       @endphp
 
       <div class="eq-store-toolbar">
+        <form method="GET" action="{{ route('stores.catalog', $vendor->slug) }}" role="search" style="display:flex; gap:.5rem; max-width:520px; width:100%;">
+          @foreach(array_diff_key($storeQuery, ['q' => true, 'page' => true]) as $key => $value)
+            <input type="hidden" name="{{ $key }}" value="{{ $value }}" />
+          @endforeach
+          <label class="sr-only" for="store-search">Search {{ $vendor->name }} products</label>
+          <input class="eq-store-control" id="store-search" type="search" name="q" value="{{ $storeQuery['q'] ?? '' }}" placeholder="Search {{ $vendor->name }} products" style="flex:1;" />
+          <button class="eq-btn eq-btn--outline" type="submit">Search</button>
+        </form>
         <nav class="eq-store-categories" aria-label="Browse {{ $vendor->name }} categories">
           <a class="eq-store-category {{ !isset($storeQuery[$browseParam]) ? 'is-active' : '' }}" @if(!isset($storeQuery[$browseParam])) aria-current="page" @endif
-             href="{{ route('stores.show', array_merge(['slug' => $vendor->slug], array_diff_key($storeQuery, ['category' => true, 'subcategory' => true]))) }}">{{ $isBrightStore ? 'All Products' : 'All Pieces' }} ({{ $allProductsCount }})</a>
+             href="{{ route('stores.catalog', array_merge(['slug' => $vendor->slug], array_diff_key($storeQuery, ['category' => true, 'subcategory' => true]))) }}">{{ $isBrightStore ? 'All Products' : 'All Pieces' }} ({{ $allProductsCount }})</a>
           @foreach($browseItems as $browseItem)
             <a class="eq-store-category {{ ($storeQuery[$browseParam] ?? null) === $browseItem->slug ? 'is-active' : '' }}" @if(($storeQuery[$browseParam] ?? null) === $browseItem->slug) aria-current="page" @endif
-               href="{{ route('stores.show', array_merge(['slug' => $vendor->slug], array_diff_key($storeQuery, ['category' => true, 'subcategory' => true]), [$browseParam => $browseItem->slug])) }}">{{ $browseItem->name }}</a>
+               href="{{ route('stores.catalog', array_merge(['slug' => $vendor->slug], array_diff_key($storeQuery, ['category' => true, 'subcategory' => true]), [$browseParam => $browseItem->slug])) }}">{{ $browseItem->name }}</a>
           @endforeach
         </nav>
 
         @if($allProductsCount > 0)
           <div class="eq-store-tools">
             <p class="eq-store-results">{{ $products->total() }} {{ $isBrightStore ? 'products' : ($products->total() === 1 ? 'piece' : 'pieces') }} found</p>
-            <form class="eq-store-sort" method="GET" action="{{ route('stores.show', $vendor->slug) }}">
+            <form class="eq-store-sort" method="GET" action="{{ route('stores.catalog', $vendor->slug) }}">
               @foreach(array_diff_key($storeQuery, ['sort' => true]) as $key => $value)
                 <input type="hidden" name="{{ $key }}" value="{{ $value }}" />
               @endforeach
@@ -177,7 +187,7 @@
             </form>
             <details class="eq-store-filters">
               <summary class="eq-store-filter-toggle">Filters @if(count($selectedFilters)) <span class="eq-store-filter-count">{{ count($selectedFilters) }}</span> @endif</summary>
-              <form class="eq-store-filter-panel {{ !$showProductTypeFilter && !$showDeliveryFilter && !$showReturnFilter ? 'is-compact' : '' }}" method="GET" action="{{ route('stores.show', $vendor->slug) }}">
+              <form class="eq-store-filter-panel {{ !$showProductTypeFilter && !$showDeliveryFilter && !$showReturnFilter ? 'is-compact' : '' }}" method="GET" action="{{ route('stores.catalog', $vendor->slug) }}">
               @foreach(array_intersect_key($storeQuery, array_flip([$browseParam, 'sort'])) as $key => $value)
                 <input type="hidden" name="{{ $key }}" value="{{ $value }}" />
               @endforeach
@@ -220,7 +230,7 @@
               <div class="eq-store-filter-actions">
                 <button type="submit" class="eq-btn eq-btn--outline" style="padding: .5rem .9rem; font-size: .8rem;">Apply filters</button>
                 @if(count($selectedFilters))
-                  <a class="eq-store-clear" href="{{ route('stores.show', array_merge(['slug' => $vendor->slug], $clearFilterQuery)) }}">Clear filters</a>
+                  <a class="eq-store-clear" href="{{ route('stores.catalog', array_merge(['slug' => $vendor->slug], $clearFilterQuery)) }}">Clear filters</a>
                 @endif
               </div>
               </form>
@@ -238,7 +248,7 @@
                   'max_price' => 'Up to ৳'.$value,
                 } }}</span>
               @endforeach
-              <a class="eq-store-clear" href="{{ route('stores.show', array_merge(['slug' => $vendor->slug], $clearFilterQuery)) }}">Clear filters</a>
+              <a class="eq-store-clear" href="{{ route('stores.catalog', array_merge(['slug' => $vendor->slug], $clearFilterQuery)) }}">Clear filters</a>
             </div>
           @endif
         @endif
@@ -293,7 +303,7 @@
             @if($allProductsCount > 0)
               <h3 style="font-family: var(--font-display); font-size: 1.35rem; color: var(--eq-navy); margin-bottom: 0.5rem; font-weight: 600;">{{ $isBrightStore ? 'No products match this selection' : 'No pieces match this selection' }}</h3>
               <p style="max-width: 460px; margin: 0 auto 1.75rem; color: var(--eq-charcoal-soft); font-size: 0.88rem; line-height: 1.6;">Try another category or clear the filters to see more from {{ $vendor->name }}.</p>
-              <a href="{{ route('stores.show', $vendor->slug) }}" class="eq-btn eq-btn--outline" style="padding: 0.55rem 1.25rem; font-size: 0.82rem; text-decoration: none;">{{ $isBrightStore ? 'View all products' : 'View all pieces' }}</a>
+              <a href="{{ route('stores.catalog', $vendor->slug) }}" class="eq-btn eq-btn--outline" style="padding: 0.55rem 1.25rem; font-size: 0.82rem; text-decoration: none;">{{ $isBrightStore ? 'View all products' : 'View all pieces' }}</a>
             @else
               <h3 style="font-family: var(--font-display); font-size: 1.35rem; color: var(--eq-navy); margin-bottom: 0.5rem; font-weight: 600;">{{ $isBrightStore ? 'Electrical Catalog in Preparation' : 'Collection in Preparation' }}</h3>
               <p style="max-width: 460px; margin: 0 auto 1.75rem; color: var(--eq-charcoal-soft); font-size: 0.88rem; line-height: 1.6;">{{ $isBrightStore ? 'Bright Electrical Company product listings are being prepared. Product details will appear here when added by the Rthquick admin.' : 'The '.$vendor->name.' catalog is currently being prepared for the Rthquick collective. New curated arrivals will debut here shortly.' }}</p>

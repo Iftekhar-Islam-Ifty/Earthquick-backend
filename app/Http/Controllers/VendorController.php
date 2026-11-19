@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\Vendor;
+use App\Models\HomepageImage;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -35,7 +36,40 @@ class VendorController extends Controller
     /**
      * Display an individual store page with its available products.
      */
-    public function show(Request $request, string $slug): View
+    public function show(Request $request, string $slug): View|\Illuminate\Http\RedirectResponse
+    {
+        $vendor = Vendor::where('slug', $slug)->where('is_active', true)->firstOrFail();
+        $catalogKeys = ['category', 'subcategory', 'product_type', 'delivery_class', 'returnable', 'min_price', 'max_price', 'sort', 'page', 'q'];
+        if (collect($catalogKeys)->contains(fn ($key) => $request->query($key) !== null)) {
+            return redirect()->route('stores.catalog', array_merge(['slug' => $vendor->slug], $request->query()));
+        }
+
+        if ($vendor->slug === 'nous-telos') {
+            $products = Product::publiclyAvailable()->where('vendor_id', $vendor->id)->where('in_stock', true);
+            $newArrivals = (clone $products)->with(['category', 'subcategory'])->where('is_new_arrival', true)->latest()->orderByDesc('id')->take(8)->get();
+            $sarees = (clone $products)->whereHas('subcategory', fn ($q) => $q->where('slug', 'saree'))->latest()->orderByDesc('id')->take(9)->get();
+            $sareeSpotlight = $sarees->first();
+            $threePieces = (clone $products)->whereHas('subcategory', fn ($q) => $q->where('slug', 'three-piece'))->latest()->take(8)->get();
+            $twoPieces = (clone $products)->whereHas('subcategory', fn ($q) => $q->where('slug', 'two-piece'))->latest()->take(5)->get();
+            $bags = (clone $products)->whereHas('category', fn ($q) => $q->where('slug', 'bags'))->latest()->take(5)->get();
+            $homepageMedia = HomepageImage::resolvedSlots();
+
+            return view('vendor.nous-telos-home', compact('vendor', 'newArrivals', 'sarees', 'sareeSpotlight', 'threePieces', 'twoPieces', 'bags', 'homepageMedia'));
+        }
+
+        if ($vendor->slug === 'bright') {
+            $electronics = Category::where('slug', 'electronics')->first();
+            $subcategories = $electronics?->subcategories()->where('is_active', true)->orderBy('name')->get() ?? collect();
+            $catalogCount = Product::where('vendor_id', $vendor->id)->where('is_active', true)->where('in_stock', true)->count();
+
+            return view('vendor.bright-home', compact('vendor', 'subcategories', 'catalogCount'));
+        }
+
+        return view('vendor.landing', compact('vendor'));
+    }
+
+    /** Display the filtered, paginated product catalog for an individual store. */
+    public function catalog(Request $request, string $slug): View
     {
         $vendor = Vendor::where('slug', $slug)
             ->where('is_active', true)
@@ -43,7 +77,7 @@ class VendorController extends Controller
         $isBrightStore = $vendor->slug === 'bright';
 
         $storeQuery = [];
-        foreach (['category', 'subcategory', 'product_type', 'delivery_class', 'returnable', 'min_price', 'max_price', 'sort'] as $key) {
+        foreach (['category', 'subcategory', 'product_type', 'delivery_class', 'returnable', 'min_price', 'max_price', 'sort', 'q'] as $key) {
             $value = $request->query($key);
             if (is_string($value) && $value !== '') {
                 $storeQuery[$key] = $value;
@@ -89,6 +123,17 @@ class VendorController extends Controller
         $query = (clone $catalog)
             ->with(['category', 'subcategory', 'brand'])
             ->applyCatalogFilters($storeQuery);
+        if (! empty($storeQuery['q'])) {
+            $term = trim($storeQuery['q']);
+            if (mb_strlen($term) > 100) {
+                $term = mb_substr($term, 0, 100);
+            }
+            $query->where(function ($builder) use ($term) {
+                $builder->where('name', 'like', '%'.$term.'%')
+                    ->orWhere('short_desc', 'like', '%'.$term.'%')
+                    ->orWhere('description', 'like', '%'.$term.'%');
+            });
+        }
         if ($selectedSubcategory) {
             $query->where('subcategory_id', $selectedSubcategory->id);
         }

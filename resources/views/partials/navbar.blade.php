@@ -51,11 +51,11 @@
                   </button>
                 </div>
                 <ul class="eq-megamenu__list eq-nested-list" id="list-fashion-nested">
-                  <li><a href="{{ route('category.show', 'women') }}">Women</a></li>
-                  <li><a href="{{ route('category.show', 'men') }}">Men</a></li>
-                  <li><a href="{{ route('category.show', 'kids') }}">Kids</a></li>
-                  <li><a href="{{ route('category.show', 'bags') }}">Bags</a></li>
-                  <li><a href="{{ route('category.show', 'ornaments') }}">Ornaments</a></li>
+                  <li><a href="{{ route('stores.catalog', ['slug' => 'nous-telos', 'category' => 'women']) }}">Women</a></li>
+                  <li><a href="{{ route('stores.catalog', ['slug' => 'nous-telos', 'category' => 'men']) }}">Men</a></li>
+                  <li><a href="{{ route('stores.catalog', ['slug' => 'nous-telos', 'category' => 'kids']) }}">Kids</a></li>
+                  <li><a href="{{ route('stores.catalog', ['slug' => 'nous-telos', 'category' => 'bags']) }}">Bags</a></li>
+                  <li><a href="{{ route('stores.catalog', ['slug' => 'nous-telos', 'category' => 'ornaments']) }}">Ornaments</a></li>
                 </ul>
               </div>
 
@@ -69,20 +69,29 @@
                   </button>
                 </div>
                 <ul class="eq-megamenu__list eq-nested-list" id="list-home-living-nested">
-                  <li><a href="{{ route('category.show', 'home-decor') }}">Home Decor</a></li>
-                  <li><a href="{{ route('subcategory.show', ['categorySlug' => 'home-decor', 'subcategorySlug' => 'kantha']) }}">Kantha</a></li>
-                  <li><a href="{{ route('subcategory.show', ['categorySlug' => 'home-decor', 'subcategorySlug' => 'bedsheet']) }}">Bedsheet</a></li>
-                  <li><a href="{{ route('subcategory.show', ['categorySlug' => 'home-decor', 'subcategorySlug' => 'cushion-cover']) }}">Cushion Cover</a></li>
+                  <li><a href="{{ route('stores.catalog', ['slug' => 'nous-telos', 'category' => 'home-decor']) }}">Home Decor</a></li>
+                  <li><a href="{{ route('stores.catalog', ['slug' => 'nous-telos', 'subcategory' => 'kantha']) }}">Kantha</a></li>
+                  <li><a href="{{ route('stores.catalog', ['slug' => 'nous-telos', 'subcategory' => 'bedsheet']) }}">Bedsheet</a></li>
+                  <li><a href="{{ route('stores.catalog', ['slug' => 'nous-telos', 'subcategory' => 'cushion-cover']) }}">Cushion Cover</a></li>
+                </ul>
+                <div class="eq-megamenu__heading" style="margin-top:1rem;">Bright Electrical</div>
+                <ul class="eq-megamenu__list eq-nested-list">
+                  <li><a href="{{ route('stores.catalog', ['slug' => 'bright', 'subcategory' => 'switches']) }}">Switches</a></li>
+                  <li><a href="{{ route('stores.catalog', ['slug' => 'bright', 'subcategory' => 'sockets']) }}">Sockets</a></li>
+                  <li><a href="{{ route('stores.catalog', ['slug' => 'bright', 'subcategory' => 'led-lights']) }}">LED Lights</a></li>
+                  <li><a href="{{ route('stores.catalog', ['slug' => 'bright', 'subcategory' => 'circuit-breakers']) }}">Circuit Breakers</a></li>
+                  <li><a href="{{ route('stores.catalog', ['slug' => 'bright', 'subcategory' => 'fans']) }}">Fans</a></li>
+                  <li><a href="{{ route('stores.catalog', ['slug' => 'bright']) }}">All Bright products</a></li>
                 </ul>
               </div>
 
               <div class="eq-megamenu__feature">
-                <a href="{{ route('category.show', 'women') }}" class="eq-megamenu__feature-card">
+                <a href="{{ route('stores.catalog', 'nous-telos') }}" class="eq-megamenu__feature-card">
                   <div class="eq-megamenu__feature-media">
                     <img src="{{ asset('images/hero/hero-main-saree-2.webp') }}" alt="Curated Marketplace Catalog" />
                   </div>
                   <div class="eq-megamenu__feature-content">
-                    <span class="eq-megamenu__tag">RTHQUICK CURATED</span>
+                    <span class="eq-megamenu__tag">NOUS TELOS COLLECTIONS</span>
                     <strong class="eq-megamenu__feature-title">Heritage to Modern</strong>
                     <span class="eq-megamenu__feature-link">Explore Catalog &rarr;</span>
                   </div>

@@ -34,6 +34,12 @@ supplied Facebook page screenshot to correct its electrical supplier profile and
 establish shared Electronics subcategories. No product specifications or
 warranty terms have been invented.
 
+Phase 10 Phase 6 (2026-11-19) separates the marketplace entry page, Nous Telos
+editorial store homepage, Bright electrical store homepage, and each store's
+catalog/filter page. Phase 5 verified catalog onboarding remains in progress;
+Bright's real commercial product and warranty inputs and browser review remain
+pending. See `project-record/phases/phase-10-bright-heaven/PHASE_10_PHASE_6_STORE_HOME_CATALOG_SEPARATION.md`.
+
 ## Historical review
 
 ## Current scope update — Phase 2

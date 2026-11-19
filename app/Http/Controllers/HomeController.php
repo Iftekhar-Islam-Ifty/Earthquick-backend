@@ -2,15 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Product;
-use App\Models\HomepageImage;
 use App\Models\Vendor;
 use Illuminate\View\View;
 
 /* =========================================================================
  * HOME CONTROLLER
- * Curates flagship homepage editorial sections, hero carousels,
- * artisanal handloom spotlights, and featured product collections.
+ * Renders the Rthquick marketplace entry point and its available stores.
  * ========================================================================= */
 
 class HomeController extends Controller
@@ -20,57 +17,13 @@ class HomeController extends Controller
      * Fetches categorized inventory and featured items for homepage layout.
      * ========================================================================= */
 
-    /**
-     * Render the Rthquick / Nous Telos flagship homepage.
-     */
+    /** Render the marketplace entry page with one clear choice per store. */
     public function index(): View
     {
-        $nousTelos = Vendor::where('slug', 'nous-telos')->where('is_active', true)->first();
-        $bright = Vendor::where('slug', 'bright')->where('is_active', true)->first();
+        $stores = Vendor::where('is_active', true)
+            ->whereIn('slug', ['nous-telos', 'bright'])
+            ->orderBy('sort_order')->get()->keyBy('slug');
 
-        $flagshipProducts = Product::publiclyAvailable()
-            ->where('in_stock', true);
-        if ($nousTelos) {
-            $flagshipProducts->where('vendor_id', $nousTelos->id);
-        } else {
-            $flagshipProducts->whereRaw('1 = 0');
-        }
-        $newArrivals = (clone $flagshipProducts)->with(['category', 'subcategory'])
-            ->where('is_new_arrival', true)->latest()->orderByDesc('id')->take(8)->get();
-
-        // Authentic handloom Sarees for flagship atelier showcase
-        $sarees = (clone $flagshipProducts)->whereHas('subcategory', function ($q) {
-            $q->where('slug', 'saree');
-        })->latest()->orderByDesc('id')->take(9)->get();
-
-        // Left-side masterpiece spotlight saree
-        $sareeSpotlight = $sarees->first();
-
-        $threePieces = (clone $flagshipProducts)->whereHas('subcategory', function ($q) {
-            $q->where('slug', 'three-piece');
-        })->latest()->take(8)->get();
-
-        $twoPieces = (clone $flagshipProducts)->whereHas('subcategory', function ($q) {
-            $q->where('slug', 'two-piece');
-        })->latest()->take(5)->get();
-
-        // Handcrafted Bags collection
-        $bags = (clone $flagshipProducts)->whereHas('category', function ($q) {
-            $q->where('slug', 'bags');
-        })->where('in_stock', true)->latest()->take(5)->get();
-
-        $homepageMedia = HomepageImage::resolvedSlots();
-
-        return view('home', compact(
-            'nousTelos',
-            'bright',
-            'newArrivals',
-            'sarees',
-            'sareeSpotlight',
-            'threePieces',
-            'twoPieces',
-            'bags',
-            'homepageMedia'
-        ));
+        return view('home', compact('stores'));
     }
 }
