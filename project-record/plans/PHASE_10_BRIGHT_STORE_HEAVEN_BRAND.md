@@ -1,6 +1,6 @@
 ﻿# Phase 10 - Bright store and Heaven product brand
 
-**Status: Phase 5 catalog onboarding in progress; Phase 6 implemented locally; Phase 7 responsive store journeys in progress.** Bright-verified catalog data and browser review remain before launch.
+**Status: Phase 5 intake preparation consolidated into Phase 8; Phase 6 implemented locally; Phase 7 implementation delivered with browser review pending; Phase 8 verified catalog onboarding in progress.** Bright-verified catalog data and browser review remain before launch.
 The broader work was recorded 2026-11-16 from the owner's direction.
 
 ## Owner-approved identity structure
@@ -51,10 +51,11 @@ Do not invent product or warranty claims.
 2. [Phase 2 catalog foundation](../phases/phase-10-bright-heaven/PHASE_10_PHASE_2_ELECTRICAL_CATALOG.md): implement Bright catalog/category setup and demo listings. Real commercial product data remains subject to Bright verification.
 3. [Phase 3 product experience](../phases/phase-10-bright-heaven/PHASE_10_PHASE_3_PRODUCT_EXPERIENCE.md): refine storefront/search and product presentation without inventing product claims.
 4. [Phase 4 integration verification](../phases/phase-10-bright-heaven/PHASE_10_PHASE_4_INTEGRATION_VERIFICATION.md): verify Bright/Heaven identity through product, cart, checkout and receipt; keep the full suites green.
-5. [Phase 5 catalog onboarding](../phases/phase-10-bright-heaven/PHASE_10_PHASE_5_CATALOG_ONBOARDING.md): collect Bright-verified product and warranty data for accurate central-admin entry.
+5. [Phase 5 intake preparation](../phases/phase-10-bright-heaven/PHASE_10_PHASE_5_CATALOG_ONBOARDING.md): historical preparation; follow-up work is consolidated in Phase 8.
 6. [Phase 6 store/catalog separation](../phases/phase-10-bright-heaven/PHASE_10_PHASE_6_STORE_HOME_CATALOG_SEPARATION.md): split the marketplace entry, each store homepage and each store catalog into clear customer journeys.
 7. [Phase 7 responsive store journeys](../phases/phase-10-bright-heaven/PHASE_10_PHASE_7_RESPONSIVE_STORE_JOURNEYS.md): refine desktop, tablet and mobile menu/catalog behavior without mixing store catalogs.
-8. Browser review of desktop/mobile product, cart, checkout, receipt and after-sales flows remains a release check.
+8. [Phase 8 verified catalog onboarding](../phases/phase-10-bright-heaven/PHASE_10_PHASE_8_VERIFIED_CATALOG_ONBOARDING.md): enter Bright-confirmed products, prices, stock, images, policies and exact warranty terms in the central admin.
+9. Browser review of desktop/mobile product, cart, checkout, receipt and after-sales flows remains a release check. Phase 7 visual review is still pending and remains a launch check.
 
 ## Explicit boundaries
 

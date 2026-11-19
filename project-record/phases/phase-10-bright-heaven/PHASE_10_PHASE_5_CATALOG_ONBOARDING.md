@@ -1,7 +1,8 @@
 # Bright Phase 5 - Verified catalog onboarding
 
-**Status: In progress.** Started 2026-11-17 after Phase 4's automated
-integration verification completed.
+**Status: Consolidated into Phase 8.** This record documents the original
+2026-11-17 intake preparation. Follow-up onboarding work is tracked in
+[Phase 8](PHASE_10_PHASE_8_VERIFIED_CATALOG_ONBOARDING.md).
 
 ## Goal
 

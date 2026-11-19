@@ -8,11 +8,19 @@
 @push('styles')
 <style>
   .eq-bright-home { background: #f8f4eb; }
-  .eq-bright-intro { padding: clamp(3rem, 7vw, 6rem) 1.25rem; background: linear-gradient(120deg,#193b4a,#285f79); color: #fff; }
-  .eq-bright-intro__inner { max-width: 1100px; margin: auto; }
-  .eq-bright-intro .eyebrow { color: #efd38b; letter-spacing: .15em; font-size: .75rem; font-weight: 700; text-transform: uppercase; }
-  .eq-bright-intro h1 { margin: .75rem 0; color: #fff; font: 600 clamp(2.1rem,5vw,3.8rem)/1.1 var(--font-display); }
-  .eq-bright-intro p { max-width: 620px; line-height: 1.7; opacity: .86; }
+  .eq-bright-store-hero { min-height: 420px; height: min(62vh, 620px); max-height: 620px; background: #14384b; }
+  .eq-bright-store-hero .eq-hero__media::after { background: linear-gradient(90deg, rgba(12, 33, 46, .88) 0%, rgba(12, 33, 46, .56) 48%, rgba(12, 33, 46, .08) 100%); }
+  .eq-bright-store-hero .eq-hero__content { max-width: 700px; padding-bottom: clamp(2rem, 5vw, 4rem); }
+  .eq-bright-store-hero .eq-hero__content .eq-eyebrow { color: #efd38b; }
+  .eq-bright-store-hero .eq-hero__content h1 { max-width: 14ch; }
+  .eq-bright-store-hero .eq-hero__dot { border-color: rgba(255,255,255,.8); }
+  .eq-bright-store-hero .eq-hero__dot.is-active { background: #efd38b; border-color: #efd38b; }
+  @media (max-width: 768px) {
+    .eq-bright-store-hero { min-height: 285px; height: clamp(285px, 52vh, 390px); max-height: 390px; }
+    .eq-bright-store-hero .eq-hero__media::after { background: linear-gradient(to top, rgba(12,33,46,.92) 0%, rgba(12,33,46,.48) 58%, rgba(12,33,46,.06) 100%) !important; }
+    .eq-bright-store-hero .eq-hero__media img { object-position: 72% center !important; }
+    .eq-bright-store-hero .eq-hero__content { max-width: 82%; padding-bottom: 2rem !important; }
+  }
   .eq-bright-section { max-width: 1100px; margin: auto; padding: 3rem 1.25rem; }
   .eq-bright-section h2 { color: #203e4c; font: 600 clamp(1.6rem,3vw,2.3rem) var(--font-display); }
   .eq-bright-categories { display: grid; grid-template-columns: repeat(auto-fit,minmax(150px,1fr)); gap: .8rem; margin: 1.5rem 0 2rem; }
@@ -24,14 +32,8 @@
 
 @section('content')
 <main id="main-content">
-  <section class="eq-bright-intro">
-    <div class="eq-bright-intro__inner">
-      <span class="eyebrow">Electrical products · Chattogram</span>
-      <h1>{{ $vendor->name }}</h1>
-      <p>{{ $vendor->description ?: 'Browse electrical products and accessories from Bright.' }}</p>
-      <a class="eq-btn eq-btn--light" href="{{ route('stores.catalog', $vendor->slug) }}">Shop all products <span aria-hidden="true">&rarr;</span></a>
-    </div>
-  </section>
+  @include('vendor.partials.bright-hero')
+
   <section class="eq-bright-section" aria-labelledby="bright-categories-title">
     <h2 id="bright-categories-title">Shop by category</h2>
     <div class="eq-bright-categories">

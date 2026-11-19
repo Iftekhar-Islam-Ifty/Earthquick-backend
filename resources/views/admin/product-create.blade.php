@@ -206,7 +206,8 @@
             </div>
             <div>
               <label for="input-warranty-info" style="display: block; font-size: 0.84rem; font-weight: 600; color: var(--eq-charcoal); margin-bottom: 0.4rem;">Warranty / Support</label>
-              <input type="text" name="warranty_info" id="input-warranty-info" value="{{ old('warranty_info') }}" placeholder="e.g. 1 year manufacturer warranty" style="width: 100%; padding: 0.65rem 0.85rem; border-radius: 6px; border: 1px solid var(--eq-line); font-size: 0.9rem; font-family: inherit; background: #ffffff;" />
+              <input type="text" name="warranty_info" id="input-warranty-info" value="{{ old('warranty_info') }}" placeholder="Enter seller-confirmed warranty terms only" style="width: 100%; padding: 0.65rem 0.85rem; border-radius: 6px; border: 1px solid var(--eq-line); font-size: 0.9rem; font-family: inherit; background: #ffffff;" />
+              <small style="display:block;margin-top:.35rem;color:var(--eq-charcoal-soft);">For Bright/Heaven products, enter only terms confirmed by Bright.</small>
             </div>
           </div>
 

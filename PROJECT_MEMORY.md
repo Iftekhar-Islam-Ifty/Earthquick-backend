@@ -9,8 +9,8 @@ warranties. Phase 10 Phase 1 (store/brand/warranty foundation) is complete.
 Phase 2 (Bright electrical catalog structure and admin/storefront support) is
 implemented locally; Bright-verified commercial product details remain a launch
 input. Phase 3 (product and search presentation) and Phase 4 (Bright/Heaven
-integration verification) are complete locally. Phase 5 (verified catalog
-onboarding) is in progress. Browser review and Bright-verified product data
+integration verification) are complete locally. Phase 5 catalog intake prep is
+consolidated into Phase 8. Browser review and Bright-verified product data
 remain release inputs. Phase 4 passed 186 PHP tests / 1,416
 assertions and 12 frontend interaction tests; GD was enabled only for the test
 process because the local CLI php.ini leaves it disabled.
@@ -36,16 +36,19 @@ warranty terms have been invented.
 
 Phase 10 Phase 6 (2026-11-19) separates the marketplace entry page, Nous Telos
 editorial store homepage, Bright electrical store homepage, and each store's
-catalog/filter page. Phase 5 verified catalog onboarding remains in progress;
-Bright's real commercial product and warranty inputs and browser review remain
-pending. See `project-record/phases/phase-10-bright-heaven/PHASE_10_PHASE_6_STORE_HOME_CATALOG_SEPARATION.md`.
+catalog/filter page. See
+`project-record/phases/phase-10-bright-heaven/PHASE_10_PHASE_6_STORE_HOME_CATALOG_SEPARATION.md`.
 
-Phase 10 Phase 7 (2026-11-19) is in progress: tablet Shop/Stores dropdowns now
-support touch toggling and dismiss by Escape or outside click; desktop catalog
-search/category alignment and mobile category wrapping are recorded as delivered.
-Visual browser review at desktop, tablet and mobile sizes remains pending, as does
-Bright-verified catalog onboarding. See
+Phase 10 Phase 7 (2026-11-19) implementation is delivered: tablet Shop/Stores
+dropdowns support touch toggling and dismiss by Escape or outside click; desktop
+catalog search/category alignment and mobile category wrapping are recorded as
+delivered. Visual browser review at desktop, tablet and mobile sizes remains
+pending. Phase 10 Phase 8 (2026-11-20) consolidates the old Phase 5 intake prep;
+verified Bright catalog onboarding is in progress and awaits Bright-confirmed
+product data. Phase 8 adds a clearly marked three-slide demo hero to Bright's
+main store page; replacement images should use a 1920 x 800 px canvas. See
 `project-record/phases/phase-10-bright-heaven/PHASE_10_PHASE_7_RESPONSIVE_STORE_JOURNEYS.md`.
+See also `project-record/phases/phase-10-bright-heaven/PHASE_10_PHASE_8_VERIFIED_CATALOG_ONBOARDING.md`.
 
 ## Historical review
 

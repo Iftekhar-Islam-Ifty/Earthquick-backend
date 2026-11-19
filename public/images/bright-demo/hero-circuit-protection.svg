@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="800" viewBox="0 0 1920 800" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#112F40"/><stop offset=".55" stop-color="#20546E"/><stop offset="1" stop-color="#397D94"/></linearGradient>
+    <linearGradient id="case" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#FDFEFC"/><stop offset="1" stop-color="#D8E2E4"/></linearGradient>
+  </defs>
+  <rect width="1920" height="800" fill="url(#bg)"/>
+  <path d="M0 700c400-90 660 42 1000-20s610-60 920 22v98H0z" fill="#0B2534" fill-opacity=".34"/>
+  <g fill="none" stroke="#B7E4EC" stroke-opacity=".22" stroke-width="7"><path d="M1020 175h125v125h150v-80h170v130h220"/><path d="M1040 540h150V410h150v85h150V350h190"/><path d="M1295 0v125M1510 0v65M1770 0v210"/></g>
+  <g fill="#D9B957"><circle cx="1020" cy="175" r="11"/><circle cx="1590" cy="220" r="11"/><circle cx="1820" cy="350" r="11"/><circle cx="1190" cy="540" r="11"/><circle cx="1640" cy="495" r="11"/></g>
+  <g transform="translate(1230 105) rotate(4 235 280)">
+    <rect x="35" y="32" width="470" height="565" rx="30" fill="#061D2A" fill-opacity=".3"/>
+    <rect width="470" height="565" rx="30" fill="url(#case)"/>
+    <rect x="30" y="30" width="410" height="500" rx="20" fill="#F7FAF9" stroke="#CFDADD" stroke-width="5"/>
+    <rect x="67" y="70" width="336" height="92" rx="12" fill="#E7EEF0"/><text x="235" y="126" text-anchor="middle" font-family="Arial,sans-serif" font-size="26" letter-spacing="4" fill="#426170">DEMO PANEL</text>
+    <g><rect x="77" y="205" width="75" height="220" rx="11" fill="#EEF2F2" stroke="#CCD8DB" stroke-width="4"/><rect x="168" y="205" width="75" height="220" rx="11" fill="#EEF2F2" stroke="#CCD8DB" stroke-width="4"/><rect x="259" y="205" width="75" height="220" rx="11" fill="#EEF2F2" stroke="#CCD8DB" stroke-width="4"/><rect x="350" y="205" width="35" height="220" rx="9" fill="#EEF2F2" stroke="#CCD8DB" stroke-width="4"/>
+      <rect x="98" y="235" width="33" height="105" rx="7" fill="#D8AA4A"/><rect x="189" y="235" width="33" height="105" rx="7" fill="#9AAEB3"/><rect x="280" y="235" width="33" height="105" rx="7" fill="#9AAEB3"/><rect x="358" y="235" width="19" height="105" rx="5" fill="#D8AA4A"/>
+      <circle cx="114" cy="383" r="9" fill="#78A982"/><circle cx="205" cy="383" r="9" fill="#78A982"/><circle cx="296" cy="383" r="9" fill="#78A982"/></g>
+    <path d="M93 468h284" stroke="#D4DEE0" stroke-width="8" stroke-linecap="round"/>
+    <circle cx="235" cy="565" r="8" fill="#D4B75C"/>
+  </g>
+  <g fill="#FFFDF8" fill-opacity=".3"><circle cx="1115" cy="610" r="8"/><circle cx="1740" cy="150" r="12"/><circle cx="1080" cy="205" r="5"/><circle cx="1790" cy="590" r="7"/></g>
+</svg>

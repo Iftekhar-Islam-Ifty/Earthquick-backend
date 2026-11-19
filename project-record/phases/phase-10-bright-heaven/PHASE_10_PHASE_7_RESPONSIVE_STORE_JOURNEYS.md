@@ -1,7 +1,8 @@
 # Bright / Nous Telos Phase 7 - Responsive store journeys
 
-**Status: In progress.** Started 2026-11-19 at the owner's request after
-Phase 6 separated the marketplace, store homepages and store catalogs.
+**Status: Implementation delivered; browser review pending.** Started
+2026-11-19 at the owner's request after Phase 6 separated the marketplace,
+store homepages and store catalogs.
 
 ## Goal
 
@@ -33,7 +34,7 @@ search, sorting and filters should remain within their intended store context.
   local browser access is unavailable in this chat.
 - Confirm the final browsing flows in a live browser before marking this phase
   complete.
-- Bright's verified catalog and warranty inputs remain a separate Phase 5
+- Bright's verified catalog and warranty inputs remain in Phase 8
   launch dependency.
 
 ## Checks
