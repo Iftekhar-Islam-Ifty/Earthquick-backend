@@ -215,6 +215,14 @@ function initNavbar() {
     }
   });
 
+  const closeOtherDropdowns = (activeDropdown) => {
+    navbar.querySelectorAll(".eq-nav-item--has-dropdown.is-expanded").forEach((item) => {
+      if (item === activeDropdown) return;
+      item.classList.remove("is-expanded");
+      item.querySelector(".eq-dropdown-toggle-btn")?.setAttribute("aria-expanded", "false");
+    });
+  };
+
   // Close menu when clicking navigation links, or toggle subcategories when tapping category parent header on mobile
   if (links) {
     links.querySelectorAll("a").forEach((link) => {
@@ -224,6 +232,7 @@ function initNavbar() {
         if (parentDropdown && link.parentElement && link.parentElement.classList.contains("eq-nav-link-wrapper") && (window.innerWidth <= 991 || (links && links.classList.contains("is-open")))) {
           e.preventDefault();
           e.stopPropagation();
+          closeOtherDropdowns(parentDropdown);
           const isExpanded = parentDropdown.classList.toggle("is-expanded");
           const toggleBtn = parentDropdown.querySelector(".eq-dropdown-toggle-btn");
           if (toggleBtn) {
@@ -238,8 +247,16 @@ function initNavbar() {
 
   // Close on Escape key press
   on(document, "keydown", (e) => {
-    if (e.key === "Escape" && links && links.classList.contains("is-open")) {
+    if (e.key !== "Escape") return;
+    if (links && links.classList.contains("is-open")) {
       closeMobileNav();
+      return;
+    }
+    if (window.innerWidth > 768 && window.innerWidth <= 991) {
+      navbar.querySelectorAll(".eq-nav-item--has-dropdown.is-expanded").forEach((item) => {
+        item.classList.remove("is-expanded");
+        item.querySelector(".eq-dropdown-toggle-btn")?.setAttribute("aria-expanded", "false");
+      });
     }
   });
 
@@ -251,6 +268,16 @@ function initNavbar() {
     }
   });
 
+  // Dismiss tablet dropdowns when tapping outside the primary nav.
+  on(document, "click", (e) => {
+    if (window.innerWidth <= 768 || window.innerWidth > 991) return;
+    if (e.target.closest(".eq-nav-item--has-dropdown")) return;
+    navbar.querySelectorAll(".eq-nav-item--has-dropdown.is-expanded").forEach((item) => {
+      item.classList.remove("is-expanded");
+      item.querySelector(".eq-dropdown-toggle-btn")?.setAttribute("aria-expanded", "false");
+    });
+  });
+
   // Dropdown toggle chevron handling
   const dropdownToggles = navbar.querySelectorAll(".eq-dropdown-toggle-btn");
   dropdownToggles.forEach((btn) => {
@@ -259,6 +286,7 @@ function initNavbar() {
       e.stopPropagation();
       const parentDropdown = btn.closest(".eq-nav-item--has-dropdown");
       if (parentDropdown) {
+        closeOtherDropdowns(parentDropdown);
         const isExpanded = parentDropdown.classList.toggle("is-expanded");
         btn.setAttribute("aria-expanded", String(isExpanded));
       }

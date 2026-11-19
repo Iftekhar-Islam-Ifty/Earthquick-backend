@@ -40,6 +40,13 @@ catalog/filter page. Phase 5 verified catalog onboarding remains in progress;
 Bright's real commercial product and warranty inputs and browser review remain
 pending. See `project-record/phases/phase-10-bright-heaven/PHASE_10_PHASE_6_STORE_HOME_CATALOG_SEPARATION.md`.
 
+Phase 10 Phase 7 (2026-11-19) is in progress: tablet Shop/Stores dropdowns now
+support touch toggling and dismiss by Escape or outside click; desktop catalog
+search/category alignment and mobile category wrapping are recorded as delivered.
+Visual browser review at desktop, tablet and mobile sizes remains pending, as does
+Bright-verified catalog onboarding. See
+`project-record/phases/phase-10-bright-heaven/PHASE_10_PHASE_7_RESPONSIVE_STORE_JOURNEYS.md`.
+
 ## Historical review
 
 ## Current scope update — Phase 2

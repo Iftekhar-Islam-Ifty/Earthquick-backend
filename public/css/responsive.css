@@ -305,6 +305,32 @@
   }
 }
 
+/* Tablet dropdowns must open on touch as well as hover. The JS switches
+   top-level links to toggle behavior up to 991px, so expose that state here. */
+@media (min-width: 769px) and (max-width: 991px) {
+  .eq-nav-item--has-dropdown.is-expanded .eq-megamenu {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  .eq-megamenu--shop {
+    width: min(620px, calc(100vw - 2rem));
+    left: 50%;
+    transform: translateX(-44%) translateY(8px);
+  }
+
+  .eq-nav-item--has-dropdown.is-expanded .eq-megamenu--shop {
+    transform: translateX(-44%) translateY(0);
+  }
+
+  .eq-megamenu__grid--shop {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+  }
+}
+
 /* --- Responsive Block #7: @media (max-width: 768px) --- */
 @media (max-width: 768px) {
   .eq-product-main {
