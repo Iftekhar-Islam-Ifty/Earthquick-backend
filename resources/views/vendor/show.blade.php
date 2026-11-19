@@ -8,15 +8,15 @@
 
 @push('styles')
 <style>
-  .eq-store-toolbar { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1rem; min-width: 0; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid var(--eq-line); }
-  .eq-store-search { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: .55rem; width: 100%; min-width: 0; }
+  .eq-store-toolbar { display: grid; grid-template-columns: minmax(0, 1fr) minmax(230px, 330px); gap: 1rem; min-width: 0; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid var(--eq-line); }
+  .eq-store-search { display: grid; grid-column: 2; grid-row: 1; grid-template-columns: minmax(0, 1fr) auto; align-self: center; align-items: center; gap: .55rem; width: 100%; min-width: 0; }
   .eq-store-search .eq-store-control { width: 100%; height: 2.75rem; padding: .55rem .85rem; }
   .eq-store-search button { display: inline-flex; align-items: center; justify-content: center; min-height: 2.3rem; padding: .35rem .8rem; font-size: .8rem; line-height: 1; }
-  .eq-store-categories { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; min-width: 0; }
+  .eq-store-categories { display: flex; grid-column: 1; grid-row: 1; flex-wrap: wrap; align-items: center; gap: .5rem; min-width: 0; }
   .eq-store-category { display: inline-flex; align-items: center; min-height: 2.25rem; padding: .4rem .85rem; border: 1px solid var(--eq-line); border-radius: 999px; background: var(--eq-cream); color: var(--eq-charcoal); font-size: .8rem; font-weight: 500; text-decoration: none; }
   .eq-store-category.is-active { border-color: var(--eq-navy); background: var(--eq-navy); color: #fff; }
   .eq-store-category:focus-visible, .eq-store-filter-toggle:focus-visible, .eq-store-control:focus-visible { outline: 2px solid var(--eq-gold-dark); outline-offset: 2px; }
-  .eq-store-tools { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; gap: .75rem 1rem; min-width: 0; }
+  .eq-store-tools { display: grid; grid-column: 1 / -1; grid-row: 2; grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; gap: .75rem 1rem; min-width: 0; }
   .eq-store-results { margin: 0; color: var(--eq-charcoal-soft); font-size: .82rem; }
   .eq-store-sort { display: flex; align-items: center; gap: .45rem; min-width: 0; margin: 0; font-size: .82rem; white-space: nowrap; }
   .eq-store-control { min-width: 0; min-height: 2.3rem; padding: .4rem .6rem; border: 1px solid var(--eq-line); border-radius: 6px; background: #fbf8f1; color: var(--eq-charcoal); color-scheme: light; font: inherit; }
@@ -36,9 +36,11 @@
   .eq-store-price-fields .eq-store-control { width: 50%; }
   .eq-store-filter-actions { display: flex; align-items: center; gap: .8rem; grid-column: 1 / -1; }
   .eq-store-clear { color: var(--eq-navy); font-size: .8rem; text-underline-offset: 2px; }
-  .eq-store-active { display: flex; flex-wrap: wrap; align-items: center; gap: .4rem; }
+  .eq-store-active { display: flex; grid-column: 1 / -1; grid-row: 3; flex-wrap: wrap; align-items: center; gap: .4rem; }
   .eq-store-active span { padding: .25rem .55rem; border-radius: 999px; background: var(--eq-cream); color: var(--eq-charcoal-soft); font-size: .72rem; }
   @media (max-width: 900px) {
+    .eq-store-toolbar { grid-template-columns: minmax(0, 1fr); }
+    .eq-store-search, .eq-store-categories, .eq-store-tools, .eq-store-active { grid-column: 1; grid-row: auto; }
     .eq-store-tools { grid-template-columns: minmax(0, 1fr) auto; }
     .eq-store-results { grid-column: 1 / -1; }
     .eq-store-filters { grid-column: 2; }
@@ -63,8 +65,8 @@
     .eq-store-filter-panel { position: absolute; top: calc(100% + .45rem); right: 0; width: min(650px, calc(100vw - 2rem)); box-shadow: 0 14px 36px rgba(58, 45, 25, .16); }
     .eq-store-filters { grid-column: 2; }
     .eq-store-filter-toggle { width: max-content; }
-    .eq-store-categories { flex-wrap: nowrap; overflow-x: auto; padding-bottom: .3rem; scrollbar-width: thin; }
-    .eq-store-category { flex: 0 0 auto; }
+    .eq-store-categories { flex-wrap: wrap; overflow: visible; padding-bottom: 0; }
+    .eq-store-category { flex: 0 1 auto; max-width: 100%; }
     .eq-store-filter-panel { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   }
   @media (max-width: 480px) {
