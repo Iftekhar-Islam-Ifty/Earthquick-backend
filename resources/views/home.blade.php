@@ -16,6 +16,11 @@
   .eq-market-home__cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.25rem; }
   .eq-market-home__card { display: flex; min-height: 280px; flex-direction: column; justify-content: space-between; padding: clamp(1.5rem, 4vw, 2.5rem); border: 1px solid #e5dccb; border-radius: 16px; background: #fffdf8; box-shadow: 0 12px 32px #35281512; }
   .eq-market-home__card--bright { background: #203e4c; border-color: #203e4c; color: #fff; }
+  .eq-market-home__card--bright .eyebrow { color: #f1d58d; }
+  .eq-market-home__card.eq-market-home__card--bright h2 { color: #fff; }
+  .eq-market-home__logo-box { display: grid; width: 160px; height: 148px; place-items: center; overflow: hidden; margin-bottom: 1.25rem; border: 1px solid #e8e0d2; border-radius: 12px; background: #fff; box-shadow: 0 8px 22px #35281516; }
+  .eq-market-home__logo { display: block; width: 100%; height: 100%; object-fit: contain; padding: .25rem; }
+  .eq-market-home__logo-box--empty { border-color: rgba(255,255,255,.3); }
   .eq-market-home__card h2 { margin: .7rem 0; font: 600 clamp(1.55rem, 3vw, 2.2rem)/1.2 var(--font-display); }
   .eq-market-home__card p { max-width: 40ch; line-height: 1.65; color: inherit; opacity: .82; }
   .eq-market-home__card a { align-self: flex-start; margin-top: 1.5rem; }
@@ -35,18 +40,24 @@
     <div class="eq-market-home__cards">
       @if($store = $stores->get('nous-telos'))
         <article class="eq-market-home__card">
-          <div><span class="eyebrow">Bengali heritage &amp; handloom</span><h2>{{ $store->name }}</h2><p>{{ $store->tagline ?: 'Handloom, clothing and crafted collections.' }}</p></div>
+          <div>
+            <div class="eq-market-home__logo-box"><img class="eq-market-home__logo" src="{{ asset('images/vendors/logo_1789922860_nous-telos.png') }}" alt="Nous Telos logo" width="160" height="148" /></div>
+            <span class="eyebrow">Bengali heritage &amp; handloom</span><h2>{{ $store->name }}</h2><p>{{ $store->tagline ?: 'Handloom, clothing and crafted collections.' }}</p>
+          </div>
           <a class="eq-btn eq-btn--outline" href="{{ route('stores.show', $store->slug) }}">Enter Nous Telos <span aria-hidden="true">&rarr;</span></a>
         </article>
       @endif
       @if($store = $stores->get('bright'))
         <article class="eq-market-home__card eq-market-home__card--bright">
-          <div><span class="eyebrow">Electrical products</span><h2>{{ $store->name }}</h2><p>{{ $store->tagline ?: 'Switches, sockets, lights and electrical accessories.' }} Heaven is Bright’s product brand.</p></div>
+          <div>
+            <div class="eq-market-home__logo-box eq-market-home__logo-box--empty" role="img" aria-label="Bright logo placeholder"></div>
+            <span class="eyebrow">Electrical products</span><h2>{{ $store->name }}</h2><p>{{ $store->tagline ?: 'Switches, sockets, lights and electrical accessories.' }} Heaven is Bright product brand.</p>
+          </div>
           <a class="eq-btn eq-btn--light" href="{{ route('stores.show', $store->slug) }}">Enter Bright <span aria-hidden="true">&rarr;</span></a>
         </article>
       @endif
     </div>
-    <p class="eq-market-home__foot">Shop with each store through Rthquick’s shared cart and checkout.</p>
+    <p class="eq-market-home__foot">Shop with each store through the Rthquick shared cart and checkout.</p>
   </div>
 </main>
 @endsection

@@ -8,14 +8,17 @@
 
 @push('styles')
 <style>
-  .eq-store-toolbar { display: grid; gap: .85rem; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid var(--eq-line); }
-  .eq-store-categories { display: flex; flex-wrap: wrap; gap: .5rem; }
+  .eq-store-toolbar { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1rem; min-width: 0; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid var(--eq-line); }
+  .eq-store-search { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: stretch; gap: .55rem; width: 100%; min-width: 0; }
+  .eq-store-search .eq-store-control { width: 100%; height: 2.75rem; padding: .55rem .85rem; }
+  .eq-store-search button { display: inline-flex; align-items: center; justify-content: center; min-height: 2.75rem; padding: .45rem 1.2rem; font-size: .86rem; line-height: 1; }
+  .eq-store-categories { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; min-width: 0; }
   .eq-store-category { display: inline-flex; align-items: center; min-height: 2.25rem; padding: .4rem .85rem; border: 1px solid var(--eq-line); border-radius: 999px; background: var(--eq-cream); color: var(--eq-charcoal); font-size: .8rem; font-weight: 500; text-decoration: none; }
   .eq-store-category.is-active { border-color: var(--eq-navy); background: var(--eq-navy); color: #fff; }
   .eq-store-category:focus-visible, .eq-store-filter-toggle:focus-visible, .eq-store-control:focus-visible { outline: 2px solid var(--eq-gold-dark); outline-offset: 2px; }
-  .eq-store-tools { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: .75rem; }
+  .eq-store-tools { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; gap: .75rem 1rem; min-width: 0; }
   .eq-store-results { margin: 0; color: var(--eq-charcoal-soft); font-size: .82rem; }
-  .eq-store-sort { display: flex; align-items: center; gap: .45rem; margin: 0; font-size: .82rem; white-space: nowrap; }
+  .eq-store-sort { display: flex; align-items: center; gap: .45rem; min-width: 0; margin: 0; font-size: .82rem; white-space: nowrap; }
   .eq-store-control { min-width: 0; min-height: 2.3rem; padding: .4rem .6rem; border: 1px solid var(--eq-line); border-radius: 6px; background: #fbf8f1; color: var(--eq-charcoal); color-scheme: light; font: inherit; }
   .eq-store-filters { border: 1px solid var(--eq-line); border-radius: 9px; background: #fff; }
   .eq-store-filter-toggle { display: flex; align-items: center; gap: .5rem; padding: .7rem .85rem; color: var(--eq-navy); font-size: .86rem; font-weight: 600; cursor: pointer; list-style: none; }
@@ -35,6 +38,11 @@
   .eq-store-clear { color: var(--eq-navy); font-size: .8rem; text-underline-offset: 2px; }
   .eq-store-active { display: flex; flex-wrap: wrap; align-items: center; gap: .4rem; }
   .eq-store-active span { padding: .25rem .55rem; border-radius: 999px; background: var(--eq-cream); color: var(--eq-charcoal-soft); font-size: .72rem; }
+  @media (max-width: 900px) {
+    .eq-store-tools { grid-template-columns: minmax(0, 1fr) auto; }
+    .eq-store-results { grid-column: 1 / -1; }
+    .eq-store-filters { grid-column: 2; }
+  }
   @media (max-width: 760px) {
     .eq-store-hero__inner { padding: 1.5rem 1rem 1.4rem !important; }
     .eq-store-hero__row { flex-direction: column; gap: .65rem !important; text-align: center; }
@@ -45,21 +53,28 @@
     .eq-store-hero__identity p { margin-left: auto !important; margin-right: auto !important; }
     .eq-store-hero__stats { margin: .2rem 0 0 !important; }
     .eq-store-hero__stats > div { display: flex; align-items: baseline; gap: .35rem; padding: .4rem .8rem !important; }
-    .eq-store-toolbar { gap: .7rem; }
-    .eq-store-tools { align-items: center; }
+    .eq-store-toolbar { gap: .85rem; }
+    .eq-store-tools { grid-template-columns: minmax(0, 1fr) auto; gap: .7rem; }
+    .eq-store-results { grid-column: 1 / -1; }
+    .eq-store-search { grid-template-columns: minmax(0, 1fr) auto; }
+    .eq-store-search button { padding-right: .9rem; padding-left: .9rem; }
     .eq-store-filter-panel { position: static; width: 100%; box-shadow: none; }
-    .eq-store-filters { flex: 0 0 100%; }
+    .eq-store-filters { grid-column: 1 / -1; }
     .eq-store-filter-toggle { width: max-content; }
     .eq-store-categories { flex-wrap: nowrap; overflow-x: auto; padding-bottom: .3rem; scrollbar-width: thin; }
     .eq-store-category { flex: 0 0 auto; }
     .eq-store-filter-panel { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   }
   @media (max-width: 480px) {
-    .eq-store-tools { align-items: flex-start; }
+    .eq-store-tools { grid-template-columns: minmax(0, 1fr); align-items: stretch; }
+    .eq-store-results { grid-column: auto; }
+    .eq-store-filters { grid-column: 1; }
     .eq-store-sort { width: 100%; justify-content: space-between; }
-    .eq-store-sort .eq-store-control { max-width: 68%; }
+    .eq-store-sort .eq-store-control { width: min(68%, 220px); max-width: 68%; }
     .eq-store-filter-panel { grid-template-columns: minmax(0, 1fr); padding: .8rem; }
+    .eq-store-filter-panel.is-compact { grid-template-columns: minmax(0, 1fr); }
     .eq-store-filter-actions { flex-wrap: wrap; }
+    .eq-store-search button { min-width: 78px; }
   }
 </style>
 @endpush
@@ -153,12 +168,12 @@
       @endphp
 
       <div class="eq-store-toolbar">
-        <form method="GET" action="{{ route('stores.catalog', $vendor->slug) }}" role="search" style="display:flex; gap:.5rem; max-width:520px; width:100%;">
+        <form class="eq-store-search" method="GET" action="{{ route('stores.catalog', $vendor->slug) }}" role="search">
           @foreach(array_diff_key($storeQuery, ['q' => true, 'page' => true]) as $key => $value)
             <input type="hidden" name="{{ $key }}" value="{{ $value }}" />
           @endforeach
           <label class="sr-only" for="store-search">Search {{ $vendor->name }} products</label>
-          <input class="eq-store-control" id="store-search" type="search" name="q" value="{{ $storeQuery['q'] ?? '' }}" placeholder="Search {{ $vendor->name }} products" style="flex:1;" />
+          <input class="eq-store-control" id="store-search" type="search" name="q" value="{{ $storeQuery['q'] ?? '' }}" placeholder="Search {{ $vendor->name }} products" />
           <button class="eq-btn eq-btn--outline" type="submit">Search</button>
         </form>
         <nav class="eq-store-categories" aria-label="Browse {{ $vendor->name }} categories">

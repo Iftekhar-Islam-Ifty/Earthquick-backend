@@ -74,8 +74,18 @@
                   <li><a href="{{ route('stores.catalog', ['slug' => 'nous-telos', 'subcategory' => 'bedsheet']) }}">Bedsheet</a></li>
                   <li><a href="{{ route('stores.catalog', ['slug' => 'nous-telos', 'subcategory' => 'cushion-cover']) }}">Cushion Cover</a></li>
                 </ul>
-                <div class="eq-megamenu__heading" style="margin-top:1rem;">Bright Electrical</div>
-                <ul class="eq-megamenu__list eq-nested-list">
+              </div>
+
+              <div class="eq-megamenu__col eq-submenu-nested eq-shop-menu-section" id="submenu-bright-electrical">
+                <div class="eq-nested-header">
+                  <div class="eq-megamenu__heading eq-nested-title">Bright Electrical</div>
+                  <button type="button" class="eq-nested-toggle-btn" id="btn-toggle-bright-nested" aria-expanded="false" aria-controls="list-bright-nested" aria-label="Toggle Bright Electrical categories">
+                    <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                  </button>
+                </div>
+                <ul class="eq-megamenu__list eq-nested-list" id="list-bright-nested">
                   <li><a href="{{ route('stores.catalog', ['slug' => 'bright', 'subcategory' => 'switches']) }}">Switches</a></li>
                   <li><a href="{{ route('stores.catalog', ['slug' => 'bright', 'subcategory' => 'sockets']) }}">Sockets</a></li>
                   <li><a href="{{ route('stores.catalog', ['slug' => 'bright', 'subcategory' => 'led-lights']) }}">LED Lights</a></li>
@@ -85,18 +95,6 @@
                 </ul>
               </div>
 
-              <div class="eq-megamenu__feature">
-                <a href="{{ route('stores.catalog', 'nous-telos') }}" class="eq-megamenu__feature-card">
-                  <div class="eq-megamenu__feature-media">
-                    <img src="{{ asset('images/hero/hero-main-saree-2.webp') }}" alt="Curated Marketplace Catalog" />
-                  </div>
-                  <div class="eq-megamenu__feature-content">
-                    <span class="eq-megamenu__tag">NOUS TELOS COLLECTIONS</span>
-                    <strong class="eq-megamenu__feature-title">Heritage to Modern</strong>
-                    <span class="eq-megamenu__feature-link">Explore Catalog &rarr;</span>
-                  </div>
-                </a>
-              </div>
             </div>
           </div>
         </li>

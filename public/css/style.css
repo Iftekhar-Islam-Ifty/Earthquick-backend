@@ -632,8 +632,8 @@ p {
 }
 
 .eq-megamenu--shop {
-  width: 680px;
-  padding-right: 0;
+  width: 760px;
+  padding-right: 1.6rem;
 }
 
 .eq-megamenu--stores {
@@ -642,19 +642,6 @@ p {
 
 .eq-megamenu__grid--2col {
   grid-template-columns: 1.25fr 190px;
-}
-
-.eq-megamenu__grid--shop {
-  grid-template-columns: 1fr 1fr 190px;
-}
-
-.eq-megamenu--shop .eq-megamenu__feature {
-  border-left: none;
-  padding-left: 0;
-}
-
-.eq-megamenu--shop .eq-megamenu__feature-card {
-  width: 100%;
 }
 
 .eq-megamenu__grid--stores {
@@ -745,7 +732,8 @@ p {
 
 /* Shop marketplace sections */
 .eq-megamenu__grid--shop {
-  grid-template-columns: 1fr 1fr 190px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.25rem;
 }
 
 .eq-shop-menu-section .eq-nested-header {

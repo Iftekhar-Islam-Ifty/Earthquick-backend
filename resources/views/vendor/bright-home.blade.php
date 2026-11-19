@@ -11,7 +11,7 @@
   .eq-bright-intro { padding: clamp(3rem, 7vw, 6rem) 1.25rem; background: linear-gradient(120deg,#193b4a,#285f79); color: #fff; }
   .eq-bright-intro__inner { max-width: 1100px; margin: auto; }
   .eq-bright-intro .eyebrow { color: #efd38b; letter-spacing: .15em; font-size: .75rem; font-weight: 700; text-transform: uppercase; }
-  .eq-bright-intro h1 { margin: .75rem 0; font: 600 clamp(2.1rem,5vw,3.8rem)/1.1 var(--font-display); }
+  .eq-bright-intro h1 { margin: .75rem 0; color: #fff; font: 600 clamp(2.1rem,5vw,3.8rem)/1.1 var(--font-display); }
   .eq-bright-intro p { max-width: 620px; line-height: 1.7; opacity: .86; }
   .eq-bright-section { max-width: 1100px; margin: auto; padding: 3rem 1.25rem; }
   .eq-bright-section h2 { color: #203e4c; font: 600 clamp(1.6rem,3vw,2.3rem) var(--font-display); }
