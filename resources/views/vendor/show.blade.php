@@ -16,7 +16,15 @@
   .eq-store-category { display: inline-flex; align-items: center; min-height: 2.25rem; padding: .4rem .85rem; border: 1px solid var(--eq-line); border-radius: 999px; background: var(--eq-cream); color: var(--eq-charcoal); font-size: .8rem; font-weight: 500; text-decoration: none; }
   .eq-store-category.is-active { border-color: var(--eq-navy); background: var(--eq-navy); color: #fff; }
   .eq-store-category:focus-visible, .eq-store-filter-toggle:focus-visible, .eq-store-control:focus-visible { outline: 2px solid var(--eq-gold-dark); outline-offset: 2px; }
-  .eq-store-tools { display: grid; grid-column: 1 / -1; grid-row: 2; grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; gap: .75rem 1rem; min-width: 0; }
+  @media (min-width: 901px) {
+    .eq-store-parent-categories .eq-store-category { min-height: 2.65rem; padding: .55rem 1.05rem; font-size: .88rem; }
+  }
+  .eq-store-subcategories { grid-column: 1 / -1; grid-row: auto; padding-left: .5rem; animation: eq-category-reveal .15s ease-out both; }
+  .eq-store-subcategory-heading { align-self: center; margin-right: .2rem; color: var(--eq-charcoal-soft); font-size: .78rem; font-weight: 600; }
+  .eq-store-subcategories .eq-store-category { min-height: 2.3rem; padding: .4rem .8rem; font-size: .82rem; }
+  @keyframes eq-category-reveal { from { transform: translateY(3px); } to { transform: translateY(0); } }
+  @media (prefers-reduced-motion: reduce) { .eq-store-subcategories { animation: none; } }
+  .eq-store-tools { display: grid; grid-column: 1 / -1; grid-row: auto; grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; gap: .75rem 1rem; min-width: 0; }
   .eq-store-results { margin: 0; color: var(--eq-charcoal-soft); font-size: .82rem; }
   .eq-store-sort { display: flex; align-items: center; gap: .45rem; min-width: 0; margin: 0; font-size: .82rem; white-space: nowrap; }
   .eq-store-control { min-width: 0; min-height: 2.3rem; padding: .4rem .6rem; border: 1px solid var(--eq-line); border-radius: 6px; background: #fbf8f1; color: var(--eq-charcoal); color-scheme: light; font: inherit; }
@@ -36,7 +44,7 @@
   .eq-store-price-fields .eq-store-control { width: 50%; }
   .eq-store-filter-actions { display: flex; align-items: center; gap: .8rem; grid-column: 1 / -1; }
   .eq-store-clear { color: var(--eq-navy); font-size: .8rem; text-underline-offset: 2px; }
-  .eq-store-active { display: flex; grid-column: 1 / -1; grid-row: 3; flex-wrap: wrap; align-items: center; gap: .4rem; }
+  .eq-store-active { display: flex; grid-column: 1 / -1; grid-row: auto; flex-wrap: wrap; align-items: center; gap: .4rem; }
   .eq-store-active span { padding: .25rem .55rem; border-radius: 999px; background: var(--eq-cream); color: var(--eq-charcoal-soft); font-size: .72rem; }
   @media (max-width: 900px) {
     .eq-store-toolbar { grid-template-columns: minmax(0, 1fr); }
@@ -46,15 +54,20 @@
     .eq-store-filters { grid-column: 2; }
   }
   @media (max-width: 760px) {
-    .eq-store-hero__inner { padding: 1.5rem 1rem 1.4rem !important; }
-    .eq-store-hero__row { flex-direction: column; gap: .65rem !important; text-align: center; }
-    .eq-store-hero__logo { width: 68px !important; height: 68px !important; }
-    .eq-store-hero__identity { flex: none !important; min-width: 0 !important; width: 100%; }
-    .eq-store-hero__heading { justify-content: center; flex-wrap: wrap; gap: .4rem .55rem !important; margin-bottom: .35rem !important; }
-    .eq-store-hero__heading h1 { font-size: clamp(1.55rem, 6vw, 1.85rem) !important; }
-    .eq-store-hero__identity p { margin-left: auto !important; margin-right: auto !important; }
-    .eq-store-hero__stats { margin: .2rem 0 0 !important; }
-    .eq-store-hero__stats > div { display: flex; align-items: baseline; gap: .35rem; padding: .4rem .8rem !important; }
+    .eq-store-hero__inner { padding: .6rem .85rem !important; }
+    .eq-store-hero__row { flex-direction: row; flex-wrap: nowrap; gap: .65rem !important; text-align: left; }
+    .eq-store-hero__logo { width: 46px !important; height: 46px !important; }
+    .eq-store-hero__identity { flex: 1 1 auto !important; min-width: 0 !important; width: auto; }
+    .eq-store-hero__heading { justify-content: flex-start; flex-wrap: nowrap; gap: .35rem !important; margin-bottom: 0 !important; }
+    .eq-store-hero__heading h1 { font-size: clamp(1rem, 4vw, 1.18rem) !important; line-height: 1.08 !important; }
+    .eq-store-hero__heading > span { display: none; }
+    .eq-store-hero__identity p { display: none; }
+    .eq-store-hero__mobile-detail { display: block !important; margin: .12rem 0 0 !important; color: rgba(255,255,255,.78); font-size: .68rem; line-height: 1.2; white-space: nowrap; }
+    .eq-store-hero__stats { flex: 0 0 auto; align-self: center; margin: 0 !important; }
+    .eq-store-hero__stats > div { padding: .3rem .45rem !important; }
+    .eq-store-hero__stats > div > div:first-child { font-size: 1rem !important; }
+    .eq-store-hero__stats > div > div:last-child { font-size: .52rem !important; letter-spacing: .04em !important; }
+    .eq-store-catalog-section { padding: 1rem 0 3rem !important; }
     .eq-store-toolbar { gap: .85rem; }
     .eq-store-tools { grid-template-columns: minmax(0, 1fr) auto; gap: .7rem; }
     .eq-store-results { grid-column: 1 / -1; }
@@ -133,6 +146,10 @@
             </span>
           </div>
 
+          <p class="eq-store-hero__mobile-detail" style="display: none;">
+            {{ $isBrightStore ? 'Electrical products & supplies' : 'Handloom & heritage pieces' }}
+          </p>
+
           @if($vendor->tagline)
             <p style="font-size: 0.95rem; color: #f3cf7a; margin: 0 0 0.5rem; font-weight: 500;">
               {{ $vendor->tagline }}
@@ -159,13 +176,13 @@
   </section>
 
   <!-- Storefront Products Section -->
-  <section style="padding: 2.5rem 0 5rem;">
+  <section class="eq-store-catalog-section" style="padding: 2.5rem 0 5rem;">
     <div class="eq-container">
       
       @php
         $selectedFilters = array_intersect_key($storeQuery, array_flip(['product_type', 'delivery_class', 'returnable', 'min_price', 'max_price']));
         $browseParam = $isBrightStore ? 'subcategory' : 'category';
-        $clearFilterQuery = array_intersect_key($storeQuery, array_flip([$browseParam, 'sort']));
+        $clearFilterQuery = array_intersect_key($storeQuery, array_flip(['category', 'subcategory', 'sort']));
         $showProductTypeFilter = $availableProductTypes->count() > 1 || isset($storeQuery['product_type']);
         $showDeliveryFilter = $availableDeliveryClasses->count() > 1 || isset($storeQuery['delivery_class']);
         $showReturnFilter = $hasMixedReturnPolicies || isset($storeQuery['returnable']);
@@ -180,14 +197,29 @@
           <input class="eq-store-control" id="store-search" type="search" name="q" value="{{ $storeQuery['q'] ?? '' }}" placeholder="Search {{ $vendor->name }} products" aria-label="Search {{ $vendor->name }} products" />
           <button class="eq-btn eq-btn--outline" type="submit">Search</button>
         </form>
-        <nav class="eq-store-categories" aria-label="Browse {{ $vendor->name }} categories">
-          <a class="eq-store-category {{ !isset($storeQuery[$browseParam]) ? 'is-active' : '' }}" @if(!isset($storeQuery[$browseParam])) aria-current="page" @endif
+        <nav class="eq-store-categories {{ $isBrightStore ? '' : 'eq-store-parent-categories' }}" aria-label="Browse {{ $vendor->name }} categories">
+          <a class="eq-store-category {{ !isset($storeQuery['category']) && !isset($storeQuery['subcategory']) ? 'is-active' : '' }}" @if(!isset($storeQuery['category']) && !isset($storeQuery['subcategory'])) aria-current="page" @endif
              href="{{ route('stores.catalog', array_merge(['slug' => $vendor->slug], array_diff_key($storeQuery, ['category' => true, 'subcategory' => true]))) }}">{{ $isBrightStore ? 'All Products' : 'All Pieces' }} ({{ $allProductsCount }})</a>
           @foreach($browseItems as $browseItem)
-            <a class="eq-store-category {{ ($storeQuery[$browseParam] ?? null) === $browseItem->slug ? 'is-active' : '' }}" @if(($storeQuery[$browseParam] ?? null) === $browseItem->slug) aria-current="page" @endif
+            @php($isBrowseItemActive = $isBrightStore ? (($storeQuery['subcategory'] ?? null) === $browseItem->slug) : (($storeQuery['category'] ?? null) === $browseItem->slug))
+            <a class="eq-store-category {{ $isBrowseItemActive ? 'is-active' : '' }}" @if($isBrowseItemActive) aria-current="page" @endif
                href="{{ route('stores.catalog', array_merge(['slug' => $vendor->slug], array_diff_key($storeQuery, ['category' => true, 'subcategory' => true]), [$browseParam => $browseItem->slug])) }}">{{ $browseItem->name }}</a>
           @endforeach
         </nav>
+        @unless($isBrightStore)
+          @foreach($categories as $browseCategory)
+            @if(($storeQuery['category'] ?? null) === $browseCategory->slug && $browseCategory->subcategories->isNotEmpty())
+              <nav class="eq-store-categories eq-store-subcategories" aria-label="Browse {{ $browseCategory->name }} subcategories">
+                <span class="eq-store-subcategory-heading">{{ $browseCategory->name }}</span>
+                @foreach($browseCategory->subcategories as $browseSubcategory)
+                  @php($isSubcategoryActive = ($storeQuery['subcategory'] ?? null) === $browseSubcategory->slug)
+                  <a class="eq-store-category {{ $isSubcategoryActive ? 'is-active' : '' }}" @if($isSubcategoryActive) aria-current="page" @endif
+                     href="{{ route('stores.catalog', array_merge(['slug' => $vendor->slug], array_diff_key($storeQuery, ['category' => true, 'subcategory' => true]), ['category' => $browseCategory->slug, 'subcategory' => $browseSubcategory->slug])) }}">{{ $browseSubcategory->name }}</a>
+                @endforeach
+              </nav>
+            @endif
+          @endforeach
+        @endunless
 
         @if($allProductsCount > 0)
           <div class="eq-store-tools">

@@ -39,7 +39,7 @@ Route::get('/sitemap.xml', [PageController::class, 'sitemap'])->name('sitemap');
  * Dynamic product catalogs with price, fabric, and inventory filters.
  * ========================================================================= */
 Route::get('/shop', function () {
-    return redirect()->route('stores.catalog', ['slug' => 'nous-telos', 'category' => 'women']);
+    return redirect()->route('stores.index');
 })->name('shop.index');
 Route::get('/shop/{slug}', [CategoryController::class, 'showCategory'])->name('category.show');
 Route::get('/shop/{categorySlug}/{subcategorySlug}', [CategoryController::class, 'showSubcategory'])->name('subcategory.show');

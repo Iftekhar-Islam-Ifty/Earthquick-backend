@@ -83,14 +83,40 @@ class VendorController extends Controller
                 $storeQuery[$key] = $value;
             }
         }
-        unset($storeQuery[$isBrightStore ? 'category' : 'subcategory']);
         $electronics = $isBrightStore ? Category::where('slug', 'electronics')->first() : null;
-        $subcategories = $electronics?->subcategories()->where('is_active', true)->orderBy('name')->get() ?? collect();
+        if ($isBrightStore) {
+            unset($storeQuery['category']);
+            $categories = collect();
+            $subcategories = $electronics?->subcategories()->where('is_active', true)->orderBy('name')->get() ?? collect();
+        } else {
+            unset($storeQuery['category']);
+            $categories = Category::query()
+                ->where('is_active', true)
+                ->where('slug', '!=', 'electronics')
+                ->with(['subcategories' => fn ($query) => $query->where('is_active', true)->orderBy('sort_order')])
+                ->orderBy('sort_order')
+                ->get();
+            $subcategories = $categories->flatMap(fn ($category) => $category->subcategories);
+            $requestQueryCategory = $request->query('category');
+            if (is_string($requestQueryCategory) && $categories->contains('slug', $requestQueryCategory)) {
+                $storeQuery['category'] = $requestQueryCategory;
+            }
+        }
         $selectedSubcategory = isset($storeQuery['subcategory'])
             ? $subcategories->firstWhere('slug', $storeQuery['subcategory'])
             : null;
         if (isset($storeQuery['subcategory']) && ! $selectedSubcategory) {
             unset($storeQuery['subcategory']);
+        } elseif ($selectedSubcategory && ! $isBrightStore) {
+            // Navbar subcategory links can stand alone; keep the parent category
+            // in the URL so the catalog state and product filter stay in sync.
+            $storeQuery['category'] = $selectedSubcategory->category_id
+                ? $categories->firstWhere('id', $selectedSubcategory->category_id)?->slug
+                : null;
+            if (! $storeQuery['category']) {
+                unset($storeQuery['category'], $storeQuery['subcategory']);
+                $selectedSubcategory = null;
+            }
         }
         if (isset($storeQuery['product_type']) && ! array_key_exists($storeQuery['product_type'], config('catalog.product_types'))) {
             unset($storeQuery['product_type']);
@@ -147,9 +173,7 @@ class VendorController extends Controller
 
         $products = $query->paginate(12)->withQueryString();
 
-        // Retrieve distinct categories currently represented by this vendor's in-stock inventory
-        $categories = Category::whereHas('products', fn ($q) => $q->where('vendor_id', $vendor->id)
-            ->where('in_stock', true)->where('is_active', true))->get();
+        // Catalog taxonomy stays visible even when a store has no products in a category.
         $availableProductTypes = (clone $catalog)->whereNotNull('product_type')
             ->distinct()
             ->pluck('product_type');

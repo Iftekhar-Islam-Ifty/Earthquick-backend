@@ -55,7 +55,8 @@ Do not invent product or warranty claims.
 6. [Phase 6 store/catalog separation](../phases/phase-10-bright-heaven/PHASE_10_PHASE_6_STORE_HOME_CATALOG_SEPARATION.md): split the marketplace entry, each store homepage and each store catalog into clear customer journeys.
 7. [Phase 7 responsive store journeys](../phases/phase-10-bright-heaven/PHASE_10_PHASE_7_RESPONSIVE_STORE_JOURNEYS.md): refine desktop, tablet and mobile menu/catalog behavior without mixing store catalogs.
 8. [Phase 8 verified catalog onboarding](../phases/phase-10-bright-heaven/PHASE_10_PHASE_8_VERIFIED_CATALOG_ONBOARDING.md): enter Bright-confirmed products, prices, stock, images, policies and exact warranty terms in the central admin.
-9. Browser review of desktop/mobile product, cart, checkout, receipt and after-sales flows remains a release check. Phase 7 visual review is still pending and remains a launch check.
+9. [Phase 9 customer journey readiness](../phases/phase-10-bright-heaven/PHASE_10_PHASE_9_CUSTOMER_JOURNEY_READINESS.md): audit neutral marketplace entry and store-scoped browsing through cart/checkout; consolidate final journey fixes after owner browser review.
+10. Browser review of desktop/mobile product, cart, checkout, receipt and after-sales flows remains a release check. Phase 7/8 browser review is currently with the owner.
 
 ## Explicit boundaries
 
