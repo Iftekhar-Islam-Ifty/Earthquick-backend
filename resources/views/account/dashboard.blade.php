@@ -176,7 +176,7 @@
                       <span>Parcel Tracking Timeline</span>
                     </div>
                     <span class="eq-tracking-courier">
-                      Delivery: <strong>{{ $ord->delivery_zone === 'inside_ctg' ? 'Inside Chattogram Express (48h)' : 'Nationwide Courier (2-4d)' }}</strong>
+                      Delivery: <strong>{{ $ord->delivery_zone === 'inside_ctg' ? 'Inside Chattogram' : 'Outside Chattogram' }}</strong>
                     </span>
                   </div>
                   

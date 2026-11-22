@@ -189,19 +189,19 @@
                 <span class="eq-payment-card__badge">Most Popular</span>
               </label>
               <div class="eq-payment-card__body">
-                Pay safely in cash to our courier partner when you inspect and receive your parcel at your doorstep.
+                Pay for your order in cash on delivery.
               </div>
             </div>
 
             <!-- bKash stays unavailable until the online gateway is verified. -->
             <div class="eq-payment-card" id="payment-card-bkash" aria-disabled="true">
               <div class="eq-payment-card__header">
-                <input type="radio" id="pay-bkash" name="payment_method" value="bkash" disabled aria-label="bKash online payment, coming soon" />
+                <input type="radio" id="pay-bkash" name="payment_method" value="bkash" disabled aria-label="bKash online payment, currently unavailable" />
                 <span class="eq-payment-card__title">bKash Online Payment</span>
-                <span class="eq-payment-card__badge" style="background-color: rgba(201, 150, 47, 0.15); color: var(--eq-gold-dark);">Coming Soon</span>
+                <span class="eq-payment-card__badge" style="background-color: rgba(201, 150, 47, 0.15); color: var(--eq-gold-dark);">Currently Unavailable</span>
               </div>
               <div class="eq-payment-card__body" style="display: block;">
-                Secure gateway checkout is being prepared. Please do not send a manual payment for this order.
+                Online gateway payment is not currently available. Please do not send a manual payment for this order.
               </div>
             </div>
 

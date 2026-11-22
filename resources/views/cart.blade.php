@@ -87,7 +87,7 @@
 
             <div style="display: flex; justify-content: space-between; margin-bottom: 1.25rem; font-size: 0.88rem; color: var(--eq-charcoal-soft);">
               <span>Delivery Charges</span>
-              <span>Calculated at checkout<br>(৳80 CTG / ৳150 Outside)</span>
+              <span>Calculated at checkout</span>
             </div>
             <hr style="border: 0; border-top: 1px solid var(--eq-line); margin-bottom: 1.25rem;" />
             <a href="{{ route('checkout.index') }}" class="eq-btn eq-btn--primary eq-btn--pill" style="width: 100%; justify-content: center; text-decoration: none;">

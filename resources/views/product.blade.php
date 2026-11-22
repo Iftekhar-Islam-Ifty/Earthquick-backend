@@ -223,7 +223,7 @@
                 <circle cx="5.5" cy="18.5" r="2.5"></circle>
                 <circle cx="18.5" cy="18.5" r="2.5"></circle>
               </svg>
-              <span><strong>Delivery:</strong> {{ $deliveryLabel }}. Free shipping is applied when the cart reaches ৳{{ number_format(\App\Http\Controllers\CartController::FREE_SHIPPING_THRESHOLD) }}.</span>
+              <span><strong>Delivery:</strong> {{ $deliveryLabel }}. <a href="{{ route('policies.delivery-returns') }}#delivery" style="color: inherit; text-underline-offset: 2px;">View delivery charges</a>.</span>
             </div>
             <div class="eq-product-meta-list__item">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -310,22 +310,19 @@
             <!-- Tab 3 -->
             <details class="eq-product-accordion__item">
               <summary class="eq-product-accordion__summary">
-                Delivery, Returns &amp; Warranty
+                Warranty &amp; Support
               </summary>
               <div class="eq-product-accordion__body">
-                Delivery class: <strong>{{ $deliveryLabel }}</strong>.<br />
-                @if($product->is_returnable)
-                  This item is return eligible within {{ $product->return_window_days ?? 7 }} days.
-                  {{ $product->return_policy_note }}
-                @else
-                  This item is marked as final sale. Damaged or incorrect deliveries remain subject to Rthquick support review.
-                @endif
                 @if($product->warranty_info)
-                  <br /><strong>Warranty / Support:</strong> {{ $product->warranty_info }}
+                  <p><strong>Warranty / Support:</strong> {{ $product->warranty_info }}</p>
                 @endif
                 @if($product->brand?->warrantyProvider)
-                  <br /><strong>Warranty provider:</strong> {{ $product->brand->warrantyProvider->name }}
+                  <p><strong>Warranty provider:</strong> {{ $product->brand->warrantyProvider->name }}</p>
                 @endif
+                @if(!$product->warranty_info && !($product->brand?->warrantyProvider))
+                  <p>No warranty information is currently listed for this item.</p>
+                @endif
+                <p>Return eligibility and window are shown above. <a href="{{ route('policies.delivery-returns') }}#returns">Rthquick's returns policy</a>.</p>
               </div>
             </details>
           </div>

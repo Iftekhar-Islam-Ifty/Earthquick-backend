@@ -36,6 +36,12 @@ return or warranty claims.
   Bright homepage and store footer. It separates Bright as seller from Heaven as
   product brand, points delivery/returns/refunds to Rthquick's central policy,
   and avoids inventing product-specific warranty terms.
+- Audited policy copy across Bright, Rthquick, product, cart and order pages.
+  Removed unsupported delivery-time promises and repeated fee tables from
+  summaries; the Rthquick policy page remains the single source for delivery,
+  cancellation, return and refund rules, while each product/order shows its
+  applicable item-specific details. Legacy order records without a saved return
+  window now direct customers to support instead of displaying an empty term.
 
 ## Bright inputs still required
 

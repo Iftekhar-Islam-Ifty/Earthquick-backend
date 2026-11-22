@@ -136,7 +136,7 @@
             {{ $order->address }}, {{ $order->area }}, {{ $order->district }}
             <br />
             <small style="color: var(--eq-teal-dark); font-weight: normal;">
-              ({{ $order->delivery_zone === 'inside_ctg' ? 'Inside Chattogram City (৳80)' : 'Outside Chattogram (৳150)' }})
+              ({{ $order->delivery_zone === 'inside_ctg' ? 'Inside Chattogram' : 'Outside Chattogram' }})
             </small>
           </div>
         </div>
@@ -179,7 +179,7 @@
                       <div style="font-size: 0.76rem; color: var(--eq-charcoal-soft);">{{ $item->variant_label }}</div>
                     @endif
                     @if($item->delivery_class)
-                      <div style="font-size: 0.74rem; color: var(--eq-charcoal-soft);">{{ config('catalog.delivery_classes.'.$item->delivery_class, ucfirst($item->delivery_class)) }} · {{ $item->is_returnable ? ($item->return_window_days.'-day return') : 'Final sale' }}</div>
+                      <div style="font-size: 0.74rem; color: var(--eq-charcoal-soft);">{{ config('catalog.delivery_classes.'.$item->delivery_class, ucfirst($item->delivery_class)) }} · @if($item->is_returnable){{ $item->return_window_days ? $item->return_window_days.'-day return' : 'Return eligible; ask support about the window' }}@else Final sale @endif</div>
                     @endif
                     <div style="font-size: 0.78rem; color: var(--eq-charcoal-soft);">৳{{ number_format($item->unit_price) }} each</div>
                   </div>

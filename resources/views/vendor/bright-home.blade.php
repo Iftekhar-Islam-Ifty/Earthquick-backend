@@ -44,12 +44,12 @@
         <p>Bright’s electrical categories are being prepared.</p>
       @endforelse
     </div>
-    <h2>Bright product brand</h2>
-    <p class="eq-bright-note"><strong>Heaven</strong> is presented as Bright’s product brand. Bright is the store and provides the warranty for its Heaven products; warranty terms are shown with products when supplied by Bright.</p>
+    <h2>Product brand</h2>
+    <p class="eq-bright-note"><strong>Heaven is a product brand sold by Bright.</strong></p>
     @if($catalogCount === 0)
       <p>Bright’s product listings are being prepared. Check back as products are added to the catalog.</p>
     @endif
-    <a class="eq-bright-info-link" href="{{ route('stores.bright-information') }}">About Bright &amp; store policies <span aria-hidden="true">&rarr;</span></a>
+    <a class="eq-bright-info-link" href="{{ route('stores.bright-information') }}">Bright store information &amp; policies <span aria-hidden="true">&rarr;</span></a>
   </section>
 </main>
 @endsection

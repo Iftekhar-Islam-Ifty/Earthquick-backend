@@ -22,9 +22,9 @@
       <div class="eq-hero__media"><img src="{{ asset('images/bright-demo/hero-circuit-protection.svg') }}" alt="Demo illustration of an electrical panel" loading="lazy" decoding="async" /></div>
       <div class="eq-hero__content">
         <span class="eq-eyebrow">BRIGHT ELECTRICAL · DEMO COVER</span>
-        <h1>Discover Bright Electrical</h1>
-        <p>Bright is the store. Heaven is shown as a product brand only where Bright confirms it.</p>
-        <div class="eq-hero__actions"><a href="{{ route('stores.catalog', $vendor->slug) }}" class="eq-btn eq-btn--light eq-btn--pill">View Bright products</a></div>
+        <h1>Questions about an item?</h1>
+        <p>Review Bright's store details and the terms that apply before ordering.</p>
+        <div class="eq-hero__actions"><a href="{{ route('stores.bright-information') }}" class="eq-btn eq-btn--light eq-btn--pill">Store information</a></div>
       </div>
     </div>
   </div>

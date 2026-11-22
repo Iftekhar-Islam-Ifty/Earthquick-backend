@@ -49,7 +49,7 @@
     <div class="eq-container">
       <small>Bright Electrical Company</small>
       <h1>About Bright &amp; store information</h1>
-      <p>Bright is a wholesale and retail electrical supplier in Chattogram. This page explains Bright's role as a store on Rthquick and where to find the terms that apply to an order.</p>
+      <p>Store information and customer terms for Bright orders placed through Rthquick.</p>
     </div>
   </header>
 
@@ -63,8 +63,7 @@
         </div>
         <div>
           <p><strong>Store / seller:</strong> Bright Electrical Company.</p>
-          <p><strong>Product brand:</strong> Heaven may appear on products sold by Bright. Heaven is a product brand, not a separate store.</p>
-          <p>Rthquick provides the marketplace, central checkout and customer support for orders placed through this site.</p>
+          <p><strong>Product brand:</strong> Heaven is a product brand sold by Bright, not a separate store.</p>
         </div>
       </div>
     </section>
@@ -72,17 +71,17 @@
     <section class="eq-bright-info__section" aria-labelledby="bright-policies-title">
       <h2 id="bright-policies-title">Bright store policies</h2>
       <h3>Product details and availability</h3>
-      <p>Check the product page for the current price, selected brand, specifications, stock and any product-specific terms. Product information can differ between items; only details shown for the item you order apply.</p>
+      <p>Use the product page for its current price, brand, specifications, stock and item-specific terms. Those details can differ between products.</p>
 
       <h3>Orders, delivery, returns and refunds</h3>
       <p>Orders from Bright are placed through Rthquick's central checkout. Rthquick's marketplace-wide delivery, cancellation, return and refund policy applies. Return eligibility and the return window are item-specific and are shown with the product and saved order details.</p>
       <p>Exchange requests are not automatic. Contact Rthquick support with the item or order details so the available options can be reviewed under the marketplace after-sales policy.</p>
 
       <h3>Warranty and after-sales</h3>
-      <p>Bright provides warranties for Heaven-branded products. The warranty period, coverage and exclusions are specific to the product and must be stated in its listing or order information. This page does not add a blanket warranty term. For any product whose warranty details are not shown, ask Rthquick for clarification before ordering.</p>
-      <p>For products with another brand, rely only on the warranty provider and terms explicitly stated on that product's page or order information.</p>
+      <p>Bright is the warranty provider for Heaven-branded products. The product listing or order information must state the applicable coverage and period; ask Rthquick for clarification if those details are missing. This page does not set a blanket warranty term.</p>
+      <p>For other brands, use only the warranty provider and terms shown for that product.</p>
 
-      <p class="eq-bright-info__note"><strong>Need help?</strong> Contact Rthquick with the product name or order number. The team can review the listing and help route your question about Bright's product or order.</p>
+      <p class="eq-bright-info__note"><strong>Need help?</strong> Include the product name or order number when contacting Rthquick.</p>
       <div class="eq-bright-info__actions">
         <a href="{{ route('stores.catalog', 'bright') }}">Browse Bright products <span aria-hidden="true">&rarr;</span></a>
         <a href="{{ route('policies.delivery-returns') }}">Rthquick delivery &amp; returns policy</a>

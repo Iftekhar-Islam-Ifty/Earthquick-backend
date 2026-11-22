@@ -117,16 +117,16 @@
                 <div class="eq-megamenu__heading">Featured Stores</div>
                 <div class="eq-brand-highlights" aria-label="Featured stores">
                   <div class="eq-brand-highlight">
-                    <a href="{{ route('stores.show', 'nous-telos') }}" class="eq-brand-highlight__title eq-brand-highlight__title--link">
-                      <span>Nous Telos</span><span aria-hidden="true">&rarr;</span>
+                    <a href="{{ route('stores.show', 'nous-telos') }}" class="eq-brand-highlight__logo-link" aria-label="Visit Nous Telos store">
+                      <img src="{{ asset('images/vendors/logo_1789922860_nous-telos.png') }}" alt="Nous Telos logo" />
                     </a>
-                    <span class="eq-brand-highlight__text">Bengali Heritage &amp; Handloom</span>
+                    <a href="{{ route('stores.show', 'nous-telos') }}" class="eq-brand-highlight__name">Nous Telos</a>
                   </div>
                   <div class="eq-brand-highlight">
-                    <a href="{{ route('stores.show', 'bright') }}" class="eq-brand-highlight__title eq-brand-highlight__title--link">
-                      <span>Bright Electrical Company</span><span aria-hidden="true">&rarr;</span>
+                    <a href="{{ route('stores.show', 'bright') }}" class="eq-brand-highlight__logo-link eq-brand-highlight__logo-link--placeholder" aria-label="Visit Bright Electrical Company store; official logo not provided yet">
+                      <span aria-hidden="true">Logo pending</span>
                     </a>
-                    <span class="eq-brand-highlight__text">Electrical products &bull; Heaven brand</span>
+                    <a href="{{ route('stores.show', 'bright') }}" class="eq-brand-highlight__name">Bright Electrical Company</a>
                   </div>
                 </div>
               </div>
