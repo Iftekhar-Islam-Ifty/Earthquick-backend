@@ -252,7 +252,7 @@
 
     <!-- =================================================================
          TRUST & SERVICE PROPOSITION STRIP
-         Marketplace curation, nationwide delivery, and convenient exchange support.
+         Marketplace curation, nationwide delivery, and item-specific returns support.
          ================================================================= -->
     <section class="eq-trust-strip" id="trust-strip" aria-label="Rthquick promises and services">
       <div class="eq-container">
@@ -292,8 +292,8 @@
               </svg>
             </div>
             <div class="eq-trust-content">
-              <h3 class="eq-trust-title">Easy Exchange</h3>
-              <p class="eq-trust-desc">Clear and convenient exchange support</p>
+              <h3 class="eq-trust-title">Returns &amp; Support</h3>
+              <p class="eq-trust-desc">Check each item's return terms and request help through Rthquick</p>
             </div>
           </div>
 

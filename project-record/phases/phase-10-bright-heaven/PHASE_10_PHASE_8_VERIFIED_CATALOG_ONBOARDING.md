@@ -32,6 +32,10 @@ return or warranty claims.
 - Set the source artwork canvas to **1920 x 800 px** (2.4:1). Use the same ratio
   for replacement JPEG/WebP images; keep important subject matter toward the
   center/right because the left side carries text and mobile crops differ.
+- Added a Bright-specific store information and policy page, linked from the
+  Bright homepage and store footer. It separates Bright as seller from Heaven as
+  product brand, points delivery/returns/refunds to Rthquick's central policy,
+  and avoids inventing product-specific warranty terms.
 
 ## Bright inputs still required
 
@@ -39,6 +43,8 @@ return or warranty claims.
 - Current price and stock with confirmation date.
 - Accurate description/specifications and product images.
 - Warranty responsibility and exact terms; leave terms empty until confirmed.
+- Bright should confirm the wording and any approved product-specific warranty
+  coverage, period and exclusions before those details are added to listings.
 - Return eligibility/window/notes, delivery class and any actual variants.
 
 The original source checklist is

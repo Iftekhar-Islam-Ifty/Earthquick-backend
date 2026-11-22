@@ -42,6 +42,11 @@ journey for final browser review without mixing the two stores' catalogs.
   and warranty-provider labels are retained in session/cart display, checkout
   summary and order-item receipt snapshots. The shared Rthquick cart/checkout
   remains central for both stores.
+- Added a Bright store information/policy page reachable from Bright's store
+  homepage, its footer and the marketplace About page. It uses Rthquick's
+  central delivery/returns/refunds policy and makes no unsupported warranty
+  duration or coverage claims. Updated Nous Telos's exchange promotion to match
+  the central policy, which has no automatic exchange flow.
 
 ## Remaining
 

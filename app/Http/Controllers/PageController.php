@@ -19,11 +19,11 @@ class PageController extends Controller
 {
     /* =========================================================================
      * ABOUT US & BRAND STORY
-     * Renders authentic Nous Telos brand philosophy and artisan story.
+     * Renders Rthquick marketplace information and store-specific information pages.
      * ========================================================================= */
 
     /**
-     * Display the About Us and Nous Telos brand heritage page.
+     * Display the Rthquick marketplace About page.
      *
      * @return \Illuminate\View\View
      */
@@ -32,12 +32,19 @@ class PageController extends Controller
         return view('about');
     }
 
+    /** Display Bright's store profile and seller-specific customer information. */
+    public function brightInformation(): View
+    {
+        return view('vendor.bright-information');
+    }
+
     public function sitemap(): Response
     {
         $urls = [
             route('home'),
             route('about'),
             route('policies.delivery-returns'),
+            route('stores.bright-information'),
             route('stores.index'),
         ];
 

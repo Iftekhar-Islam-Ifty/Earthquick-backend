@@ -137,6 +137,7 @@
           <h3>Bright Electrical Company</h3>
           <p>A Chattogram electrical supplier offering switches, sockets, LED lights, circuit breakers, fans and other accessories.</p>
           <a class="eq-about-link" href="{{ route('stores.show', 'bright') }}">Preview store &rarr;</a>
+          <a class="eq-about-link" href="{{ route('stores.bright-information') }}">Bright store information &amp; policies &rarr;</a>
         </article>
       </div>
     </div>

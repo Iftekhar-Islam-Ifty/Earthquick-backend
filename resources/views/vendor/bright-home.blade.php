@@ -27,6 +27,7 @@
   .eq-bright-categories a { display:flex; min-height:72px; align-items:center; justify-content:center; padding:1rem; border:1px solid #e3d9c8; border-radius:10px; background:#fffdf8; color:#203e4c; font-weight:600; text-align:center; text-decoration:none; transition:transform .2s,box-shadow .2s; }
   .eq-bright-categories a:hover { transform:translateY(-2px); box-shadow:0 8px 20px #203e4c14; }
   .eq-bright-note { margin:1rem 0 1.5rem; padding:1rem 1.1rem; border-left:3px solid #c4a55c; background:#fffdf8; color:#5c574e; line-height:1.6; }
+  .eq-bright-info-link { display:inline-flex; align-items:center; gap:.35rem; margin-top:.35rem; color:#1f5a58; font-weight:700; text-underline-offset:3px; }
 </style>
 @endpush
 
@@ -48,6 +49,7 @@
     @if($catalogCount === 0)
       <p>Bright’s product listings are being prepared. Check back as products are added to the catalog.</p>
     @endif
+    <a class="eq-bright-info-link" href="{{ route('stores.bright-information') }}">About Bright &amp; store policies <span aria-hidden="true">&rarr;</span></a>
   </section>
 </main>
 @endsection

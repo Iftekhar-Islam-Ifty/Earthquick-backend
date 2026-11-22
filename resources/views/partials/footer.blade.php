@@ -49,6 +49,9 @@
           <li><a href="{{ route('about') }}#contact-support" id="footer-link-contact">Contact &amp; Support</a></li>
           <li><a href="{{ route('about') }}#help-faq" id="footer-link-faq">Help &amp; FAQ</a></li>
           <li><a href="{{ route('policies.delivery-returns') }}" id="footer-link-delivery-returns">Delivery, Returns &amp; Refunds</a></li>
+          @if(request()->is('stores/bright*'))
+            <li><a href="{{ route('stores.bright-information') }}" id="footer-link-bright-information">Bright store information &amp; policies</a></li>
+          @endif
         </ul>
       </div>
 

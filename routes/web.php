@@ -50,6 +50,7 @@ Route::get('/shop/{categorySlug}/{subcategorySlug}', [CategoryController::class,
  * ========================================================================= */
 Route::get('/stores', [VendorController::class, 'index'])->name('stores.index');
 Route::get('/stores/{slug}/catalog', [VendorController::class, 'catalog'])->name('stores.catalog');
+Route::get('/stores/bright/about', [PageController::class, 'brightInformation'])->name('stores.bright-information');
 Route::get('/stores/{slug}', [VendorController::class, 'show'])->name('stores.show');
 
 /* =========================================================================
