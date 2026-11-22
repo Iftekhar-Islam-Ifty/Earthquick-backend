@@ -57,7 +57,6 @@ class AdminController extends Controller
             ->sum('total');
 
         $totalOrders = Order::count();
-        $totalRevenue = Order::where('status', '!=', 'cancelled')->sum('total');
         $totalRevenue = (float) Order::where('status', '!=', 'cancelled')->sum('total');
         $nonCancelledOrders = Order::where('status', '!=', 'cancelled')->count();
         $averageOrderValue = $nonCancelledOrders > 0 ? round($totalRevenue / $nonCancelledOrders, 2) : 0;
@@ -65,6 +64,7 @@ class AdminController extends Controller
         $pendingOrdersCount = Order::where('status', 'pending')->count();
         $totalProducts = Product::count();
         $inStockProducts = Product::where('in_stock', true)->count();
+        $brightStore = Vendor::where('slug', 'bright')->first();
 
         // Retrieve latest 10 customer transactions
         // 2. 14-Day Sales & Order Volume Trend Stream (for Area/Bar Chart)
@@ -161,6 +161,7 @@ class AdminController extends Controller
             'pendingOrdersCount',
             'totalProducts',
             'inStockProducts',
+            'brightStore',
             'chartLabelsJson',
             'chartRevenueJson',
             'chartOrdersJson',

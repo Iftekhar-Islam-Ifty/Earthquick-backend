@@ -23,10 +23,13 @@
   .eq-home-media-alert { padding: 0.75rem 1rem; border-radius: 6px; margin-bottom: 0.9rem; }
   .eq-home-media-alert--success { background: #e6f4eb; color: #165b32; }
   .eq-home-media-alert--error { background: #fff0ed; color: #962f22; }
+.eq-home-media-stores { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; max-width: 800px; }
+.eq-home-media-store { display: flex; align-items: center; gap: 1rem; min-height: 110px; padding: 1rem; border: 1px solid var(--eq-line); border-radius: 8px; background: #fffdf8; color: var(--eq-navy); text-decoration: none; }
+.eq-home-media-store:hover { border-color: var(--eq-gold); box-shadow: 0 6px 18px rgba(45, 38, 25, .08); }
+.eq-home-media-store img { width: 76px; height: 76px; object-fit: contain; border-radius: 6px; background: #fff; }
+.eq-home-media-store__placeholder { display: grid; place-items: center; width: 76px; height: 76px; border-radius: 6px; background: #eef3f5; color: var(--eq-navy); font-weight: 700; }
   @media (max-width: 600px) { .eq-home-media-grid { grid-template-columns: 1fr; } }
 </style>
-
-<p class="eq-home-media-intro">Replace homepage photography without changing product cards or the slide/filter layout. Each position keeps its current image until you upload a replacement. Uploaded JPEG, PNG and WebP files are saved as WebP.</p>
 
 @if(session('success'))
   <p class="eq-home-media-alert eq-home-media-alert--success" role="status">{{ session('success') }}</p>
@@ -37,6 +40,31 @@
   </div>
 @endif
 
+@if(!isset($store))
+  <p class="eq-home-media-intro">Choose a store first to manage its homepage images.</p>
+  <div class="eq-home-media-stores">
+    @foreach($stores as $availableStore)
+      <a class="eq-home-media-store" href="{{ route('admin.homepage-images.index', ['store' => $availableStore->slug]) }}">
+        @if($availableStore->logo)
+          <img src="{{ asset($availableStore->logo) }}" alt="{{ $availableStore->name }} logo" />
+        @else
+          <span class="eq-home-media-store__placeholder" aria-hidden="true">{{ strtoupper(substr($availableStore->name, 0, 1)) }}</span>
+        @endif
+        <span><strong>{{ $availableStore->name }}</strong><br><small>Manage homepage images</small></span>
+      </a>
+    @endforeach
+  </div>
+@else
+<p class="eq-home-media-intro">
+  <a href="{{ route('admin.homepage-images.index') }}" class="eq-admin-btn eq-admin-btn--outline" style="text-decoration:none; margin-right:.5rem;">&larr; Choose store</a>
+  Editing homepage images for <strong>{{ $store->name }}</strong>. Each position keeps its current image until you upload a replacement. Uploaded JPEG, PNG and WebP files are saved as WebP.
+</p>
+
+@if($slots === [])
+  <p class="eq-home-media-note">No editable homepage image slots are configured for this store yet.</p>
+@endif
+
+@if(collect($slots)->contains(fn ($slot) => $slot['section'] === 'hero'))
 <h2 class="eq-home-media-section">Hero Slider</h2>
 <p class="eq-home-media-note"><strong>Image guide:</strong> Use wide campaign photography, ideally <strong>1920 × 1080 px (16:9)</strong>; 1600 × 900–2400 × 1350 px works well. Minimum 1200 × 675 px, maximum upload 6 MB. The image fills the banner and crops differently on phones—keep the subject near the centre or right and avoid putting important text inside the image.</p>
 <div class="eq-home-media-grid">
@@ -59,7 +87,9 @@
     @endif
   @endforeach
 </div>
+@endif
 
+@if($storeSlug === 'nous-telos')
 <h2 class="eq-home-media-section">Styled by You</h2>
 <p class="eq-home-media-note"><strong>What to upload:</strong> Complete coordinated outfits, festive looks, everyday styling, heritage moments, or close-up accessory details that match each position's label and filter. Use photos you own or have permission to publish. These coverflow cards are taller than product cards: aim for <strong>900 × 1280 px portrait</strong> (roughly 7:10), minimum 600 × 800 px, maximum upload 6 MB. Keep the important person/product near the centre so mobile cropping stays clear.</p>
 <div class="eq-home-media-grid">
@@ -82,4 +112,6 @@
     @endif
   @endforeach
 </div>
+@endif
+@endif
 @endsection

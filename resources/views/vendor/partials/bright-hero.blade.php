@@ -1,7 +1,7 @@
 <section class="eq-hero eq-hero--slider eq-bright-store-hero" id="hero-section" tabindex="0" aria-label="Bright store highlights" aria-roledescription="carousel">
   <div class="eq-hero__slides" id="hero-slides">
     <div class="eq-hero__slide is-active" data-slide-index="0">
-      <div class="eq-hero__media"><img src="{{ asset('images/bright-demo/hero-electrical-essentials.svg') }}" alt="Demo illustration of electrical switches and sockets" fetchpriority="high" decoding="async" /></div>
+      <div class="eq-hero__media"><img src="{{ asset($homepageMedia['bright-hero-1']['image']) }}" alt="{{ $homepageMedia['bright-hero-1']['alt'] }}" fetchpriority="high" decoding="async" /></div>
       <div class="eq-hero__content">
         <span class="eq-eyebrow">WHOLESALE &amp; RETAIL · CHATTOGRAM</span>
         <h1>Bright Electrical Company</h1>
@@ -10,7 +10,7 @@
       </div>
     </div>
     <div class="eq-hero__slide" data-slide-index="1">
-      <div class="eq-hero__media"><img src="{{ asset('images/bright-demo/hero-lighting-essentials.svg') }}" alt="Demo illustration of a light bulb" loading="lazy" decoding="async" /></div>
+      <div class="eq-hero__media"><img src="{{ asset($homepageMedia['bright-hero-2']['image']) }}" alt="{{ $homepageMedia['bright-hero-2']['alt'] }}" loading="lazy" decoding="async" /></div>
       <div class="eq-hero__content">
         <span class="eq-eyebrow">BRIGHT ELECTRICAL · DEMO COVER</span>
         <h1>Lighting and everyday electricals</h1>
@@ -19,7 +19,7 @@
       </div>
     </div>
     <div class="eq-hero__slide" data-slide-index="2">
-      <div class="eq-hero__media"><img src="{{ asset('images/bright-demo/hero-circuit-protection.svg') }}" alt="Demo illustration of an electrical panel" loading="lazy" decoding="async" /></div>
+      <div class="eq-hero__media"><img src="{{ asset($homepageMedia['bright-hero-3']['image']) }}" alt="{{ $homepageMedia['bright-hero-3']['alt'] }}" loading="lazy" decoding="async" /></div>
       <div class="eq-hero__content">
         <span class="eq-eyebrow">BRIGHT ELECTRICAL · DEMO COVER</span>
         <h1>Questions about an item?</h1>

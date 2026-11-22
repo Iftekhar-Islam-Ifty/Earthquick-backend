@@ -205,6 +205,20 @@ class AdminVendorController extends Controller
         );
     }
 
+    /** Remove a store logo or banner and clear its saved path. */
+    public function deleteMedia(int $id, string $field): RedirectResponse
+    {
+        abort_unless(in_array($field, ['logo', 'banner'], true), 404);
+
+        $vendor = Vendor::findOrFail($id);
+        $path = $vendor->{$field};
+        $vendor->update([$field => null]);
+        app(AdminImageUpload::class)->remove($path, 'images/vendors');
+
+        return redirect()->route('admin.vendors.edit', $vendor->id)
+            ->with('success', ucfirst($field).' removed for '.$vendor->name.'.');
+    }
+
     /**
      * Toggle vendor active status.
      */

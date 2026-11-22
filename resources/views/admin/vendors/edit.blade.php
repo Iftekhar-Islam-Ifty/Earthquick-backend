@@ -23,6 +23,10 @@
     </div>
   </div>
 
+  @if(session('success'))
+    <div class="eq-admin-alert eq-admin-alert--success" role="status" style="background:#e6f4eb;color:#165b32;border:1px solid #b7dfc4;padding:.8rem 1rem;border-radius:6px;margin-bottom:1rem;">{{ session('success') }}</div>
+  @endif
+
   @if($errors->any())
     <div class="eq-admin-alert eq-admin-alert--error" style="background: #fdf2f2; color: #9b1c1c; border: 1px solid #f8b4b4; padding: 1rem 1.25rem; border-radius: 6px; margin-bottom: 1.5rem;">
       <div>
@@ -217,9 +221,10 @@
               Store Logo / Monogram Avatar
             </label>
             @if($vendor->logo)
-              <div style="margin-bottom: 0.65rem; display: flex; align-items: center; gap: 0.75rem;">
+              <div style="margin-bottom: 0.65rem; display: flex; align-items: center; gap: 0.75rem; flex-wrap:wrap;">
                 <img src="{{ asset($vendor->logo) }}" alt="{{ $vendor->name }}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 6px; border: 1px solid var(--eq-line);" />
                 <span style="font-size: 0.75rem; color: var(--eq-charcoal-muted);">Current logo</span>
+                <button type="submit" form="delete-vendor-logo" class="eq-admin-btn eq-admin-btn--outline" style="padding:.35rem .6rem;font-size:.75rem;color:#9b1c1c;" onclick="return confirm('Remove the current store logo?')">Remove logo</button>
               </div>
             @endif
             <input 
@@ -242,6 +247,7 @@
             @if($vendor->banner)
               <div style="margin-bottom: 0.65rem;">
                 <img src="{{ asset($vendor->banner) }}" alt="{{ $vendor->name }}" style="width: 100%; height: 70px; object-fit: cover; border-radius: 4px; border: 1px solid var(--eq-line);" />
+                <button type="submit" form="delete-vendor-banner" class="eq-admin-btn eq-admin-btn--outline" style="margin-top:.5rem;padding:.35rem .6rem;font-size:.75rem;color:#9b1c1c;" onclick="return confirm('Remove the current store cover image?')">Remove cover image</button>
               </div>
             @endif
             <input 
@@ -267,5 +273,12 @@
 
     </div>
   </form>
+
+  @if($vendor->logo)
+    <form id="delete-vendor-logo" method="POST" action="{{ route('admin.vendors.media.delete', [$vendor->id, 'logo']) }}" hidden>@csrf @method('DELETE')</form>
+  @endif
+  @if($vendor->banner)
+    <form id="delete-vendor-banner" method="POST" action="{{ route('admin.vendors.media.delete', [$vendor->id, 'banner']) }}" hidden>@csrf @method('DELETE')</form>
+  @endif
 
 @endsection

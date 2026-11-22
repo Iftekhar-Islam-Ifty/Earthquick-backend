@@ -169,5 +169,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::post('/vendors', [AdminVendorController::class, 'store'])->name('vendors.store');
     Route::get('/vendors/{id}/edit', [AdminVendorController::class, 'edit'])->name('vendors.edit');
     Route::put('/vendors/{id}', [AdminVendorController::class, 'update'])->name('vendors.update');
+    Route::delete('/vendors/{id}/media/{field}', [AdminVendorController::class, 'deleteMedia'])
+        ->whereIn('field', ['logo', 'banner'])->name('vendors.media.delete');
     Route::post('/vendors/{id}/toggle', [AdminVendorController::class, 'toggleActive'])->name('vendors.toggle');
 });

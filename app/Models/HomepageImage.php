@@ -15,12 +15,16 @@ class HomepageImage extends Model
     protected $fillable = ['slot', 'image_path', 'alt_text'];
 
     /** Resolve editable image slots while keeping bundled images as safe defaults. */
-    public static function resolvedSlots(): array
+    public static function resolvedSlots(?string $store = null): array
     {
         $saved = static::query()->get()->keyBy('slot');
         $slots = [];
 
         foreach (config('homepage_media.slots', []) as $key => $default) {
+            if ($store !== null && ($default['store'] ?? 'nous-telos') !== $store) {
+                continue;
+            }
+
             $override = $saved->get($key);
             $slots[$key] = [
                 ...$default,

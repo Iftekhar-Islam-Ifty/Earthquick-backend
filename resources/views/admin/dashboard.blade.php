@@ -197,7 +197,7 @@
         ৳{{ number_format($averageOrderValue) }}
       </div>
       <span class="eq-metric-box__sub">
-        <span class="eq-sub-desktop">Per fulfilled acquisition</span>
+        <span class="eq-sub-desktop">Per non-cancelled order</span>
         <span class="eq-sub-mobile">Per order</span>
       </span>
     </div>
@@ -219,6 +219,22 @@
       </span>
     </div>
 
+  </section>
+
+  <section class="eq-admin-card" style="margin:0 0 1.15rem;padding:1rem 1.15rem;">
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;">
+      <div>
+        <h3 class="eq-admin-card__title" style="margin-bottom:.2rem;">Bright store controls</h3>
+        <p style="margin:0;color:var(--eq-charcoal-soft);font-size:.82rem;">Manage Bright's electrical catalog, store profile and homepage covers.</p>
+      </div>
+      <div style="display:flex;gap:.55rem;flex-wrap:wrap;">
+        <a href="{{ route('admin.products', ['vendor' => 'bright']) }}" class="eq-admin-btn eq-admin-btn--outline" style="text-decoration:none;">Bright products</a>
+        @if($brightStore)
+          <a href="{{ route('admin.vendors.edit', $brightStore->id) }}" class="eq-admin-btn eq-admin-btn--outline" style="text-decoration:none;">Store profile</a>
+        @endif
+        <a href="{{ route('admin.homepage-images.index', ['store' => 'bright']) }}" class="eq-admin-btn eq-admin-btn--primary" style="text-decoration:none;">Homepage images</a>
+      </div>
+    </div>
   </section>
 
   <!-- Interactive Infographic Charts & Secondary Insights Grid -->
