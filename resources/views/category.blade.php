@@ -1,5 +1,13 @@
 @extends('layouts.app')
 
+@php
+  $isElectronicsCategory = $category->slug === 'electronics';
+  $selectedFabrics = collect(is_array(request('fabric')) ? request('fabric') : [request('fabric')])->filter()->values();
+  $hasActiveFilters = (bool) (request('fabric') || request('in_stock') || request('min_price')
+    || request('max_price') || request('product_type') || request('vendor')
+    || request('delivery_class') || request()->has('returnable'));
+@endphp
+
 @section('title', (isset($subcategory) ? $subcategory->name : $category->name) . ' | Rthquick')
 @section('meta_description', $category->description ?: ('Shop ' . (isset($subcategory) ? $subcategory->name : $category->name) . ' products from independent stores at Rthquick.'))
 @section('canonical_url', request()->integer('page') > 1 ? url()->current().'?page='.request()->integer('page') : url()->current())
@@ -10,7 +18,6 @@
 @section('scroll_motion', '1')
 
 @section('content')
-  @php($isElectronicsCategory = $category->slug === 'electronics')
   <!-- ===================================================================
        MAIN CONTENT CONTAINER
        =================================================================== -->
@@ -120,13 +127,6 @@
 
       <!-- Active Filter Tags / Chips -->
       <div class="eq-active-filters" id="active-filter-chips">
-        @php
-          $selectedFabrics = collect(is_array(request('fabric')) ? request('fabric') : [request('fabric')])->filter()->values();
-          $hasActiveFilters = request('fabric') || request('in_stock') || request('min_price')
-            || request('max_price') || request('product_type') || request('vendor')
-            || request('delivery_class') || request()->has('returnable');
-        @endphp
-
         @if($hasActiveFilters)
           @if(request('fabric'))
             <span class="eq-active-chip">
