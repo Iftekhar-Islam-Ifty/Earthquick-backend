@@ -1,7 +1,8 @@
 # Bright / Nous Telos Phase 9 - Customer journey readiness
 
-**Status: In progress.** Started 2026-11-20 at the owner's request after the
-Bright hero and catalog onboarding preparation were committed.
+**Status: Implementation complete; owner visual review pending.** Started
+2026-11-20 at the owner's request after the Bright hero and catalog onboarding
+preparation were committed.
 
 ## Goal
 
@@ -34,15 +35,17 @@ journey for final browser review without mixing the two stores' catalogs.
   logo/name/count layout, hiding secondary store copy and the vendor code on
   narrow screens. The catalog section's oversized top and bottom spacing is
   reduced on mobile.
+- Product detail breadcrumbs and related-product links now return to the
+  product's own store catalog/category. The product page also links its store
+  identity back to that store homepage, keeping store context through discovery.
+- Audited the cart, checkout and receipt paths: item-level store, product-brand
+  and warranty-provider labels are retained in session/cart display, checkout
+  summary and order-item receipt snapshots. The shared Rthquick cart/checkout
+  remains central for both stores.
 
 ## Remaining
 
-- Owner is reviewing Phase 7/8 browser behavior. Perform the consolidated
-  customer-journey review after that review and record any resulting fixes here.
-- Review the new Nous Telos category/subcategory rows in desktop and mobile
-  browsers during the consolidated review.
-- Complete Phase 8 onboarding when Bright supplies verified product, price,
-  stock, image, return and warranty information.
-- Recheck product-to-cart-to-checkout context after the browser review.
+- Owner is reviewing desktop/tablet/mobile behavior. Apply any reported visual
+  fixes and close the phase after that review.
 
 No migrations, seeders or business records are part of this phase.

@@ -9,6 +9,28 @@
 @section('og_description', $product->short_desc ?? ($product->description ?? 'Discover curated collections at Rthquick.'))
 @section('og_image', asset($product->image))
 @section('body_class', 'eq-product-page')
+
+@php
+  $storeCategoryUrl = $product->category ? route('category.show', $product->category->slug) : route('stores.index');
+  $storeSubcategoryUrl = $product->subcategory
+    ? route('subcategory.show', ['categorySlug' => $product->category->slug, 'subcategorySlug' => $product->subcategory->slug])
+    : null;
+  $relatedCatalogUrl = $product->category ? route('category.show', $product->category->slug) : route('stores.index');
+  if ($product->vendor) {
+    $storeCatalogParams = ['slug' => $product->vendor->slug];
+    if ($product->vendor->slug !== 'bright' && $product->category) {
+      $storeCatalogParams['category'] = $product->category->slug;
+    }
+    $storeCategoryUrl = route('stores.catalog', $storeCatalogParams);
+    $relatedCatalogUrl = route('stores.catalog', $storeCatalogParams);
+    if ($product->subcategory) {
+      $storeSubcategoryParams = $storeCatalogParams;
+      $storeSubcategoryParams['subcategory'] = $product->subcategory->slug;
+      $storeSubcategoryUrl = route('stores.catalog', $storeSubcategoryParams);
+    }
+  }
+@endphp
+
 @section('scroll_motion', '1')
 
 @section('content')
@@ -29,10 +51,14 @@
       <ol class="eq-breadcrumb__list" id="eq-breadcrumb-list" style="display: flex; align-items: center; flex-wrap: wrap; gap: 0.45rem; list-style: none; margin: 0; padding: 0; font-size: 0.82rem; color: var(--eq-charcoal-soft);">
         <li><a href="{{ route('home') }}" style="color: inherit; text-decoration: none;">Home</a></li>
         <li style="color: var(--eq-line-dark);">&rsaquo;</li>
-        <li id="bc-category"><a href="{{ route('category.show', $product->category->slug) }}" style="color: inherit; text-decoration: none;">{{ $product->category->name }}</a></li>
+        @if($product->vendor)
+          <li id="bc-store"><a href="{{ route('stores.show', $product->vendor->slug) }}" style="color: inherit; text-decoration: none;">{{ $product->vendor->name }}</a></li>
+          <li style="color: var(--eq-line-dark);">&rsaquo;</li>
+        @endif
+        <li id="bc-category"><a href="{{ $storeCategoryUrl }}" style="color: inherit; text-decoration: none;">{{ $product->category->name }}</a></li>
         @if($product->subcategory)
           <li style="color: var(--eq-line-dark);">&rsaquo;</li>
-          <li id="bc-subcategory"><a href="{{ route('subcategory.show', ['categorySlug' => $product->category->slug, 'subcategorySlug' => $product->subcategory->slug]) }}" style="color: inherit; text-decoration: none;">{{ $product->subcategory->name }}</a></li>
+          <li id="bc-subcategory"><a href="{{ $storeSubcategoryUrl }}" style="color: inherit; text-decoration: none;">{{ $product->subcategory->name }}</a></li>
         @endif
         <li style="color: var(--eq-line-dark);">&rsaquo;</li>
         <li id="bc-product" style="color: var(--eq-charcoal); font-weight: 500;" aria-current="page">{{ $product->name }}</li>
@@ -203,7 +229,7 @@
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
               </svg>
-              <span><strong>Store:</strong> {{ $product->vendor->name ?? 'Rthquick' }}@if($product->brand) &bull; <strong>Brand:</strong> {{ $product->brand->name }}@endif</span>
+              <span><strong>Store:</strong> @if($product->vendor)<a href="{{ route('stores.show', $product->vendor->slug) }}" style="color: inherit; text-underline-offset: 2px;">{{ $product->vendor->name }}</a>@else Rthquick @endif @if($product->brand) &bull; <strong>Brand:</strong> {{ $product->brand->name }}@endif</span>
             </div>
             <div class="eq-product-meta-list__item">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -316,7 +342,7 @@
               <span style="font-size: 0.82rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--eq-teal-dark);">Curated Suggestions</span>
               <h2 style="font-family: var(--font-display); font-size: 1.65rem; color: var(--eq-charcoal); margin: 0.25rem 0 0;">You May Also Admire</h2>
             </div>
-            <a href="{{ $product->vendor?->slug === 'bright' ? route('stores.show', $product->vendor->slug) : route('category.show', $product->category->slug) }}" id="related-view-all" style="font-size: 0.88rem; font-weight: 600; color: var(--eq-teal-dark); text-decoration: none;">{{ $product->vendor?->slug === 'bright' ? 'View Bright store' : 'View Entire Category' }} &rarr;</a>
+            <a href="{{ $relatedCatalogUrl }}" id="related-view-all" style="font-size: 0.88rem; font-weight: 600; color: var(--eq-teal-dark); text-decoration: none;">{{ $product->vendor?->slug === 'bright' ? 'View all Bright products' : ($product->vendor ? 'View all '.$product->category->name : 'View Entire Category') }} &rarr;</a>
           </div>
 
           <div class="eq-catalog-grid" id="related-products-grid">

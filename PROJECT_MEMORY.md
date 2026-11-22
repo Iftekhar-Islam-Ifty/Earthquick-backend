@@ -49,9 +49,11 @@ product data. Phase 8 adds a clearly marked three-slide demo hero to Bright's
 main store page; replacement images should use a 1920 x 800 px canvas. See
 `project-record/phases/phase-10-bright-heaven/PHASE_10_PHASE_7_RESPONSIVE_STORE_JOURNEYS.md`.
 See also `project-record/phases/phase-10-bright-heaven/PHASE_10_PHASE_8_VERIFIED_CATALOG_ONBOARDING.md`.
-Phase 10 Phase 9 (2026-11-20) is in progress: generic `/shop` now opens the
-neutral store directory instead of assuming Nous Telos; remaining journey review
-will follow the owner's Phase 7/8 browser review. See
+Phase 10 Phase 9 implementation is complete locally: generic `/shop` opens the
+neutral store directory, category links and product breadcrumbs preserve store
+context, and cart/checkout/receipt retain seller identity. Owner visual review
+is pending; apply any feedback after the review. Phase 8 verified product data
+is still awaiting Bright. See
 `project-record/phases/phase-10-bright-heaven/PHASE_10_PHASE_9_CUSTOMER_JOURNEY_READINESS.md`.
 
 ## Historical review
