@@ -116,18 +116,20 @@
               <div class="eq-megamenu__col">
                 <div class="eq-megamenu__heading">Featured Stores</div>
                 <div class="eq-brand-highlights" aria-label="Featured stores">
-                  <div class="eq-brand-highlight">
-                    <a href="{{ route('stores.show', 'nous-telos') }}" class="eq-brand-highlight__logo-link" aria-label="Visit Nous Telos store">
-                      <img src="{{ asset('images/vendors/logo_1789922860_nous-telos.png') }}" alt="Nous Telos logo" />
-                    </a>
-                    <a href="{{ route('stores.show', 'nous-telos') }}" class="eq-brand-highlight__name">Nous Telos</a>
-                  </div>
-                  <div class="eq-brand-highlight">
-                    <a href="{{ route('stores.show', 'bright') }}" class="eq-brand-highlight__logo-link eq-brand-highlight__logo-link--placeholder" aria-label="Visit Bright Electrical Company store; official logo not provided yet">
-                      <span aria-hidden="true">Logo pending</span>
-                    </a>
-                    <a href="{{ route('stores.show', 'bright') }}" class="eq-brand-highlight__name">Bright Electrical Company</a>
-                  </div>
+                  @foreach(['nous-telos', 'bright'] as $storeSlug)
+                    @if($featuredStore = $storeLogos->get($storeSlug))
+                      <div class="eq-brand-highlight">
+                        <a href="{{ route('stores.show', $featuredStore->slug) }}" class="eq-brand-highlight__logo-link {{ $featuredStore->logo ? '' : 'eq-brand-highlight__logo-link--placeholder' }}" aria-label="Visit {{ $featuredStore->name }} store">
+                          @if($featuredStore->logo)
+                            <img src="{{ asset($featuredStore->logo) }}" alt="{{ $featuredStore->name }} logo" />
+                          @else
+                            <span aria-hidden="true">{{ strtoupper(substr($featuredStore->name, 0, 1)) }}</span>
+                          @endif
+                        </a>
+                        <a href="{{ route('stores.show', $featuredStore->slug) }}" class="eq-brand-highlight__name">{{ $featuredStore->name }}</a>
+                      </div>
+                    @endif
+                  @endforeach
                 </div>
               </div>
             </div>

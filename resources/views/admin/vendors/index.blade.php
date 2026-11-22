@@ -97,7 +97,7 @@
                   <div style="display: flex; align-items: center; gap: 0.85rem;">
                     <div style="width: 42px; height: 42px; border-radius: 6px; background: var(--eq-cream); border: 1px solid var(--eq-line); display: flex; align-items: center; justify-content: center; font-weight: 700; color: var(--eq-navy); font-size: 0.95rem; overflow: hidden; flex-shrink: 0;">
                       @if($vendor->logo)
-                        <img src="{{ asset($vendor->logo) }}" alt="{{ $vendor->name }}" style="width: 100%; height: 100%; object-fit: cover;" />
+                        <img src="{{ asset($vendor->logo) }}" alt="{{ $vendor->name }}" style="width: 100%; height: 100%; object-fit: contain;" />
                       @else
                         {{ substr($vendor->name, 0, 2) }}
                       @endif
@@ -188,7 +188,7 @@
             <div class="eq-card-item__top">
               <div style="width: 46px; height: 46px; border-radius: 6px; background: var(--eq-cream); border: 1px solid var(--eq-line); display: flex; align-items: center; justify-content: center; font-weight: 700; color: var(--eq-navy); font-size: 1rem; overflow: hidden; flex-shrink: 0;">
                 @if($vendor->logo)
-                  <img src="{{ asset($vendor->logo) }}" alt="{{ $vendor->name }}" style="width: 100%; height: 100%; object-fit: cover;" />
+                  <img src="{{ asset($vendor->logo) }}" alt="{{ $vendor->name }}" style="width: 100%; height: 100%; object-fit: contain;" />
                 @else
                   {{ substr($vendor->name, 0, 2) }}
                 @endif

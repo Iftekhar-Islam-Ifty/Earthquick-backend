@@ -49,7 +49,7 @@
               @endif
               <div style="position: absolute; bottom: -28px; left: 1.5rem; width: 58px; height: 58px; border-radius: 50%; background: #ffffff; border: 3px solid #ffffff; box-shadow: 0 3px 10px rgba(0,0,0,0.12); display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-weight: 700; color: var(--eq-navy); font-size: 1.15rem; overflow: hidden;">
                 @if($vendor->logo)
-                  <img src="{{ asset($vendor->logo) }}" alt="{{ $vendor->name }}" style="width: 100%; height: 100%; object-fit: cover;" />
+                  <img src="{{ asset($vendor->logo) }}" alt="{{ $vendor->name }}" style="width: 100%; height: 100%; object-fit: contain;" />
                 @else
                   {{ substr($vendor->name, 0, 2) }}
                 @endif

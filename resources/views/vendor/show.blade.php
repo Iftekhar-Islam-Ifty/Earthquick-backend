@@ -132,7 +132,7 @@
         <!-- Brand Logo / Monogram -->
         <div class="eq-store-hero__logo" style="width: 80px; height: 80px; border-radius: 50%; background: #ffffff; border: 3px solid rgba(255,255,255,0.3); box-shadow: 0 4px 15px rgba(0,0,0,0.25); display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-weight: 700; color: var(--eq-navy); font-size: 1.6rem; overflow: hidden; flex-shrink: 0;">
           @if($vendor->logo)
-            <img src="{{ asset($vendor->logo) }}" alt="{{ $vendor->name }}" style="width: 100%; height: 100%; object-fit: cover;" />
+            <img src="{{ asset($vendor->logo) }}" alt="{{ $vendor->name }}" style="width: 100%; height: 100%; object-fit: contain;" />
           @else
             {{ substr($vendor->name, 0, 2) }}
           @endif

@@ -20,6 +20,7 @@
   .eq-market-home__card.eq-market-home__card--bright h2 { color: #fff; }
   .eq-market-home__logo-box { display: grid; width: 160px; height: 148px; place-items: center; overflow: hidden; margin-bottom: 1.25rem; border: 1px solid #e8e0d2; border-radius: 12px; background: #fff; box-shadow: 0 8px 22px #35281516; }
   .eq-market-home__logo { display: block; width: 100%; height: 100%; object-fit: contain; padding: .25rem; }
+  .eq-market-home__logo-fallback { color: #203e4c; font: 600 3rem/1 var(--font-display); }
   .eq-market-home__logo-box--empty { border-color: rgba(255,255,255,.3); }
   .eq-market-home__card h2 { margin: .7rem 0; font: 600 clamp(1.55rem, 3vw, 2.2rem)/1.2 var(--font-display); }
   .eq-market-home__card p { max-width: 40ch; line-height: 1.65; color: inherit; opacity: .82; }
@@ -41,7 +42,13 @@
       @if($store = $stores->get('nous-telos'))
         <article class="eq-market-home__card">
           <div>
-            <div class="eq-market-home__logo-box"><img class="eq-market-home__logo" src="{{ asset('images/vendors/logo_1789922860_nous-telos.png') }}" alt="Nous Telos logo" width="160" height="148" /></div>
+            <div class="eq-market-home__logo-box" role="img" aria-label="{{ $store->name }} logo">
+              @if($store->logo)
+                <img class="eq-market-home__logo" src="{{ asset($store->logo) }}" alt="{{ $store->name }} logo" width="160" height="148" />
+              @else
+                <span class="eq-market-home__logo-fallback" aria-hidden="true">{{ strtoupper(substr($store->name, 0, 1)) }}</span>
+              @endif
+            </div>
             <span class="eyebrow">Bengali heritage &amp; handloom</span><h2>{{ $store->name }}</h2><p>{{ $store->tagline ?: 'Handloom, clothing and crafted collections.' }}</p>
           </div>
           <a class="eq-btn eq-btn--outline" href="{{ route('stores.show', $store->slug) }}">Enter Nous Telos <span aria-hidden="true">&rarr;</span></a>
@@ -50,7 +57,13 @@
       @if($store = $stores->get('bright'))
         <article class="eq-market-home__card eq-market-home__card--bright">
           <div>
-            <div class="eq-market-home__logo-box eq-market-home__logo-box--empty" role="img" aria-label="Bright logo placeholder"></div>
+            <div class="eq-market-home__logo-box eq-market-home__logo-box--empty" role="img" aria-label="{{ $store->name }} logo">
+              @if($store->logo)
+                <img class="eq-market-home__logo" src="{{ asset($store->logo) }}" alt="{{ $store->name }} logo" width="160" height="148" />
+              @else
+                <span class="eq-market-home__logo-fallback" aria-hidden="true">{{ strtoupper(substr($store->name, 0, 1)) }}</span>
+              @endif
+            </div>
             <span class="eyebrow">Electrical products</span><h2>{{ $store->name }}</h2><p>{{ $store->tagline ?: 'Switches, sockets, lights and electrical accessories.' }} Heaven is Bright product brand.</p>
           </div>
           <a class="eq-btn eq-btn--light" href="{{ route('stores.show', $store->slug) }}">Enter Bright <span aria-hidden="true">&rarr;</span></a>

@@ -222,7 +222,7 @@
             </label>
             @if($vendor->logo)
               <div style="margin-bottom: 0.65rem; display: flex; align-items: center; gap: 0.75rem; flex-wrap:wrap;">
-                <img src="{{ asset($vendor->logo) }}" alt="{{ $vendor->name }}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 6px; border: 1px solid var(--eq-line);" />
+                <img src="{{ asset($vendor->logo) }}" alt="{{ $vendor->name }}" style="width: 50px; height: 50px; object-fit: contain; border-radius: 6px; border: 1px solid var(--eq-line);" />
                 <span style="font-size: 0.75rem; color: var(--eq-charcoal-muted);">Current logo</span>
                 <button type="submit" form="delete-vendor-logo" class="eq-admin-btn eq-admin-btn--outline" style="padding:.35rem .6rem;font-size:.75rem;color:#9b1c1c;" onclick="return confirm('Remove the current store logo?')">Remove logo</button>
               </div>
