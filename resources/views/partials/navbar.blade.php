@@ -51,11 +51,11 @@
                   </button>
                 </div>
                 <ul class="eq-megamenu__list eq-nested-list" id="list-fashion-nested">
-                  <li><a href="{{ route('stores.catalog', ['slug' => 'nous-telos', 'category' => 'women']) }}">Women</a></li>
-                  <li><a href="{{ route('stores.catalog', ['slug' => 'nous-telos', 'category' => 'men']) }}">Men</a></li>
-                  <li><a href="{{ route('stores.catalog', ['slug' => 'nous-telos', 'category' => 'kids']) }}">Kids</a></li>
-                  <li><a href="{{ route('stores.catalog', ['slug' => 'nous-telos', 'category' => 'bags']) }}">Bags</a></li>
-                  <li><a href="{{ route('stores.catalog', ['slug' => 'nous-telos', 'category' => 'ornaments']) }}">Ornaments</a></li>
+                  <li><a href="{{ route('category.show', 'women') }}">Women</a></li>
+                  <li><a href="{{ route('category.show', 'men') }}">Men</a></li>
+                  <li><a href="{{ route('category.show', 'kids') }}">Kids</a></li>
+                  <li><a href="{{ route('category.show', 'bags') }}">Bags</a></li>
+                  <li><a href="{{ route('category.show', 'ornaments') }}">Ornaments</a></li>
                 </ul>
               </div>
 
@@ -69,10 +69,10 @@
                   </button>
                 </div>
                 <ul class="eq-megamenu__list eq-nested-list" id="list-home-living-nested">
-                  <li><a href="{{ route('stores.catalog', ['slug' => 'nous-telos', 'category' => 'home-decor']) }}">Home Decor</a></li>
-                  <li><a href="{{ route('stores.catalog', ['slug' => 'nous-telos', 'subcategory' => 'kantha']) }}">Kantha</a></li>
-                  <li><a href="{{ route('stores.catalog', ['slug' => 'nous-telos', 'subcategory' => 'bedsheet']) }}">Bedsheet</a></li>
-                  <li><a href="{{ route('stores.catalog', ['slug' => 'nous-telos', 'subcategory' => 'cushion-cover']) }}">Cushion Cover</a></li>
+                  <li><a href="{{ route('category.show', 'home-decor') }}">Home Decor</a></li>
+                  <li><a href="{{ route('subcategory.show', ['categorySlug' => 'home-decor', 'subcategorySlug' => 'kantha']) }}">Kantha</a></li>
+                  <li><a href="{{ route('subcategory.show', ['categorySlug' => 'home-decor', 'subcategorySlug' => 'bedsheet']) }}">Bedsheet</a></li>
+                  <li><a href="{{ route('subcategory.show', ['categorySlug' => 'home-decor', 'subcategorySlug' => 'cushion-cover']) }}">Cushion Cover</a></li>
                 </ul>
               </div>
 
@@ -86,12 +86,12 @@
                   </button>
                 </div>
                 <ul class="eq-megamenu__list eq-nested-list" id="list-bright-nested">
-                  <li><a href="{{ route('stores.catalog', ['slug' => 'bright', 'subcategory' => 'switches']) }}">Switches</a></li>
-                  <li><a href="{{ route('stores.catalog', ['slug' => 'bright', 'subcategory' => 'sockets']) }}">Sockets</a></li>
-                  <li><a href="{{ route('stores.catalog', ['slug' => 'bright', 'subcategory' => 'led-lights']) }}">LED Lights</a></li>
-                  <li><a href="{{ route('stores.catalog', ['slug' => 'bright', 'subcategory' => 'circuit-breakers']) }}">Circuit Breakers</a></li>
-                  <li><a href="{{ route('stores.catalog', ['slug' => 'bright', 'subcategory' => 'fans']) }}">Fans</a></li>
-                  <li><a href="{{ route('stores.catalog', ['slug' => 'bright']) }}">All Bright products</a></li>
+                  <li><a href="{{ route('subcategory.show', ['categorySlug' => 'electronics', 'subcategorySlug' => 'switches']) }}">Switches</a></li>
+                  <li><a href="{{ route('subcategory.show', ['categorySlug' => 'electronics', 'subcategorySlug' => 'sockets']) }}">Sockets</a></li>
+                  <li><a href="{{ route('subcategory.show', ['categorySlug' => 'electronics', 'subcategorySlug' => 'led-lights']) }}">LED Lights</a></li>
+                  <li><a href="{{ route('subcategory.show', ['categorySlug' => 'electronics', 'subcategorySlug' => 'circuit-breakers']) }}">Circuit Breakers</a></li>
+                  <li><a href="{{ route('subcategory.show', ['categorySlug' => 'electronics', 'subcategorySlug' => 'fans']) }}">Fans</a></li>
+                  <li><a href="{{ route('category.show', 'electronics') }}">All Electrical Products</a></li>
                 </ul>
               </div>
 

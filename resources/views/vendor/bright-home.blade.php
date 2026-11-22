@@ -39,7 +39,7 @@
     <h2 id="bright-categories-title">Shop by category</h2>
     <div class="eq-bright-categories">
       @forelse($subcategories as $subcategory)
-        <a href="{{ route('stores.catalog', ['slug' => $vendor->slug, 'subcategory' => $subcategory->slug]) }}">{{ $subcategory->name }}</a>
+        <a href="{{ route('subcategory.show', ['categorySlug' => 'electronics', 'subcategorySlug' => $subcategory->slug]) }}">{{ $subcategory->name }}</a>
       @empty
         <p>Bright’s electrical categories are being prepared.</p>
       @endforelse

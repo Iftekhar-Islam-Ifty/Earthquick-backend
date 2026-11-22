@@ -91,7 +91,7 @@
             <h1>The Art of Bangladeshi Handlooms</h1>
             <p>Heritage Jamdani, Rajshahi silks and Tangail weaves shaped with quiet modern grace for the contemporary wardrobe.</p>
             <div class="eq-hero__actions">
-              <a href="{{ url('/shop/women/saree') }}" class="eq-btn eq-btn--light eq-btn--pill" id="hero-cta-explore-1">Explore Sarees</a>
+              <a href="{{ route('subcategory.show', ['categorySlug' => 'women', 'subcategorySlug' => 'saree']) }}" class="eq-btn eq-btn--light eq-btn--pill" id="hero-cta-explore-1">Explore Sarees</a>
               <a href="#story" class="eq-btn eq-btn--outline eq-btn--pill" id="hero-cta-story-1" style="border-color:rgba(255,253,249,.6); color:#fffdf9;">Our Story</a>
             </div>
           </div>
@@ -107,7 +107,7 @@
             <h1>Poise in Every Silhouette</h1>
             <p>Breathable mulmul, organza dupattas, and delicate zardozi embroidery crafted for celebratory moments and everyday grace.</p>
             <div class="eq-hero__actions">
-              <a href="{{ url('/shop/women/three-piece') }}" class="eq-btn eq-btn--light eq-btn--pill" id="hero-cta-explore-2">Shop Three-Piece</a>
+              <a href="{{ route('subcategory.show', ['categorySlug' => 'women', 'subcategorySlug' => 'three-piece']) }}" class="eq-btn eq-btn--light eq-btn--pill" id="hero-cta-explore-2">Shop Three-Piece</a>
               <a href="#new-arrivals" class="eq-btn eq-btn--outline eq-btn--pill" id="hero-cta-story-2" style="border-color:rgba(255,253,249,.6); color:#fffdf9;">View Arrivals</a>
             </div>
           </div>
@@ -123,8 +123,8 @@
             <h1>Functional Form & Natural Texture</h1>
             <p>Handcrafted leather bags, archival totes, and easy everyday coordinates designed for purposeful, effortless movement.</p>
             <div class="eq-hero__actions">
-              <a href="{{ route('stores.catalog', ['slug' => 'nous-telos', 'category' => 'bags']) }}" class="eq-btn eq-btn--light eq-btn--pill" id="hero-cta-explore-3">Discover Bags</a>
-              <a href="{{ url('/shop/women/two-piece') }}" class="eq-btn eq-btn--outline eq-btn--pill" id="hero-cta-story-3" style="border-color:rgba(255,253,249,.6); color:#fffdf9;">Two-Piece Sets</a>
+              <a href="{{ route('category.show', 'bags') }}" class="eq-btn eq-btn--light eq-btn--pill" id="hero-cta-explore-3">Discover Bags</a>
+              <a href="{{ route('subcategory.show', ['categorySlug' => 'women', 'subcategorySlug' => 'two-piece']) }}" class="eq-btn eq-btn--outline eq-btn--pill" id="hero-cta-story-3" style="border-color:rgba(255,253,249,.6); color:#fffdf9;">Two-Piece Sets</a>
             </div>
           </div>
         </div>
@@ -174,7 +174,7 @@
         <div class="eq-category-strip__grid eq-reveal">
 
           <!-- 1. WOMEN -->
-          <a href="{{ route('stores.catalog', ['slug' => 'nous-telos', 'category' => 'women']) }}" class="eq-category-card" id="cat-card-women">
+          <a href="{{ route('category.show', 'women') }}" class="eq-category-card" id="cat-card-women">
             <div class="eq-category-card__media">
               <img src="{{ asset('images/categories/women-icon.svg') }}" alt="" loading="lazy" decoding="async" />
               <div class="eq-category-card__overlay"></div>
@@ -186,7 +186,7 @@
           </a>
 
           <!-- 2. MEN -->
-          <a href="{{ route('stores.catalog', ['slug' => 'nous-telos', 'category' => 'men']) }}" class="eq-category-card" id="cat-card-men">
+          <a href="{{ route('category.show', 'men') }}" class="eq-category-card" id="cat-card-men">
             <div class="eq-category-card__media">
               <img src="{{ asset('images/categories/men-icon.svg') }}" alt="" loading="lazy" decoding="async" />
               <div class="eq-category-card__overlay"></div>
@@ -198,7 +198,7 @@
           </a>
 
           <!-- 3. KIDS -->
-          <a href="{{ route('stores.catalog', ['slug' => 'nous-telos', 'category' => 'kids']) }}" class="eq-category-card" id="cat-card-kids">
+          <a href="{{ route('category.show', 'kids') }}" class="eq-category-card" id="cat-card-kids">
             <div class="eq-category-card__media">
               <img src="{{ asset('images/categories/kids-icon.svg') }}" alt="" loading="lazy" decoding="async" />
               <div class="eq-category-card__overlay"></div>
@@ -210,7 +210,7 @@
           </a>
 
           <!-- 4. ORNAMENTS -->
-          <a href="{{ route('stores.catalog', ['slug' => 'nous-telos', 'category' => 'ornaments']) }}" class="eq-category-card" id="cat-card-ornaments">
+          <a href="{{ route('category.show', 'ornaments') }}" class="eq-category-card" id="cat-card-ornaments">
             <div class="eq-category-card__media">
               <img src="{{ asset('images/categories/ornaments-icon.svg') }}" alt="" loading="lazy" decoding="async" />
               <div class="eq-category-card__overlay"></div>
@@ -222,7 +222,7 @@
           </a>
 
           <!-- 5. BAGS -->
-          <a href="{{ route('stores.catalog', ['slug' => 'nous-telos', 'category' => 'bags']) }}" class="eq-category-card" id="cat-card-bags">
+          <a href="{{ route('category.show', 'bags') }}" class="eq-category-card" id="cat-card-bags">
             <div class="eq-category-card__media">
               <img src="{{ asset('images/categories/bags-icon.svg') }}" alt="" loading="lazy" decoding="async" />
               <div class="eq-category-card__overlay"></div>
@@ -234,7 +234,7 @@
           </a>
 
           <!-- 6. HOME DECOR -->
-          <a href="{{ route('stores.catalog', ['slug' => 'nous-telos', 'category' => 'home-decor']) }}" class="eq-category-card" id="cat-card-home-decor">
+          <a href="{{ route('category.show', 'home-decor') }}" class="eq-category-card" id="cat-card-home-decor">
             <div class="eq-category-card__media">
               <img src="{{ asset('images/categories/home-decor-icon.svg') }}" alt="" loading="lazy" decoding="async" />
               <div class="eq-category-card__overlay"></div>
@@ -430,7 +430,7 @@
         </div>
 
         <div class="eq-saree-view-all eq-reveal">
-          <a href="{{ url('/shop/women/saree') }}" class="eq-text-link" id="link-view-all-sarees">
+          <a href="{{ route('subcategory.show', ['categorySlug' => 'women', 'subcategorySlug' => 'saree']) }}" class="eq-text-link" id="link-view-all-sarees">
             View All Sarees
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"></path><path d="M13 6l6 6-6 6"></path></svg>
           </a>
@@ -494,7 +494,7 @@
         </div>
 
         <div class="eq-reveal" style="margin-top: var(--space-lg); text-align:center;">
-          <a href="{{ url('/shop/women/three-piece') }}" class="eq-text-link" id="link-view-all-three-piece">
+          <a href="{{ route('subcategory.show', ['categorySlug' => 'women', 'subcategorySlug' => 'three-piece']) }}" class="eq-text-link" id="link-view-all-three-piece">
             View All Three Piece
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"></path><path d="M13 6l6 6-6 6"></path></svg>
           </a>
@@ -555,7 +555,7 @@
         </div>
 
         <div class="eq-reveal" style="margin-top: var(--space-lg); text-align:center;">
-          <a href="{{ url('/shop/women/two-piece') }}" class="eq-text-link" id="link-view-all-two-piece">
+          <a href="{{ route('subcategory.show', ['categorySlug' => 'women', 'subcategorySlug' => 'two-piece']) }}" class="eq-text-link" id="link-view-all-two-piece">
             View All Two Piece
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"></path><path d="M13 6l6 6-6 6"></path></svg>
           </a>
@@ -610,7 +610,7 @@
             <span class="eq-eyebrow">CRAFTED ACCESSORIES BY NOUS TELOS</span>
             <h2 class="eq-heading-lg">Bags</h2>
           </div>
-          <a href="{{ route('stores.catalog', ['slug' => 'nous-telos', 'category' => 'bags']) }}" class="eq-text-link" id="link-view-all-bags">
+          <a href="{{ route('category.show', 'bags') }}" class="eq-text-link" id="link-view-all-bags">
             View All Bags
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"></path><path d="M13 6l6 6-6 6"></path></svg>
           </a>

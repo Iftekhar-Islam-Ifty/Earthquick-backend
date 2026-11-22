@@ -10,6 +10,7 @@
 @section('scroll_motion', '1')
 
 @section('content')
+  @php($isElectronicsCategory = $category->slug === 'electronics')
   <!-- ===================================================================
        MAIN CONTENT CONTAINER
        =================================================================== -->
@@ -85,7 +86,7 @@
 
           <!-- Result Counter -->
           <span class="eq-cat-counter" id="catalog-counter">
-            Showing <strong>{{ $products->total() }}</strong> handcrafted pieces
+            Showing <strong>{{ $products->total() }}</strong> {{ $isElectronicsCategory ? 'products' : 'pieces' }}
           </span>
         </div>
 
@@ -94,7 +95,7 @@
           <div class="eq-sort-wrapper">
             <label for="catalog-sort-select" class="eq-sort-label">Sort by:</label>
             <select class="eq-sort-select" id="catalog-sort-select" onchange="updateFilterParam('sort', this.value)">
-              <option value="featured" {{ request('sort') == 'featured' ? 'selected' : '' }}>Featured Curations</option>
+              <option value="featured" {{ request('sort') == 'featured' ? 'selected' : '' }}>{{ $isElectronicsCategory ? 'Featured Products' : 'Featured Curations' }}</option>
               <option value="price-low" {{ request('sort') == 'price-low' ? 'selected' : '' }}>Price: Low to High</option>
               <option value="price-high" {{ request('sort') == 'price-high' ? 'selected' : '' }}>Price: High to Low</option>
               <option value="newest" {{ request('sort') == 'newest' ? 'selected' : '' }}>Newest Arrivals</option>
@@ -381,7 +382,7 @@
                   <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                   <line x1="8" y1="11" x2="14" y2="11"></line>
                 </svg>
-                <h3 class="eq-catalog-empty__title">No matching pieces found</h3>
+                <h3 class="eq-catalog-empty__title">No matching {{ $isElectronicsCategory ? 'products' : 'pieces' }} found</h3>
                 <p class="eq-catalog-empty__text">Try adjusting your filters or price range to find more products in this category.</p>
                 <a href="{{ url()->current() }}" class="eq-btn eq-btn--primary eq-btn--pill" id="empty-reset-filters">
                   Reset All Filters

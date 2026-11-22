@@ -15,7 +15,7 @@
         <span class="eq-eyebrow">BRIGHT ELECTRICAL · DEMO COVER</span>
         <h1>Lighting and everyday electricals</h1>
         <p>Demo cover artwork only. Product details will be shown after Bright confirms them.</p>
-        <div class="eq-hero__actions"><a href="{{ route('stores.catalog', ['slug' => $vendor->slug, 'subcategory' => 'led-lights']) }}" class="eq-btn eq-btn--light eq-btn--pill">Explore lighting</a></div>
+        <div class="eq-hero__actions"><a href="{{ route('subcategory.show', ['categorySlug' => 'electronics', 'subcategorySlug' => 'led-lights']) }}" class="eq-btn eq-btn--light eq-btn--pill">Explore lighting</a></div>
       </div>
     </div>
     <div class="eq-hero__slide" data-slide-index="2">
