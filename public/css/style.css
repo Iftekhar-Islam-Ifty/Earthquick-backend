@@ -2253,7 +2253,7 @@ p {
 
 .eq-footer__top {
   display: grid;
-  grid-template-columns: minmax(0, 1.55fr) minmax(0, .85fr) minmax(0, 1fr) minmax(0, 1.25fr);
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1.2fr) minmax(0, 1.25fr) minmax(0, .9fr) minmax(0, 1.05fr);
   gap: clamp(1.5rem, 3vw, 3.25rem);
   align-items: start;
   padding-bottom: clamp(2rem, 3vw, 2.75rem);
@@ -4316,6 +4316,22 @@ p {
   gap: 0.5rem;
   margin-top: 0.5rem;
   padding-top: 0.5rem;
+}
+
+.eq-cat-pills--group {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.eq-cat-pills__row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.eq-cat-pills__row--subcategories {
+  padding-left: 0.65rem;
+  border-left: 2px solid rgba(169, 122, 32, 0.35);
 }
 
 .eq-cat-pill {

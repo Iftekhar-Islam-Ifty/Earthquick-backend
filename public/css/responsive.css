@@ -2579,18 +2579,24 @@
     height: 19px !important;
   }
 
-  #footer-col-shop {
-    display: none !important;
+  #footer-col-stores {
+    grid-column: 1 / -1 !important;
+    grid-row: 2 !important;
+  }
+
+  #footer-col-categories {
+    grid-column: 1 / -1 !important;
+    grid-row: 3 !important;
   }
 
   #footer-col-company {
     grid-column: 2 !important;
-    grid-row: 2;
+    grid-row: 4 !important;
   }
 
   #footer-col-contact {
     grid-column: 1 !important;
-    grid-row: 2;
+    grid-row: 4 !important;
   }
 
   .eq-footer__heading {
@@ -3580,6 +3586,24 @@
     padding-bottom: 0.35rem !important;
     gap: 0.35rem !important;
     margin-top: 0.4rem !important;
+  }
+
+  .eq-cat-pills.eq-cat-pills--group {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    flex-wrap: initial !important;
+    overflow: visible !important;
+  }
+
+  .eq-cat-pills--group .eq-cat-pills__row {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    width: 100% !important;
+    overflow: visible !important;
+  }
+
+  .eq-cat-pills--group .eq-cat-pill {
+    flex-shrink: 1 !important;
   }
 
   .eq-cat-pills::-webkit-scrollbar {

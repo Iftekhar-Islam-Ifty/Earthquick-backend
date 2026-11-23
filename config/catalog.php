@@ -34,6 +34,14 @@ return [
         'electronics' => 'electronics',
     ],
 
+    'category_groups' => [
+        'fashion-accessories' => [
+            'label' => 'Fashion & Accessories',
+            'description' => 'Explore fashion, accessories and handcrafted collections from Rthquick stores.',
+            'categories' => ['women', 'men', 'kids', 'ornaments', 'bags'],
+        ],
+    ],
+
     'delivery_classes' => [
         'standard' => 'Standard Courier',
         'fragile' => 'Fragile — Special Handling',

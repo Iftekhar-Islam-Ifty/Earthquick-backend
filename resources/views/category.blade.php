@@ -1,18 +1,24 @@
 @extends('layouts.app')
 
 @php
+  $listingTitle = isset($categoryGroup)
+    ? ($selectedGroupSubcategory?->name ?? $selectedGroupCategory?->name ?? $categoryGroup['label'])
+    : ($subcategory->name ?? $category->name);
+  $listingDescription = $categoryGroup['description'] ?? $category->description ?? 'Explore products in this category from independent Rthquick stores.';
   $isElectronicsCategory = $category->slug === 'electronics';
+  $catalogItemLabel = $isElectronicsCategory ? 'products' : 'pieces';
+  $isProductCollection = $isElectronicsCategory;
   $selectedFabrics = collect(is_array(request('fabric')) ? request('fabric') : [request('fabric')])->filter()->values();
   $hasActiveFilters = (bool) (request('fabric') || request('in_stock') || request('min_price')
     || request('max_price') || request('product_type') || request('vendor')
-    || request('delivery_class') || request()->has('returnable'));
+    || request('delivery_class') || request()->has('returnable') || request('category') || request('subcategory'));
 @endphp
 
-@section('title', (isset($subcategory) ? $subcategory->name : $category->name) . ' | Rthquick')
-@section('meta_description', $category->description ?: ('Shop ' . (isset($subcategory) ? $subcategory->name : $category->name) . ' products from independent stores at Rthquick.'))
+@section('title', $listingTitle . ' | Rthquick')
+@section('meta_description', $listingDescription)
 @section('canonical_url', request()->integer('page') > 1 ? url()->current().'?page='.request()->integer('page') : url()->current())
-@section('og_title', (isset($subcategory) ? $subcategory->name : $category->name) . ' | Rthquick')
-@section('og_description', $category->description ?: ('Shop ' . (isset($subcategory) ? $subcategory->name : $category->name) . ' products from independent stores at Rthquick.'))
+@section('og_title', $listingTitle . ' | Rthquick')
+@section('og_description', $listingDescription)
 @section('og_image', asset($category->image ?? 'images/logo/rthquick-logo.png'))
 @section('body_class', 'eq-catalog-page')
 @section('scroll_motion', '1')
@@ -28,7 +34,18 @@
       <nav class="eq-breadcrumbs" aria-label="Breadcrumb">
         <ol>
           <li><a href="{{ route('home') }}">Home</a></li>
-          @if(isset($subcategory))
+          @if(isset($categoryGroup))
+            @if($selectedGroupSubcategory)
+              <li><a href="{{ route('category.group', $groupSlug) }}">{{ $categoryGroup['label'] }}</a></li>
+              <li><a href="{{ route('category.group', ['group' => $groupSlug, 'category' => $selectedGroupCategory->slug]) }}">{{ $selectedGroupCategory->name }}</a></li>
+              <li aria-current="page">{{ $selectedGroupSubcategory->name }}</li>
+            @elseif($selectedGroupCategory)
+              <li><a href="{{ route('category.group', $groupSlug) }}">{{ $categoryGroup['label'] }}</a></li>
+              <li aria-current="page">{{ $selectedGroupCategory->name }}</li>
+            @else
+              <li aria-current="page">{{ $categoryGroup['label'] }}</li>
+            @endif
+          @elseif(isset($subcategory))
             <li><a href="{{ route('category.show', $category->slug) }}">{{ $category->name }}</a></li>
             <li aria-current="page">{{ $subcategory->name }}</li>
           @else
@@ -44,14 +61,30 @@
         <div class="eq-cat-banner__inner eq-reveal">
           <span class="eq-cat-banner__eyebrow" id="cat-banner-eyebrow">RTHQUICK MARKETPLACE</span>
           <h1 class="eq-cat-banner__title" id="cat-banner-title">
-            {{ isset($subcategory) ? $subcategory->name : $category->name }} Collection
+            {{ $listingTitle }} Collection
           </h1>
           <p class="eq-cat-banner__desc" id="cat-banner-desc">
-            {{ $category->description ?: 'Explore products in this category from independent Rthquick stores.' }}
+            {{ $listingDescription }}
           </p>
 
           <!-- Subcategory Filter Pills Container -->
-          @if(isset($subcategories) && $subcategories->count() > 0)
+          @if(isset($categoryGroup))
+            <div class="eq-cat-pills eq-cat-pills--group" id="cat-pills-container" aria-label="{{ $categoryGroup['label'] }} categories">
+              <div class="eq-cat-pills__row">
+                <a href="{{ route('category.group', $groupSlug) }}" class="eq-cat-pill {{ !$selectedGroupCategory ? 'is-active' : '' }}">All {{ $categoryGroup['label'] }}</a>
+                @foreach($groupCategories as $groupCategory)
+                  <a href="{{ route('category.group', ['group' => $groupSlug, 'category' => $groupCategory->slug]) }}" class="eq-cat-pill {{ $selectedGroupCategory?->id === $groupCategory->id && !$selectedGroupSubcategory ? 'is-active' : '' }}">{{ $groupCategory->name }}</a>
+                @endforeach
+              </div>
+              @if($selectedGroupCategory)
+                <div class="eq-cat-pills__row eq-cat-pills__row--subcategories" aria-label="{{ $selectedGroupCategory->name }} subcategories">
+                @foreach($selectedGroupCategory->subcategories->where('is_active', true) as $sub)
+                  <a href="{{ route('category.group', ['group' => $groupSlug, 'category' => $selectedGroupCategory->slug, 'subcategory' => $sub->slug]) }}" class="eq-cat-pill {{ $selectedGroupSubcategory?->id === $sub->id ? 'is-active' : '' }}">{{ $sub->name }}</a>
+                @endforeach
+                </div>
+              @endif
+            </div>
+          @elseif(isset($subcategories) && $subcategories->count() > 0)
             <div class="eq-cat-pills" id="cat-pills-container">
               <a href="{{ route('category.show', $category->slug) }}" 
                  class="eq-cat-pill {{ !isset($subcategory) ? 'is-active' : '' }}">
@@ -93,7 +126,7 @@
 
           <!-- Result Counter -->
           <span class="eq-cat-counter" id="catalog-counter">
-            Showing <strong>{{ $products->total() }}</strong> {{ $isElectronicsCategory ? 'products' : 'pieces' }}
+            Showing <strong>{{ $products->total() }}</strong> {{ $catalogItemLabel }}
           </span>
         </div>
 
@@ -102,7 +135,7 @@
           <div class="eq-sort-wrapper">
             <label for="catalog-sort-select" class="eq-sort-label">Sort by:</label>
             <select class="eq-sort-select" id="catalog-sort-select" onchange="updateFilterParam('sort', this.value)">
-              <option value="featured" {{ request('sort') == 'featured' ? 'selected' : '' }}>{{ $isElectronicsCategory ? 'Featured Products' : 'Featured Curations' }}</option>
+              <option value="featured" {{ request('sort') == 'featured' ? 'selected' : '' }}>{{ $isProductCollection ? 'Featured Products' : 'Featured Curations' }}</option>
               <option value="price-low" {{ request('sort') == 'price-low' ? 'selected' : '' }}>Price: Low to High</option>
               <option value="price-high" {{ request('sort') == 'price-high' ? 'selected' : '' }}>Price: High to Low</option>
               <option value="newest" {{ request('sort') == 'newest' ? 'selected' : '' }}>Newest Arrivals</option>
@@ -132,6 +165,18 @@
             <span class="eq-active-chip">
               <span>Fabric: {{ $selectedFabrics->implode(', ') }}</span>
               <button type="button" aria-label="Remove filter" onclick="updateFilterParam('fabric', null)">&times;</button>
+            </span>
+          @endif
+          @if(isset($categoryGroup) && $selectedGroupCategory && !$selectedGroupSubcategory)
+            <span class="eq-active-chip">
+              <span>Category: {{ $selectedGroupCategory->name }}</span>
+              <button type="button" aria-label="Remove category filter" onclick="updateFilterParam('category', null)">&times;</button>
+            </span>
+          @endif
+          @if(isset($categoryGroup) && $selectedGroupSubcategory)
+            <span class="eq-active-chip">
+              <span>{{ $selectedGroupSubcategory->name }}</span>
+              <button type="button" aria-label="Remove subcategory filter" onclick="updateFilterParam('subcategory', null)">&times;</button>
             </span>
           @endif
           @if(request('product_type'))
@@ -335,7 +380,7 @@
         <section class="eq-catalog-main" aria-label="Product listings">
           <div class="eq-catalog-grid eq-reveal" id="catalog-grid">
             @forelse($products as $product)
-              <article class="eq-product-card" id="card-{{ $product->id }}" data-id="{{ $product->id }}" data-category="{{ $category->slug }}" data-product-description="{{ $product->short_desc ?? '' }}" data-brand-name="{{ $product->brand?->name ?? '' }}" data-vendor-name="{{ $product->vendor?->name ?? '' }}">
+              <article class="eq-product-card" id="card-{{ $product->id }}" data-id="{{ $product->id }}" data-category="{{ $product->category?->slug ?? $category->slug }}" data-product-description="{{ $product->short_desc ?? '' }}" data-brand-name="{{ $product->brand?->name ?? '' }}" data-vendor-name="{{ $product->vendor?->name ?? '' }}">
                 <div class="eq-product-card__frame">
                   <!-- Status Badge -->
                   @if($product->badge)
@@ -382,7 +427,7 @@
                   <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                   <line x1="8" y1="11" x2="14" y2="11"></line>
                 </svg>
-                <h3 class="eq-catalog-empty__title">No matching {{ $isElectronicsCategory ? 'products' : 'pieces' }} found</h3>
+                <h3 class="eq-catalog-empty__title">No matching {{ $catalogItemLabel }} found</h3>
                 <p class="eq-catalog-empty__text">Try adjusting your filters or price range to find more products in this category.</p>
                 <a href="{{ url()->current() }}" class="eq-btn eq-btn--primary eq-btn--pill" id="empty-reset-filters">
                   Reset All Filters

@@ -21,9 +21,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        View::composer('partials.navbar', function ($view): void {
+        View::composer(['partials.navbar', 'partials.footer'], function ($view): void {
             $storeLogos = Vendor::whereIn('slug', ['nous-telos', 'bright'])
-                ->get(['id', 'name', 'slug', 'logo'])
+                ->get(['id', 'name', 'slug', 'logo', 'tagline', 'address'])
                 ->keyBy('slug');
 
             $view->with('storeLogos', $storeLogos);

@@ -41,6 +41,7 @@ Route::get('/sitemap.xml', [PageController::class, 'sitemap'])->name('sitemap');
 Route::get('/shop', function () {
     return redirect()->route('stores.index');
 })->name('shop.index');
+Route::get('/shop/collections/{group}', [CategoryController::class, 'showGroup'])->name('category.group');
 Route::get('/shop/{slug}', [CategoryController::class, 'showCategory'])->name('category.show');
 Route::get('/shop/{categorySlug}/{subcategorySlug}', [CategoryController::class, 'showSubcategory'])->name('subcategory.show');
 
