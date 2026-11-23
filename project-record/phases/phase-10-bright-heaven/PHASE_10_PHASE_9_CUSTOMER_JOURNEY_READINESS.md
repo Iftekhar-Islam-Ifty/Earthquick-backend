@@ -25,6 +25,14 @@ journey for final browser review without mixing the two stores' catalogs.
   Women's catalog, which did not represent Bright or the marketplace as a whole.
 - Category-specific `/shop/{category}` and `/shop/{category}/{subcategory}`
   routes remain available for direct category links.
+- Added a shared `/shop/collections/fashion-accessories` marketplace category-group
+  route. Footer Fashion & Accessories links use this shared catalog and preserve
+  the selected category/subcategory in the breadcrumb, avoiding a duplicate
+  group label and one-off pages.
+- On the shared category-group page, category choices stay on the first row and
+  the selected category's subcategories render on a separate row below it.
+- Footer navigation keeps the two store links under Our Stores and marketplace
+  category links under Shop by Category; these use shared marketplace routes.
 - Nous Telos catalog now keeps the full active store taxonomy visible, including
   categories with no current stock, and renders each category's active
   subcategories in a separate wrapped row. Parent category and subcategory links
@@ -50,7 +58,8 @@ journey for final browser review without mixing the two stores' catalogs.
 
 ## Remaining
 
-- Owner is reviewing desktop/tablet/mobile behavior. Apply any reported visual
+- Owner desktop/tablet/mobile visual review remains. Apply any reported visual
   fixes and close the phase after that review.
+- Bright-verified catalog data remains a Phase 8 launch dependency.
 
 No migrations, seeders or business records are part of this phase.

@@ -1,5 +1,5 @@
 <!-- =====================================================================
-     RTHQUICK / NOUS TELOS — REUSABLE HEADER & NAVIGATION COMPONENT
+     RTHQUICK MARKETPLACE — REUSABLE HEADER & NAVIGATION COMPONENT
      Blade Partial: resources/views/partials/navbar.blade.php
      ===================================================================== -->
 <a href="#main-content" class="eq-skip-link">Skip to main content</a>

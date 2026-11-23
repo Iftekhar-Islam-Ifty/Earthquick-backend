@@ -21,8 +21,7 @@ use App\Http\Controllers\VendorController;
 use Illuminate\Support\Facades\Route;
 
 /* =========================================================================
- * WEB ROUTE ARCHITECTURE - RTHQUICK (NOUS TELOS)
- * WEB ROUTE ARCHITECTURE - RTHQUICK
+ * WEB ROUTE ARCHITECTURE - RTHQUICK MARKETPLACE
  * Defines public catalog browsing, customer checkout flows, authenticated
  * account management, and administrative control panel endpoints.
  * ========================================================================= */
