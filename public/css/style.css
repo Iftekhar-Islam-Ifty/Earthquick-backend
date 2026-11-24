@@ -7334,6 +7334,8 @@ p {
 
 /* Bright electrical storefront */
 .eq-bright-home { background: #f8f4eb; }
+.eq-nous-telos-store-hero .eq-hero__media::after { display: none !important; }
+.eq-nous-telos-store-hero .eq-hero__slide .eq-hero__media img { object-fit: cover; object-position: center; filter: none; opacity: 1; transform: none; }
 .eq-bright-store-hero { height: min(58vh, 590px); min-height: 360px; max-height: 590px; background: #173443; }
 .eq-bright-store-hero .eq-hero__media::after { display: none; }
 .eq-bright-store-hero .eq-hero__content { display: none !important; }
@@ -7348,11 +7350,6 @@ p {
 .eq-store-trust__item { display: flex; min-height: 76px; align-items: center; gap: .8rem; padding: .8rem 1rem; border: 1px solid #e1d8c9; border-radius: 12px; background: #fffdf8; color: #203e4c; font-size: .88rem; font-weight: 600; line-height: 1.35; }
 .eq-store-trust__icon { display: grid; width: 38px; height: 38px; flex: 0 0 38px; place-items: center; border-radius: 50%; background: #e8f0f1; color: #244d60; }
 .eq-store-trust__icon svg { display: block; width: 21px; height: 21px; }
-.eq-store-trust__brands { display: inline-flex; flex: 0 0 auto; align-items: center; gap: .3rem; color: #244d60; }
-.eq-store-trust__heaven { color: #927331; font: 600 .96rem/1 var(--font-display); }
-.eq-store-trust__times { color: #7a7468; font-size: .8rem; }
-.eq-store-trust__brands img { display: block; width: auto; max-width: 76px; height: 26px; object-fit: contain; }
-.eq-store-trust__bright { color: #244d60; font: 600 .9rem/1 var(--font-display); }
 .eq-bright-section__heading { display: flex; align-items: end; justify-content: space-between; gap: 1rem; margin-bottom: 1.1rem; }
 .eq-bright-eyebrow { color: #927331; font-size: .7rem; font-weight: 700; letter-spacing: .13em; text-transform: uppercase; }
 .eq-bright-section h2 { margin: .35rem 0 0; color: #203e4c; font: 600 clamp(1.55rem, 3vw, 2.1rem)/1.15 var(--font-display); }

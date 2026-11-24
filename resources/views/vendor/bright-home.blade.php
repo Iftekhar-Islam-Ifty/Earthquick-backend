@@ -19,7 +19,7 @@
       <span>Returns &amp; support<br>through Rthquick</span>
     </div>
     <div class="eq-store-trust__item eq-store-trust__brand-item">
-      <span class="eq-store-trust__brands"><span class="eq-store-trust__heaven">Heaven</span><span class="eq-store-trust__times">×</span>@if($vendor->logo)<img src="{{ asset($vendor->logo) }}" alt="{{ $vendor->name }} logo" loading="lazy" decoding="async">@else<span class="eq-store-trust__bright">Bright</span>@endif</span>
+      <span class="eq-store-trust__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m20.6 13.4-7.2 7.2a2 2 0 0 1-2.8 0L3 13V4h9l8.6 8.6a.6.6 0 0 1 0 .8Z"/><circle cx="7.5" cy="8.5" r="1.2"/><path d="m13 11 1 2 2.2.3-1.6 1.5.4 2.2-2-1.1-2 1.1.4-2.2-1.6-1.5L12 13z"/></svg></span>
       <span>Heaven brand &amp;<br>warranty by Bright</span>
     </div>
   </section>

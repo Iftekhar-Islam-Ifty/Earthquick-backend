@@ -5439,12 +5439,11 @@
   .eq-nous-telos-store-hero .eq-hero__slides { min-height: 0 !important; height: auto !important; position: relative !important; }
   .eq-nous-telos-store-hero .eq-hero__slide { min-height: 0 !important; height: auto !important; padding: 0 !important; flex-direction: column !important; align-items: stretch !important; justify-content: flex-start !important; }
   .eq-nous-telos-store-hero .eq-hero__slide.is-active { position: relative !important; inset: auto !important; }
-  .eq-nous-telos-store-hero .eq-hero__media { position: relative !important; inset: auto !important; width: 100% !important; height: auto !important; aspect-ratio: 12 / 5; }
-  .eq-nous-telos-store-hero .eq-hero__media img { width: 100% !important; height: 100% !important; object-fit: contain !important; object-position: center !important; transform: none !important; }
+  .eq-nous-telos-store-hero .eq-hero__media { position: relative !important; inset: auto !important; width: 100% !important; height: auto !important; aspect-ratio: 16 / 9; }
+  .eq-nous-telos-store-hero .eq-hero__media img { width: 100% !important; height: 100% !important; object-fit: cover !important; object-position: center !important; transform: none !important; filter: none !important; }
   .eq-nous-telos-store-hero .eq-hero__media::after { display: none !important; }
-  .eq-nous-telos-store-hero .eq-hero__content { position: relative !important; inset: auto !important; width: 100% !important; max-width: none !important; padding: .85rem 1rem 1rem !important; background: #173443; }
-  .eq-nous-telos-store-hero .eq-hero__nav { top: 20.83vw !important; }
-  .eq-nous-telos-store-hero .eq-hero__dots { top: calc(41.67vw - 32px) !important; right: .75rem !important; bottom: auto !important; left: auto !important; }
+  .eq-nous-telos-store-hero .eq-hero__nav { top: 28.125vw !important; }
+  .eq-nous-telos-store-hero .eq-hero__dots { top: calc(56.25vw - 32px) !important; right: .75rem !important; bottom: auto !important; left: auto !important; }
 
   .eq-bright-store-hero { min-height: 0 !important; height: auto !important; max-height: none !important; aspect-ratio: 12 / 5; }
   .eq-bright-store-hero .eq-hero__slides,
@@ -5455,9 +5454,6 @@
   .eq-store-trust__item { flex-direction: column; gap: .35rem; padding: .55rem .35rem; font-size: .65rem; line-height: 1.2; }
   .eq-store-trust__icon { width: 25px; height: 25px; flex-basis: 25px; font-size: .58rem; }
   .eq-store-trust__icon svg { width: 16px; height: 16px; }
-  .eq-store-trust__brands { gap: .12rem; }
-  .eq-store-trust__heaven { font-size: .72rem; }
-  .eq-store-trust__brands img { max-width: 46px; height: 20px; }
   .eq-bright-categories { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .5rem; }
   .eq-bright-category { min-height: 82px; gap: .3rem; padding: .45rem .35rem; }
   .eq-bright-category__icon { width: 32px; height: 32px; flex-basis: 32px; }

@@ -86,15 +86,6 @@
           <div class="eq-hero__media">
             <img src="{{ asset($homepageMedia['hero-1']['image']) }}" alt="{{ $homepageMedia['hero-1']['alt'] }}" fetchpriority="high" decoding="async" />
           </div>
-          <div class="eq-hero__content">
-            <span class="eq-eyebrow">NOUS TELOS — FLAGSHIP STORE</span>
-            <h1>The Art of Bangladeshi Handlooms</h1>
-            <p>Heritage Jamdani, Rajshahi silks and Tangail weaves shaped with quiet modern grace for the contemporary wardrobe.</p>
-            <div class="eq-hero__actions">
-              <a href="{{ route('subcategory.show', ['categorySlug' => 'women', 'subcategorySlug' => 'saree']) }}" class="eq-btn eq-btn--light eq-btn--pill" id="hero-cta-explore-1">Explore Sarees</a>
-              <a href="#story" class="eq-btn eq-btn--outline eq-btn--pill" id="hero-cta-story-1" style="border-color:rgba(255,253,249,.6); color:#fffdf9;">Our Story</a>
-            </div>
-          </div>
         </div>
 
         <!-- Slide 2: Contemporary Three-Piece Sets -->
@@ -102,30 +93,12 @@
           <div class="eq-hero__media">
             <img src="{{ asset($homepageMedia['hero-2']['image']) }}" alt="{{ $homepageMedia['hero-2']['alt'] }}" loading="lazy" decoding="async" />
           </div>
-          <div class="eq-hero__content">
-            <span class="eq-eyebrow">NOUS TELOS &bull; READY TO WEAR</span>
-            <h1>Poise in Every Silhouette</h1>
-            <p>Breathable mulmul, organza dupattas, and delicate zardozi embroidery crafted for celebratory moments and everyday grace.</p>
-            <div class="eq-hero__actions">
-              <a href="{{ route('subcategory.show', ['categorySlug' => 'women', 'subcategorySlug' => 'three-piece']) }}" class="eq-btn eq-btn--light eq-btn--pill" id="hero-cta-explore-2">Shop Three-Piece</a>
-              <a href="#new-arrivals" class="eq-btn eq-btn--outline eq-btn--pill" id="hero-cta-story-2" style="border-color:rgba(255,253,249,.6); color:#fffdf9;">View Arrivals</a>
-            </div>
-          </div>
         </div>
 
         <!-- Slide 3: Artisanal Bags & Everyday Sets -->
         <div class="eq-hero__slide" data-slide-index="2">
           <div class="eq-hero__media">
             <img src="{{ asset($homepageMedia['hero-3']['image']) }}" alt="{{ $homepageMedia['hero-3']['alt'] }}" loading="lazy" decoding="async" />
-          </div>
-          <div class="eq-hero__content">
-            <span class="eq-eyebrow">NOUS TELOS &bull; CRAFTED ACCESSORIES</span>
-            <h1>Functional Form & Natural Texture</h1>
-            <p>Handcrafted leather bags, archival totes, and easy everyday coordinates designed for purposeful, effortless movement.</p>
-            <div class="eq-hero__actions">
-              <a href="{{ route('category.show', 'bags') }}" class="eq-btn eq-btn--light eq-btn--pill" id="hero-cta-explore-3">Discover Bags</a>
-              <a href="{{ route('subcategory.show', ['categorySlug' => 'women', 'subcategorySlug' => 'two-piece']) }}" class="eq-btn eq-btn--outline eq-btn--pill" id="hero-cta-story-3" style="border-color:rgba(255,253,249,.6); color:#fffdf9;">Two-Piece Sets</a>
-            </div>
           </div>
         </div>
 
@@ -148,10 +121,6 @@
         <button type="button" class="eq-hero__dot" data-index="2" role="tab" aria-selected="false" aria-label="Slide 3: Bags and Accessories"></button>
       </div>
 
-      <div class="eq-hero__scroll-cue" aria-hidden="true">
-        <span>SCROLL</span>
-        <span class="eq-scroll-line"></span>
-      </div>
     </section>
 
     <section class="eq-bright-section eq-store-trust" aria-label="Shopping information">
