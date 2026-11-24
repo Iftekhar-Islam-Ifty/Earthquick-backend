@@ -5,40 +5,38 @@
 @section('canonical_url', route('home'))
 @section('body_class', 'eq-marketplace-home')
 
-@push('styles')
-<style>
-  .eq-market-home { background: #f8f4eb; padding: clamp(3rem, 8vw, 6.5rem) 1.25rem; }
-  .eq-market-home__inner { max-width: 1120px; margin: auto; }
-  .eq-market-home__intro { max-width: 700px; margin: 0 auto 2.5rem; text-align: center; }
-  .eq-market-home__intro .eyebrow { color: #927331; letter-spacing: .16em; font-size: .72rem; font-weight: 700; text-transform: uppercase; }
-  .eq-market-home__intro h1 { margin: .7rem 0; color: #203e4c; font: 600 clamp(2rem, 5vw, 3.5rem)/1.12 var(--font-display); }
-  .eq-market-home__intro p { color: #655f56; line-height: 1.7; }
-  .eq-market-home__cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.25rem; }
-  .eq-market-home__card { display: flex; min-height: 280px; flex-direction: column; justify-content: space-between; padding: clamp(1.5rem, 4vw, 2.5rem); border: 1px solid #e5dccb; border-radius: 16px; background: #fffdf8; box-shadow: 0 12px 32px #35281512; }
-  .eq-market-home__card--bright { background: #203e4c; border-color: #203e4c; color: #fff; }
-  .eq-market-home__card--bright .eyebrow { color: #f1d58d; }
-  .eq-market-home__card.eq-market-home__card--bright h2 { color: #fff; }
-  .eq-market-home__logo-box { display: grid; width: 160px; height: 148px; place-items: center; overflow: hidden; margin-bottom: 1.25rem; border: 1px solid #e8e0d2; border-radius: 12px; background: #fff; box-shadow: 0 8px 22px #35281516; }
-  .eq-market-home__logo { display: block; width: 100%; height: 100%; object-fit: contain; padding: .25rem; }
-  .eq-market-home__logo-fallback { color: #203e4c; font: 600 3rem/1 var(--font-display); }
-  .eq-market-home__logo-box--empty { border-color: rgba(255,255,255,.3); }
-  .eq-market-home__card h2 { margin: .7rem 0; font: 600 clamp(1.55rem, 3vw, 2.2rem)/1.2 var(--font-display); }
-  .eq-market-home__card p { max-width: 40ch; line-height: 1.65; color: inherit; opacity: .82; }
-  .eq-market-home__card a { align-self: flex-start; margin-top: 1.5rem; }
-  .eq-market-home__foot { margin: 2rem 0 0; color: #777064; text-align: center; font-size: .86rem; }
-  @media(max-width:700px) { .eq-market-home__cards { grid-template-columns: 1fr; } .eq-market-home__card { min-height: 230px; } }
-</style>
-@endpush
-
 @section('content')
 <main id="main-content" class="eq-market-home">
   <div class="eq-market-home__inner">
-    <header class="eq-market-home__intro">
-      <span class="eyebrow">A marketplace of independent stores</span>
-      <h1>Find the store you came for.</h1>
-      <p>Rthquick brings distinct businesses together. Choose a store to explore its own collections and products.</p>
+    <header class="eq-market-home__hero">
+      <div class="eq-market-home__hero-copy">
+        <h1>A marketplace for<br><em>everyday discoveries.</em></h1>
+        <p>Discover distinctive products from independent Bangladeshi businesses.</p>
+        <div class="eq-market-home__hero-actions">
+          <a class="eq-market-home__action eq-market-home__action--gold" href="#market-stores">Explore stores <span aria-hidden="true">&darr;</span></a>
+          <a class="eq-market-home__action eq-market-home__action--blue" href="#market-categories">Browse categories <span aria-hidden="true">&darr;</span></a>
+        </div>
+      </div>
+      <div class="eq-market-home__hero-art" aria-hidden="true">
+        <span class="eq-market-home__network-link eq-market-home__network-link--one"></span>
+        <span class="eq-market-home__network-link eq-market-home__network-link--two"></span>
+        <span class="eq-market-home__network-link eq-market-home__network-link--three"></span>
+        <span class="eq-market-home__network-link eq-market-home__network-link--four"></span>
+        <span class="eq-market-home__network-link eq-market-home__network-link--five"></span>
+        <span class="eq-market-home__network-node eq-market-home__network-node--center"></span>
+        <span class="eq-market-home__network-node eq-market-home__network-node--one"></span>
+        <span class="eq-market-home__network-node eq-market-home__network-node--two"></span>
+        <span class="eq-market-home__network-node eq-market-home__network-node--three"></span>
+        <span class="eq-market-home__network-node eq-market-home__network-node--four"></span>
+        <span class="eq-market-home__network-node eq-market-home__network-node--five"></span>
+      </div>
     </header>
-    <div class="eq-market-home__cards">
+    <section id="market-stores" class="eq-market-home__stores" aria-labelledby="market-stores-title">
+      <div class="eq-market-home__section-heading">
+        <span class="eyebrow">A marketplace of independent stores</span>
+        <h2 id="market-stores-title">Find the store you came for.</h2>
+      </div>
+      <div class="eq-market-home__cards">
       @if($store = $stores->get('nous-telos'))
         <article class="eq-market-home__card">
           <div>
@@ -69,8 +67,26 @@
           <a class="eq-btn eq-btn--light" href="{{ route('stores.show', $store->slug) }}">Enter Bright <span aria-hidden="true">&rarr;</span></a>
         </article>
       @endif
-    </div>
-    <p class="eq-market-home__foot">Shop with each store through the Rthquick shared cart and checkout.</p>
+      </div>
+    </section>
+    <section id="market-categories" class="eq-market-home__categories" aria-labelledby="market-categories-title">
+      <div class="eq-market-home__section-heading">
+        <span class="eyebrow">Or browse by interest</span>
+        <h2 id="market-categories-title">Shop by category</h2>
+      </div>
+      <div class="eq-market-home__category-links">
+        <a class="eq-market-home__category-link" href="{{ route('category.group', 'fashion-accessories') }}">
+          <span class="eq-market-home__category-icon" aria-hidden="true">01</span><span class="eq-market-home__category-name">Fashion &amp; Accessories<small>Clothing, bags and more</small></span><span class="eq-market-home__category-arrow" aria-hidden="true">&rarr;</span>
+        </a>
+        <a class="eq-market-home__category-link" href="{{ route('category.show', 'home-decor') }}">
+          <span class="eq-market-home__category-icon" aria-hidden="true">02</span><span class="eq-market-home__category-name">Home &amp; Living<small>Useful pieces for your home</small></span><span class="eq-market-home__category-arrow" aria-hidden="true">&rarr;</span>
+        </a>
+        <a class="eq-market-home__category-link" href="{{ route('category.show', 'electronics') }}">
+          <span class="eq-market-home__category-icon" aria-hidden="true">03</span><span class="eq-market-home__category-name">Electronics<small>Everyday electrical essentials</small></span><span class="eq-market-home__category-arrow" aria-hidden="true">&rarr;</span>
+        </a>
+      </div>
+    </section>
+    <p class="eq-market-home__foot">One marketplace. Distinct stores. Shared Rthquick checkout.</p>
   </div>
 </main>
 @endsection

@@ -2534,8 +2534,8 @@
 
   .eq-footer__top {
     display: grid !important;
-    grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr) !important;
-    gap: 1.2rem 1rem !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 1.2rem .75rem !important;
     padding-bottom: 1.5rem;
   }
 
@@ -2579,31 +2579,17 @@
     height: 19px !important;
   }
 
-  #footer-col-stores {
-    grid-column: 1 / -1 !important;
-    grid-row: 2 !important;
-  }
-
-  #footer-col-categories {
-    grid-column: 1 / -1 !important;
-    grid-row: 3 !important;
-  }
-
-  #footer-col-company {
-    grid-column: 2 !important;
-    grid-row: 4 !important;
-  }
-
-  #footer-col-contact {
-    grid-column: 1 !important;
-    grid-row: 4 !important;
-  }
+  #footer-col-stores { grid-column: 1 !important; grid-row: 2 !important; }
+  #footer-col-contact { grid-column: 1 !important; grid-row: 3 !important; align-self: start; }
+  #footer-col-categories { grid-column: 2 !important; grid-row: 2 / span 2 !important; align-self: start; }
+  #footer-col-company { grid-column: 3 !important; grid-row: 2 / span 2 !important; align-self: start; }
 
   .eq-footer__heading {
-    font-size: 0.78rem !important;
-    letter-spacing: 0.08em !important;
+    font-size: clamp(0.62rem, 2.1vw, 0.76rem) !important;
+    letter-spacing: 0.045em !important;
     margin-bottom: 0.55rem !important;
     color: var(--eq-gold) !important;
+    overflow-wrap: anywhere;
   }
 
   .eq-footer__links {
@@ -2614,9 +2600,10 @@
 
   .eq-footer__links a,
   .eq-footer__links li {
-    font-size: 0.84rem !important;
-    line-height: 1.42 !important;
+    font-size: clamp(0.68rem, 2.2vw, 0.8rem) !important;
+    line-height: 1.35 !important;
     color: rgba(247, 242, 233, 0.8) !important;
+    overflow-wrap: anywhere;
   }
 
   #footer-col-contact .eq-footer__links li {
@@ -5405,4 +5392,35 @@
     opacity: 0.28 !important;
     pointer-events: none;
   }
+}
+@media (min-width: 701px) and (max-width: 1000px) {
+  .eq-market-home__hero { grid-template-columns: minmax(0, 1fr) minmax(240px, .8fr); gap: 1.5rem; min-height: 340px; }
+  .eq-market-home__hero h1 { font-size: clamp(2.35rem, 5vw, 3.5rem); }
+  .eq-market-home__hero-art { width: min(100%, 360px); }
+}
+
+@media (max-width: 700px) {
+  .eq-market-home { padding: 0 1rem 2.25rem; }
+  .eq-market-home__hero { grid-template-columns: 1fr; gap: 1.5rem; min-height: 0; margin-bottom: 2rem; padding: 2rem 1rem; }
+  .eq-market-home__hero h1 { font-size: clamp(2.15rem, 10vw, 3rem); }
+  .eq-market-home__hero-art { display: none; }
+  .eq-market-home__hero-copy > p { overflow: hidden; font-size: clamp(.5rem, 2.3vw, .82rem); line-height: 1.4; text-overflow: clip; white-space: nowrap; }
+  .eq-market-home__hero-actions { flex-wrap: nowrap; gap: .5rem; }
+  .eq-market-home__action { min-height: 42px; padding: .6rem .8rem; font-size: .78rem; }
+  .eq-market-home__cards { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .55rem; }
+  .eq-market-home__card { min-width: 0; min-height: 0; padding: .65rem; border-radius: 12px; }
+  .eq-market-home__logo-box { width: 96px; height: 88px; max-width: 100%; margin-bottom: .45rem; border-radius: 9px; }
+  .eq-market-home__card .eyebrow,
+  .eq-market-home__card p { display: none; }
+  .eq-market-home__card h2 { margin: .35rem 0; font-size: clamp(.95rem, 4.2vw, 1.2rem); }
+  .eq-market-home__card a { margin-top: .55rem; padding: .5rem .55rem; font-size: .68rem; white-space: nowrap; }
+  .eq-market-home__section-heading h2 { font-size: clamp(1.55rem, 6.4vw, 2.15rem); }
+  .eq-market-home__category-links { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .5rem; }
+  .eq-market-home__category-link { min-height: 58px; gap: .45rem; padding: .55rem; border-radius: 10px; }
+  .eq-market-home__category-icon { width: 30px; height: 30px; flex-basis: 30px; font-size: .62rem; }
+  .eq-market-home__category-name { font-size: .76rem; line-height: 1.2; }
+  .eq-market-home__category-name small { display: none; }
+  .eq-market-home__category-arrow { font-size: 1rem; }
+  .eq-footer__store-list,
+  #footer-col-categories .eq-footer__links { display: flex !important; flex-direction: column !important; gap: .45rem !important; }
 }
