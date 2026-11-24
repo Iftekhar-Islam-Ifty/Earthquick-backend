@@ -78,7 +78,7 @@
          Multi-slide editorial campaign showcase with smooth crossfade,
          slide dots, and previous/next navigation.
          ================================================================= -->
-    <section class="eq-hero eq-hero--slider" id="hero-section" aria-label="Featured Campaigns">
+    <section class="eq-hero eq-hero--slider eq-nous-telos-store-hero" id="hero-section" aria-label="Featured Campaigns">
       <div class="eq-hero__slides" id="hero-slides">
 
         <!-- Slide 1: Saree Masterpiece & Handloom Heritage -->
