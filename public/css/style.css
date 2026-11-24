@@ -7332,6 +7332,46 @@ p {
 .eq-market-home__category-arrow { color: #927331; font-size: 1.2rem; }
 .eq-market-home__foot { margin: 1.5rem 0 0; color: #777064; text-align: center; font-size: .86rem; }
 
+/* Bright electrical storefront */
+.eq-bright-home { background: #f8f4eb; }
+.eq-bright-store-hero { height: min(58vh, 590px); min-height: 360px; max-height: 590px; background: #173443; }
+.eq-bright-store-hero .eq-hero__media::after { display: none; }
+.eq-bright-store-hero .eq-hero__content { display: none !important; }
+.eq-bright-store-hero .eq-hero__slide .eq-hero__media img { object-fit: cover; object-position: center; filter: none; opacity: 1; }
+.eq-bright-store-hero .eq-hero__nav { opacity: 0; transition: opacity .2s ease; }
+.eq-bright-store-hero:hover .eq-hero__nav,
+.eq-bright-store-hero:focus-within .eq-hero__nav { opacity: 1; }
+.eq-bright-store-hero .eq-hero__dot { border-color: #fffdf8; }
+.eq-bright-store-hero .eq-hero__dot.is-active { background: #e5bd49; border-color: #e5bd49; }
+.eq-bright-section { max-width: 1160px; margin: auto; padding: 2.25rem 1.25rem; }
+.eq-bright-trust { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .85rem; padding-top: 1.5rem; padding-bottom: 1.25rem; }
+.eq-bright-trust__item { display: flex; min-height: 66px; align-items: center; gap: .8rem; padding: .8rem 1rem; border: 1px solid #e1d8c9; border-radius: 12px; background: #fffdf8; color: #203e4c; font-size: .92rem; font-weight: 600; }
+.eq-bright-trust__icon { display: grid; width: 34px; height: 34px; flex: 0 0 34px; place-items: center; border-radius: 50%; background: #e8f0f1; color: #244d60; font-size: .68rem; }
+.eq-bright-section__heading { display: flex; align-items: end; justify-content: space-between; gap: 1rem; margin-bottom: 1.1rem; }
+.eq-bright-eyebrow { color: #927331; font-size: .7rem; font-weight: 700; letter-spacing: .13em; text-transform: uppercase; }
+.eq-bright-section h2 { margin: .35rem 0 0; color: #203e4c; font: 600 clamp(1.55rem, 3vw, 2.1rem)/1.15 var(--font-display); }
+.eq-bright-view-all { flex: 0 0 auto; color: #244d60; font-size: .85rem; font-weight: 600; text-decoration: none; }
+.eq-bright-view-all:hover { color: #927331; }
+.eq-bright-categories { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: .8rem; }
+.eq-bright-category { display: flex; min-width: 0; min-height: 132px; flex-direction: column; align-items: center; justify-content: center; gap: .55rem; padding: .8rem .55rem; border: 1px solid #e1d8c9; border-radius: 14px; background: #fffdf8; color: #203e4c; text-align: center; text-decoration: none; transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease; }
+.eq-bright-category:hover { transform: translateY(-3px); border-color: #c9b88f; box-shadow: 0 10px 24px #203e4c12; }
+.eq-bright-category__icon { display: grid; width: 60px; height: 60px; place-items: center; overflow: hidden; border-radius: 12px; background: #edf4f5; }
+.eq-bright-category__icon img { width: 100%; height: 100%; object-fit: contain; }
+.eq-bright-category__name { font-size: .82rem; font-weight: 600; line-height: 1.25; }
+.eq-bright-category__arrow { display: none; }
+.eq-bright-products { padding-top: 1.5rem; }
+.eq-bright-product-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1rem; }
+.eq-bright-product-card { min-width: 0; flex: initial; overflow: hidden; border: 1px solid #e1d8c9; border-radius: 14px; background: #fffdf8; }
+.eq-bright-product-card .eq-product-card__frame { aspect-ratio: 1 / 1; border-radius: 0; background: #edf2f3; }
+.eq-bright-product-card .eq-product-card__frame > img { object-fit: contain; padding: 7%; }
+.eq-bright-product-card .eq-product-card__body { padding: .75rem; }
+.eq-bright-product-card .eq-product-card__name { display: -webkit-box; overflow: hidden; font-size: .9rem; line-height: 1.3; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+.eq-bright-product-card .eq-product-card__category { font-size: .65rem; }
+.eq-bright-product-card .eq-product-card__price { margin: .25rem 0 0; font-size: .9rem; }
+.eq-bright-empty { color: #655f56; }
+.eq-bright-footer-link { padding-top: 0; }
+.eq-bright-info-link { display: inline-flex; align-items: center; gap: .35rem; color: #1f5a58; font-weight: 700; text-underline-offset: 3px; }
+
 /* =====================================================================
    MOBILE RESPONSIVE ADJUSTMENTS (max-width: 768px)
    Compact, tight layout to minimize scrolling and keep alignment crisp

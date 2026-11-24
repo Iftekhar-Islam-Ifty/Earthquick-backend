@@ -11,7 +11,7 @@
     <rect x="35" y="32" width="470" height="565" rx="30" fill="#061D2A" fill-opacity=".3"/>
     <rect width="470" height="565" rx="30" fill="url(#case)"/>
     <rect x="30" y="30" width="410" height="500" rx="20" fill="#F7FAF9" stroke="#CFDADD" stroke-width="5"/>
-    <rect x="67" y="70" width="336" height="92" rx="12" fill="#E7EEF0"/><text x="235" y="126" text-anchor="middle" font-family="Arial,sans-serif" font-size="26" letter-spacing="4" fill="#426170">DEMO PANEL</text>
+<rect x="67" y="70" width="336" height="92" rx="12" fill="#E7EEF0"/>
     <g><rect x="77" y="205" width="75" height="220" rx="11" fill="#EEF2F2" stroke="#CCD8DB" stroke-width="4"/><rect x="168" y="205" width="75" height="220" rx="11" fill="#EEF2F2" stroke="#CCD8DB" stroke-width="4"/><rect x="259" y="205" width="75" height="220" rx="11" fill="#EEF2F2" stroke="#CCD8DB" stroke-width="4"/><rect x="350" y="205" width="35" height="220" rx="9" fill="#EEF2F2" stroke="#CCD8DB" stroke-width="4"/>
       <rect x="98" y="235" width="33" height="105" rx="7" fill="#D8AA4A"/><rect x="189" y="235" width="33" height="105" rx="7" fill="#9AAEB3"/><rect x="280" y="235" width="33" height="105" rx="7" fill="#9AAEB3"/><rect x="358" y="235" width="19" height="105" rx="5" fill="#D8AA4A"/>
       <circle cx="114" cy="383" r="9" fill="#78A982"/><circle cx="205" cy="383" r="9" fill="#78A982"/><circle cx="296" cy="383" r="9" fill="#78A982"/></g>

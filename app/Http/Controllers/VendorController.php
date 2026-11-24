@@ -59,11 +59,18 @@ class VendorController extends Controller
 
         if ($vendor->slug === 'bright') {
             $electronics = Category::where('slug', 'electronics')->first();
-            $subcategories = $electronics?->subcategories()->where('is_active', true)->orderBy('name')->get() ?? collect();
+            $subcategories = $electronics?->subcategories()->where('is_active', true)->orderBy('sort_order')->orderBy('name')->get() ?? collect();
             $catalogCount = Product::where('vendor_id', $vendor->id)->where('is_active', true)->where('in_stock', true)->count();
+            $featuredProducts = Product::publiclyAvailable()
+                ->where('vendor_id', $vendor->id)
+                ->where('in_stock', true)
+                ->with(['category', 'subcategory'])
+                ->latest('id')
+                ->take(4)
+                ->get();
             $homepageMedia = HomepageImage::resolvedSlots('bright');
 
-            return view('vendor.bright-home', compact('vendor', 'subcategories', 'catalogCount', 'homepageMedia'));
+            return view('vendor.bright-home', compact('vendor', 'subcategories', 'catalogCount', 'featuredProducts', 'homepageMedia'));
         }
 
         return view('vendor.landing', compact('vendor'));
