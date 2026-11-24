@@ -49,12 +49,15 @@ product data. Phase 8 adds a clearly marked three-slide demo hero to Bright's
 main store page; replacement images should use a 1920 x 800 px canvas. See
 `project-record/phases/phase-10-bright-heaven/PHASE_10_PHASE_7_RESPONSIVE_STORE_JOURNEYS.md`.
 See also `project-record/phases/phase-10-bright-heaven/PHASE_10_PHASE_8_VERIFIED_CATALOG_ONBOARDING.md`.
-Phase 10 Phase 9 implementation is complete locally: generic `/shop` opens the
-neutral store directory, category links and product breadcrumbs preserve store
-context, and cart/checkout/receipt retain seller identity. Owner visual review
-is pending; apply any feedback after the review. Phase 8 verified product data
-is still awaiting Bright. See
+Phase 10 Phase 9 is complete based on source review; per owner direction, visual
+review is excluded from closure. Generic `/shop` opens the neutral store
+directory, category links and product breadcrumbs preserve store context, and
+cart/checkout/receipt retain seller identity. Phase 8 verified product data is
+still awaiting Bright, and Phase 7 browser review remains separate. See
 `project-record/phases/phase-10-bright-heaven/PHASE_10_PHASE_9_CUSTOMER_JOURNEY_READINESS.md`.
+
+Phase 11 security hardening is planned but not started. See
+`project-record/phases/phase-11-security-hardening/PHASE_11_SECURITY_HARDENING_PLAN.md`.
 
 ## Historical review
 

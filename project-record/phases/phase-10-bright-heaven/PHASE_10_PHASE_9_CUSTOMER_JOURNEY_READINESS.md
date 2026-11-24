@@ -1,6 +1,6 @@
 # Bright / Nous Telos Phase 9 - Customer journey readiness
 
-**Status: Implementation complete; owner visual review pending.** Started
+**Status: Complete (source-reviewed; visual review excluded per owner direction).** Started
 2026-11-20 at the owner's request after the Bright hero and catalog onboarding
 preparation were committed.
 
@@ -56,10 +56,11 @@ journey for final browser review without mixing the two stores' catalogs.
   duration or coverage claims. Updated Nous Telos's exchange promotion to match
   the central policy, which has no automatic exchange flow.
 
-## Remaining
+## Closure
 
-- Owner desktop/tablet/mobile visual review remains. Apply any reported visual
-  fixes and close the phase after that review.
-- Bright-verified catalog data remains a Phase 8 launch dependency.
+- Non-visual deliverables were checked against current routes, controllers and
+  views. The owner asked to close this phase without waiting for visual review;
+  no browser-review result is claimed.
+- Bright-verified catalog data remains a separate Phase 8 launch dependency.
 
 No migrations, seeders or business records are part of this phase.
