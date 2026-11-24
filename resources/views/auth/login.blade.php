@@ -78,7 +78,7 @@
             <input type="checkbox" name="remember" id="remember-me" checked style="accent-color: var(--eq-gold);" />
             <span>Remember me</span>
           </label>
-          <small style="display: block; margin-top: 0.35rem; color: var(--eq-charcoal-soft); font-size: 0.76rem;">Remember me applies to customer accounts only. Admin sessions end when you leave the panel or after inactivity.</small>
+          <small style="display: block; margin-top: 0.35rem; color: var(--eq-charcoal-soft); font-size: 0.76rem;">Remember me applies to customer accounts only. Admin sessions end when the browser closes or after 15 minutes without admin activity.</small>
         </div>
 
         <button type="submit" class="eq-auth-submit-btn" id="btn-login-submit">

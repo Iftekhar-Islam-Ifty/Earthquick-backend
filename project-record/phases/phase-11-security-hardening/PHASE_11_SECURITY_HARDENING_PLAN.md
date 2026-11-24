@@ -28,8 +28,9 @@ single central-admin model and the existing customer/store flows.
   at least 12 characters.
 - Add appropriate throttles to guest order creation and public search endpoints.
 - Make admin authentication browser-session-only: ignore Remember me for admins,
-  expire the admin session on browser close, and require login again after
-  leaving the admin area or after a short inactivity timeout. Keep customer
+  expire the admin session on browser close, and require login again after a
+  short inactivity timeout. Keep admin authenticated while viewing storefront
+  pages in the same browser; count inactivity from admin requests. Keep customer
   Remember me/session behavior unchanged; revoke any old admin remember token
   when this policy first takes effect.
 - Add MFA for the central admin, verified-email password recovery, and recent
@@ -79,10 +80,11 @@ Remind the owner of this checklist at Phase 11 closure; do not start the Laravel
   search and live suggestions are limited to 60 requests per minute per IP.
 - Admin login ignores Remember me, rotates any existing remember token during
   password sign-in, uses a browser-session cookie while in the admin route
-  group, ends on leaving that group, and expires after 15 minutes of admin
-  inactivity. Pre-change admin sessions are rejected once and require a fresh
-  password login. Customer remember-me remains unchanged. Browser session-restore
-  features can restore session cookies, so the idle and leave-area checks remain
+  group and public storefront pages, and expires after 15 minutes without an
+  admin request. Viewing the storefront does not end the admin session or reset
+  its idle clock. Pre-change admin sessions are rejected once and require a
+  fresh password login. Customer remember-me remains unchanged. Browser
+  session-restore features can restore session cookies, so the idle check remains
   necessary.
 - The production session cookie defaults to Secure when `APP_ENV=production`;
   explicit deployment configuration and live HTTPS behavior still need review.

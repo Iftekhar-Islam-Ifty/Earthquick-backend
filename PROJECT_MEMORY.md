@@ -57,11 +57,12 @@ still awaiting Bright, and Phase 7 browser review remains separate. See
 `project-record/phases/phase-10-bright-heaven/PHASE_10_PHASE_9_CUSTOMER_JOURNEY_READINESS.md`.
 
 Phase 11 security hardening is in progress. The first local increment adds
-admin-only session expiry behavior, effective registration throttling, stronger
-new-password length, guest checkout/search limits, and a production Secure
-session-cookie default. Hosting checks, CSP/HSTS review, MFA, role-assignment
-hardening, dependency audit, and release review remain. No migrations or seeders
-were run. See
+admin-only session expiry while preserving authentication during storefront
+browsing (idle time is measured from admin requests), effective registration
+throttling, stronger new-password length, guest checkout/search limits, and a
+production Secure session-cookie default. Hosting checks, CSP/HSTS review, MFA,
+role-assignment hardening, dependency audit, and release review remain. No
+migrations or seeders were run. See
 `project-record/phases/phase-11-security-hardening/PHASE_11_SECURITY_HARDENING_PLAN.md`.
 
 ## Historical review

@@ -7,8 +7,8 @@ use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Make the shared Laravel session cookie a browser-session cookie only while
- * an administrator is actively using the admin area.
+ * Keep the shared Laravel session cookie browser-session-only while an admin
+ * session is active, including when that admin browses public storefront pages.
  */
 class AdminSessionCookieLifetime
 {

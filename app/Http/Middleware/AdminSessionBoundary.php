@@ -8,8 +8,8 @@ use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Keep administrator authentication confined to the admin area and expire
- * inactive admin sessions without changing customer remember-me behavior.
+ * Preserve the admin login while browsing the storefront, and enforce its
+ * browser-session and admin-idle boundaries without affecting customers.
  */
 class AdminSessionBoundary
 {
@@ -50,26 +50,25 @@ class AdminSessionBoundary
             return $next($request);
         }
 
-        // Leaving /admin ends the administrator session while preserving the
-        // customer's cart and other unrelated session data.
-        if (! $isAdminRequest) {
-            $this->endAdminSession($request);
+        // Storefront browsing in another tab should not sign the admin out.
+        // The inactivity clock is based on admin requests, not public browsing.
+        if ($isAdminRequest) {
+            $lastActivity = (int) $request->session()->get('admin.last_activity_at', 0);
+            $idleLimit = max(60, (int) config('session.admin_idle_timeout', 900));
 
-            return $next($request);
+            if ($lastActivity > 0 && (time() - $lastActivity) >= $idleLimit) {
+                $this->endAdminSession($request);
+
+                return redirect()->route('login')
+                    ->with('error', 'Your admin session expired after inactivity. Please sign in again.');
+            }
+
+            $request->session()->put('admin.last_activity_at', time());
         }
 
-        $lastActivity = (int) $request->session()->get('admin.last_activity_at', 0);
-        $idleLimit = max(60, (int) config('session.admin_idle_timeout', 900));
-
-        if ($lastActivity > 0 && (time() - $lastActivity) >= $idleLimit) {
-            $this->endAdminSession($request);
-
-            return redirect()->route('login')
-                ->with('error', 'Your admin session expired after inactivity. Please sign in again.');
-        }
-
+        // Keep the shared session cookie browser-session-only while the admin
+        // is signed in, including storefront pages opened in another tab.
         $request->session()->put('admin.browser_session_only', true);
-        $request->session()->put('admin.last_activity_at', time());
 
         return $next($request);
     }

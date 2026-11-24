@@ -908,7 +908,7 @@
 
       <li class="eq-admin-nav__heading">Live Store</li>
       <li>
-        <a href="{{ route('home') }}" target="_blank" class="eq-admin-nav__link">
+        <a href="{{ route('home') }}" target="_blank" rel="noopener noreferrer" class="eq-admin-nav__link">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
             <polyline points="15 3 21 3 21 9"></polyline>
@@ -961,7 +961,7 @@
         <span style="font-size: 0.78rem; color: var(--eq-charcoal-soft);" class="eq-topbar-date">
           {{ now()->format('l, d M Y') }}
         </span>
-        <a href="{{ route('home') }}" target="_blank" class="eq-admin-btn eq-admin-btn--outline" style="font-size: 0.76rem; padding: 0.35rem 0.75rem; display: inline-flex; align-items: center; gap: 0.35rem;" title="Open live store in a new tab">
+        <a href="{{ route('home') }}" target="_blank" rel="noopener noreferrer" class="eq-admin-btn eq-admin-btn--outline" style="font-size: 0.76rem; padding: 0.35rem 0.75rem; display: inline-flex; align-items: center; gap: 0.35rem;" title="Open live store in a new tab">
           <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
             <polyline points="15 3 21 3 21 9"></polyline>
