@@ -154,6 +154,20 @@
       </div>
     </section>
 
+    <section class="eq-bright-section eq-store-trust" aria-label="Shopping information">
+      <div class="eq-store-trust__item">
+        <span class="eq-store-trust__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h11v11H3zM14 10h4l3 3v4h-7z"/><circle cx="7.5" cy="18" r="1.8"/><circle cx="18" cy="18" r="1.8"/></svg></span>
+        <span>Doorstep delivery<br>across Bangladesh</span>
+      </div>
+      <div class="eq-store-trust__item">
+        <span class="eq-store-trust__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 20 6v5c0 5-3.4 8.4-8 10-4.6-1.6-8-5-8-10V6z"/><path d="M8 12h8M10 9l-3 3 3 3"/></svg></span>
+        <span>Returns &amp; support<br>through Rthquick</span>
+      </div>
+      <div class="eq-store-trust__item">
+        <span class="eq-store-trust__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5c4 0 4 14 8 14s4-14 8-14"/><path d="M4 9c4 0 4 6 8 6s4-6 8-6M4 13c4 0 4 2 8 2s4-2 8-2"/></svg></span>
+        <span>Bengali heritage<br>&amp; handloom</span>
+      </div>
+    </section>
 
     <!-- =================================================================
          SECTION 2.5: HOMEPAGE CATEGORY DISCOVERY STRIP
@@ -244,58 +258,6 @@
               <span class="eq-category-card__meta">Living &amp; Accents</span>
             </div>
           </a>
-
-        </div>
-      </div>
-    </section>
-
-
-    <!-- =================================================================
-         TRUST & SERVICE PROPOSITION STRIP
-         Marketplace curation, nationwide delivery, and item-specific returns support.
-         ================================================================= -->
-    <section class="eq-trust-strip" id="trust-strip" aria-label="Rthquick promises and services">
-      <div class="eq-container">
-        <div class="eq-trust-grid eq-reveal">
-
-          <div class="eq-trust-card" id="trust-item-artisan">
-            <div class="eq-trust-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M4 6h16M4 12h16M4 18h16M8 3v18M16 3v18"/>
-              </svg>
-            </div>
-            <div class="eq-trust-content">
-              <h3 class="eq-trust-title">Distinct Stores</h3>
-              <p class="eq-trust-desc">Independent stores with their own products and identity</p>
-            </div>
-          </div>
-
-          <div class="eq-trust-card" id="trust-item-delivery">
-            <div class="eq-trust-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M1 3h15v13H1z"/>
-                <path d="M16 8h4l3 3v5h-7V8z"/>
-                <circle cx="5.5" cy="18.5" r="2.5"/>
-                <circle cx="18.5" cy="18.5" r="2.5"/>
-              </svg>
-            </div>
-            <div class="eq-trust-content">
-              <h3 class="eq-trust-title">Reliable Delivery</h3>
-              <p class="eq-trust-desc">Convenient doorstep delivery across Bangladesh</p>
-            </div>
-          </div>
-
-          <div class="eq-trust-card" id="trust-item-exchange">
-            <div class="eq-trust-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
-              </svg>
-            </div>
-            <div class="eq-trust-content">
-              <h3 class="eq-trust-title">Returns &amp; Support</h3>
-              <p class="eq-trust-desc">Check each item's return terms and request help through Rthquick</p>
-            </div>
-          </div>
 
         </div>
       </div>
