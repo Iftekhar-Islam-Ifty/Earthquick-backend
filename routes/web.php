@@ -84,7 +84,7 @@ Route::post('/cart/coupon/remove', [CartController::class, 'removeCoupon'])->nam
  * Checkout formulation, delivery zone calculation, and order placement.
  * ========================================================================= */
 Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
-Route::post('/checkout/order', [CheckoutController::class, 'store'])->name('checkout.store');
+Route::post('/checkout/order', [CheckoutController::class, 'store'])->middleware('throttle:10,1')->name('checkout.store');
 Route::get('/checkout/success/{order_number}', [CheckoutController::class, 'success'])->name('checkout.success');
 Route::post('/orders/{order_number}/cancellation-request', [OrderCancellationController::class, 'store'])->name('orders.cancellation-request');
 Route::post('/orders/{order_number}/items/{itemId}/return-request', [OrderReturnController::class, 'store'])->name('orders.return-request');
@@ -113,8 +113,8 @@ Route::middleware('auth')->group(function () {
  * 9. LIVE INSTANT SEARCH & RESULTS ENGINE
  * Real-time typeahead suggestions API and paginated full-text search.
  * ========================================================================= */
-Route::get('/search', [SearchController::class, 'index'])->name('search');
-Route::get('/api/search/suggestions', [SearchController::class, 'suggestions'])->name('search.suggestions');
+Route::get('/search', [SearchController::class, 'index'])->middleware('throttle:60,1')->name('search');
+Route::get('/api/search/suggestions', [SearchController::class, 'suggestions'])->middleware('throttle:60,1')->name('search.suggestions');
 
 /* =========================================================================
  * 10. ADMINISTRATIVE CONTROL PANEL

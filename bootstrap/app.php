@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Middleware\AdminMiddleware;
+use App\Http\Middleware\AdminSessionCookieLifetime;
+use App\Http\Middleware\AdminSessionBoundary;
 use App\Http\Middleware\SecurityHeaders;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -16,8 +18,13 @@ return Application::configure(basePath: dirname(__DIR__))
         __DIR__.'/../app/Console/Commands',
     ])
     ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->appendToGroup('web', [
+            AdminSessionBoundary::class,
+        ]);
+
         $middleware->append([
             SecurityHeaders::class,
+            AdminSessionCookieLifetime::class,
         ]);
 
         $middleware->alias([

@@ -1,6 +1,7 @@
 # Rthquick Phase 11 - Security hardening plan
 
-**Status: Planned; implementation has not started.** This mini-phase follows the
+**Status: In progress.** The first local application controls are implemented;
+source checks and deployment verification remain. This mini-phase follows the
 source-level security review requested on 2026-11-24. The review did not include
 live cPanel inspection or penetration testing.
 
@@ -69,10 +70,34 @@ Remind the owner of this checklist at Phase 11 closure; do not start the Laravel
 - Admin access has MFA and privileged role assignment remains server-controlled.
 - Dependency audit results and deployed security-header checks are recorded.
 
+## First implementation increment - 2026-11-24
+
+- Registration requests are counted before validation (five attempts per IP per
+  10 minutes), successful registration no longer clears the IP limit, and new
+  passwords require 12 characters.
+- Guest checkout submission is limited to 10 requests per minute per IP;
+  search and live suggestions are limited to 60 requests per minute per IP.
+- Admin login ignores Remember me, rotates any existing remember token during
+  password sign-in, uses a browser-session cookie while in the admin route
+  group, ends on leaving that group, and expires after 15 minutes of admin
+  inactivity. Pre-change admin sessions are rejected once and require a fresh
+  password login. Customer remember-me remains unchanged. Browser session-restore
+  features can restore session cookies, so the idle and leave-area checks remain
+  necessary.
+- The production session cookie defaults to Secure when `APP_ENV=production`;
+  explicit deployment configuration and live HTTPS behavior still need review.
+- Existing baseline browser headers were already present in `SecurityHeaders`.
+
+Still pending: CSP report-only inventory and configuration, HSTS/production
+headers and document-root review on cPanel, `is_admin` mass-assignment hardening,
+MFA and verified-email recovery design, dependency advisories, and release checks.
+MFA/recovery schema or account changes need a reviewed plan and backup before any
+migration is run. No database migration or seeder was run for this increment.
+
 ## Boundaries and dependencies
 
-- This is a plan only; no application code, live environment, or account settings
-  have been changed.
+- Application code has changed locally in the first increment above. No live
+  environment or account settings have been changed.
 - Live cPanel document-root, HTTPS and environment values require deployment
   access and owner authorization.
 - If MFA requires a schema migration, prepare a reviewed migration and backup

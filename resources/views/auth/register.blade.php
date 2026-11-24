@@ -100,9 +100,9 @@
             id="reg-password" 
             name="password" 
             class="eq-form-input" 
-            placeholder="Minimum 6 characters" 
+            placeholder="Minimum 12 characters"
             required 
-            minlength="6"
+            minlength="12"
             autocomplete="new-password"
           />
         </div>

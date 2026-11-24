@@ -18,9 +18,11 @@ class AuthController extends Controller
 {
     private const LOGIN_MAX_ATTEMPTS = 5;
 
-    private const REGISTRATION_MAX_ATTEMPTS = 3;
+    private const REGISTRATION_MAX_ATTEMPTS = 5;
 
     private const THROTTLE_DECAY_SECONDS = 60;
+
+    private const REGISTRATION_THROTTLE_DECAY_SECONDS = 600;
 
     /**
      * Display customer authentication sign-in view.
@@ -76,15 +78,36 @@ class AuthController extends Controller
             'password' => $password,
         ];
 
-        if (Auth::attempt($credentials, $remember)) {
+        // Authenticate without a persistent cookie first. Admin accounts are
+        // deliberately session-only; customer remember-me is applied below.
+        if (Auth::attempt($credentials, false)) {
             RateLimiter::clear($throttleKey);
-            $request->session()->regenerate();
 
             // Route administrator directly to executive admin panel
             if (Auth::user()->is_admin) {
+                $admin = Auth::user();
+
+                // Rotate any old persistent admin token, then restore this
+                // login as a non-remembered session.
+                Auth::logout();
+                Auth::login($admin, false);
+                $request->session()->regenerate();
+                $request->session()->put([
+                    'admin.authenticated_at' => time(),
+                    'admin.last_activity_at' => time(),
+                    'admin.browser_session_only' => true,
+                ]);
+
                 return redirect()->route('admin.dashboard')
                     ->with('success', 'Welcome, ' . Auth::user()->name . '! Logged in to Admin Panel.');
             }
+
+            $customer = Auth::user();
+            if ($remember) {
+                Auth::login($customer, true);
+            }
+
+            $request->session()->regenerate();
 
             // Route customer to intended page or personal dashboard
             return redirect()->intended(route('account.dashboard'))
@@ -122,23 +145,6 @@ class AuthController extends Controller
      */
     public function register(Request $request)
     {
-        $request->validate([
-            'name'     => 'required|string|max:255',
-            'email'    => 'required|string|email|max:255|unique:users,email',
-            'phone'    => ['required', 'string', 'regex:/^(?:\+?88)?01[3-9]\d{8}$/', 'unique:users,phone'],
-            'city'     => 'nullable|string|max:100',
-            'password' => 'required|string|min:6',
-        ], [
-            'name.required'     => 'Full name is required.',
-            'email.required'    => 'Email address is required.',
-            'email.unique'      => 'This email address is already registered.',
-            'phone.required'    => 'Mobile phone number is required.',
-            'phone.regex'       => 'Please provide a valid 11-digit Bangladeshi mobile number (e.g. 017XXXXXXXX).',
-            'phone.unique'      => 'This phone number is already registered.',
-            'password.required' => 'Password is required.',
-            'password.min'      => 'Password must contain at least 6 characters.',
-        ]);
-
         $throttleKey = 'registration:'.$request->ip();
         if (RateLimiter::tooManyAttempts($throttleKey, self::REGISTRATION_MAX_ATTEMPTS)) {
             return back()
@@ -147,6 +153,26 @@ class AuthController extends Controller
                 ])
                 ->withInput($request->except('password'));
         }
+
+        // Count every registration request, including invalid and successful ones.
+        RateLimiter::hit($throttleKey, self::REGISTRATION_THROTTLE_DECAY_SECONDS);
+
+        $request->validate([
+            'name'     => 'required|string|max:255',
+            'email'    => 'required|string|email|max:255|unique:users,email',
+            'phone'    => ['required', 'string', 'regex:/^(?:\+?88)?01[3-9]\d{8}$/', 'unique:users,phone'],
+            'city'     => 'nullable|string|max:100',
+            'password' => 'required|string|min:12',
+        ], [
+            'name.required'     => 'Full name is required.',
+            'email.required'    => 'Email address is required.',
+            'email.unique'      => 'This email address is already registered.',
+            'phone.required'    => 'Mobile phone number is required.',
+            'phone.regex'       => 'Please provide a valid 11-digit Bangladeshi mobile number (e.g. 017XXXXXXXX).',
+            'phone.unique'      => 'This phone number is already registered.',
+            'password.required' => 'Password is required.',
+            'password.min'      => 'Password must contain at least 12 characters.',
+        ]);
 
         // Create user record
         $user = User::create([
@@ -158,7 +184,6 @@ class AuthController extends Controller
         ]);
 
         Auth::login($user);
-        RateLimiter::clear($throttleKey);
         $request->session()->regenerate();
 
         return redirect()->route('account.dashboard')

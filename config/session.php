@@ -36,6 +36,10 @@ return [
 
     'expire_on_close' => env('SESSION_EXPIRE_ON_CLOSE', false),
 
+    // Admin authentication has a separate idle timeout; customer sessions
+    // retain the normal session lifetime and remember-me behavior.
+    'admin_idle_timeout' => (int) env('ADMIN_SESSION_IDLE_TIMEOUT', 900),
+
     /*
     |--------------------------------------------------------------------------
     | Session Encryption
@@ -169,7 +173,7 @@ return [
     |
     */
 
-    'secure' => env('SESSION_SECURE_COOKIE'),
+    'secure' => env('SESSION_SECURE_COOKIE', env('APP_ENV', 'production') === 'production'),
 
     /*
     |--------------------------------------------------------------------------
