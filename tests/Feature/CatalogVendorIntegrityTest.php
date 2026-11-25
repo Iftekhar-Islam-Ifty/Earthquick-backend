@@ -55,7 +55,7 @@ class CatalogVendorIntegrityTest extends TestCase
         $product = Product::firstOrFail();
         $subcategory = Subcategory::firstOrFail();
         $otherCategory = Category::whereKeyNot($subcategory->category_id)->firstOrFail();
-        $admin = User::create([
+        $admin = User::forceCreate([
             'name' => 'Catalog QA Admin', 'email' => 'catalog-qa-admin@example.test',
             'password' => 'qa-test-password', 'is_admin' => true,
         ]);
@@ -70,7 +70,7 @@ class CatalogVendorIntegrityTest extends TestCase
 
     public function test_vendor_admin_ui_has_no_commission_or_featured_vendor_controls(): void
     {
-        $admin = User::create([
+        $admin = User::forceCreate([
             'name' => 'Vendor QA Admin', 'email' => 'vendor-qa-admin@example.test',
             'password' => 'qa-test-password', 'is_admin' => true,
         ]);

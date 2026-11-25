@@ -102,7 +102,7 @@ class GeneralCatalogCompletionTest extends TestCase
 
     public function test_admin_can_upload_role_based_product_media(): void
     {
-        $admin = User::create([
+        $admin = User::forceCreate([
             'name' => 'Media Catalog Admin',
             'email' => 'media-admin'.random_int(1000, 9999).'@rthquick.com',
             'password' => Hash::make('password123'),

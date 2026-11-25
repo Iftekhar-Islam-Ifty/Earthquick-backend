@@ -16,7 +16,7 @@ class HomepageImageManagementTest extends TestCase
 
     private function admin(): User
     {
-        return User::create([
+        return User::forceCreate([
             'name' => 'Homepage Editor',
             'email' => 'homepage-editor-'.Str::random(10).'@example.com',
             'password' => bcrypt('password123'),

@@ -97,7 +97,7 @@ class ProductVariantTest extends TestCase
     public function test_admin_can_replace_variants_and_product_summary_stock_is_synced(): void
     {
         [$product] = $this->makeVariantProduct();
-        $admin = User::create([
+        $admin = User::forceCreate([
             'name' => 'Variant Catalog Admin',
             'email' => 'variant-admin'.random_int(1000, 9999).'@rthquick.com',
             'password' => Hash::make('password123'),

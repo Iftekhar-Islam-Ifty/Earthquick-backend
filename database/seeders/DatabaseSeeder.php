@@ -26,7 +26,7 @@ class DatabaseSeeder extends Seeder
             $password = env('RTHQUICK_SEED_ADMIN_PASSWORD');
 
             if (filled($email) && filled($password) && ! User::where('email', $email)->exists()) {
-                User::create([
+                User::forceCreate([
                     'name' => 'Rthquick Admin',
                     'email' => $email,
                     'phone' => '01700000000',

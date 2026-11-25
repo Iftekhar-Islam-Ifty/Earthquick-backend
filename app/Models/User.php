@@ -32,7 +32,6 @@ class User extends Authenticatable
         'area',
         'address',
         'password',
-        'is_admin',
     ];
 
     /**

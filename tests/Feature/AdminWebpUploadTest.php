@@ -43,7 +43,7 @@ class AdminWebpUploadTest extends TestCase
 
     public function test_vendor_logo_and_banner_upload_as_webp_only(): void
     {
-        $admin = User::create([
+        $admin = User::forceCreate([
             'name' => 'WebP Vendor Admin',
             'email' => 'webp-vendor-'.Str::random(10).'@example.com',
             'password' => bcrypt('password123'),
@@ -73,7 +73,7 @@ class AdminWebpUploadTest extends TestCase
 
     public function test_replacing_product_image_removes_old_upload_after_webp_is_saved(): void
     {
-        $admin = User::create([
+        $admin = User::forceCreate([
             'name' => 'WebP Product Admin',
             'email' => 'webp-product-'.Str::random(10).'@example.com',
             'password' => bcrypt('password123'),
@@ -116,7 +116,7 @@ class AdminWebpUploadTest extends TestCase
 
     public function test_admin_controls_hover_image_and_removing_it_restores_main_image_fallback(): void
     {
-        $admin = User::create([
+        $admin = User::forceCreate([
             'name' => 'Hover Image Admin',
             'email' => 'hover-image-'.Str::random(10).'@example.com',
             'password' => bcrypt('password123'),
@@ -170,7 +170,7 @@ class AdminWebpUploadTest extends TestCase
 
     public function test_svg_is_rejected_for_new_vendor_upload(): void
     {
-        $admin = User::create([
+        $admin = User::forceCreate([
             'name' => 'SVG Guard Admin',
             'email' => 'svg-guard-'.Str::random(10).'@example.com',
             'password' => bcrypt('password123'),

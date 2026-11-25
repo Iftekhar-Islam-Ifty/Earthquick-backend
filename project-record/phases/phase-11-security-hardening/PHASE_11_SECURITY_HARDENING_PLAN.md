@@ -18,6 +18,7 @@ single central-admin model and the existing customer/store flows.
   `SESSION_SECURE_COOKIE=true`; preserve HttpOnly and SameSite protections.
 - Add CSP in report-only mode first; enable HSTS only after the production
   domain is confirmed HTTPS-only. Account for current inline scripts/styles.
+  (Report-only header implemented locally; browser report review remains.)
 - Verify the deployed configuration and response headers without exposing
   secrets or changing live hosting settings until the owner authorizes it.
 
@@ -37,11 +38,13 @@ single central-admin model and the existing customer/store flows.
   authentication for high-impact actions where practical.
 - Remove `is_admin` from general mass-assignment and keep admin provisioning on
   an explicit trusted path. Preserve the one-admin design; add no seller roles.
+  (Implemented locally on 2026-11-25.)
 
 ## Phase 11.3 - Dependency and release review
 
 - Run Composer and npm advisory audits when network access is available; review
   and update affected dependencies without unreviewed major-version upgrades.
+  (Completed locally on 2026-11-25; both lockfile audits are clear.)
 - Check the finished deployment for public `.env`/debug exposure, session cookie
   flags, admin access boundaries, throttling behavior, and security headers.
 - Record remaining accepted risks and any cPanel actions the owner must perform.
@@ -90,15 +93,51 @@ Remind the owner of this checklist at Phase 11 closure; do not start the Laravel
   explicit deployment configuration and live HTTPS behavior still need review.
 - Existing baseline browser headers were already present in `SecurityHeaders`.
 
-Still pending: CSP report-only inventory and configuration, HSTS/production
-headers and document-root review on cPanel, `is_admin` mass-assignment hardening,
-MFA and verified-email recovery design, dependency advisories, and release checks.
+## Second implementation increment - 2026-11-25
+
+- Removed `is_admin` from `User::$fillable`, so generic create/update requests
+  cannot set or change administrator privileges through mass assignment.
+- Kept the opt-in local/testing bootstrap admin creation explicit with
+  `User::forceCreate`; public registration still creates ordinary users only.
+- Updated existing admin test fixtures to use explicit trusted fixture creation.
+  Tests were not run, in keeping with the project instruction.
+- No migration or seeder was run, and no live account was changed.
+
+## Third implementation increment - 2026-11-25
+
+- Composer audit initially reported 12 advisories across seven packages. Applied
+  compatible updates within the existing Laravel 12 and Symfony 7.4 lines; the
+  targeted update resolved those advisories with 49 transitive patch/minor
+  updates, one added polyfill and no removals or major-version upgrades.
+- npm audit initially reported five vulnerabilities in the lockfile, including
+  critical `shell-quote` advisories. Applied `npm audit fix --package-lock-only`;
+  vulnerable packages now resolve to Vite 7.3.8, concurrently 9.2.5,
+  follow-redirects 1.16.3, shell-quote 1.12.0 and source-map-js 1.2.4.
+- Re-ran both audits successfully: Composer found no advisories and npm found
+  zero vulnerabilities. The npm lockfile is updated; local `node_modules` was
+  not reinstalled.
+- Automated tests and production deployment checks were not run.
+
+## Fourth implementation increment - 2026-11-25
+
+- Added `Content-Security-Policy-Report-Only` with same-origin defaults, no
+  plugins/objects, same-origin framing/forms, and the currently observed Google
+  Fonts hosts. Local Vite development origins are allowed only in local mode.
+- Inline scripts/styles and images outside the local/data/blob sources are
+  intentionally reportable for browser review; the header does not block them.
+- No reporting collector or enforcing CSP was enabled. Review browser console
+  reports on the main store, product, checkout, and admin pages before tightening.
+- HSTS and live document-root/session settings remain cPanel verification items.
+
+Still pending: browser review of CSP reports and a staged CSP tightening plan,
+HSTS/production headers and document-root review on cPanel, MFA and verified-email
+recovery design, and release checks.
 MFA/recovery schema or account changes need a reviewed plan and backup before any
 migration is run. No database migration or seeder was run for this increment.
 
 ## Boundaries and dependencies
 
-- Application code has changed locally in the first increment above. No live
+- Application code has changed locally in the increments above. No live
   environment or account settings have been changed.
 - Live cPanel document-root, HTTPS and environment values require deployment
   access and owner authorization.

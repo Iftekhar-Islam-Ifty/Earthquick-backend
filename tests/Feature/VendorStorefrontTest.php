@@ -21,7 +21,7 @@ class VendorStorefrontTest extends TestCase
      */
     protected function createAdminUser(): User
     {
-        return User::create([
+        return User::forceCreate([
             'name' => 'Vendor Test Admin',
             'email' => 'vendoradmin'.rand(1000, 9999).'@rthquick.com',
             'phone' => '01711'.rand(100000, 999999),

@@ -51,7 +51,7 @@ class AdminFeatureTest extends TestCase
         // The production dashboard must render with no Vite manifest: cPanel has no Node.
         $this->withVite();
 
-        $admin = User::create([
+        $admin = User::forceCreate([
             'name'     => 'Chief Administrator',
             'email'    => 'admin' . rand(1000, 9999) . '@rthquick.com',
             'phone'    => '01811' . rand(100000, 999999),
@@ -72,7 +72,7 @@ class AdminFeatureTest extends TestCase
      */
     public function test_admin_can_view_orders_and_filter(): void
     {
-        $admin = User::create([
+        $admin = User::forceCreate([
             'name'     => 'Order Manager',
             'email'    => 'orders' . rand(1000, 9999) . '@rthquick.com',
             'phone'    => '01911' . rand(100000, 999999),
@@ -111,7 +111,7 @@ class AdminFeatureTest extends TestCase
      */
     public function test_admin_can_update_order_status(): void
     {
-        $admin = User::create([
+        $admin = User::forceCreate([
             'name'     => 'Dispatch Lead',
             'email'    => 'dispatch' . rand(1000, 9999) . '@rthquick.com',
             'phone'    => '01511' . rand(100000, 999999),
@@ -161,7 +161,7 @@ class AdminFeatureTest extends TestCase
      */
     public function test_admin_can_toggle_product_stock(): void
     {
-        $admin = User::create([
+        $admin = User::forceCreate([
             'name'     => 'Inventory Head',
             'email'    => 'stock' . rand(1000, 9999) . '@rthquick.com',
             'phone'    => '01311' . rand(100000, 999999),
@@ -208,7 +208,7 @@ class AdminFeatureTest extends TestCase
      */
     public function test_admin_login_redirects_to_admin_dashboard(): void
     {
-        $admin = User::create([
+        $admin = User::forceCreate([
             'name'     => 'Auto Redirect Admin',
             'email'    => 'autoadmin' . rand(1000, 9999) . '@rthquick.com',
             'phone'    => '01722' . rand(100000, 999999),
@@ -230,7 +230,7 @@ class AdminFeatureTest extends TestCase
      */
     public function test_navbar_displays_admin_panel_button_for_admin(): void
     {
-        $admin = User::create([
+        $admin = User::forceCreate([
             'name'     => 'Navbar Admin',
             'email'    => 'navbaradmin' . rand(1000, 9999) . '@rthquick.com',
             'phone'    => '01733' . rand(100000, 999999),
@@ -266,7 +266,7 @@ class AdminFeatureTest extends TestCase
      */
     public function test_admin_can_view_product_create_page(): void
     {
-        $admin = User::create([
+        $admin = User::forceCreate([
             'name'     => 'Product Creator Admin',
             'email'    => 'prodcreate' . rand(1000, 9999) . '@rthquick.com',
             'phone'    => '01755' . rand(100000, 999999),
@@ -287,7 +287,7 @@ class AdminFeatureTest extends TestCase
      */
     public function test_admin_can_create_product_with_image_upload(): void
     {
-        $admin = User::create([
+        $admin = User::forceCreate([
             'name'     => 'Catalog Uploader Admin',
             'email'    => 'uploader' . rand(1000, 9999) . '@rthquick.com',
             'phone'    => '01766' . rand(100000, 999999),
@@ -349,7 +349,7 @@ class AdminFeatureTest extends TestCase
 
     public function test_admin_catalog_rejects_nested_specification_values(): void
     {
-        $admin = User::create([
+        $admin = User::forceCreate([
             'name' => 'Specification Validator',
             'email' => 'spec-validator'.rand(1000, 9999).'@rthquick.com',
             'password' => Hash::make('password123'),
@@ -375,7 +375,7 @@ class AdminFeatureTest extends TestCase
      */
     public function test_admin_can_view_product_edit_page(): void
     {
-        $admin = User::create([
+        $admin = User::forceCreate([
             'name'     => 'Editor Admin',
             'email'    => 'editor' . rand(1000, 9999) . '@rthquick.com',
             'phone'    => '01777' . rand(100000, 999999),
@@ -396,7 +396,7 @@ class AdminFeatureTest extends TestCase
      */
     public function test_admin_can_update_product(): void
     {
-        $admin = User::create([
+        $admin = User::forceCreate([
             'name'     => 'Updater Admin',
             'email'    => 'updater' . rand(1000, 9999) . '@rthquick.com',
             'phone'    => '01788' . rand(100000, 999999),
@@ -444,7 +444,7 @@ class AdminFeatureTest extends TestCase
      */
     public function test_admin_can_delete_product(): void
     {
-        $admin = User::create([
+        $admin = User::forceCreate([
             'name'     => 'Deletion Admin',
             'email'    => 'deleter' . rand(1000, 9999) . '@rthquick.com',
             'phone'    => '01799' . rand(100000, 999999),
@@ -480,7 +480,7 @@ class AdminFeatureTest extends TestCase
      */
     public function test_admin_can_search_orders_by_phone_or_order_number(): void
     {
-        $admin = User::create([
+        $admin = User::forceCreate([
             'name'     => 'Order Searcher',
             'email'    => 'searcher' . rand(1000, 9999) . '@rthquick.com',
             'phone'    => '01722' . rand(100000, 999999),
@@ -528,7 +528,7 @@ class AdminFeatureTest extends TestCase
      */
     public function test_admin_can_update_order_with_courier_and_tracking(): void
     {
-        $admin = User::create([
+        $admin = User::forceCreate([
             'name'     => 'Courier Dispatcher',
             'email'    => 'dispatcher' . rand(1000, 9999) . '@rthquick.com',
             'phone'    => '01633' . rand(100000, 999999),
@@ -573,7 +573,7 @@ class AdminFeatureTest extends TestCase
      */
     public function test_admin_can_view_order_invoice(): void
     {
-        $admin = User::create([
+        $admin = User::forceCreate([
             'name'     => 'Billing Specialist',
             'email'    => 'billing' . rand(1000, 9999) . '@rthquick.com',
             'phone'    => '01844' . rand(100000, 999999),
@@ -627,7 +627,7 @@ class AdminFeatureTest extends TestCase
      */
     public function test_admin_dashboard_renders_analytics_and_charts(): void
     {
-        $admin = User::create([
+        $admin = User::forceCreate([
             'name'     => 'Analytics Lead',
             'email'    => 'analytics' . rand(1000, 9999) . '@rthquick.com',
             'phone'    => '01777' . rand(100000, 999999),
@@ -676,7 +676,7 @@ class AdminFeatureTest extends TestCase
      */
     public function test_admin_can_export_orders_csv(): void
     {
-        $admin = User::create([
+        $admin = User::forceCreate([
             'name'     => 'Export Auditor',
             'email'    => 'export' . rand(1000, 9999) . '@rthquick.com',
             'phone'    => '01633' . rand(100000, 999999),
@@ -721,7 +721,7 @@ class AdminFeatureTest extends TestCase
      */
     public function test_admin_can_export_filtered_orders_csv(): void
     {
-        $admin = User::create([
+        $admin = User::forceCreate([
             'name'     => 'Filtered Auditor',
             'email'    => 'filter' . rand(1000, 9999) . '@rthquick.com',
             'phone'    => '01988' . rand(100000, 999999),
@@ -772,7 +772,7 @@ class AdminFeatureTest extends TestCase
      */
     public function test_admin_can_view_coupons_list(): void
     {
-        $admin = User::create([
+        $admin = User::forceCreate([
             'name'     => 'Coupon Admin',
             'email'    => 'couponadmin' . rand(1000, 9999) . '@rthquick.com',
             'phone'    => '01711' . rand(100000, 999999),
@@ -800,7 +800,7 @@ class AdminFeatureTest extends TestCase
      */
     public function test_admin_can_create_coupon(): void
     {
-        $admin = User::create([
+        $admin = User::forceCreate([
             'name'     => 'Campaign Creator',
             'email'    => 'creator' . rand(1000, 9999) . '@rthquick.com',
             'phone'    => '01822' . rand(100000, 999999),
@@ -834,7 +834,7 @@ class AdminFeatureTest extends TestCase
      */
     public function test_admin_can_toggle_coupon_status(): void
     {
-        $admin = User::create([
+        $admin = User::forceCreate([
             'name'     => 'Toggle Admin',
             'email'    => 'toggle' . rand(1000, 9999) . '@rthquick.com',
             'phone'    => '01833' . rand(100000, 999999),
@@ -863,7 +863,7 @@ class AdminFeatureTest extends TestCase
      */
     public function test_admin_can_delete_coupon(): void
     {
-        $admin = User::create([
+        $admin = User::forceCreate([
             'name'     => 'Delete Coupon Admin',
             'email'    => 'delcoupon' . rand(1000, 9999) . '@rthquick.com',
             'phone'    => '01844' . rand(100000, 999999),

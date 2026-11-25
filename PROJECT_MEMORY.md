@@ -60,9 +60,11 @@ Phase 11 security hardening is in progress. The first local increment adds
 admin-only session expiry while preserving authentication during storefront
 browsing (idle time is measured from admin requests), effective registration
 throttling, stronger new-password length, guest checkout/search limits, and a
-production Secure session-cookie default. Hosting checks, CSP/HSTS review, MFA,
-role-assignment hardening, dependency audit, and release review remain. No
-migrations or seeders were run. See
+production Secure session-cookie default, `is_admin` mass-assignment hardening
+with a trusted bootstrap-admin path, Composer/npm lockfile updates (both audits
+currently clear), and a CSP Report-Only header. Browser review of CSP reports,
+hosting/HSTS checks, MFA, and release review remain. No migrations or seeders
+were run. See
 `project-record/phases/phase-11-security-hardening/PHASE_11_SECURITY_HARDENING_PLAN.md`.
 
 ## Historical review
