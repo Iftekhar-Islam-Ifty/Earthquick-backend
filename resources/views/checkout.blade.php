@@ -13,7 +13,7 @@
     <ol class="eq-breadcrumb__list" style="display: flex; align-items: center; gap: 0.5rem; list-style: none; margin: 0; padding: 0; font-size: 0.84rem; color: var(--eq-charcoal-soft);">
       <li><a href="{{ route('home') }}" style="color: inherit; text-decoration: none;">Home</a></li>
       <li style="color: var(--eq-line-dark);">&rsaquo;</li>
-      <li><a href="{{ route('category.show', 'women') }}" style="color: inherit; text-decoration: none;">Shop</a></li>
+      <li><a href="{{ route('stores.index') }}" style="color: inherit; text-decoration: none;">Stores</a></li>
       <li style="color: var(--eq-line-dark);">&rsaquo;</li>
       <li style="color: var(--eq-charcoal); font-weight: 500;" aria-current="page">Checkout</li>
     </ol>

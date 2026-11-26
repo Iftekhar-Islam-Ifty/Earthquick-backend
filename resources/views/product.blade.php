@@ -107,7 +107,7 @@
           <!-- RIGHT: PRIMARY INFO (SITS BESIDE THE PICTURE) -->
           <div class="eq-product-header">
             <div class="eq-product-info__category" id="product-category-label">
-              {{ strtoupper($product->category->name) }}{{ $product->subcategory ? ' &bull; ' . strtoupper($product->subcategory->name) : '' }}
+              {{ strtoupper($product->category->name) }}@if($product->subcategory) &bull; {{ strtoupper($product->subcategory->name) }}@endif
             </div>
             <h1 id="product-name">{{ $product->name }}</h1>
 

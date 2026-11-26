@@ -48,3 +48,20 @@ search, sorting and filters should remain within their intended store context.
   failures do not establish a regression in the Phase 7 tablet-menu changes.
 
 No database, migration, seeder or business-record changes are part of this phase.
+
+## Local Chrome follow-up — 2026-11-26
+
+Browser access became available after the original record. A partial visual
+review covered both store homepages, the Bright catalog, and a Nous Telos
+product page at desktop/mobile widths. The product page was also inspected at
+360px, 390px and 768px with no horizontal overflow. Product mobile controls
+and the hero carousel received small UI/accessibility fixes; see the
+[external review follow-up](../../plans/EXTERNAL_REVIEW_TRIAGE_2026-11-26.md).
+The original full journey/browser review remains open, so this follow-up does
+not change Phase 7's completion status.
+
+A further local Chrome pass found and fixed a mobile cart drawer stacking issue
+and an overlapping dedicated cart page. Cart/checkout were checked at 390px and
+360px; catalog search, category selection, sorting and filters worked in the
+Bright catalog. Tablet Shop toggle and Escape dismissal were checked at 820px.
+Variant-product and complete reduced-motion browser verification remain open.

@@ -21,7 +21,7 @@ defect. No live browser/cPanel revision was verified for this record.
 |---|---|---|---|---|
 | Checkout shares stock between legacy size-labelled cart lines | **Fixed locally; verification pending.** At triage, size-labelled cart lines validated separately against shared product stock. Checkout now locks and aggregates by product or variant stock pool, validates combined demand, and decrements each pool once. Cart add/update use the same pool accounting. | Oversell or wrong remaining stock | **Launch blocker until verified** | This plan, checkout correctness |
 | Repeat checkout POST | **Fixed locally; verification pending.** The order number is now a stable, server-derived key for the same session/cart/form submission. Its existing database unique constraint is reserved before stock and coupon changes; retries resolve to the first order. | Duplicate order and customer confusion | **Launch blocker until verified** | This plan, checkout correctness |
-| Escaped category separator | **Confirmed source bug.** `product.blade.php:110` includes literal `&bull;` inside escaped Blade interpolation. | Visible markup text | **Before handover** | This plan, product polish |
+| Escaped category separator | **Fixed locally and visually checked.** Product category labels render a bullet between escaped category names. | Visible markup text | **Before handover** | This plan, product polish |
 | Product details placeholder | **Confirmed template fallback.** `product.blade.php:276` renders it when description is absent. Whether launch listings actually lack descriptions requires data review. | Thin product information | **Client decision/data pending** | Phase 10 Phase 8 |
 | Two Kotki Saree listings at different prices | **Verification pending.** Current source does not establish live catalog equality or approved price. | Possible buyer confusion | **Client decision/data pending** | Phase 10 Phase 8 |
 | Marketplace hero photography and cross-store product cards | **Design proposal.** `home.blade.php:11-35` has abstract graphic; store cards and category links already provide both discovery paths (`home.blade.php:36-88`). Photography/card additions require approved assets and verified products. | Clarifies assortment, but can distract from store choice | **Post-launch improvement** | Phase 10 visual follow-up |
@@ -121,3 +121,37 @@ visual polish and architectural extraction; verification remains open.
   coupon again. A fresh purchase rotates the nonce. Old order numbers are
   untouched. Focused retry/new-purchase regression cases were added but not
   run under the project instruction. Production/security handoff remains open.
+
+## UI-first follow-up — 2026-11-26
+
+- Current local Chrome review covered the marketplace landing page, both store
+  homepages, Bright catalog, and a Nous Telos product page. Product controls
+  were inspected at 390px, 360px and 768px; the Bright catalog at 390px and
+  360px. Those reviewed layouts had no horizontal overflow.
+- Fixed the rendered `&bull;` text in the product category label. Increased
+  small-screen category/stock/option text and option/purchase control heights
+  without changing the desktop product layout. The product label now renders
+  `WOMEN • SAREE` in Chrome.
+- The Nous Telos hero arrows now have stronger contrast. Keyboard arrow input
+  was observed changing slides. The carousel now pauses automatic sliding
+  while focused or the page is hidden, and does not auto-slide for reduced
+  motion. Reduced-motion behavior is source-reviewed, not browser-emulated yet.
+- The first Nous Telos hero currently contains lettering baked into its image.
+  The owner previously requested an image-only hero, so a new HTML CTA or
+  overlay headline was not added. Removing that lettering needs a replacement
+  approved image. Marketplace product photography and Bright real-product
+  imagery also remain dependent on approved assets and verified catalog data.
+- Task 4 remains open for variant-product controls, reduced-motion browser
+  emulation and the complete desktop/tablet buyer journey. No order, migration,
+  seeder or automated test was run in this follow-up.
+- Follow-on local Chrome review found the mobile cart drawer header hidden behind
+  the sticky navbar and the separate `/cart` page's two-column grid overlapping
+  at 390px. The drawer stacking order and dedicated cart-page layout were fixed;
+  cart and checkout were visually checked at 390px and 360px, and the desktop
+  cart kept its two-column layout. A temporary session cart item was removed
+  after review; no order was submitted. Checkout's breadcrumb now links to
+  neutral Stores instead of the unrelated Women category.
+- Bright catalog category selection, search, ascending price sort and the warm
+  filter panel were checked in local Chrome. Tablet Shop toggle was checked at
+  820px; Escape now hides the popup even while the toggle retains pointer
+  hover. Full variant-product and reduced-motion browser checks remain open.

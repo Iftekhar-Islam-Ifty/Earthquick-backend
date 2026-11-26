@@ -3428,10 +3428,10 @@ p {
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  background-color: rgba(27, 58, 75, 0.35);
+  background-color: rgba(27, 58, 75, 0.68);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 253, 249, 0.25);
+  border: 1px solid rgba(255, 253, 249, 0.65);
   color: var(--eq-cream);
   display: flex;
   align-items: center;
@@ -3501,6 +3501,15 @@ p {
   width: 26px;
   border-radius: var(--radius-pill);
   background-color: var(--eq-gold);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .eq-hero__slide,
+  .eq-hero__slide .eq-hero__media img,
+  .eq-hero__slide .eq-hero__content {
+    transition: none;
+    transform: none;
+  }
 }
 
 /* =====================================================================
@@ -5065,6 +5074,27 @@ p {
 /* Tablet & Mobile Breakpoint (<= 991px) */
 
 /* Mobile Screen Breakpoint (< 576px) */
+
+/* Dedicated bag page shares the cart data but needs its own responsive layout. */
+.eq-cart-page__main { padding: 3rem 0; }
+.eq-cart-page__content { max-width: 900px; margin: 0 auto; }
+.eq-cart-page__title { font-family: var(--font-display); font-size: 2.2rem; margin-bottom: 2rem; }
+.eq-cart-page__layout { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 2.5rem; align-items: start; }
+.eq-cart-page__item { display: flex; gap: 1.5rem; padding: 1.5rem 0; border-bottom: 1px solid var(--eq-line); align-items: center; }
+.eq-cart-page__image { width: 90px; height: 110px; object-fit: cover; border-radius: 4px; flex-shrink: 0; }
+.eq-cart-page__item-info { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.eq-cart-page__summary { min-width: 0; background: var(--eq-cream); padding: 2rem; border: 1px solid var(--eq-line); border-radius: var(--radius-sm); }
+.eq-cart-page__coupon-form { display: flex; gap: 0.45rem; margin: 0; }
+.eq-cart-page__coupon-form input { min-width: 0; }
+
+@media (max-width: 768px) {
+  .eq-cart-page__main { padding: 1.5rem 0 2.5rem; }
+  .eq-cart-page__title { font-size: clamp(1.8rem, 7vw, 2.2rem); margin-bottom: 0.75rem; }
+  .eq-cart-page__layout { grid-template-columns: minmax(0, 1fr); gap: 1.5rem; }
+  .eq-cart-page__item { gap: 0.9rem; padding: 1rem 0; }
+  .eq-cart-page__image { width: 78px; height: 96px; }
+  .eq-cart-page__summary { padding: 1.25rem; }
+}
 
 /* =====================================================================
    22. SLIDE-IN SHOPPING CART DRAWER

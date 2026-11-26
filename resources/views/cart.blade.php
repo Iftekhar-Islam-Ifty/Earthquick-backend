@@ -4,19 +4,19 @@
 @section('body_class', 'eq-cart-page')
 
 @section('content')
-<main id="main-content" style="padding: 3rem 0;">
+<main id="main-content" class="eq-cart-page__main">
   <div class="eq-container">
-    <div style="max-width: 900px; margin: 0 auto;">
-      <h1 style="font-family: var(--font-display); font-size: 2.2rem; margin-bottom: 2rem;">Your Shopping Bag</h1>
+    <div class="eq-cart-page__content">
+      <h1 class="eq-cart-page__title">Your Shopping Bag</h1>
 
       @if(count($cart) > 0)
-        <div style="display: grid; grid-template-columns: 1fr 340px; gap: 2.5rem; align-items: start;">
+        <div class="eq-cart-page__layout">
           <!-- Cart Items List -->
           <div>
             @foreach($cart as $key => $item)
-              <div style="display: flex; gap: 1.5rem; padding: 1.5rem 0; border-bottom: 1px solid var(--eq-line); align-items: center;">
-                <img src="{{ asset($item['image']) }}" alt="{{ $item['name'] }}" style="width: 90px; height: 110px; object-fit: cover; border-radius: 4px;" />
-                <div style="flex: 1;">
+              <div class="eq-cart-page__item">
+                <img class="eq-cart-page__image" src="{{ asset($item['image']) }}" alt="{{ $item['name'] }}" />
+                <div class="eq-cart-page__item-info">
                   <h3 style="font-size: 1.05rem; margin-bottom: 0.35rem;">
                     <a href="{{ route('product.show', $item['slug']) }}" style="color: var(--eq-charcoal); text-decoration: none;">
                       {{ $item['name'] }}
@@ -37,7 +37,7 @@
           </div>
 
           <!-- Order Summary Card -->
-          <div style="background: var(--eq-cream); padding: 2rem; border-radius: var(--radius-sm); border: 1px solid var(--eq-line);">
+          <div class="eq-cart-page__summary">
             <h2 style="font-size: 1.3rem; margin-bottom: 1.25rem;">Order Summary</h2>
 
             <!-- Promo / Coupon Box -->
@@ -54,7 +54,7 @@
                   </form>
                 </div>
               @else
-                <form action="{{ route('cart.coupon.apply') }}" method="POST" style="display: flex; gap: 0.45rem; margin: 0;">
+                <form class="eq-cart-page__coupon-form" action="{{ route('cart.coupon.apply') }}" method="POST">
                   @csrf
                   <input type="text" name="code" placeholder="Promo code" value="{{ old('code') }}" style="flex: 1; min-height: 38px; padding: 0.4rem 0.75rem; font-size: 0.82rem; text-transform: uppercase; border: 1px solid #d1d5db; border-radius: 6px; font-family: monospace;" required />
                   <button type="submit" style="min-height: 38px; padding: 0 1rem; background: var(--eq-charcoal, #1a1a1a); color: #ffffff; font-size: 0.82rem; font-weight: 600; border: none; border-radius: 6px; cursor: pointer;">Apply</button>

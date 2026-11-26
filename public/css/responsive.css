@@ -308,6 +308,14 @@
 /* Tablet dropdowns must open on touch as well as hover. The JS switches
    top-level links to toggle behavior up to 991px, so expose that state here. */
 @media (min-width: 769px) and (max-width: 991px) {
+  /* Tablet menus open from their toggles; hover/focus must not reopen after Escape. */
+  .eq-nav-item--has-dropdown:hover .eq-megamenu,
+  .eq-nav-item--has-dropdown:focus-within .eq-megamenu {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
   .eq-nav-item--has-dropdown.is-expanded .eq-megamenu {
     opacity: 1;
     visibility: visible;
@@ -468,7 +476,7 @@
   }
 
   .eq-product-info__category {
-    font-size: 0.58rem;
+    font-size: 0.68rem;
     font-weight: 600;
     letter-spacing: 0.04em;
     text-transform: uppercase;
@@ -546,7 +554,7 @@
   /* Stock status */
   .eq-stock-notice {
     margin-top: 0.1rem !important;
-    font-size: 0.64rem !important;
+    font-size: 0.7rem !important;
     gap: 0.2rem !important;
     line-height: 1.25 !important;
     word-break: break-word;
@@ -567,7 +575,7 @@
   }
 
   .eq-product-info__label {
-    font-size: 0.62rem;
+    font-size: 0.72rem;
     font-weight: 600;
     color: var(--eq-charcoal);
     margin-bottom: 0.12rem;
@@ -581,9 +589,9 @@
   }
 
   .eq-size-options button {
-    padding: 0.18rem 0.38rem;
-    font-size: 0.62rem;
-    min-height: 22px;
+    padding: 0.3rem 0.5rem;
+    font-size: 0.72rem;
+    min-height: 32px;
     border-radius: 3px;
     border: 1px solid var(--eq-line);
     background: #fff;
@@ -619,7 +627,7 @@
   }
 
   .eq-qty-selector {
-    height: 34px;
+    height: 40px;
     width: 68px;
     flex-shrink: 0;
     display: flex;
@@ -633,7 +641,7 @@
 
   .eq-qty-selector button {
     width: 20px;
-    height: 32px;
+    height: 38px;
     font-size: 0.85rem;
     background: none;
     border: none;
@@ -654,7 +662,7 @@
 
   .eq-product-actions #btn-add-to-cart {
     flex: 1.3;
-    height: 34px;
+    height: 40px;
     padding: 0 0.45rem;
     font-size: 0.75rem;
     font-weight: 600;
@@ -675,7 +683,7 @@
 
   .eq-product-actions #btn-buy-now {
     flex: 1;
-    height: 34px;
+    height: 40px;
     padding: 0 0.45rem;
     font-size: 0.75rem;
     font-weight: 600;
@@ -866,7 +874,7 @@
 
   .eq-qty-selector {
     width: 62px;
-    height: 32px;
+    height: 38px;
   }
 
   .eq-qty-selector button {
@@ -877,7 +885,7 @@
   .eq-product-actions #btn-add-to-cart,
   .eq-product-actions #btn-buy-now {
     font-size: 0.72rem;
-    height: 32px;
+    height: 38px;
     padding: 0 0.35rem;
   }
 }
@@ -1116,6 +1124,10 @@
     top: 0 !important;
     z-index: 10000 !important;
   }
+
+  /* The cart must cover the sticky mobile navbar, including its close button. */
+  .eq-cart-backdrop { z-index: 10001; }
+  .eq-cart-drawer { z-index: 10002; }
 
   /* Compact mobile menu toggle, matched to the 34px utility icon buttons. */
   .eq-navbar__toggle {

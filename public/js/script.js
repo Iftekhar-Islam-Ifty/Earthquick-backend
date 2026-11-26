@@ -1377,6 +1377,7 @@ function initHeroSlider() {
   let currentIndex = 0;
   let timer = null;
   const slideCount = slides.length;
+  const reducedMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)");
 
   const goToSlide = (index) => {
     currentIndex = (index + slideCount) % slideCount;
@@ -1399,6 +1400,8 @@ function initHeroSlider() {
 
   const startAutoPlay = () => {
     stopAutoPlay();
+    // Keep slides still for reduced-motion users and while someone is using the controls.
+    if (reducedMotion?.matches || document.hidden || slider.matches(":focus-within")) return;
     timer = setInterval(nextSlide, 6500);
   };
 
@@ -1436,13 +1439,19 @@ function initHeroSlider() {
   // Pause autoplay on mouse hover to allow patron reading
   slider.addEventListener("mouseenter", stopAutoPlay);
   slider.addEventListener("mouseleave", startAutoPlay);
+  slider.addEventListener("focusin", stopAutoPlay);
+  slider.addEventListener("focusout", startAutoPlay);
+  document.addEventListener("visibilitychange", () => document.hidden ? stopAutoPlay() : startAutoPlay());
+  reducedMotion?.addEventListener?.("change", () => reducedMotion.matches ? stopAutoPlay() : startAutoPlay());
 
   // Keyboard navigation when focused
   slider.addEventListener("keydown", (e) => {
     if (e.key === "ArrowLeft") {
+      e.preventDefault();
       prevSlide();
       startAutoPlay();
     } else if (e.key === "ArrowRight") {
+      e.preventDefault();
       nextSlide();
       startAutoPlay();
     }
