@@ -7365,14 +7365,17 @@ p {
 /* Bright electrical storefront */
 .eq-bright-home { background: #f8f4eb; }
 .eq-nous-telos-store-hero .eq-hero__media::after { display: none !important; }
-.eq-nous-telos-store-hero .eq-hero__slide .eq-hero__media img { object-fit: cover; object-position: center; filter: none; opacity: 1; transform: none; }
+.eq-nous-telos-store-hero .eq-hero__slide .eq-hero__media img { object-fit: cover; object-position: center; filter: none; opacity: 1; }
 .eq-bright-store-hero { height: min(58vh, 590px); min-height: 360px; max-height: 590px; background: #173443; }
 .eq-bright-store-hero .eq-hero__media::after { display: none; }
 .eq-bright-store-hero .eq-hero__content { display: none !important; }
 .eq-bright-store-hero .eq-hero__slide .eq-hero__media img { object-fit: cover; object-position: center; filter: none; opacity: 1; }
-.eq-bright-store-hero .eq-hero__nav { opacity: 0; transition: opacity .2s ease; }
+.eq-bright-store-hero .eq-hero__nav,
+.eq-nous-telos-store-hero .eq-hero__nav { opacity: 0; transition: opacity .2s ease; }
 .eq-bright-store-hero:hover .eq-hero__nav,
-.eq-bright-store-hero:focus-within .eq-hero__nav { opacity: 1; }
+.eq-bright-store-hero:focus-within .eq-hero__nav,
+.eq-nous-telos-store-hero:hover .eq-hero__nav,
+.eq-nous-telos-store-hero:focus-within .eq-hero__nav { opacity: 1; }
 .eq-bright-store-hero .eq-hero__dot { border-color: #fffdf8; }
 .eq-bright-store-hero .eq-hero__dot.is-active { background: #e5bd49; border-color: #e5bd49; }
 .eq-bright-section { max-width: 1160px; margin: auto; padding: 2.25rem 1.25rem; }

@@ -5447,15 +5447,12 @@
 }
 
 @media (max-width: 560px) {
-  .eq-nous-telos-store-hero { min-height: 0 !important; height: auto !important; max-height: none !important; }
-  .eq-nous-telos-store-hero .eq-hero__slides { min-height: 0 !important; height: auto !important; position: relative !important; }
-  .eq-nous-telos-store-hero .eq-hero__slide { min-height: 0 !important; height: auto !important; padding: 0 !important; flex-direction: column !important; align-items: stretch !important; justify-content: flex-start !important; }
-  .eq-nous-telos-store-hero .eq-hero__slide.is-active { position: relative !important; inset: auto !important; }
-  .eq-nous-telos-store-hero .eq-hero__media { position: relative !important; inset: auto !important; width: 100% !important; height: auto !important; aspect-ratio: 16 / 9; }
+  .eq-nous-telos-store-hero { min-height: 0 !important; height: auto !important; max-height: none !important; aspect-ratio: 16 / 9; }
+  .eq-nous-telos-store-hero .eq-hero__slides,
+  .eq-nous-telos-store-hero .eq-hero__slide,
+  .eq-nous-telos-store-hero .eq-hero__media { min-height: 0 !important; height: 100% !important; }
   .eq-nous-telos-store-hero .eq-hero__media img { width: 100% !important; height: 100% !important; object-fit: cover !important; object-position: center !important; transform: none !important; filter: none !important; }
   .eq-nous-telos-store-hero .eq-hero__media::after { display: none !important; }
-  .eq-nous-telos-store-hero .eq-hero__nav { top: 28.125vw !important; }
-  .eq-nous-telos-store-hero .eq-hero__dots { top: calc(56.25vw - 32px) !important; right: .75rem !important; bottom: auto !important; left: auto !important; }
 
   .eq-bright-store-hero { min-height: 0 !important; height: auto !important; max-height: none !important; aspect-ratio: 12 / 5; }
   .eq-bright-store-hero .eq-hero__slides,
