@@ -1,7 +1,7 @@
 # Rthquick Phase 11 - Security hardening plan
 
-**Status: In progress.** The first local application controls are implemented;
-source checks and deployment verification remain. This mini-phase follows the
+**Status: In progress.** Local application controls and the MFA migration are
+implemented; production configuration and deployment verification remain. This mini-phase follows the
 source-level security review requested on 2026-11-24. The review did not include
 live cPanel inspection or penetration testing.
 
@@ -129,11 +129,58 @@ Remind the owner of this checklist at Phase 11 closure; do not start the Laravel
   reports on the main store, product, checkout, and admin pages before tightening.
 - HSTS and live document-root/session settings remain cPanel verification items.
 
-Still pending: browser review of CSP reports and a staged CSP tightening plan,
-HSTS/production headers and document-root review on cPanel, MFA and verified-email
-recovery design, and release checks.
-MFA/recovery schema or account changes need a reviewed plan and backup before any
-migration is run. No database migration or seeder was run for this increment.
+## Fifth implementation increment - 2026-11-25
+
+- Added mandatory authenticator-app TOTP MFA for the central admin, one-time
+  recovery codes, attempt throttling, and a one-time enrollment screen. The
+  shared TOTP secret and hashed recovery codes are encrypted at rest through
+  Laravel encrypted casts. No MFA vendor or external QR service receives the
+  secret.
+- Added schema migrations for the admin MFA fields and TOTP replay prevention.
+  Both were applied locally after full database backups; neither was run on
+  cPanel.
+- Added signed email verification for new accounts and email changes, and
+  password reset links only for verified email addresses. Responses do not
+  disclose whether an email belongs to an account. The existing
+  `password_reset_tokens` table is reused. The current `.env.example` mailer is
+  `log`; configure and verify SMTP before relying on email delivery.
+- Added password-session validation on web requests so password changes end
+  other authenticated sessions, plus a ten-minute password confirmation window
+  before permanent order deletion, COD payment marking, refund actions, product
+  deletion and coupon deletion.
+- Admin access now requires verified email and MFA. Existing admin accounts
+  must verify the configured email and enroll an authenticator after the
+  migration is applied. Customers retain remember-me behavior.
+- A TOTP time step can be accepted only once; one-time recovery codes are also
+  consumed atomically, preventing replay of a recently accepted code.
+- PHP syntax lint and `git diff --check` passed. Automated tests were not run.
+- Full local `earthquick_db` dumps were created outside the repository and
+  verified before each migration (27 tables, 11 data statements); migrations
+  are recorded locally as batches 27 and 28. No seeder or cPanel migration was
+  run.
+
+Still pending: configure/test production mail; review CSP browser reports and
+staged tightening; inspect
+production HTTPS/HSTS, response headers, document root and environment on cPanel;
+then complete release checks. Browser and live hosting checks require a running
+app / cPanel access. Do not enable enforcing CSP or HSTS until those checks pass.
+
+### MFA migration review / backup checklist
+
+- Scope: add nullable `users` columns for the encrypted TOTP secret, encrypted
+  hashed recovery codes, confirmation time and last accepted TOTP step. No
+  existing rows are rewritten and no customer/order data is modified.
+- Compatibility: app code and both migrations must be deployed together; until
+  they are applied, MFA enrollment cannot work. Existing admin access will
+  redirect to enrollment after deployment.
+- Backup: create a full database dump immediately before migration, confirm it
+  is non-empty/readable and retain it outside the public web root. Do not include
+  it in Git or place it under `public/`.
+- Apply: both migrations are applied locally. Run the Laravel migration command
+  on production only after confirming its database backup and target.
+- Rollback: first restore compatible application code. Rolling back these
+  migrations deletes MFA secrets, recovery codes and replay state, so admins
+  must set up MFA again after any rollback/re-apply.
 
 ## Boundaries and dependencies
 
@@ -141,7 +188,7 @@ migration is run. No database migration or seeder was run for this increment.
   environment or account settings have been changed.
 - Live cPanel document-root, HTTPS and environment values require deployment
   access and owner authorization.
-- If MFA requires a schema migration, prepare a reviewed migration and backup
-  plan first; do not run it as part of planning.
+- Any future MFA schema changes need a verified database backup and reviewed
+  plan before application; preserve rollback ability.
 - Security verification should use a staging copy. Do not run tests or scans that
   modify business data against production.

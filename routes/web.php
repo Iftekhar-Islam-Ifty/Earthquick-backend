@@ -6,6 +6,10 @@ use App\Http\Controllers\AdminEmailDeliveryController;
 use App\Http\Controllers\AdminHomepageImageController;
 use App\Http\Controllers\AdminVendorController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AdminSecurityController;
+use App\Http\Controllers\AdminPasswordConfirmationController;
+use App\Http\Controllers\EmailVerificationController;
+use App\Http\Controllers\PasswordRecoveryController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CheckoutController;
@@ -98,12 +102,19 @@ Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
 Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
 Route::post('/register', [AuthController::class, 'register'])->name('register.submit');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::get('/forgot-password', [PasswordRecoveryController::class, 'requestForm'])->name('password.request');
+Route::post('/forgot-password', [PasswordRecoveryController::class, 'sendLink'])->middleware('throttle:5,1')->name('password.email');
+Route::get('/reset-password/{token}', [PasswordRecoveryController::class, 'resetForm'])->name('password.reset');
+Route::post('/reset-password', [PasswordRecoveryController::class, 'reset'])->middleware('throttle:5,1')->name('password.update');
 
 /* =========================================================================
  * 8. CUSTOMER DASHBOARD & ORDER HISTORY
  * Authenticated customer account hub, address management, and order tracking.
  * ========================================================================= */
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'auth.session'])->group(function () {
+    Route::get('/email/verify', [EmailVerificationController::class, 'notice'])->name('verification.notice');
+    Route::get('/email/verify/{id}/{hash}', [EmailVerificationController::class, 'verify'])->middleware('signed')->name('verification.verify');
+    Route::post('/email/verification-notification', [EmailVerificationController::class, 'resend'])->middleware('throttle:6,1')->name('verification.send');
     Route::get('/account', [AccountController::class, 'index'])->name('account.dashboard');
     Route::get('/account/order/{order_number}', [AccountController::class, 'showOrder'])->name('account.order');
     Route::post('/account/profile/update', [AccountController::class, 'updateProfile'])->name('account.profile.update');
@@ -120,7 +131,17 @@ Route::get('/api/search/suggestions', [SearchController::class, 'suggestions'])-
  * 10. ADMINISTRATIVE CONTROL PANEL
  * Protected management suite for orders, inventory statuses, and metrics.
  * ========================================================================= */
-Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+Route::middleware(['auth', 'auth.session'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/security/setup', [AdminSecurityController::class, 'setup'])->name('security.setup');
+    Route::post('/security/setup', [AdminSecurityController::class, 'confirmSetup'])->middleware('throttle:5,1')->name('security.setup.confirm');
+    Route::get('/security/recovery-codes', [AdminSecurityController::class, 'recoveryCodes'])->name('security.recovery-codes');
+    Route::get('/security/challenge', [AdminSecurityController::class, 'challenge'])->name('security.challenge');
+    Route::post('/security/challenge', [AdminSecurityController::class, 'verifyChallenge'])->middleware('throttle:10,5')->name('security.challenge.verify');
+    Route::get('/security/confirm-password', [AdminPasswordConfirmationController::class, 'show'])->name('security.confirm-password');
+    Route::post('/security/confirm-password', [AdminPasswordConfirmationController::class, 'confirm'])->middleware('throttle:10,5')->name('security.confirm-password.submit');
+});
+
+Route::middleware(['auth', 'admin', 'auth.session'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [AdminController::class, 'dashboard'])->name('dashboard');
     Route::get('/homepage-images', [AdminHomepageImageController::class, 'index'])->name('homepage-images.index');
     Route::post('/homepage-images/{slot}', [AdminHomepageImageController::class, 'update'])->name('homepage-images.update');
@@ -135,17 +156,17 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::post('/orders/{id}/unarchive', [AdminController::class, 'unarchiveOrder'])->name('orders.unarchive');
     Route::delete('/orders/{id}', [AdminController::class, 'trashOrder'])->name('orders.trash');
     Route::post('/orders/{id}/restore', [AdminController::class, 'restoreTrashedOrder'])->name('orders.restore');
-    Route::delete('/orders/{id}/purge', [AdminController::class, 'purgeOrder'])->name('orders.purge');
+    Route::delete('/orders/{id}/purge', [AdminController::class, 'purgeOrder'])->middleware('admin.recent-password')->name('orders.purge');
     Route::post('/orders/{id}/status', [AdminController::class, 'updateOrderStatus'])->name('orders.update-status');
-    Route::post('/orders/{id}/cod-paid', [AdminController::class, 'markCodPaid'])->name('orders.cod-paid');
+    Route::post('/orders/{id}/cod-paid', [AdminController::class, 'markCodPaid'])->middleware('admin.recent-password')->name('orders.cod-paid');
     Route::post('/orders/{id}/cancellation-requests/{requestId}/decision', [AdminController::class, 'decideCancellation'])->name('orders.cancellation-decision');
     Route::post('/orders/{id}/return-requests/{requestId}/decision', [OrderReturnController::class, 'decide'])->name('orders.return-decision');
     Route::post('/orders/{id}/return-requests/{requestId}/receive', [OrderReturnController::class, 'receive'])->name('orders.return-receive');
     Route::post('/orders/{id}/return-requests/{requestId}/inspect', [OrderReturnController::class, 'inspect'])->name('orders.return-inspect');
     Route::post('/orders/{id}/return-requests/{requestId}/restock', [OrderReturnController::class, 'restock'])->name('orders.return-restock');
-    Route::post('/orders/{id}/return-requests/{requestId}/refund', [OrderRefundController::class, 'approve'])->name('orders.refund-approve');
-    Route::post('/orders/{id}/refunds/{refundId}/verify-recipient', [OrderRefundController::class, 'verifyRecipient'])->name('orders.refund-verify-recipient');
-    Route::post('/orders/{id}/refunds/{refundId}/complete', [OrderRefundController::class, 'complete'])->name('orders.refund-complete');
+    Route::post('/orders/{id}/return-requests/{requestId}/refund', [OrderRefundController::class, 'approve'])->middleware('admin.recent-password')->name('orders.refund-approve');
+    Route::post('/orders/{id}/refunds/{refundId}/verify-recipient', [OrderRefundController::class, 'verifyRecipient'])->middleware('admin.recent-password')->name('orders.refund-verify-recipient');
+    Route::post('/orders/{id}/refunds/{refundId}/complete', [OrderRefundController::class, 'complete'])->middleware('admin.recent-password')->name('orders.refund-complete');
     Route::get('/orders/{id}/invoice', [AdminController::class, 'orderInvoice'])->name('orders.invoice');
     Route::get('/products', [AdminController::class, 'products'])->name('products');
     Route::get('/products/stock-levels', [AdminController::class, 'stockLevels'])->name('products.stock-levels');
@@ -153,7 +174,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::post('/products', [AdminController::class, 'storeProduct'])->name('products.store');
     Route::get('/products/{id}/edit', [AdminController::class, 'editProduct'])->name('products.edit');
     Route::put('/products/{id}', [AdminController::class, 'updateProduct'])->name('products.update');
-    Route::delete('/products/{id}', [AdminController::class, 'deleteProduct'])->name('products.delete');
+    Route::delete('/products/{id}', [AdminController::class, 'deleteProduct'])->middleware('admin.recent-password')->name('products.delete');
     Route::post('/products/{id}/toggle-stock', [AdminController::class, 'toggleStock'])->name('products.toggle-stock');
 
     // Coupon & Promotional Campaign Management
@@ -161,7 +182,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/coupons/create', [AdminController::class, 'couponCreate'])->name('coupons.create');
     Route::post('/coupons', [AdminController::class, 'couponStore'])->name('coupons.store');
     Route::post('/coupons/{id}/toggle', [AdminController::class, 'couponToggle'])->name('coupons.toggle');
-    Route::delete('/coupons/{id}', [AdminController::class, 'couponDestroy'])->name('coupons.destroy');
+    Route::delete('/coupons/{id}', [AdminController::class, 'couponDestroy'])->middleware('admin.recent-password')->name('coupons.destroy');
 
     // Store and vendor administration
     Route::get('/vendors', [AdminVendorController::class, 'index'])->name('vendors.index');

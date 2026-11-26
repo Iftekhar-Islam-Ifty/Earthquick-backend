@@ -4,6 +4,8 @@ use App\Http\Middleware\AdminMiddleware;
 use App\Http\Middleware\AdminSessionCookieLifetime;
 use App\Http\Middleware\AdminSessionBoundary;
 use App\Http\Middleware\SecurityHeaders;
+use App\Http\Middleware\RequireRecentAdminPassword;
+use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -20,6 +22,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->appendToGroup('web', [
             AdminSessionBoundary::class,
+            AuthenticateSession::class,
         ]);
 
         $middleware->append([
@@ -29,6 +32,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->alias([
             'admin' => AdminMiddleware::class,
+            'admin.recent-password' => RequireRecentAdminPassword::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

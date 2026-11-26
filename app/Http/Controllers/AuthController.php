@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\RateLimiter;
@@ -98,8 +99,13 @@ class AuthController extends Controller
                     'admin.browser_session_only' => true,
                 ]);
 
-                return redirect()->route('admin.dashboard')
-                    ->with('success', 'Welcome, ' . Auth::user()->name . '! Logged in to Admin Panel.');
+                if (! $admin->hasVerifiedEmail()) {
+                    return redirect()->route('verification.notice');
+                }
+                if (! $admin->admin_totp_confirmed_at) {
+                    return redirect()->route('admin.security.setup');
+                }
+                return redirect()->route('admin.security.challenge');
             }
 
             $customer = Auth::user();
@@ -185,9 +191,10 @@ class AuthController extends Controller
 
         Auth::login($user);
         $request->session()->regenerate();
+        event(new Registered($user));
 
-        return redirect()->route('account.dashboard')
-            ->with('success', 'Welcome to Rthquick! Your account has been created successfully.');
+        return redirect()->route('verification.notice')
+            ->with('success', 'Your account is ready. Verify your email to enable password recovery.');
     }
 
     /**

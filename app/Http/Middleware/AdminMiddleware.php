@@ -35,6 +35,18 @@ class AdminMiddleware
             abort(403, 'Unauthorized access. This area is reserved for system administrators only.');
         }
 
+        if (! Auth::user()->hasVerifiedEmail()) {
+            return redirect()->route('verification.notice');
+        }
+
+        if (! Auth::user()->admin_totp_confirmed_at) {
+            return redirect()->route('admin.security.setup');
+        }
+
+        if (! $request->session()->boolean('admin.mfa_verified')) {
+            return redirect()->route('admin.security.challenge');
+        }
+
         return $next($request);
     }
 }

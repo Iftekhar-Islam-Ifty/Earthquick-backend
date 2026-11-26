@@ -80,6 +80,9 @@
           </label>
           <small style="display: block; margin-top: 0.35rem; color: var(--eq-charcoal-soft); font-size: 0.76rem;">Remember me applies to customer accounts only. Admin sessions end when the browser closes or after 15 minutes without admin activity.</small>
         </div>
+        <div style="text-align:right;margin:-0.65rem 0 1rem;font-size:0.86rem">
+          <a href="{{ route('password.request') }}" class="eq-auth-link">Forgot password?</a>
+        </div>
 
         <button type="submit" class="eq-auth-submit-btn" id="btn-login-submit">
           Sign In &rarr;

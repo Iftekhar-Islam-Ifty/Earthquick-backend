@@ -80,6 +80,7 @@ class AccountController extends Controller
         ]);
 
         // Persist sanitized customer credentials
+        $emailChanged = strtolower(trim($request->email)) !== strtolower($user->email);
         $user->update([
             'name' => trim($request->name),
             'email' => strtolower(trim($request->email)),
@@ -88,6 +89,11 @@ class AccountController extends Controller
             'area' => $request->area,
             'address' => $request->address,
         ]);
+
+        if ($emailChanged) {
+            $user->forceFill(['email_verified_at' => null])->save();
+            $user->sendEmailVerificationNotification();
+        }
 
         return redirect()->route('account.dashboard')->with('success', 'Profile information updated successfully.');
     }
