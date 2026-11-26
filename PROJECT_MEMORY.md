@@ -63,9 +63,22 @@ throttling, stronger new-password length, guest checkout/search limits, and a
 production Secure session-cookie default, `is_admin` mass-assignment hardening
 with a trusted bootstrap-admin path, Composer/npm lockfile updates (both audits
 currently clear), and a CSP Report-Only header. Browser review of CSP reports,
-hosting/HSTS checks, MFA, and release review remain. No migrations or seeders
-were run. See
+hosting/HSTS checks and release review remain. Admin MFA, verified-email
+password recovery and recent-password checks were implemented on 2026-11-25.
+Both additive MFA migrations were applied to the local database after verified
+backups. Admin login and idle expiry now clear all MFA session markers; MFA
+secrets are hidden from serialized user data. Production SMTP, cPanel migration,
+document-root/HTTPS review, CSP browser review and release checks remain. See
 `project-record/phases/phase-11-security-hardening/PHASE_11_SECURITY_HARDENING_PLAN.md`.
+
+The 2026-11-26 external-review triage is in
+`project-record/plans/EXTERNAL_REVIEW_TRIAGE_2026-11-26.md`. The checkout
+stock-pool aggregation risk is fixed locally in cart/checkout code, with focused
+regression cases added but not run. Server-side repeat-submit idempotency is also
+implemented locally using the existing unique order-number index and a stable
+session/cart/form key; it requires no migration but still needs isolated
+verification. Visual observations from older screenshots remain
+pending a complete current-browser review.
 
 ## Historical review
 

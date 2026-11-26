@@ -42,6 +42,13 @@ single central-admin model and the existing customer/store flows.
 
 ## Phase 11.3 - Dependency and release review
 
+The [2026-11-26 external-review triage](../../plans/EXTERNAL_REVIEW_TRIAGE_2026-11-26.md)
+tracks checkout correctness separately. Phase 11 owns production proof for the
+deployed revision, public document root (including the Softaculous WordPress
+record at `public_html`), HTTPS/debug/cookie headers, MFA and verified email,
+SMTP/scheduler, database and uploads backup/restore, and rollback. No item is
+verified solely from local configuration or prior cPanel screenshots.
+
 - Run Composer and npm advisory audits when network access is available; review
   and update affected dependencies without unreviewed major-version upgrades.
   (Completed locally on 2026-11-25; both lockfile audits are clear.)
@@ -181,6 +188,29 @@ app / cPanel access. Do not enable enforcing CSP or HSTS until those checks pass
 - Rollback: first restore compatible application code. Rolling back these
   migrations deletes MFA secrets, recovery codes and replay state, so admins
   must set up MFA again after any rollback/re-apply.
+
+## Sixth implementation increment - 2026-11-26
+
+- Cleared MFA proof and recent-password markers whenever an admin session
+  expires or a fresh admin password login begins. An expired session can no
+  longer carry MFA proof into the next login.
+- Hid encrypted MFA secrets and recovery-code hashes from model serialization.
+  Sensitive admin setup/challenge and email recovery pages now send `no-store`.
+- Static CSP inventory found extensive inline markup in Blade views (more than
+  1,400 inline script/style/event/style-attribute occurrences). Keep CSP in
+  report-only mode; enabling the current strict policy would break the site.
+- Local source checks only; production access, SMTP setup and browser review
+  remain outstanding.
+
+## Local browser observation - 2026-11-26
+
+- The local homepage returned HTTP 200 with the expected
+  `Content-Security-Policy-Report-Only`, `X-Content-Type-Options: nosniff`,
+  and `Referrer-Policy: strict-origin-when-cross-origin` headers.
+- Chrome showed no captured console errors on the homepage or Bright storefront.
+  This does not prove a clean CSP: the page has extensive inline resources and
+  no violation reporting collector. Keep the policy report-only. Product,
+  checkout, admin, production headers, SMTP and cPanel checks remain open.
 
 ## Boundaries and dependencies
 

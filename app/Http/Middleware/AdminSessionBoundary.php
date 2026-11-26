@@ -80,7 +80,11 @@ class AdminSessionBoundary
             'admin.authenticated_at',
             'admin.last_activity_at',
             'admin.browser_session_only',
+            'admin.mfa_verified',
+            'admin.password_confirmed_at',
+            'admin.recovery_codes',
         ]);
-        $request->session()->regenerate();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
     }
 }

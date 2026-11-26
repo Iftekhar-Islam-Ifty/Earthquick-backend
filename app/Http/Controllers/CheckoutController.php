@@ -7,6 +7,7 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
 use App\Models\ProductVariant;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -115,9 +116,18 @@ class CheckoutController extends Controller
         ]);
 
         $cart = session()->get('cart', []);
+        $requestFingerprint = $this->checkoutRequestFingerprint($request);
 
         // Guard against empty checkout submissions
         if (empty($cart)) {
+            $lastCheckout = session('last_checkout');
+            if (is_array($lastCheckout)
+                && ($lastCheckout['request_fingerprint'] ?? null) === $requestFingerprint
+                && now()->timestamp - (int) ($lastCheckout['completed_at'] ?? 0) <= 1800
+                && ($order = $this->matchingCompletedOrder((string) ($lastCheckout['order_number'] ?? ''), $request))) {
+                return redirect()->route('checkout.success', ['order_number' => $order->order_number]);
+            }
+
             return redirect()->route('cart.index')->with('error', 'Your shopping bag is empty. Please add items before checking out.');
         }
 
@@ -131,170 +141,266 @@ class CheckoutController extends Controller
             ]);
         }
 
-        // Human-readable invoice number: EQ-2026-XXXX-XXXX
-        $orderNumber = 'EQ-'.date('Y').'-'.strtoupper(Str::random(4)).'-'.rand(1000, 9999);
+        // The order number doubles as a persisted idempotency key. Identical
+        // submissions from this session produce the same value until placement.
+        $orderNumber = $this->checkoutOrderNumber($cart, $requestFingerprint);
+        if ($existingOrder = $this->matchingCompletedOrder($orderNumber, $request)) {
+            $this->rememberCompletedCheckout($existingOrder, $requestFingerprint);
+
+            return redirect()->route('checkout.success', ['order_number' => $existingOrder->order_number]);
+        }
 
         // Execute atomic order persistence transaction
-        $order = DB::transaction(function () use ($request, $orderNumber, $paymentMethod, $cart) {
-            $items = [];
-            $subtotal = 0.00;
+        try {
+            $order = DB::transaction(function () use ($request, $orderNumber, $paymentMethod, $cart) {
+                $items = [];
+                $subtotal = 0.00;
 
-            foreach ($cart as $item) {
-                $productId = $item['product_id'] ?? $item['id'] ?? null;
-                $quantity = (int) ($item['quantity'] ?? 0);
-                $product = Product::with(['vendor', 'brand.warrantyProvider'])->lockForUpdate()->find($productId);
-                $variantId = $item['variant_id'] ?? null;
-                $variant = $variantId
-                    ? ProductVariant::query()
-                        ->whereKey($variantId)
-                        ->where('product_id', $productId)
-                        ->lockForUpdate()
-                        ->first()
-                    : null;
-                $hasActiveVariants = $product?->variants()
-                    ->where('is_active', true)
-                    ->exists() ?? false;
-                $availableStock = $variant?->stock_quantity ?? $product?->stock_quantity ?? 0;
-
-                if (! $product || $quantity < 1 || ! $product->isPubliclyAvailable()
-                    || ! $product->in_stock || ($variantId && (! $variant || ! $variant->is_active))
-                    || ($hasActiveVariants && ! $variant) || $availableStock < $quantity) {
-                    throw ValidationException::withMessages([
-                        'cart' => 'One or more items are no longer available in the requested quantity.',
-                    ]);
-                }
-
-                $unitPrice = $variant?->price !== null
-                    ? (float) $variant->price
-                    : (float) $product->price;
-
-                $items[] = [
-                    'product' => $product,
-                    'variant' => $variant,
-                    'quantity' => $quantity,
-                    'size' => $variant?->label ?? ($item['size'] ?? 'Standard'),
-                    'unit_price' => $unitPrice,
-                ];
-                $subtotal += $unitPrice * $quantity;
-            }
-
-            $deliveryFee = $subtotal >= CartController::FREE_SHIPPING_THRESHOLD
-                ? 0.00
-                : ($request->delivery_zone === 'inside_ctg'
-                    ? self::DELIVERY_FEE_INSIDE_CTG
-                    : self::DELIVERY_FEE_OUTSIDE_CTG);
-
-            // Re-validate and apply coupon discount safely inside transaction
-            $couponCode = null;
-            $couponId = null;
-            $discountAmount = 0.00;
-
-            if (session()->has('coupon')) {
-                $sessionCoupon = session('coupon');
-                $coupon = Coupon::find($sessionCoupon['id'] ?? null);
-                if ($coupon && $coupon->isValid($subtotal)['valid']) {
-                    $discountAmount = $coupon->calculateDiscount($subtotal);
-                    $couponCode = $coupon->code;
-                    $couponId = $coupon->id;
-                    $coupon->increment('used_count');
-                }
-            }
-
-            $total = max(0, $subtotal - $discountAmount) + $deliveryFee;
-
-            $newOrder = Order::create([
-                'order_number' => $orderNumber,
-                'user_id' => auth()->id(),
-                'customer_name' => $request->customer_name,
-                'customer_phone' => $request->customer_phone,
-                'customer_email' => $request->customer_email,
-                'delivery_zone' => $request->delivery_zone,
-                'district' => $request->district,
-                'area' => $request->area,
-                'address' => $request->address,
-                'order_notes' => $request->order_notes,
-                'payment_method' => $paymentMethod,
-                'payment_status' => 'due_on_delivery',
-                'coupon_code' => $couponCode,
-                'coupon_id' => $couponId,
-                'discount_amount' => $discountAmount,
-                'subtotal' => $subtotal,
-                'delivery_fee' => $deliveryFee,
-                'total' => $total,
-                'status' => 'pending',
-            ]);
-
-            $newOrder->statusEvents()->create([
-                'actor_user_id' => auth()->id(),
-                'source' => 'checkout',
-                'from_status' => null,
-                'to_status' => 'pending',
-            ]);
-
-            foreach ($items as $item) {
-                $product = $item['product'];
-                $variant = $item['variant'];
-                $quantity = $item['quantity'];
-                $size = $item['size'];
-                $unitPrice = $item['unit_price'];
-
-                if ($variant) {
-                    $variant->update([
-                        'stock_quantity' => $variant->stock_quantity - $quantity,
-                    ]);
-
-                    $remainingStock = (int) $product->variants()
-                        ->where('is_active', true)
-                        ->sum('stock_quantity');
-                    $product->update([
-                        'stock_quantity' => $remainingStock,
-                        'in_stock' => $remainingStock > 0,
-                    ]);
-                } else {
-                    $remainingStock = $product->stock_quantity - $quantity;
-                    $product->update([
-                        'stock_quantity' => $remainingStock,
-                        'in_stock' => $remainingStock > 0,
-                    ]);
-                }
-
-                OrderItem::create([
-                    'order_id' => $newOrder->id,
-                    'vendor_id' => $product->vendor_id,
-                    'product_id' => $product->id,
-                    'variant_id' => $variant?->id,
-                    'product_name' => $product->name.(! $variant && $size !== 'Standard' ? " ({$size})" : ''),
-                    'vendor_name' => $product->vendor?->name,
-                    'product_brand_name' => $product->brand?->name,
-                    'warranty_provider_name' => $product->brand?->warrantyProvider?->name,
-                    'variant_sku' => $variant?->sku,
-                    'variant_label' => $variant?->label,
-                    'variant_attributes' => $variant?->attributes,
-                    'delivery_class' => $product->delivery_class,
-                    'is_returnable' => $product->is_returnable,
-                    'return_window_days' => $product->return_window_days,
-                    'return_policy_note' => $product->return_policy_note,
-                    'product_image' => $product->image,
-                    'unit_price' => $unitPrice,
-                    'quantity' => $quantity,
-                    'total_price' => $unitPrice * $quantity,
+                // Reserve the unique order number before stock/coupon work. A
+                // concurrent retry must wait here, then reuse the committed order.
+                $newOrder = Order::create([
+                    'order_number' => $orderNumber,
+                    'user_id' => auth()->id(),
+                    'customer_name' => $request->customer_name,
+                    'customer_phone' => $request->customer_phone,
+                    'customer_email' => $request->customer_email,
+                    'delivery_zone' => $request->delivery_zone,
+                    'district' => $request->district,
+                    'area' => $request->area,
+                    'address' => $request->address,
+                    'order_notes' => $request->order_notes,
+                    'payment_method' => $paymentMethod,
+                    'payment_status' => 'due_on_delivery',
+                    'subtotal' => 0,
+                    'delivery_fee' => 0,
+                    'total' => 0,
+                    'status' => 'pending',
                 ]);
+                $productIds = collect($cart)->map(fn ($item) => (int) ($item['product_id'] ?? $item['id'] ?? 0))
+                    ->filter()->unique()->sort()->values()->all();
+                $variantIds = collect($cart)->map(fn ($item) => (int) ($item['variant_id'] ?? 0))
+                    ->filter()->unique()->sort()->values()->all();
+
+                // Lock each inventory row once and in a stable order before checking any cart line.
+                $products = Product::with(['vendor', 'brand.warrantyProvider'])
+                    ->whereIn('id', $productIds)->orderBy('id')->lockForUpdate()->get()->keyBy('id');
+                $variants = ProductVariant::query()->whereIn('id', $variantIds)
+                    ->orderBy('id')->lockForUpdate()->get()->keyBy('id');
+                $activeVariantProducts = [];
+                $stockPools = [];
+
+                foreach ($cart as $item) {
+                    $productId = $item['product_id'] ?? $item['id'] ?? null;
+                    $quantity = (int) ($item['quantity'] ?? 0);
+                    $product = $products->get((int) $productId);
+                    $variantId = $item['variant_id'] ?? null;
+                    $variant = $variantId ? $variants->get((int) $variantId) : null;
+                    $hasActiveVariants = $product
+                        ? ($activeVariantProducts[$product->id] ??= $product->activeVariants()->exists())
+                        : false;
+
+                    if (! $product || $quantity < 1 || ! $product->isPubliclyAvailable()
+                        || ! $product->in_stock
+                        || ($variantId && (! $variant || $variant->product_id !== $product->id || ! $variant->is_active))
+                        || ($hasActiveVariants && ! $variant)) {
+                        throw ValidationException::withMessages([
+                            'cart' => 'One or more items are no longer available in the requested quantity.',
+                        ]);
+                    }
+
+                    // Legacy size labels share product stock; real variants each own a stock pool.
+                    $poolKey = $variant ? 'variant:'.$variant->id : 'product:'.$product->id;
+                    $stockPools[$poolKey] ??= [
+                        'product' => $product,
+                        'variant' => $variant,
+                        'available' => (int) ($variant?->stock_quantity ?? $product->stock_quantity),
+                        'quantity' => 0,
+                    ];
+                    $stockPools[$poolKey]['quantity'] += $quantity;
+
+                    $unitPrice = $variant?->price !== null
+                        ? (float) $variant->price
+                        : (float) $product->price;
+
+                    $items[] = [
+                        'product' => $product,
+                        'variant' => $variant,
+                        'quantity' => $quantity,
+                        'size' => $variant?->label ?? ($item['size'] ?? 'Standard'),
+                        'unit_price' => $unitPrice,
+                    ];
+                    $subtotal += $unitPrice * $quantity;
+                }
+
+                foreach ($stockPools as $pool) {
+                    if ($pool['available'] < $pool['quantity']) {
+                        throw ValidationException::withMessages([
+                            'cart' => 'One or more items are no longer available in the requested quantity.',
+                        ]);
+                    }
+                }
+
+                $deliveryFee = $subtotal >= CartController::FREE_SHIPPING_THRESHOLD
+                    ? 0.00
+                    : ($request->delivery_zone === 'inside_ctg'
+                        ? self::DELIVERY_FEE_INSIDE_CTG
+                        : self::DELIVERY_FEE_OUTSIDE_CTG);
+
+                // Re-validate and apply coupon discount safely inside transaction
+                $couponCode = null;
+                $couponId = null;
+                $discountAmount = 0.00;
+
+                if (session()->has('coupon')) {
+                    $sessionCoupon = session('coupon');
+                    $coupon = Coupon::find($sessionCoupon['id'] ?? null);
+                    if ($coupon && $coupon->isValid($subtotal)['valid']) {
+                        $discountAmount = $coupon->calculateDiscount($subtotal);
+                        $couponCode = $coupon->code;
+                        $couponId = $coupon->id;
+                        $coupon->increment('used_count');
+                    }
+                }
+
+                $total = max(0, $subtotal - $discountAmount) + $deliveryFee;
+
+                $newOrder->update([
+                    'coupon_code' => $couponCode,
+                    'coupon_id' => $couponId,
+                    'discount_amount' => $discountAmount,
+                    'subtotal' => $subtotal,
+                    'delivery_fee' => $deliveryFee,
+                    'total' => $total,
+                ]);
+
+                $newOrder->statusEvents()->create([
+                    'actor_user_id' => auth()->id(),
+                    'source' => 'checkout',
+                    'from_status' => null,
+                    'to_status' => 'pending',
+                ]);
+
+                $productsWithVariants = [];
+                foreach ($stockPools as $pool) {
+                    $remainingStock = $pool['available'] - $pool['quantity'];
+                    if ($pool['variant']) {
+                        $pool['variant']->update(['stock_quantity' => $remainingStock]);
+                        $productsWithVariants[$pool['product']->id] = $pool['product'];
+                    } else {
+                        $pool['product']->update([
+                            'stock_quantity' => $remainingStock,
+                            'in_stock' => $remainingStock > 0,
+                        ]);
+                    }
+                }
+                foreach ($productsWithVariants as $product) {
+                    $remainingStock = (int) $product->activeVariants()->sum('stock_quantity');
+                    $product->update(['stock_quantity' => $remainingStock, 'in_stock' => $remainingStock > 0]);
+                }
+
+                foreach ($items as $item) {
+                    $product = $item['product'];
+                    $variant = $item['variant'];
+                    $quantity = $item['quantity'];
+                    $size = $item['size'];
+                    $unitPrice = $item['unit_price'];
+
+                    OrderItem::create([
+                        'order_id' => $newOrder->id,
+                        'vendor_id' => $product->vendor_id,
+                        'product_id' => $product->id,
+                        'variant_id' => $variant?->id,
+                        'product_name' => $product->name.(! $variant && $size !== 'Standard' ? " ({$size})" : ''),
+                        'vendor_name' => $product->vendor?->name,
+                        'product_brand_name' => $product->brand?->name,
+                        'warranty_provider_name' => $product->brand?->warrantyProvider?->name,
+                        'variant_sku' => $variant?->sku,
+                        'variant_label' => $variant?->label,
+                        'variant_attributes' => $variant?->attributes,
+                        'delivery_class' => $product->delivery_class,
+                        'is_returnable' => $product->is_returnable,
+                        'return_window_days' => $product->return_window_days,
+                        'return_policy_note' => $product->return_policy_note,
+                        'product_image' => $product->image,
+                        'unit_price' => $unitPrice,
+                        'quantity' => $quantity,
+                        'total_price' => $unitPrice * $quantity,
+                    ]);
+                }
+
+                return $newOrder;
+            });
+        } catch (QueryException $exception) {
+            $existingOrder = $this->matchingCompletedOrder($orderNumber, $request);
+            if (! $existingOrder) {
+                throw $exception;
             }
 
-            return $newOrder;
-        });
+            $this->rememberCompletedCheckout($existingOrder, $requestFingerprint);
+
+            return redirect()->route('checkout.success', ['order_number' => $existingOrder->order_number]);
+        }
 
         // Clear active shopping cart and applied coupon upon successful placement
-        session()->forget('cart');
-        session()->forget('coupon');
-        session()->put('checkout_order_numbers', array_values(array_unique([
-            ...session('checkout_order_numbers', []),
-            $order->order_number,
-        ])));
+        $this->rememberCompletedCheckout($order, $requestFingerprint);
 
         app(\App\Services\CustomerCommunications::class)->order($order, 'placed');
 
         return redirect()->route('checkout.success', ['order_number' => $order->order_number]);
+    }
+
+    /** Identical session/cart/form submissions use the existing unique order number constraint. */
+    private function checkoutOrderNumber(array $cart, string $requestFingerprint): string
+    {
+        $payload = implode('|', [
+            session()->getId(),
+            session('checkout_nonce', 'initial'),
+            hash('sha256', serialize($cart)),
+            $requestFingerprint,
+        ]);
+        $digest = strtoupper(substr(hash_hmac('sha256', $payload, (string) config('app.key')), 0, 24));
+
+        return 'EQ-'.substr($digest, 0, 12).'-'.substr($digest, 12, 12);
+    }
+
+    private function checkoutRequestFingerprint(Request $request): string
+    {
+        return hash('sha256', serialize($request->only([
+            'customer_name', 'customer_phone', 'customer_email', 'delivery_zone',
+            'district', 'area', 'address', 'order_notes', 'payment_method',
+        ])));
+    }
+
+    private function matchingCompletedOrder(string $orderNumber, Request $request): ?Order
+    {
+        if ($orderNumber === '') {
+            return null;
+        }
+
+        $order = Order::query()->where('order_number', $orderNumber)->first();
+
+        if (! $order || $order->user_id !== auth()->id()
+            || $order->customer_phone !== $request->input('customer_phone')
+            || $order->customer_name !== $request->input('customer_name')) {
+            return null;
+        }
+
+        return $order;
+    }
+
+    private function rememberCompletedCheckout(Order $order, string $requestFingerprint): void
+    {
+        session()->forget(['cart', 'coupon']);
+        session()->put('checkout_nonce', Str::random(32));
+        session()->put('checkout_order_numbers', array_values(array_unique([
+            ...session('checkout_order_numbers', []),
+            $order->order_number,
+        ])));
+        session()->put('last_checkout', [
+            'order_number' => $order->order_number,
+            'request_fingerprint' => $requestFingerprint,
+            'completed_at' => now()->timestamp,
+        ]);
     }
 
     /* =========================================================================

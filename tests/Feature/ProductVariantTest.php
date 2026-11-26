@@ -94,6 +94,37 @@ class ProductVariantTest extends TestCase
         $this->assertSame(1250.0, $item->unit_price);
     }
 
+    public function test_checkout_keeps_two_variant_stock_pools_independent(): void
+    {
+        [$product, $firstVariant, $secondVariant] = $this->makeVariantProduct();
+        foreach ([[$firstVariant, 2], [$secondVariant, 4]] as [$variant, $quantity]) {
+            $this->postJson('/cart/add', [
+                'product_id' => $product->id,
+                'variant_id' => $variant->id,
+                'quantity' => $quantity,
+            ])->assertOk();
+        }
+
+        $this->post('/checkout/order', [
+            'customer_name' => 'Two Variant Customer',
+            'customer_phone' => '01719998873',
+            'delivery_zone' => 'inside_ctg',
+            'district' => 'Chattogram',
+            'area' => 'GEC',
+            'address' => 'Two variant test address',
+            'payment_method' => 'cod',
+        ])->assertRedirectContains('/checkout/success/EQ-');
+
+        $this->assertSame(1, $firstVariant->fresh()->stock_quantity);
+        $this->assertSame(1, $secondVariant->fresh()->stock_quantity);
+        $this->assertSame(2, $product->fresh()->stock_quantity);
+        $order = Order::where('customer_phone', '01719998873')->latest()->firstOrFail();
+        $this->assertEqualsCanonicalizing(
+            [$firstVariant->id, $secondVariant->id],
+            $order->items->pluck('variant_id')->all()
+        );
+    }
+
     public function test_admin_can_replace_variants_and_product_summary_stock_is_synced(): void
     {
         [$product] = $this->makeVariantProduct();

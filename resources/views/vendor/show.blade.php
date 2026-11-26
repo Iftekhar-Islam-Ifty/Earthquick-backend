@@ -226,7 +226,7 @@
 
         @if($allProductsCount > 0)
           <div class="eq-store-tools">
-            <p class="eq-store-results">{{ $products->total() }} {{ $isBrightStore ? 'products' : ($products->total() === 1 ? 'piece' : 'pieces') }} found</p>
+            <p class="eq-store-results">{{ $products->total() }} {{ $isBrightStore ? ($products->total() === 1 ? 'product' : 'products') : ($products->total() === 1 ? 'piece' : 'pieces') }} found</p>
             <form class="eq-store-sort" method="GET" action="{{ route('stores.catalog', $vendor->slug) }}">
               @foreach(array_diff_key($storeQuery, ['sort' => true]) as $key => $value)
                 <input type="hidden" name="{{ $key }}" value="{{ $value }}" />

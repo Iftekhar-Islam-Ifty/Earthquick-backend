@@ -4,6 +4,11 @@
 consolidates the previously prepared Phase 5 catalog-intake work so there is one
 active onboarding track.
 
+The [external-review triage](../../plans/EXTERNAL_REVIEW_TRIAGE_2026-11-26.md)
+adds no unverified catalog data. Confirmed Bright SKU/specification/price/stock,
+approved photography, Heaven attribution and warranty terms remain inputs;
+the old visual observations require current-browser review.
+
 ## Goal
 
 Prepare and enter Bright catalog items only from seller-verified information.

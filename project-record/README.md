@@ -25,6 +25,7 @@ conflict. See `PROJECT_MEMORY.md` for current owner direction.
 
 ## Plans and references
 
+- [External review triage and ordered follow-up (2026-11-26)](plans/EXTERNAL_REVIEW_TRIAGE_2026-11-26.md) — source-checked priorities; checkout stock and retry fixes implemented locally, verification pending.
 - [Phase 10 plan](plans/PHASE_10_BRIGHT_STORE_HEAVEN_BRAND.md)
 - [Bright catalog intake template](reference/BRIGHT_CATALOG_INTAKE_TEMPLATE.csv)
 - [Rthquick identity update](reference/RTHQUICK_RENAME_2026-11-16.md)

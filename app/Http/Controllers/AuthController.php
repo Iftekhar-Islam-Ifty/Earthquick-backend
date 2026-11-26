@@ -93,6 +93,13 @@ class AuthController extends Controller
                 Auth::logout();
                 Auth::login($admin, false);
                 $request->session()->regenerate();
+                // Never carry MFA proof from an earlier admin session into a
+                // fresh password login, even when the browser cookie survives.
+                $request->session()->forget([
+                    'admin.mfa_verified',
+                    'admin.password_confirmed_at',
+                    'admin.recovery_codes',
+                ]);
                 $request->session()->put([
                     'admin.authenticated_at' => time(),
                     'admin.last_activity_at' => time(),

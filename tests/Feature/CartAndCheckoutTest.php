@@ -279,6 +279,154 @@ class CartAndCheckoutTest extends TestCase
         $successResponse->assertSee('01793123456');
     }
 
+    public function test_legacy_sizes_share_one_stock_limit_in_the_cart(): void
+    {
+        $product = Product::publiclyAvailable()->whereDoesntHave('variants')->firstOrFail();
+        $product->update(['stock_quantity' => 3, 'in_stock' => true]);
+
+        $this->postJson('/cart/add', [
+            'product_id' => $product->id, 'size' => 'Small', 'quantity' => 2,
+        ])->assertOk();
+        $this->postJson('/cart/add', [
+            'product_id' => $product->id, 'size' => 'Large', 'quantity' => 2,
+        ])->assertUnprocessable();
+
+        $this->assertCount(1, session('cart'));
+        $this->assertSame(2, (int) array_values(session('cart'))[0]['quantity']);
+    }
+
+    public function test_checkout_rejects_combined_legacy_size_demand_above_stock(): void
+    {
+        $product = Product::publiclyAvailable()->whereDoesntHave('variants')->firstOrFail();
+        $product->update(['stock_quantity' => 3, 'in_stock' => true]);
+        $cart = [];
+        foreach (['Small', 'Large'] as $size) {
+            $cart[$product->id.'_'.strtolower($size)] = [
+                'product_id' => $product->id, 'size' => $size,
+                'quantity' => 2, 'price' => (float) $product->price,
+            ];
+        }
+        $orderCount = Order::count();
+
+        $this->withSession(['cart' => $cart])->post('/checkout/order', [
+            'customer_name' => 'Shared Stock Customer',
+            'customer_phone' => '01719998871',
+            'delivery_zone' => 'inside_ctg',
+            'district' => 'Chattogram',
+            'area' => 'GEC',
+            'address' => 'Stock pool test address',
+            'payment_method' => 'cod',
+        ])->assertSessionHasErrors('cart');
+
+        $this->assertSame($orderCount, Order::count());
+        $this->assertSame(3, $product->fresh()->stock_quantity);
+    }
+
+    public function test_checkout_decrements_shared_legacy_stock_once_and_keeps_size_snapshots(): void
+    {
+        $product = Product::publiclyAvailable()->whereDoesntHave('variants')->firstOrFail();
+        $product->update(['stock_quantity' => 4, 'in_stock' => true]);
+        $cart = [
+            $product->id.'_small' => [
+                'product_id' => $product->id, 'size' => 'Small',
+                'quantity' => 2, 'price' => (float) $product->price,
+            ],
+            $product->id.'_large' => [
+                'product_id' => $product->id, 'size' => 'Large',
+                'quantity' => 1, 'price' => (float) $product->price,
+            ],
+        ];
+
+        $this->withSession(['cart' => $cart])->post('/checkout/order', [
+            'customer_name' => 'Shared Stock Customer',
+            'customer_phone' => '01719998872',
+            'delivery_zone' => 'inside_ctg',
+            'district' => 'Chattogram',
+            'area' => 'GEC',
+            'address' => 'Stock pool test address',
+            'payment_method' => 'cod',
+        ])->assertRedirectContains('/checkout/success/EQ-');
+
+        $order = Order::where('customer_phone', '01719998872')->latest()->firstOrFail();
+        $this->assertSame(1, $product->fresh()->stock_quantity);
+        $this->assertCount(2, $order->items);
+        $this->assertEqualsCanonicalizing(
+            [$product->name.' (Small)', $product->name.' (Large)'],
+            $order->items->pluck('product_name')->all()
+        );
+    }
+
+    public function test_repeated_checkout_submission_returns_the_first_order_without_reusing_stock_or_coupon(): void
+    {
+        $product = Product::publiclyAvailable()->whereDoesntHave('variants')->firstOrFail();
+        $product->update(['stock_quantity' => 5, 'in_stock' => true]);
+        $coupon = Coupon::create([
+            'code' => 'RETRY'.strtoupper(substr(bin2hex(random_bytes(4)), 0, 8)),
+            'type' => 'fixed', 'value' => 100, 'is_active' => true,
+        ]);
+        $cart = [$product->id.'_standard' => [
+            'product_id' => $product->id, 'size' => 'Standard',
+            'quantity' => 1, 'price' => (float) $product->price,
+        ]];
+        $checkoutData = [
+            'customer_name' => 'Retry Customer',
+            'customer_phone' => '01719998874',
+            'delivery_zone' => 'inside_ctg',
+            'district' => 'Chattogram',
+            'area' => 'GEC',
+            'address' => 'Retry test address',
+            'payment_method' => 'cod',
+        ];
+        $initialOrderCount = Order::count();
+        $this->withSession(['cart' => $cart, 'coupon' => ['id' => $coupon->id]])
+            ->post('/checkout/order', $checkoutData)
+            ->assertRedirectContains('/checkout/success/EQ-');
+        $firstOrder = Order::where('customer_phone', '01719998874')->latest()->firstOrFail();
+
+        // Retry after the first response has cleared the cart.
+        $this->post('/checkout/order', $checkoutData)
+            ->assertRedirect(route('checkout.success', $firstOrder->order_number));
+
+        // Retry using a stale session snapshot from before the first response.
+        $this->withSession(['cart' => $cart, 'checkout_nonce' => 'initial'])
+            ->post('/checkout/order', $checkoutData)
+            ->assertRedirect(route('checkout.success', $firstOrder->order_number));
+
+        $this->assertSame($initialOrderCount + 1, Order::count());
+        $this->assertSame(4, $product->fresh()->stock_quantity);
+        $this->assertSame(1, $coupon->fresh()->used_count);
+    }
+
+    public function test_new_cart_purchase_after_success_receives_a_new_order_number(): void
+    {
+        $product = Product::publiclyAvailable()->whereDoesntHave('variants')->firstOrFail();
+        $product->update(['stock_quantity' => 5, 'in_stock' => true]);
+        $cart = [$product->id.'_standard' => [
+            'product_id' => $product->id, 'size' => 'Standard',
+            'quantity' => 1, 'price' => (float) $product->price,
+        ]];
+        $checkoutData = [
+            'customer_name' => 'Repeat Buyer',
+            'customer_phone' => '01719998875',
+            'delivery_zone' => 'inside_ctg',
+            'district' => 'Chattogram',
+            'area' => 'GEC',
+            'address' => 'Repeat buyer test address',
+            'payment_method' => 'cod',
+        ];
+
+        $this->withSession(['cart' => $cart])->post('/checkout/order', $checkoutData)
+            ->assertRedirectContains('/checkout/success/EQ-');
+        $firstNumber = Order::where('customer_phone', '01719998875')->latest()->firstOrFail()->order_number;
+        $this->withSession(['cart' => $cart])->post('/checkout/order', $checkoutData)
+            ->assertRedirectContains('/checkout/success/EQ-');
+        $secondNumber = Order::where('customer_phone', '01719998875')->latest()->firstOrFail()->order_number;
+
+        $this->assertNotSame($firstNumber, $secondNumber);
+        $this->assertSame(2, Order::where('customer_phone', '01719998875')->count());
+        $this->assertSame(3, $product->fresh()->stock_quantity);
+    }
+
     /**
      * Test applying a valid percentage coupon via AJAX.
      */

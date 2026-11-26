@@ -123,7 +123,7 @@ class CartController extends Controller
         $cartKey = $variant
             ? $product->id.'_variant_'.$variant->id
             : $product->id.'_'.Str::slug($size);
-        $requestedQuantity = $quantity + (int) ($cart[$cartKey]['quantity'] ?? 0);
+        $requestedQuantity = $quantity + $this->quantityInStockPool($cart, $product->id, $variant?->id);
 
         if (! $product->in_stock || $availableStock < $requestedQuantity) {
             $message = 'The requested quantity is no longer available.';
@@ -248,7 +248,7 @@ class CartController extends Controller
 
                 if (! $product || ! $product->isPubliclyAvailable() || ! $product->in_stock
                     || ($variantId && ! $variant) || ($hasActiveVariants && ! $variant)
-                    || $availableStock < $cart[$key]['quantity']) {
+                    || $availableStock < $this->quantityInStockPool($cart, (int) $productId, $variant?->id)) {
                     return response()->json([
                         'success' => false,
                         'message' => 'The requested quantity is no longer available.',
@@ -545,5 +545,25 @@ class CartController extends Controller
             'discount' => $discount,
             'total' => max(0, $subtotal - $discount),
         ];
+    }
+
+    /**
+     * Count every cart line drawing from the same inventory row. Legacy size
+     * labels share product stock; database variants have separate stock.
+     *
+     * @param  array<string, array<string, mixed>>  $cart
+     */
+    private function quantityInStockPool(array $cart, int $productId, ?int $variantId): int
+    {
+        $quantity = 0;
+        foreach ($cart as $item) {
+            $itemProductId = (int) ($item['product_id'] ?? $item['id'] ?? 0);
+            $itemVariantId = isset($item['variant_id']) ? (int) $item['variant_id'] : null;
+            if ($itemProductId === $productId && $itemVariantId === $variantId) {
+                $quantity += (int) ($item['quantity'] ?? 0);
+            }
+        }
+
+        return $quantity;
     }
 }

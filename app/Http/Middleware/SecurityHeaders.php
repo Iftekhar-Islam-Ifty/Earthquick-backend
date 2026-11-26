@@ -55,6 +55,12 @@ class SecurityHeaders
 
         $response->headers->set('Content-Security-Policy-Report-Only', $contentSecurityPolicy);
 
+        // Setup keys, one-time codes and reset tokens must never be stored in
+        // browser or intermediary caches.
+        if ($request->is('admin/security/*', 'email/verify*', 'forgot-password', 'reset-password*')) {
+            $response->headers->set('Cache-Control', 'no-store, private');
+        }
+
         return $response;
     }
 }
