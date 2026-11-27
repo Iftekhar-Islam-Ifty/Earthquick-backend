@@ -2680,6 +2680,18 @@
   }
 }
 
+@media (max-width: 1024px) and (min-width: 601px) {
+  .eq-story--shop {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    max-width: 900px;
+  }
+
+  .eq-story--shop .eq-story__media {
+    aspect-ratio: 4 / 3;
+    max-height: none;
+  }
+}
+
 /* --- Homepage mobile editorial product layouts --- */
 @media (max-width: 600px) {
   /* Three Piece shows a comfortable first row of three; remaining cards stay
@@ -5463,12 +5475,77 @@
   .eq-store-trust__item { flex-direction: column; gap: .35rem; padding: .55rem .35rem; font-size: .65rem; line-height: 1.2; }
   .eq-store-trust__icon { width: 25px; height: 25px; flex-basis: 25px; font-size: .58rem; }
   .eq-store-trust__icon svg { width: 16px; height: 16px; }
-  .eq-bright-categories { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .5rem; }
-  .eq-bright-category { min-height: 82px; gap: .3rem; padding: .45rem .35rem; }
-  .eq-bright-category__icon { width: 32px; height: 32px; flex-basis: 32px; }
+  .eq-bright-categories { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .45rem; }
+  .eq-bright-category { min-height: 70px; gap: .15rem; padding: .35rem .25rem; }
+  .eq-bright-category__icon { width: 28px; height: 28px; flex-basis: 28px; }
+  .eq-bright-category__name { font-size: .7rem; line-height: 1.15; }
   .eq-bright-section__heading { align-items: end; }
   .eq-bright-section__heading h2 { font-size: 1.55rem; }
   .eq-bright-view-all { font-size: .75rem; }
   .eq-bright-product-card .eq-product-card__body { padding: .55rem; }
   .eq-bright-product-card .eq-product-card__name { font-size: .82rem; }
+}
+
+@media (max-width: 600px) {
+  #story:has(.eq-story--shop) {
+    padding: 1.25rem 0 !important;
+  }
+
+  .eq-story--shop {
+    grid-template-columns: minmax(0, clamp(118px, 40vw, 160px)) minmax(0, 1fr) !important;
+    column-gap: .9rem !important;
+    row-gap: .25rem !important;
+    align-items: center !important;
+    max-width: 520px !important;
+    padding: 0 !important;
+  }
+
+  .eq-story--shop .eq-story__media {
+    grid-column: 1;
+    grid-row: 1;
+    aspect-ratio: 4 / 3 !important;
+    max-height: none !important;
+  }
+
+  .eq-story--shop .eq-story__text {
+    display: contents !important;
+  }
+
+  .eq-story--shop .eq-story__text h2 {
+    grid-column: 2;
+    grid-row: 1;
+    align-self: center;
+    font-size: clamp(1.25rem, 4.5vw, 1.5rem) !important;
+    margin: 0 !important;
+  }
+
+  .eq-story--shop .eq-story__desc-mobile {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    font-size: .9rem !important;
+    line-height: 1.5 !important;
+    margin-top: .6rem !important;
+  }
+}
+
+@media (min-width: 601px) and (max-width: 768px) {
+  .eq-story--shop {
+    grid-template-columns: minmax(0, 40%) minmax(0, 1fr) !important;
+    gap: 1.25rem !important;
+    max-width: 680px !important;
+  }
+
+  .eq-story--shop .eq-story__media {
+    aspect-ratio: 4 / 3 !important;
+    max-height: none !important;
+  }
+
+  .eq-story--shop .eq-story__text h2 {
+    font-size: 1.55rem !important;
+  }
+
+  .eq-story--shop .eq-story__desc-mobile {
+    font-size: .9rem !important;
+    line-height: 1.5 !important;
+  }
 }

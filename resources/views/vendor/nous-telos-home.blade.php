@@ -242,7 +242,6 @@
         <!-- Section Header -->
         <div class="eq-section-head eq-reveal">
           <div class="eq-section-head__text">
-            <span class="eq-eyebrow">FROM NOUS TELOS</span>
             <h2 class="eq-heading-lg">New Arrivals</h2>
           </div>
           <div class="eq-carousel__controls" aria-label="New arrivals carousel navigation">
@@ -289,7 +288,6 @@
          ================================================================ -->
     <section class="eq-home-stores" aria-labelledby="nous-catalog-title">
       <div class="eq-container eq-home-stores__intro eq-reveal">
-        <span class="eq-eyebrow">NOUS TELOS COLLECTIONS</span>
         <h2 class="eq-heading-lg" id="nous-catalog-title">Explore every piece</h2>
         <p>Browse the complete Nous Telos collection with categories and filters in one place.</p>
         <a href="{{ route('stores.catalog', 'nous-telos') }}" class="eq-btn eq-btn--outline">View all Nous Telos products <span aria-hidden="true">&rarr;</span></a>
@@ -312,7 +310,6 @@
         <!-- Section Header with Flagship Atelier Identity -->
         <div class="eq-section-head eq-reveal">
           <div class="eq-section-head__text">
-            <span class="eq-eyebrow">THE NOUS TELOS EDIT</span>
             <h2 class="eq-heading-lg">The Saree Collection</h2>
             <p class="eq-body-lg" style="margin-top: 0.35rem; max-width: 54ch;">Handwoven traditions from Tangail, Narayanganj and Rajshahi, curated by Nous Telos for contemporary wardrobes.</p>
           </div>
@@ -329,7 +326,6 @@
                   <img src="{{ asset($sareeSpotlight->optimized_image) }}" alt="{{ $sareeSpotlight->name }}" loading="lazy" decoding="async" />
                 </div>
                 <div class="eq-saree-masterpiece__body">
-                  <span class="eq-saree-masterpiece__eyebrow">THE SIGNATURE DRAPE</span>
                   <h3 class="eq-saree-masterpiece__name">{{ $sareeSpotlight->name }}</h3>
                   <p class="eq-saree-masterpiece__price">৳{{ number_format($sareeSpotlight->price) }}</p>
                   <span class="eq-saree-masterpiece__cta">Discover the piece <span aria-hidden="true">&rarr;</span></span>
@@ -340,7 +336,7 @@
 
           <div class="eq-saree-gallery-wrap">
             <div class="eq-saree-gallery-head">
-              <span>MORE FROM THE EDIT</span>
+              <span>More sarees</span>
               <div class="eq-saree-gallery-controls" aria-label="Saree collection navigation">
                 <button type="button" class="eq-arrow-btn" id="saree-gallery-prev" aria-label="Previous sarees" disabled>
                   <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg>
@@ -385,7 +381,6 @@
         <!-- Section Header -->
         <div class="eq-section-head eq-reveal">
           <div class="eq-section-head__text">
-            <span class="eq-eyebrow">NOUS TELOS READY TO WEAR</span>
             <h2 class="eq-heading-lg">Three Piece</h2>
             <p class="eq-body-muted" style="margin-top: 0.75rem;">Kameez, salwar and dupatta sets built for daily rotation — from block-printed cotton to fine chikankari.</p>
           </div>
@@ -443,7 +438,6 @@
         <!-- Section Header -->
           <div class="eq-section-head eq-reveal">
             <div class="eq-section-head__text">
-              <span class="eq-eyebrow">CONTEMPORARY SETS BY NOUS TELOS</span>
               <h2 class="eq-heading-lg">Two Piece</h2>
             </div>
           </div>
@@ -496,8 +490,8 @@
 
 
     <!-- =================================================================
-         SECTION 7: BRAND HERITAGE & CRAFTSMANSHIP STORY
-         High-contrast deep heritage navy statement band with Nous Telos artisan story.
+         SECTION 7: NOUS TELOS STORE STORY
+         The owner's shop photo and launch period introduce the physical store.
          ================================================================= -->
     <section class="eq-section eq-story-section eq-section--dark eq-section--arched" id="story">
       <div class="eq-arch-divider eq-arch-divider--top" aria-hidden="true">
@@ -506,18 +500,17 @@
         </svg>
       </div>
       <div class="eq-container">
-        <div class="eq-story eq-reveal">
+        <div class="eq-story eq-story--shop eq-reveal">
           <div class="eq-story__media" id="story-media-container">
-            <img src="{{ asset('images/hero/story-heritage.jpg') }}" alt="Nous Telos handloom heritage" loading="lazy" decoding="async" />
+            <img src="{{ asset('images/stores/nous-telos/shop.jpg') }}" alt="Nous Telos storefront and clothing displays in Chattogram" width="2048" height="1536" loading="lazy" decoding="async" />
           </div>
           <div class="eq-story__text" id="story-text-container">
             <svg class="eq-story__mark" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true">
               <path d="M4 30c8 0 8-16 16-16s8 16 16 16" />
             </svg>
-            <span class="eq-eyebrow">NOUS TELOS STORY</span>
-            <h2 class="eq-heading-lg">Tradition, Reimagined.</h2>
-            <p class="eq-body-lg eq-story__desc-desktop">Nous Telos works with Bangladesh’s handloom traditions and craft communities, bringing material heritage into thoughtful collections for contemporary living.</p>
-            <p class="eq-story__desc-mobile">Rooted in Bengal handlooms and craft communities, Nous Telos brings material heritage into thoughtful contemporary collections.</p>
+            <h2 class="eq-heading-lg">Where art meets culture.</h2>
+            <p class="eq-body-lg eq-story__desc-desktop">Nous Telos opened its doors in Chattogram toward the end of 2025. The store brings together clothing, accessories and pieces for the home, with a focus on art, culture and the details that make each piece memorable.</p>
+            <p class="eq-story__desc-mobile">Opened in Chattogram in late 2025, Nous Telos brings clothing, accessories and crafted home pieces together around art and culture.</p>
           </div>
         </div>
       </div>
@@ -538,7 +531,6 @@
         <!-- Section Header -->
         <div class="eq-section-head eq-reveal">
           <div class="eq-section-head__text">
-            <span class="eq-eyebrow">CRAFTED ACCESSORIES BY NOUS TELOS</span>
             <h2 class="eq-heading-lg">Bags</h2>
           </div>
           <a href="{{ route('category.show', 'bags') }}" class="eq-text-link" id="link-view-all-bags">
@@ -592,7 +584,6 @@
         
         <!-- Section Header -->
         <div class="eq-coverflow-header eq-reveal">
-          <span class="eq-eyebrow">RTHQUICK COMMUNITY</span>
           <h2 class="eq-heading-lg">Styled by You</h2>
           <p class="eq-body-lg">
             Real looks and everyday moments shared by the Nous Telos community on Rthquick.
@@ -672,7 +663,6 @@
     <section class="eq-final-cta eq-reveal" id="newsletter-section">
       <div class="eq-container">
         <div class="eq-newsletter-card">
-          <span class="eq-eyebrow eq-newsletter-eyebrow">JOIN THE HOUSE OF RTHQUICK</span>
           <h2 class="eq-heading-lg eq-newsletter-title">Be first to see what's next.</h2>
           <p class="eq-body-lg eq-newsletter-desc">Sign up for early access to new drops, restocks, and the stories behind the makers we work with.</p>
 

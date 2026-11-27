@@ -153,9 +153,10 @@
       <section class="eq-catalog-main" aria-label="Search results listings" style="margin-top: 1.5rem;">
         
         @if($products->count() > 0)
-          <div class="eq-catalog-grid view-3col eq-reveal" id="catalog-grid">
+          @php($onlyBrightProducts = $products->getCollection()->every(fn ($item) => $item->vendor?->slug === 'bright'))
+          <div class="eq-catalog-grid{{ $onlyBrightProducts ? ' eq-catalog-grid--electrical' : ' view-3col' }} eq-reveal" id="catalog-grid">
             @foreach($products as $product)
-              <article class="eq-product-card" id="card-{{ $product->id }}" data-id="{{ $product->id }}" data-category="{{ $product->category?->slug ?? '' }}" data-product-description="{{ $product->short_desc ?? '' }}" data-brand-name="{{ $product->brand?->name ?? '' }}" data-vendor-name="{{ $product->vendor?->name ?? '' }}">
+              <article class="eq-product-card{{ $product->vendor?->slug === 'bright' ? ' eq-bright-product-card' : '' }}" id="card-{{ $product->id }}" data-id="{{ $product->id }}" data-category="{{ $product->category?->slug ?? '' }}" data-product-description="{{ $product->short_desc ?? '' }}" data-brand-name="{{ $product->brand?->name ?? '' }}" data-vendor-name="{{ $product->vendor?->name ?? '' }}">
                 <div class="eq-product-card__frame">
                   <!-- Status Badge -->
                   @if($product->badge)
@@ -259,12 +260,21 @@
     const viewButtons = document.querySelectorAll('.eq-grid-view-btn');
 
     if (grid && viewButtons.length) {
+      const syncDefaultView = () => {
+        if (grid.dataset.customColumns) return;
+        const columns = getComputedStyle(grid).gridTemplateColumns.split(' ').length;
+        viewButtons.forEach(btn => btn.classList.toggle('is-active', Number(btn.dataset.cols) === columns));
+      };
+      syncDefaultView();
+      window.addEventListener('resize', syncDefaultView);
+
       viewButtons.forEach(btn => {
         btn.addEventListener('click', () => {
           viewButtons.forEach(b => b.classList.remove('is-active'));
           btn.classList.add('is-active');
 
           const cols = btn.getAttribute('data-cols');
+          grid.dataset.customColumns = cols;
           grid.classList.remove('view-2col', 'view-3col', 'view-4col');
           grid.classList.add('view-' + cols + 'col');
         });

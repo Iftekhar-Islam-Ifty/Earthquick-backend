@@ -344,7 +344,7 @@
 
           <div class="eq-catalog-grid" id="related-products-grid">
             @foreach($relatedProducts as $rel)
-              <article class="eq-product-card" id="card-{{ $rel->id }}" data-id="{{ $rel->id }}" data-product-description="{{ $rel->short_desc ?? '' }}" data-brand-name="{{ $rel->brand?->name ?? '' }}" data-vendor-name="{{ $rel->vendor?->name ?? '' }}">
+              <article class="eq-product-card{{ $rel->vendor?->slug === 'bright' ? ' eq-bright-product-card' : '' }}" id="card-{{ $rel->id }}" data-id="{{ $rel->id }}" data-product-description="{{ $rel->short_desc ?? '' }}" data-brand-name="{{ $rel->brand?->name ?? '' }}" data-vendor-name="{{ $rel->vendor?->name ?? '' }}">
                 <div class="eq-product-card__frame">
                   @if($rel->badge)
                     <span class="eq-product-badge eq-product-badge--{{ $rel->badge_type ?? 'ready' }}">{{ $rel->badge }}</span>

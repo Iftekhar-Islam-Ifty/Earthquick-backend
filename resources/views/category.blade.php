@@ -378,9 +378,9 @@
              RIGHT COLUMN: PRODUCT CATALOG GRID
              ============================================================= -->
         <section class="eq-catalog-main" aria-label="Product listings">
-          <div class="eq-catalog-grid eq-reveal" id="catalog-grid">
+          <div class="eq-catalog-grid{{ $isElectronicsCategory ? ' eq-catalog-grid--electrical' : '' }} eq-reveal" id="catalog-grid">
             @forelse($products as $product)
-              <article class="eq-product-card" id="card-{{ $product->id }}" data-id="{{ $product->id }}" data-category="{{ $product->category?->slug ?? $category->slug }}" data-product-description="{{ $product->short_desc ?? '' }}" data-brand-name="{{ $product->brand?->name ?? '' }}" data-vendor-name="{{ $product->vendor?->name ?? '' }}">
+              <article class="eq-product-card{{ $product->vendor?->slug === 'bright' ? ' eq-bright-product-card' : '' }}" id="card-{{ $product->id }}" data-id="{{ $product->id }}" data-category="{{ $product->category?->slug ?? $category->slug }}" data-product-description="{{ $product->short_desc ?? '' }}" data-brand-name="{{ $product->brand?->name ?? '' }}" data-vendor-name="{{ $product->vendor?->name ?? '' }}">
                 <div class="eq-product-card__frame">
                   <!-- Status Badge -->
                   @if($product->badge)
@@ -499,15 +499,25 @@
     }
   });
 
-  // Grid switcher logic (2, 3, 4 cols)
-  document.querySelectorAll(".eq-grid-view-btn").forEach(btn => {
+  // Keep the selected control aligned with the responsive default until the shopper chooses a layout.
+  const gridViewButtons = document.querySelectorAll(".eq-grid-view-btn");
+  const gridViewGrid = document.querySelector("#catalog-grid");
+  const syncDefaultGridView = () => {
+    if (!gridViewGrid || gridViewGrid.dataset.customColumns) return;
+    const columns = getComputedStyle(gridViewGrid).gridTemplateColumns.split(' ').length;
+    gridViewButtons.forEach(btn => btn.classList.toggle("is-active", Number(btn.dataset.cols) === columns));
+  };
+  syncDefaultGridView();
+  window.addEventListener("resize", syncDefaultGridView);
+
+  gridViewButtons.forEach(btn => {
     btn.addEventListener("click", () => {
-      document.querySelectorAll(".eq-grid-view-btn").forEach(b => b.classList.remove("is-active"));
+      gridViewButtons.forEach(b => b.classList.remove("is-active"));
       btn.classList.add("is-active");
       const cols = btn.getAttribute("data-cols");
-      const grid = document.querySelector("#catalog-grid");
-      if (grid) {
-        grid.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+      if (gridViewGrid) {
+        gridViewGrid.dataset.customColumns = cols;
+        gridViewGrid.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
       }
     });
   });

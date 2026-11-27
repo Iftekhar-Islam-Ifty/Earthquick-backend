@@ -26,24 +26,23 @@
 
   <section class="eq-bright-section eq-bright-category-section" aria-labelledby="bright-categories-title">
     <div class="eq-bright-section__heading">
-      <div><span class="eq-bright-eyebrow">Find what you need</span><h2 id="bright-categories-title">Shop by category</h2></div>
-      <a href="{{ route('stores.catalog', $vendor->slug) }}" class="eq-bright-view-all">View all products <span aria-hidden="true">&rarr;</span></a>
+      <div><h2 id="bright-categories-title">Shop by category</h2></div>
     </div>
     @php
       $categoryIcons = [
-        'switches' => '<rect x="5" y="3" width="14" height="18" rx="3"/><path class="eq-bright-category__accent" d="M12 7v5m0 0-2 2m2-2 2 2"/>',
-        'sockets' => '<circle cx="12" cy="12" r="8"/><path class="eq-bright-category__accent" d="M9 10v3m6-3v3m-3 3v1"/>',
-        'led-lights' => '<path d="M8 16a7 7 0 1 1 8 0c-.8.6-1 1.3-1 3H9c0-1.7-.2-2.4-1-3Z"/><path class="eq-bright-category__accent" d="M9 19h6m-5 2h4"/>',
-        'circuit-breakers' => '<rect x="4" y="3" width="16" height="18" rx="3"/><path d="M7 7h10"/><path class="eq-bright-category__accent" d="m9 11 6 2-4 4"/>',
-        'fans' => '<path d="M11 10C8 7 8 3 10 3c3 0 3 5 3 7m1 2c4-1 7 1 6 3-1 3-5 0-7-1m-2 2c0 4-3 7-5 5-2-2 2-5 4-7m-1-2c-4 0-7-3-5-5 2-2 5 2 7 4"/><circle class="eq-bright-category__accent" cx="12" cy="12" r="2"/>',
-        'electrical-accessories' => '<path d="M8 3v6m8-6v6M6 9h12v3a6 6 0 0 1-6 6v3"/><path class="eq-bright-category__accent" d="M10 12v2m4-2v2"/>',
+        'switches' => '<rect x="3.5" y="3" width="17" height="18" rx="2.5"/><rect class="eq-bright-category__accent" x="8" y="6.5" width="8" height="11" rx="1.5"/><path d="M9.5 12h5"/>',
+        'sockets' => '<rect x="3.5" y="3" width="17" height="18" rx="2.5"/><circle cx="9" cy="10" r="1.2"/><circle cx="15" cy="10" r="1.2"/><path class="eq-bright-category__accent" d="M12 14.5v2.5"/>',
+        'led-lights' => '<path d="M9 16c0-2-3-3.4-3-7a6 6 0 0 1 12 0c0 3.6-3 5-3 7H9Z"/><path class="eq-bright-category__accent" d="M9 18.5h6m-5 2.5h4"/>',
+        'circuit-breakers' => '<rect x="5" y="2.5" width="14" height="19" rx="2"/><path d="M8 6h8m-8 13h8"/><rect class="eq-bright-category__accent" x="9" y="10" width="6" height="6" rx="1"/><path d="m11 12 2 2"/>',
+        'fans' => '<path d="M12 2v5M11 10c-3-4.5-2.4-6.5-.4-7 2.6-.6 3.5 2.8 2.3 7m1.3 1.3c5-1.6 6.7-.5 7 1.5.5 2.6-3 3.5-7 1.4M10.6 14c-2 5-4 5.9-5.7 4.6-2.1-1.7-.1-4.2 4.7-6"/><circle class="eq-bright-category__accent" cx="12" cy="12" r="2"/>',
+        'electrical-accessories' => '<path d="M8 2.5v5m5-5v5M5.5 8h10v3a5 5 0 0 1-5 5v1.5c0 2 1.5 3 3.5 3H19"/><path class="eq-bright-category__accent" d="M7.5 12h6"/>',
       ];
     @endphp
     <div class="eq-bright-categories">
       @forelse($subcategories as $subcategory)
         @php($categoryIcon = $categoryIcons[$subcategory->slug] ?? $categoryIcons['electrical-accessories'])
-        <a class="eq-bright-category" href="{{ route('subcategory.show', ['categorySlug' => 'electronics', 'subcategorySlug' => $subcategory->slug]) }}">
-          <span class="eq-bright-category__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">{!! $categoryIcon !!}</svg></span>
+        <a class="eq-bright-category" href="{{ route('stores.catalog', ['slug' => $vendor->slug, 'subcategory' => $subcategory->slug]) }}">
+          <span class="eq-bright-category__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">{!! $categoryIcon !!}</svg></span>
           <span class="eq-bright-category__name">{{ $subcategory->name }}</span>
           <span class="eq-bright-category__arrow" aria-hidden="true">&rarr;</span>
         </a>
@@ -55,8 +54,8 @@
 
   <section class="eq-bright-section eq-bright-products" aria-labelledby="bright-products-title">
     <div class="eq-bright-section__heading">
-      <div><span class="eq-bright-eyebrow">Electrical essentials</span><h2 id="bright-products-title">Bright products</h2></div>
-      <a href="{{ route('stores.catalog', $vendor->slug) }}" class="eq-bright-view-all">View all <span aria-hidden="true">&rarr;</span></a>
+      <div><h2 id="bright-products-title">Bright products</h2></div>
+      <a href="{{ route('stores.catalog', $vendor->slug) }}" class="eq-bright-view-all">View all products <span aria-hidden="true">&rarr;</span></a>
     </div>
     @if($featuredProducts->isNotEmpty())
       <div class="eq-bright-product-grid">
