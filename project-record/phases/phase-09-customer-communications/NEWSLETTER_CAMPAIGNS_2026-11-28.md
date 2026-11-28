@@ -30,6 +30,11 @@ Local backup: `storage/app/backups/earthquick_db-before-newsletter-campaigns-202
 name length limit. Both newly created tables had zero rows, were removed, and
 then migrated successfully with short explicit constraint names in batch 30.
 
-The separate signup migration must also be deployed on cPanel. Local XAMPP
-still has a Gmail sender and cannot launch or send this NOC-only feature until
-its private SMTP settings are updated. Do not commit mailbox passwords.
+Production was deployed on 2026-11-28 at commit `149afdb` after the verified
+backup documented above. Both newsletter migrations ran successfully. The
+live NOC sender check passed, the command appeared in Laravel's schedule and
+the existing cPanel cron runs `schedule:run` every five minutes. Live counts
+were zero subscribers and zero campaigns; no campaign was launched or real
+subscriber email sent. Local XAMPP still has a Gmail sender and cannot launch
+or send this NOC-only feature until its private SMTP settings are updated.
+Do not commit mailbox passwords.

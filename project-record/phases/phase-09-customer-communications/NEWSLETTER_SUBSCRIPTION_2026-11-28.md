@@ -32,9 +32,11 @@ campaign workflow is documented in `NEWSLETTER_CAMPAIGNS_2026-11-28.md`.
    scanners do not remove subscribers. No future marketing messages should be
    sent to unconfirmed or unsubscribed addresses.
 
-The production NOC SMTP settings and transactional notification switch were
-already configured in cPanel. A production code pull and migration are still
-needed for this feature to operate there. The local XAMPP sender currently
-remains its prior Gmail account, so newsletter signup correctly reports
-unavailable there until local SMTP is changed to the NOC sender. Never copy
-the NOC mailbox password into git.
+Production was deployed on 2026-11-28 at commit `149afdb` after a verified
+database backup at `storage/app/private/backups/pre-newsletter-2026-11-28.sql`
+(27 table definitions). The subscription migration ran successfully. The live
+NOC SMTP sender, HTTPS app URL and five-minute Laravel cron were checked. No
+controlled end-to-end signup/confirmation/unsubscribe email was sent during
+deployment. The local XAMPP sender remains Gmail, so newsletter signup reports
+unavailable there until its private SMTP settings use NOC. Never commit the
+NOC mailbox password.

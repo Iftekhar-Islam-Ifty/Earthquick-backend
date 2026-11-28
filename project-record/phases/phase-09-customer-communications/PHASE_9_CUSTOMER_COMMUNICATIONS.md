@@ -1,6 +1,6 @@
 # Phase 9 — Customer Communications and Support
 
-Status: Local SMTP smoke test reached the owner's inbox and local notifications were enabled on 2026-09-28. A durable email outbox, retry command, health check and central-admin delivery screen are implemented locally. Production cron/migration/operational sign-off are not yet verified. The owner deferred automated SMS.
+Status: Local SMTP smoke test reached the owner's inbox and local notifications were enabled on 2026-09-28. A durable email outbox, retry command, health check and central-admin delivery screen are implemented. On 2026-11-28 the owner enabled live NOC SMTP notifications after controlled delivery to NOC and Gmail; live mail health and the existing cron were checked. Event-specific live support/order flow and ongoing operations remain to be reviewed. The owner deferred automated SMS.
 
 ## Implemented
 
@@ -34,7 +34,7 @@ Status: Local SMTP smoke test reached the owner's inbox and local notifications 
 
 Automated SMS is deliberately **deferred by owner decision**. Public `tel:` and confirmed WhatsApp click-to-chat links remain manual contact paths; neither sends automated SMS. A later SMS phase requires a provider, cost/consent policy and separate integration approval.
 
-Adding a phone number displays a call option; it does **not** send SMS or WhatsApp messages. WhatsApp click-to-chat opens an external conversation without a provider integration, but automated messages would require a chosen provider, credentials, consent/cost policy and separate integration/testing. bKash remains Coming Soon. The homepage marketing newsletter is also separate from transactional email and is not activated by this switch.
+Adding a phone number displays a call option; it does **not** send SMS or WhatsApp messages. WhatsApp click-to-chat opens an external conversation without a provider integration, but automated messages would require a chosen provider, credentials, consent/cost policy and separate integration/testing. bKash remains Coming Soon. The Nous Telos newsletter signup and admin campaign workflow were deployed on 2026-11-28; see `NEWSLETTER_SUBSCRIPTION_2026-11-28.md` and `NEWSLETTER_CAMPAIGNS_2026-11-28.md`. No campaign launches automatically; a controlled end-to-end email check remains.
 
 ## What each contact path actually does
 
