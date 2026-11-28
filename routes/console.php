@@ -11,3 +11,8 @@ Artisan::command('inspire', function () {
 Schedule::command('rthquick:mail-retry --limit=25')
     ->everyFiveMinutes()
     ->when(fn () => config('communications.email_enabled'));
+
+Schedule::command('rthquick:newsletter-send --limit=5')
+    ->everyFiveMinutes()
+    ->withoutOverlapping()
+    ->when(fn () => config('communications.email_enabled'));

@@ -16,6 +16,7 @@
     .eq-mail-status { display: inline-block; padding: .2rem .55rem; border-radius: 999px; font-size: .72rem; font-weight: 700; text-transform: uppercase; }
     .eq-mail-status--sent { background: #e4f4ed; color: #14643d; }
     .eq-mail-status--failed { background: #fee8e5; color: #9a312b; }
+    .eq-mail-status--skipped { background: #edf0f2; color: #42505a; }
     .eq-mail-status--pending, .eq-mail-status--sending { background: #fff2d8; color: #76520d; }
     .eq-mail-retry { display: grid; gap: .4rem; max-width: 240px; font-size: .78rem; }
     @media (max-width: 480px) { .eq-mail-entry { padding: .8rem; } .eq-mail-retry { max-width: 100%; } }
@@ -27,11 +28,11 @@
     <div class="eq-admin-alert eq-admin-alert--error" role="alert">{{ $errors->first() }}</div>
   @endif
   <section class="eq-admin-card">
-    <h2 class="eq-admin-card__title">Transactional email outbox</h2>
+    <h2 class="eq-admin-card__title">Email outbox</h2>
     <p class="eq-mail-summary">A sent status means SMTP accepted the message, not that it reached the inbox. Pending messages retry automatically only while the Laravel scheduler is running. After five unsuccessful attempts, staff must review the failed entry. Recipient and message content are encrypted while pending and erased after SMTP handoff.</p>
     <nav class="eq-mail-filters" aria-label="Filter email deliveries">
       <a class="eq-admin-btn {{ $status === null ? 'eq-admin-btn--primary' : 'eq-admin-btn--outline' }}" href="{{ route('admin.email-deliveries') }}">All</a>
-      @foreach(['pending', 'sending', 'failed', 'sent'] as $filter)
+      @foreach(['pending', 'sending', 'failed', 'sent', 'skipped'] as $filter)
         <a class="eq-admin-btn {{ $status === $filter ? 'eq-admin-btn--primary' : 'eq-admin-btn--outline' }}" href="{{ route('admin.email-deliveries', ['status' => $filter]) }}">{{ ucfirst($filter) }} ({{ $counts[$filter] }})</a>
       @endforeach
     </nav>

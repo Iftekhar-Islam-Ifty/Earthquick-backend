@@ -7,7 +7,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     @php
-      $noindex = request()->routeIs('search', 'cart.*', 'checkout.*', 'login', 'register', 'account.*')
+      $noindex = request()->routeIs('search', 'cart.*', 'checkout.*', 'login', 'register', 'account.*', 'newsletter.*')
         || (request()->routeIs('category.show', 'subcategory.show', 'stores.show', 'stores.catalog')
           && count(array_diff(array_keys(request()->query()), ['page'])) > 0);
     @endphp

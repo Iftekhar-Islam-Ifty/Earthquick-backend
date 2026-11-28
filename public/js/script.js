@@ -11,7 +11,7 @@
    5. ACCOUNT ACTIONS             -> Account drawer / login feedback
    6. PRODUCT CAROUSELS           -> Arrow buttons + touch swipe navigation
    7. SCROLL REVEAL ANIMATIONS    -> IntersectionObserver viewport entrance
-   8. NEWSLETTER SUBSCRIPTION     -> Form validation and submission feedback
+   8. NEWSLETTER SUBSCRIPTION     -> Handled by the Laravel form endpoint
    9. INITIALIZATION BOOTSTRAP    -> DOMContentLoaded event listener
    ===================================================================== */
 
@@ -1337,29 +1337,6 @@ function initScrollReveal() {
 
 
 /* =====================================================================
-   8. NEWSLETTER SUBSCRIPTION
-   Validates and simulates email signup for the Rthquick house drops.
-   ===================================================================== */
-function initNewsletterForm() {
-  const form = document.querySelector("#eq-newsletter-form") || document.querySelector("[data-newsletter-form]");
-  if (!form) return;
-
-  form.addEventListener("submit", (event) => {
-    event.preventDefault();
-    const input = form.querySelector('input[type="email"]');
-    const email = input ? input.value.trim() : "";
-
-    if (email && email.includes("@")) {
-      Toast.show("Welcome to the House of Rthquick. Thank you for subscribing!");
-      form.reset();
-    } else {
-      Toast.show("Please enter a valid email address.");
-    }
-  });
-}
-
-
-/* =====================================================================
    9. HERO CAMPAIGN SLIDER
    Smooth crossfade slider with pause-on-hover, arrow keys, and dots.
    ===================================================================== */
@@ -1918,7 +1895,6 @@ function initRthquickApp() {
   initSareeGalleryCarousel();
   init3DCoverflow();
   initScrollReveal();
-  initNewsletterForm();
   handleHashNavigationOnLoad();
 }
 

@@ -12,7 +12,7 @@ class RthquickNotice extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public function __construct(public string $noticeSubject, public string $noticeBody)
+    public function __construct(public string $noticeSubject, public string $noticeBody, public ?string $noticeEvent = null)
     {
     }
 

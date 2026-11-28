@@ -13,14 +13,14 @@ class AdminEmailDeliveryController extends Controller
     public function index(Request $request): View
     {
         $status = $request->query('status');
-        if (! in_array($status, ['pending', 'sending', 'failed', 'sent'], true)) {
+        if (! in_array($status, ['pending', 'sending', 'failed', 'sent', 'skipped'], true)) {
             $status = null;
         }
         $messages = OutboundMessage::query()
             ->when($status, fn ($query) => $query->where('status', $status))
             ->latest()->paginate(20)->withQueryString();
         $counts = [];
-        foreach (['pending', 'sending', 'failed', 'sent'] as $name) {
+        foreach (['pending', 'sending', 'failed', 'sent', 'skipped'] as $name) {
             $counts[$name] = OutboundMessage::where('status', $name)->count();
         }
 

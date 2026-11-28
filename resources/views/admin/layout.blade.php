@@ -905,6 +905,18 @@
           <span>Email Deliveries</span>
         </a>
       </li>
+      <li>
+        <a href="{{ route('admin.newsletter.index') }}" class="eq-admin-nav__link {{ request()->routeIs('admin.newsletter.*') ? 'is-active' : '' }}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="m3 6 9 7 9-7"></path></svg>
+          <span>Newsletter Subscribers</span>
+        </a>
+      </li>
+      <li>
+        <a href="{{ route('admin.newsletter-campaigns.index') }}" class="eq-admin-nav__link {{ request()->routeIs('admin.newsletter-campaigns.*') ? 'is-active' : '' }}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="m3 6 9 7 9-7"></path></svg>
+          <span>Newsletter Campaigns</span>
+        </a>
+      </li>
 
       <li class="eq-admin-nav__heading">Live Store</li>
       <li>

@@ -666,17 +666,22 @@
           <h2 class="eq-heading-lg eq-newsletter-title">Be first to see what's next.</h2>
           <p class="eq-body-lg eq-newsletter-desc">Sign up for early access to new drops, restocks, and the stories behind the makers we work with.</p>
 
-          <form class="eq-newsletter" id="eq-newsletter-form" data-newsletter-form novalidate>
+          <form class="eq-newsletter" id="eq-newsletter-form" action="{{ route('newsletter.store') }}" method="POST">
+            @csrf
             <div class="eq-newsletter-field">
               <svg class="eq-newsletter-input-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <rect x="2" y="4" width="20" height="16" rx="2"></rect>
                 <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
               </svg>
-              <input type="email" id="eq-newsletter-email" required placeholder="Enter your email address" aria-label="Email address" autocomplete="email" />
+              <input type="email" name="email" id="eq-newsletter-email" required maxlength="255" placeholder="Enter your email address" aria-label="Email address" autocomplete="email" />
             </div>
+            <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" class="eq-newsletter-honeypot" />
             <button type="submit" class="eq-btn eq-btn--primary eq-newsletter-submit" id="eq-newsletter-submit">Subscribe</button>
           </form>
-          <p class="eq-newsletter-guarantee">No spam, ever. Unsubscribe with one click anytime.</p>
+          @if(session('newsletter_status'))<p class="eq-newsletter-feedback" role="status">{{ session('newsletter_status') }}</p>@endif
+          @if(session('newsletter_error'))<p class="eq-newsletter-feedback" role="alert">{{ session('newsletter_error') }}</p>@endif
+          @error('email')<p class="eq-newsletter-feedback" role="alert">{{ $message }}</p>@enderror
+          <p class="eq-newsletter-guarantee">Subscribe to Nous Telos product updates. Confirm by email; unsubscribe any time using the link in our emails.</p>
         </div>
       </div>
     </section>

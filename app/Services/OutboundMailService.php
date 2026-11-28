@@ -4,6 +4,8 @@ namespace App\Services;
 
 use App\Mail\RthquickNotice;
 use App\Models\OutboundMessage;
+use App\Models\NewsletterSubscription;
+use App\Models\NewsletterCampaign;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
@@ -17,25 +19,34 @@ class OutboundMailService
     public function queueAndSend(string $email, string $subject, string $body, array $context): void
     {
         try {
-            $message = OutboundMessage::create([
-                'recipient_hint' => $this->mask($email),
-                'recipient' => $email,
-                'subject' => $subject,
-                'body' => $body,
-                'context' => $context,
-                'status' => 'pending',
-                'next_attempt_at' => now(),
-            ]);
-            $this->deliver($message->id);
+            $this->deliver($this->enqueue($email, $subject, $body, $context));
         } catch (Throwable $exception) {
             // An email subsystem failure must not undo a committed order/inquiry.
             Log::warning('Rthquick email could not be recorded', $context + ['exception' => $exception::class]);
         }
     }
 
+    public function enqueue(string $email, string $subject, string $body, array $context): int
+    {
+        return OutboundMessage::create([
+            'recipient_hint' => $this->mask($email),
+            'recipient' => $email,
+            'subject' => $subject,
+            'body' => $body,
+            'context' => $context,
+            'status' => 'pending',
+            'next_attempt_at' => now(),
+        ])->id;
+    }
+
     public function deliver(int $id): bool
     {
         if (! $this->transportReady()) {
+            return false;
+        }
+        $candidate = OutboundMessage::find($id);
+        $event = $candidate?->context['event'] ?? '';
+        if (str_starts_with($event, 'newsletter_') && ! app(NewsletterCampaignService::class)->senderReady()) {
             return false;
         }
 
@@ -62,8 +73,23 @@ class OutboundMailService
             return false;
         }
 
+        if (($message->context['event'] ?? null) === 'newsletter_campaign') {
+            $subscription = NewsletterSubscription::find($message->context['subscription_id'] ?? null);
+            $campaign = NewsletterCampaign::find($message->context['campaign_id'] ?? null);
+            if (! $campaign || $campaign->status === 'cancelled'
+                || ! $subscription || ! $subscription->confirmed_at || $subscription->unsubscribed_at) {
+                // Retry jobs must respect an unsubscribe that happened after enqueue.
+                OutboundMessage::whereKey($id)->where('status', 'sending')->update([
+                    'status' => 'skipped', 'recipient' => null, 'subject' => null, 'body' => null,
+                    'next_attempt_at' => null, 'updated_at' => now(),
+                ]);
+
+                return false;
+            }
+        }
+
         try {
-            Mail::to($message->recipient)->send(new RthquickNotice($message->subject, $message->body));
+            Mail::to($message->recipient)->send(new RthquickNotice($message->subject, $message->body, $message->context['event'] ?? null));
             // Clear recoverable recipient/content after successful handoff.
             OutboundMessage::whereKey($id)->where('status', 'sending')->update([
                 'status' => 'sent',

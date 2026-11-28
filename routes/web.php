@@ -21,6 +21,9 @@ use App\Http\Controllers\PageController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\SupportInquiryController;
+use App\Http\Controllers\NewsletterSubscriptionController;
+use App\Http\Controllers\AdminNewsletterSubscriptionController;
+use App\Http\Controllers\AdminNewsletterCampaignController;
 use App\Http\Controllers\VendorController;
 use Illuminate\Support\Facades\Route;
 
@@ -70,6 +73,11 @@ Route::get('/product/{slug}', [ProductController::class, 'show'])->name('product
 Route::get('/about', [PageController::class, 'about'])->name('about');
 Route::get('/delivery-returns', [PageController::class, 'deliveryReturns'])->name('policies.delivery-returns');
 Route::post('/contact', [SupportInquiryController::class, 'store'])->middleware('throttle:5,1')->name('contact.store');
+Route::post('/newsletter/nous-telos', [NewsletterSubscriptionController::class, 'store'])->middleware('throttle:5,1')->name('newsletter.store');
+Route::get('/newsletter/confirm/{subscription}/{token}', [NewsletterSubscriptionController::class, 'confirmForm'])->name('newsletter.confirm');
+Route::post('/newsletter/confirm/{subscription}/{token}', [NewsletterSubscriptionController::class, 'confirm'])->middleware('throttle:5,1')->name('newsletter.confirm.submit');
+Route::get('/newsletter/unsubscribe/{subscription}', [NewsletterSubscriptionController::class, 'unsubscribeForm'])->middleware('signed')->name('newsletter.unsubscribe');
+Route::post('/newsletter/unsubscribe/{subscription}', [NewsletterSubscriptionController::class, 'unsubscribe'])->middleware(['signed', 'throttle:5,1'])->name('newsletter.unsubscribe.submit');
 
 /* =========================================================================
  * 5. SHOPPING CART & DRAWER SYNCHRONIZATION
@@ -149,6 +157,15 @@ Route::middleware(['auth', 'admin', 'auth.session'])->prefix('admin')->name('adm
     Route::get('/support-inquiries', [SupportInquiryController::class, 'index'])->name('support.index');
     Route::post('/support-inquiries/{inquiry}', [SupportInquiryController::class, 'update'])->name('support.update');
     Route::get('/email-deliveries', [AdminEmailDeliveryController::class, 'index'])->name('email-deliveries');
+    Route::get('/newsletter-subscribers', [AdminNewsletterSubscriptionController::class, 'index'])->name('newsletter.index');
+    Route::get('/newsletter-campaigns', [AdminNewsletterCampaignController::class, 'index'])->name('newsletter-campaigns.index');
+    Route::post('/newsletter-campaigns', [AdminNewsletterCampaignController::class, 'store'])->name('newsletter-campaigns.store');
+    Route::get('/newsletter-campaigns/{campaign}', [AdminNewsletterCampaignController::class, 'show'])->name('newsletter-campaigns.show');
+    Route::put('/newsletter-campaigns/{campaign}', [AdminNewsletterCampaignController::class, 'update'])->name('newsletter-campaigns.update');
+    Route::post('/newsletter-campaigns/{campaign}/launch', [AdminNewsletterCampaignController::class, 'launch'])
+        ->middleware('admin.recent-password')->name('newsletter-campaigns.launch');
+    Route::post('/newsletter-campaigns/{campaign}/cancel', [AdminNewsletterCampaignController::class, 'cancel'])
+        ->middleware('admin.recent-password')->name('newsletter-campaigns.cancel');
     Route::post('/email-deliveries/{id}/retry', [AdminEmailDeliveryController::class, 'retry'])->name('email-deliveries.retry');
     Route::get('/orders/export', [AdminController::class, 'exportOrders'])->name('orders.export');
     Route::get('/orders/{id}', [AdminController::class, 'showOrder'])->name('orders.show');
